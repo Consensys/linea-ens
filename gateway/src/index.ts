@@ -2,12 +2,10 @@ import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
 import { ethers } from "ethers";
 
-const IResolverAbi =
-  require("@ensdomains/arb-resolver-contracts/artifacts/contracts/l1/ArbitrumResolverStub.sol/IResolverService.json").abi;
-const helperAbi =
-  require("@ensdomains/arb-resolver-contracts/artifacts/contracts/l1/AssertionHelper.sol/AssertionHelper.json").abi;
+const IResolverAbi = require("../abi/IResolverService.json").abi;
+const helperAbi = require("../abi/AssertionHelper.json").abi;
 
-const rollupAbi = require("./rollup.json");
+const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
 program
@@ -31,7 +29,7 @@ program
     "0xE87d317eB8dcc9afE24d9f63D6C760e52Bc18A40"
   )
   .option("-d --debug", "debug", false)
-  .option("-p --port <number>", "Port number to serve on", "8081");
+  .option("-p --port <number>", "Port number to serve on", "8080");
 program.parse(process.argv);
 const options = program.opts();
 console.log({ options });
