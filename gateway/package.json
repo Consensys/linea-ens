@@ -4,6 +4,11 @@
   "main": "dist/index.js",
   "author": "Consensys",
   "license": "MIT",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsdx build",
