@@ -1,0 +1,67 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IResolverService",
+  "sourceName": "contracts/l1/ZkEVMResolverStub.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "node",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addr",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint64",
+              "name": "nodeIndex",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "blockHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes",
+              "name": "sendRoot",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "encodedBlockArray",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "stateTrieWitness",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "stateRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes",
+              "name": "storageTrieWitness",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct L2StateProof",
+          "name": "proof",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
