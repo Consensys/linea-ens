@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@eth-optimism/contracts": "^0.5.40",
-    "@openzeppelin/contracts": "^4.8.1"
+    "@openzeppelin/contracts": "^4.8.1",
+    "dotenv": "^16.0.3"
   }
 }

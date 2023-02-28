@@ -1,0 +1,33 @@
+{
+  "name": "zkevm-resolver-gateway",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "Consensys",
+  "license": "MIT",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsdx build",
+    "gcp-build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "NODE_ENV=development tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "clean": "rm -fr node_modules dist"
+  },
+  "module": "dist/gateway.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/gateway.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/gateway.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "dependencies": {
+    "@chainlink/ccip-read-server": "^0.2.1",
+    "tsdx": "^0.14.1"
+  }
+}

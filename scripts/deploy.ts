@@ -8,6 +8,12 @@ async function main() {
   await zkEVMResolver.deployed();
   console.log(`ZkEVMResolver deployed to ${zkEVMResolver.address}`);
 
+  // Deploy the assertion helper
+  const AssertionHelper = await ethers.getContractFactory("AssertionHelper");
+  const assertionHelper = await AssertionHelper.deploy();
+  await assertionHelper.deployed();
+  console.log(`AssertionHelper deployed at ${assertionHelper.address}`);
+
   // Deploy ZkEVM Resolver Stub to L1
   const rollupAddress =
     ROLLUP_ADDRESSES[network.name as keyof typeof ROLLUP_ADDRESSES];
