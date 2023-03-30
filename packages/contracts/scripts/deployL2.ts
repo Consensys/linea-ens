@@ -6,7 +6,7 @@ async function main() {
   const lineaResolver = await LineaResolver.deploy();
   await lineaResolver.deployed();
   console.log(
-    `LineaResolver deployed to, RESOLVER_ADDRESS: ${lineaResolver.address}`
+    `LineaResolver deployed to, L2_RESOLVER_ADDRESS: ${lineaResolver.address}`
   );
 }
 
