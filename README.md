@@ -34,7 +34,7 @@ npx hardhat run --network goerliLinea scripts/deployL2.ts
 Get the resolver address, then deploy L1 contracts.
 
 ```
-RESOLVER_ADDRESS=$RESOLVER_ADDRESS npx hardhat run --network goerli scripts/deployL1.ts
+L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network goerli scripts/deployL1.ts
 ```
 
 ### Start Gateway server

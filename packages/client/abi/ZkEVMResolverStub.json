@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "ZkEVMResolverStub",
-  "sourceName": "contracts/l1/ZkEVMResolverStub.sol",
+  "contractName": "LineaResolverStub",
+  "sourceName": "contracts/l1/LineaResolverStub.sol",
   "abi": [
     {
       "inputs": [

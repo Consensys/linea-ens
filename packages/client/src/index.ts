@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import fetch from "cross-fetch";
 
 const namehash = require("eth-ens-namehash");
-const StubAbi = require("../abi/ZkEVMResolverStub.json").abi;
+const StubAbi = require("../abi/LineaResolverStub.json").abi;
 const IResolverAbi = require("../abi/IResolverService.json").abi;
 const program = new Command();
 const { defaultAbiCoder, hexConcat } = require("ethers/lib/utils");
