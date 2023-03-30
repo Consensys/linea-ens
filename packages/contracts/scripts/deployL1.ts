@@ -22,13 +22,13 @@ async function main() {
   const ZkEVMResolverStub = await ethers.getContractFactory(
     "ZkEVMResolverStub"
   );
-  const zkEVMResolverStub = await ZkEVMResolverStub.deploy(
+  const LineaResolverStub = await ZkEVMResolverStub.deploy(
     [gatewayUrl],
     rollupAddress,
     RESOLVER_ADDRESS
   );
-  await zkEVMResolverStub.deployed();
-  console.log(`ZkEVMResolverStub deployed to ${zkEVMResolverStub.address}`);
+  await LineaResolverStub.deployed();
+  console.log(`ZkEVMResolverStub deployed to ${LineaResolverStub.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

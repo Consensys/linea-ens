@@ -2,10 +2,10 @@ import { ethers } from "hardhat";
 
 async function main() {
   // Deploy ZkEVM Resolver to L2
-  const ZkEVMResolver = await ethers.getContractFactory("ZkEVMResolver");
-  const zkEVMResolver = await ZkEVMResolver.deploy();
-  await zkEVMResolver.deployed();
-  console.log(`ZkEVMResolver deployed to ${zkEVMResolver.address}`);
+  const LineaResolver = await ethers.getContractFactory("ZkEVMResolver");
+  const lineaResolver = await LineaResolver.deploy();
+  await lineaResolver.deployed();
+  console.log(`ZkEVMResolver deployed to ${lineaResolver.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

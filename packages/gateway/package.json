@@ -1,5 +1,5 @@
 {
-  "name": "zkevm-resolver-gateway",
+  "name": "linea-resolver-gateway",
   "version": "1.0.0",
   "main": "dist/index.js",
   "author": "Consensys",

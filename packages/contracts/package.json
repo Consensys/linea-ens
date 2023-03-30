@@ -1,7 +1,7 @@
 {
-  "name": "zkEVM-resolver",
+  "name": "Linea-resolver",
   "version": "0.0.1",
-  "description": "zkEVM Resolver for ENS",
+  "description": "Linea Resolver for ENS",
   "main": "index.js",
   "author": "Consensys",
   "license": "MIT",
