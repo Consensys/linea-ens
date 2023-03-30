@@ -60,7 +60,7 @@ interface IRollup {
         returns (Node memory);
 }
 
-contract ZkEVMResolverStub{
+contract LineaResolverStub{
     string[] public gateways;
     address public rollup;
     address public l2resolver;
@@ -88,7 +88,7 @@ contract ZkEVMResolverStub{
     }
 
     function addr(bytes32 node) public view returns (address) {
-        return _addr(node, ZkEVMResolverStub.addrWithProof.selector);
+        return _addr(node, LineaResolverStub.addrWithProof.selector);
     }
 
     function addr(bytes32 node, uint256 coinType)
@@ -101,7 +101,7 @@ contract ZkEVMResolverStub{
                 addressToBytes(
                     _addr(
                         node,
-                        ZkEVMResolverStub.bytesAddrWithProof.selector
+                        LineaResolverStub.bytesAddrWithProof.selector
                     )
                 );
         } else {

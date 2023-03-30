@@ -1,34 +1,36 @@
 import { ethers, network } from "hardhat";
 import { ROLLUP_ADDRESSES } from "./constants";
 
-let RESOLVER_ADDRESS;
+let L2_RESOLVER_ADDRESS;
 async function main() {
   // Deploy the assertion helper
   const AssertionHelper = await ethers.getContractFactory("AssertionHelper");
   const assertionHelper = await AssertionHelper.deploy();
   await assertionHelper.deployed();
-  console.log(`AssertionHelper deployed at ${assertionHelper.address}`);
+  console.log(
+    `AssertionHelper deployed at HELPER_ADDRESS: ${assertionHelper.address}`
+  );
 
-  if (process.env.RESOLVER_ADDRESS) {
-    RESOLVER_ADDRESS = process.env.RESOLVER_ADDRESS;
+  if (process.env.L2_RESOLVER_ADDRESS) {
+    L2_RESOLVER_ADDRESS = process.env.L2_RESOLVER_ADDRESS;
   } else {
-    throw "Set RESOLVER_ADDRESS=";
+    throw "Set L2_RESOLVER_ADDRESS=";
   }
 
-  // Deploy ZkEVM Resolver Stub to L1
+  // Deploy Linea Resolver Stub to L1
   const rollupAddress =
     ROLLUP_ADDRESSES[network.name as keyof typeof ROLLUP_ADDRESSES];
   const gatewayUrl = "http://localhost:8080";
-  const ZkEVMResolverStub = await ethers.getContractFactory(
-    "ZkEVMResolverStub"
+  const LineaResolverStub = await ethers.getContractFactory(
+    "LineaResolverStub"
   );
-  const zkEVMResolverStub = await ZkEVMResolverStub.deploy(
+  const lineaResolverStub = await LineaResolverStub.deploy(
     [gatewayUrl],
     rollupAddress,
-    RESOLVER_ADDRESS
+    L2_RESOLVER_ADDRESS
   );
-  await zkEVMResolverStub.deployed();
-  console.log(`ZkEVMResolverStub deployed to ${zkEVMResolverStub.address}`);
+  await lineaResolverStub.deployed();
+  console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
