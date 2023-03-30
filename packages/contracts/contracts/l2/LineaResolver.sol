@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ZkEVMResolver is Ownable {
+contract LineaResolver is Ownable {
     mapping(bytes32 => address) addresses;
 
     event AddrChanged(bytes32 indexed node, address a);

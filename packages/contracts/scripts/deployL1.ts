@@ -15,20 +15,20 @@ async function main() {
     throw "Set RESOLVER_ADDRESS=";
   }
 
-  // Deploy ZkEVM Resolver Stub to L1
+  // Deploy Linea Resolver Stub to L1
   const rollupAddress =
     ROLLUP_ADDRESSES[network.name as keyof typeof ROLLUP_ADDRESSES];
   const gatewayUrl = "http://localhost:8080";
-  const ZkEVMResolverStub = await ethers.getContractFactory(
-    "ZkEVMResolverStub"
+  const LineaResolverStub = await ethers.getContractFactory(
+    "LineaResolverStub"
   );
-  const LineaResolverStub = await ZkEVMResolverStub.deploy(
+  const lineaResolverStub = await LineaResolverStub.deploy(
     [gatewayUrl],
     rollupAddress,
     RESOLVER_ADDRESS
   );
-  await LineaResolverStub.deployed();
-  console.log(`ZkEVMResolverStub deployed to ${LineaResolverStub.address}`);
+  await lineaResolverStub.deployed();
+  console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
