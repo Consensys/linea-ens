@@ -18,10 +18,23 @@ yarn hardhat node --fork YOUR_GOERLI_L1_RPC_URL
 
 In second terminal, deploy L1 and L2 smart contracts:
 
+Compile
+
 ```bash
-cd packages/gateway
+cd packages/contracts
 yarn hardhat compile
-yarn hardhat run scripts/deploy.ts
+```
+
+Deploy L2 contracts first:
+
+```bash
+npx hardhat run --network goerliLinea scripts/deployL2.ts
+```
+
+Get the resolver address, then deploy L1 contracts.
+
+```
+RESOLVER_ADDRESS=$RESOLVER_ADDRESS npx hardhat run --network goerli scripts/deployL1.ts
 ```
 
 ### Start Gateway server
