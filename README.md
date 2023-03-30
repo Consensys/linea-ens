@@ -43,6 +43,7 @@ Then start the gateway.
 
 ```bash
 cd ../gateway
+yarn
 yarn build
 yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --helper_address $HELPER_ADDRESS
 ```
