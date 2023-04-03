@@ -8,7 +8,7 @@ async function main() {
   const assertionHelper = await AssertionHelper.deploy();
   await assertionHelper.deployed();
   console.log(
-    `AssertionHelper deployed at HELPER_ADDRESS: ${assertionHelper.address}`
+    `AssertionHelper deployed at, HELPER_ADDRESS: ${assertionHelper.address}`
   );
 
   if (process.env.L2_RESOLVER_ADDRESS) {
@@ -30,7 +30,9 @@ async function main() {
     L2_RESOLVER_ADDRESS
   );
   await lineaResolverStub.deployed();
-  console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
+  console.log(
+    `LineaResolverStub deployed to, ENS_REGISTRY_ADDRESS: ${lineaResolverStub.address}`
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
