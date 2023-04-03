@@ -12,12 +12,12 @@ program
   .option(
     "-l1 --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
-    "http://localhost:8545"
+    "http://127.0.0.1:8545/"
   )
   .option(
     "-l2 --l2_provider_url <url2>",
     "L2_PROVIDER_URL",
-    "http://localhost:8545"
+    "http://127.0.0.1:8545/"
   )
   .option("-i --chainId <chainId>", "chainId", "31337")
   .option("-n --chainName <chainName>", "chainName", "unknown")
@@ -55,7 +55,8 @@ const l2provider = new ethers.providers.JsonRpcProvider(
   const l2ChainId = parseInt(await l2provider.send("eth_chainId", []));
   const name = program.args[0];
   const node = namehash.hash(name);
-  let r = await provider.getResolver(name);
+  let r = await provider.getResolver("lineatester.eth");
+  console.log("r", r);
   if (r) {
     const resolver = new ethers.Contract(r.address, StubAbi, provider);
     const iresolver = new ethers.Contract(r.address, IResolverAbi, provider);
@@ -64,18 +65,6 @@ const l2provider = new ethers.providers.JsonRpcProvider(
         // this will throw OffchainLookup error
         console.log(await resolver.callStatic["addr(bytes32)"](node));
       } else {
-        const beforeTime = new Date().getTime();
-        console.log("getAddress           ", await r.getAddress());
-        const afterTime = new Date().getTime();
-        console.log("(call time=", afterTime - beforeTime, ")");
-        console.log("getAddress(60)       ", await r.getAddress(60));
-        console.log(
-          "_fetchBytes          ",
-          await r._fetchBytes(
-            "0xf1cb7e06",
-            "0x000000000000000000000000000000000000000000000000000000000000003c"
-          )
-        );
         console.log(
           "addr(bytes32)        ",
           await resolver.callStatic["addr(bytes32)"](node, {

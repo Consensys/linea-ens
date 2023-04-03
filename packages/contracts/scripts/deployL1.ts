@@ -1,8 +1,16 @@
 import { ethers, network } from "hardhat";
-import { ROLLUP_ADDRESSES } from "./constants";
+import {
+  ETH_REGISTRAR_CONTROLLER_ADDRESS,
+  REGISTRY_ADDRESS,
+  ROLLUP_ADDRESSES,
+} from "./constants";
+const ensRegistryAbi = require("../abi/ENSRegistry.json");
+const eTHRegistrarControllerAbi = require("../abi/ETHRegistrarController.json");
+const namehash = require("eth-ens-namehash");
 
 let L2_RESOLVER_ADDRESS;
 async function main() {
+  const [owner, user] = await ethers.getSigners();
   // Deploy the assertion helper
   const AssertionHelper = await ethers.getContractFactory("AssertionHelper");
   const assertionHelper = await AssertionHelper.deploy();
@@ -31,6 +39,52 @@ async function main() {
   );
   await lineaResolverStub.deployed();
   console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
+
+  // Create a new ENS
+  const secret =
+    "0x0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF";
+  const ethRegistrarControllerAddr =
+    ETH_REGISTRAR_CONTROLLER_ADDRESS[
+      network.name as keyof typeof ETH_REGISTRAR_CONTROLLER_ADDRESS
+    ];
+  const ethRegistrarController = await new ethers.Contract(
+    ethRegistrarControllerAddr,
+    eTHRegistrarControllerAbi,
+    owner
+  );
+  const ensTest = "lineatester";
+
+  if (await ethRegistrarController.available(ensTest)) {
+    const makeCommitmentResp = await ethRegistrarController.makeCommitment(
+      ensTest,
+      owner.address,
+      secret
+    );
+
+    console.log("makeCommitmentResp", makeCommitmentResp);
+    await ethRegistrarController.commit(makeCommitmentResp);
+    console.log("commit done");
+    await network.provider.send("evm_increaseTime", [12000]);
+    await ethRegistrarController.register(
+      ensTest,
+      owner.address,
+      "10000000",
+      secret,
+      { value: ethers.utils.parseEther("1") }
+    );
+  }
+
+  // Set the sub node
+  const registryAddress =
+    REGISTRY_ADDRESS[network.name as keyof typeof REGISTRY_ADDRESS];
+  const registry = await new ethers.Contract(
+    registryAddress,
+    ensRegistryAbi,
+    owner
+  );
+
+  const node = namehash.hash("lineatester.eth");
+  await registry.setResolver(node, lineaResolverStub.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -3,9 +3,9 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 
 const IResolverAbi = require("../abi/IResolverService.json").abi;
-const helperAbi = require("../abi/AssertionHelper.json").abi;
+// const helperAbi = require("../abi/AssertionHelper.json").abi;
 
-const rollupAbi = require("../abi/rollup.json");
+// const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
 program
@@ -14,15 +14,15 @@ program
   .option(
     "-l1p --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
-    "http://localhost:8545"
+    "http://127.0.0.1:8545/"
   )
   .option(
     "-l2p --l2_provider_url <url2>",
     "L2_PROVIDER_URL",
-    "http://localhost:8545"
+    "http://127.0.0.1:8545/"
   )
-  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "1337")
-  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "412346")
+  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "31337")
+  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "31337")
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
@@ -36,7 +36,7 @@ console.log({ options });
 const {
   l1_provider_url,
   l2_provider_url,
-  rollup_address,
+  // rollup_address,
   helper_address,
   l2_resolver_address,
   l1_chain_id,
@@ -47,10 +47,10 @@ if (helper_address === undefined || l2_resolver_address === undefined) {
   throw "Must specify --l2_resolver_address and --helper_address";
 }
 
-const l1provider = new ethers.providers.JsonRpcProvider(l1_provider_url);
+// const l1provider = new ethers.providers.JsonRpcProvider(l1_provider_url);
 const l2provider = new ethers.providers.JsonRpcProvider(l2_provider_url);
-const rollup = new ethers.Contract(rollup_address, rollupAbi, l1provider);
-const helper = new ethers.Contract(helper_address, helperAbi, l1provider);
+// const rollup = new ethers.Contract(rollup_address, rollupAbi, l1provider);
+// const helper = new ethers.Contract(helper_address, helperAbi, l1provider);
 const server = new Server();
 
 server.add(IResolverAbi, [
@@ -84,15 +84,16 @@ server.add(IResolverAbi, [
           addressData,
         });
       }
-      const nodeIndex = await rollup.lastFinalizedStateRootHash();
-      console.log({
-        nodeIndex: nodeIndex.toString(),
-      });
-      const nodeEventFilter = await rollup.filters.NodeCreated(nodeIndex);
-      const nodeEvents = await rollup.queryFilter(nodeEventFilter);
-      const assertion = nodeEvents[0].args!.assertion;
-      const sendRoot = await helper.getSendRoot(assertion);
-      const blockHash = await helper.getBlockHash(assertion);
+      // const nodeIndex = await rollup.lastFinalizedStateRootHash();
+      // console.log({
+      //   nodeIndex: nodeIndex.toString(),
+      // });
+      // const nodeEventFilter = await rollup.filters.NodeCreated(nodeIndex);
+      // const nodeEvents = await rollup.queryFilter(nodeEventFilter);
+      // const assertion = nodeEvents[0].args!.assertion;
+      // const sendRoot = await helper.getSendRoot(assertion);
+      // const blockHash = await helper.getBlockHash(assertion);
+      const blockHash = (await l2provider.getBlock("latest")).hash;
       const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
         blockHash,
         false,
@@ -130,9 +131,9 @@ server.add(IResolverAbi, [
         (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
       );
       const finalProof = {
-        nodeIndex,
+        nodeIndex: blockHash,
         blockHash,
-        sendRoot,
+        sendRoot: blockHash,
         encodedBlockArray,
         stateTrieWitness: accountProof,
         stateRoot,
