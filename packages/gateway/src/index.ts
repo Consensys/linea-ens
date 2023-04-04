@@ -3,14 +3,11 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 
 const IResolverAbi = require("../abi/IResolverService.json").abi;
-// const helperAbi = require("../abi/AssertionHelper.json").abi;
-
-// const rollupAbi = require("../abi/rollup.json");
+const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
 program
   .option("-r --l2_resolver_address <address>", "RESOLVER_ADDRESS")
-  .option("-h --helper_address <helper_address>", "HELPER_ADDRESS")
   .option(
     "-l1p --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
@@ -19,10 +16,10 @@ program
   .option(
     "-l2p --l2_provider_url <url2>",
     "L2_PROVIDER_URL",
-    "http://127.0.0.1:8545/"
+    "https://consensys-zkevm-goerli-prealpha.infura.io/v3/16fff764ff2145c2b137fbe8013730c6"
   )
-  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "31337")
-  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "31337")
+  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "5")
+  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "59140")
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
@@ -36,21 +33,19 @@ console.log({ options });
 const {
   l1_provider_url,
   l2_provider_url,
-  // rollup_address,
-  helper_address,
+  rollup_address,
   l2_resolver_address,
   l1_chain_id,
   l2_chain_id,
   debug,
 } = options;
-if (helper_address === undefined || l2_resolver_address === undefined) {
-  throw "Must specify --l2_resolver_address and --helper_address";
+if (l2_resolver_address === undefined) {
+  throw "Must specify --l2_resolver_address";
 }
 
-// const l1provider = new ethers.providers.JsonRpcProvider(l1_provider_url);
+const l1provider = new ethers.providers.JsonRpcProvider(l1_provider_url);
 const l2provider = new ethers.providers.JsonRpcProvider(l2_provider_url);
-// const rollup = new ethers.Contract(rollup_address, rollupAbi, l1provider);
-// const helper = new ethers.Contract(helper_address, helperAbi, l1provider);
+const rollup = new ethers.Contract(rollup_address, rollupAbi, l1provider);
 const server = new Server();
 
 server.add(IResolverAbi, [
@@ -58,6 +53,7 @@ server.add(IResolverAbi, [
     type: "addr(bytes32)",
     func: async ([node], { to, data: _callData }) => {
       const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
+
       if (debug) {
         console.log(1, {
           node,
@@ -93,7 +89,13 @@ server.add(IResolverAbi, [
       // const assertion = nodeEvents[0].args!.assertion;
       // const sendRoot = await helper.getSendRoot(assertion);
       // const blockHash = await helper.getBlockHash(assertion);
-      const blockHash = (await l2provider.getBlock("latest")).hash;
+      const nodeIndex = await rollup.lastFinalizedBatchHeight();
+      const stateRootHash = await rollup.stateRootHash();
+      console.log(`nodeIndex ${nodeIndex}`);
+      const blockNumber = nodeIndex.toNumber();
+      console.log(`blockNumber ${blockNumber}`);
+      const block = await l2provider.getBlock(blockNumber);
+      const blockHash = block.hash;
       const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
         blockHash,
         false,
@@ -131,9 +133,9 @@ server.add(IResolverAbi, [
         (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
       );
       const finalProof = {
-        nodeIndex: blockHash,
+        nodeIndex: nodeIndex,
         blockHash,
-        sendRoot: blockHash,
+        sendRoot: stateRootHash,
         encodedBlockArray,
         stateTrieWitness: accountProof,
         stateRoot,

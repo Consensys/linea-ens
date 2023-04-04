@@ -1,10 +1,11 @@
 import { Command } from "commander";
 import { ethers } from "ethers";
 import fetch from "cross-fetch";
+import { REGISTRY_ADDRESS } from "./constants";
 
 const namehash = require("eth-ens-namehash");
 const StubAbi = require("../abi/LineaResolverStub.json").abi;
-const IResolverAbi = require("../abi/IResolverService.json").abi;
+const ensRegistryAbi = require("../abi/ENSRegistry.json");
 const program = new Command();
 const { defaultAbiCoder, hexConcat } = require("ethers/lib/utils");
 program
@@ -17,7 +18,7 @@ program
   .option(
     "-l2 --l2_provider_url <url2>",
     "L2_PROVIDER_URL",
-    "http://127.0.0.1:8545/"
+    "https://consensys-zkevm-goerli-prealpha.infura.io/v3/16fff764ff2145c2b137fbe8013730c6"
   )
   .option("-i --chainId <chainId>", "chainId", "31337")
   .option("-n --chainName <chainName>", "chainName", "unknown")
@@ -36,7 +37,7 @@ console.log("options", {
   chainName,
   debug,
 });
-let provider;
+let provider: ethers.providers.JsonRpcProvider;
 if (chainId && chainName) {
   provider = new ethers.providers.JsonRpcProvider(l1_provider_url, {
     chainId,
@@ -46,20 +47,17 @@ if (chainId && chainName) {
 } else {
   provider = new ethers.providers.JsonRpcProvider(options.l1_provider_url);
 }
-// provider.on("debug", console.log)
-const l2provider = new ethers.providers.JsonRpcProvider(
-  options.l2_provider_url
-);
+
 (async () => {
-  const l1ChainId = parseInt(await provider.send("eth_chainId", []));
-  const l2ChainId = parseInt(await l2provider.send("eth_chainId", []));
   const name = program.args[0];
   const node = namehash.hash(name);
-  let r = await provider.getResolver("lineatester.eth");
-  console.log("r", r);
-  if (r) {
-    const resolver = new ethers.Contract(r.address, StubAbi, provider);
-    const iresolver = new ethers.Contract(r.address, IResolverAbi, provider);
+  console.log("node", node);
+  let resolverAddr = (await getResolver(name))[0];
+  console.log("resolverAddr", resolverAddr);
+  let test = (await getResolver("1.offchainexample.eth"))[0];
+  console.log("test", test);
+  if (resolverAddr) {
+    const resolver = new ethers.Contract(resolverAddr, StubAbi, provider);
     try {
       if (debug) {
         // this will throw OffchainLookup error
@@ -117,3 +115,25 @@ const l2provider = new ethers.providers.JsonRpcProvider(
     }
   }
 })();
+
+async function getResolver(name: string) {
+  const parent = (currentname: string) => {
+    const index = currentname.indexOf(".");
+    return currentname.substring(index + 1, currentname.length);
+  };
+
+  for (
+    let currentname = name;
+    currentname !== "";
+    currentname = parent(currentname)
+  ) {
+    console.log("currentname", currentname);
+    const node = namehash.hash(currentname);
+    const ens = new ethers.Contract(REGISTRY_ADDRESS, ensRegistryAbi, provider);
+    const resolver = await ens.resolver(node);
+    if (resolver != "0x0000000000000000000000000000000000000000") {
+      return [resolver, currentname];
+    }
+  }
+  return [null, ""];
+}
