@@ -16,10 +16,10 @@ program
   .option(
     "-l2p --l2_provider_url <url2>",
     "L2_PROVIDER_URL",
-    "https://consensys-zkevm-goerli-prealpha.infura.io/v3/16fff764ff2145c2b137fbe8013730c6"
+    "http://127.0.0.1:8545/"
   )
-  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "5")
-  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "59140")
+  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "31337")
+  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "31337")
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
@@ -80,20 +80,11 @@ server.add(IResolverAbi, [
           addressData,
         });
       }
-      // const nodeIndex = await rollup.lastFinalizedStateRootHash();
-      // console.log({
-      //   nodeIndex: nodeIndex.toString(),
-      // });
-      // const nodeEventFilter = await rollup.filters.NodeCreated(nodeIndex);
-      // const nodeEvents = await rollup.queryFilter(nodeEventFilter);
-      // const assertion = nodeEvents[0].args!.assertion;
-      // const sendRoot = await helper.getSendRoot(assertion);
-      // const blockHash = await helper.getBlockHash(assertion);
-      const nodeIndex = await rollup.lastFinalizedBatchHeight();
+
+      const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
       const stateRootHash = await rollup.stateRootHash();
-      console.log(`nodeIndex ${nodeIndex}`);
-      const blockNumber = nodeIndex.toNumber();
-      console.log(`blockNumber ${blockNumber}`);
+      const blockNumber = lastBlockFinalized.toNumber();
+      console.log(`Last block number finalized on L2 : ${blockNumber}`);
       const block = await l2provider.getBlock(blockNumber);
       const blockHash = block.hash;
       const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
@@ -133,7 +124,7 @@ server.add(IResolverAbi, [
         (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
       );
       const finalProof = {
-        nodeIndex: nodeIndex,
+        nodeIndex: lastBlockFinalized,
         blockHash,
         sendRoot: stateRootHash,
         encodedBlockArray,
