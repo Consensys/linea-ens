@@ -7,7 +7,7 @@ import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Recei
 
 contract LineaResolver is Ownable, ERC721 {
     mapping(bytes32 => address) public addresses;
-    uint256 public tokenId; 
+    uint256 public tokenId;
 
     event AddrChanged(bytes32 indexed node, address a);
 
@@ -16,14 +16,20 @@ contract LineaResolver is Ownable, ERC721 {
         string memory _symbol
     ) ERC721(_name, _symbol) {}
 
-    function mintSubdomain(bytes32 node, address _addr) public onlyOwner {
-        addresses[node] = _addr;
+    function mintSubdomain(
+        bytes32 node,
+        address _addr
+    ) external returns (uint256) {
+        addresses[node] = tokenId;
         emit AddrChanged(node, _addr);
         _mint(_addr, tokenId); // mint the new token with the current tokenId
         tokenId++; // increment tokenId
+
+        return tokenId;
     }
 
-    function addr(bytes32 node) public view returns (address) {
-        return addresses[node];
+    function resolve(bytes32 node) external view returns (address) {
+        uint256 tokenId = addresses[node];
+        return ownerOf(tokenId);
     }
 }
