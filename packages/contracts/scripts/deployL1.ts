@@ -15,7 +15,7 @@ async function main() {
   }
 
   // Deploy Linea Resolver Stub to L1
-  const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "http://localhost:8080/{sender}/{data}.json";
+  const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "http://34.207.205.70:8080/{sender}/{data}.json";
   const rollupAddress = ROLLUP_ADDRESSES[network.name as keyof typeof ROLLUP_ADDRESSES];
   const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
   const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl], rollupAddress, L2_RESOLVER_ADDRESS);

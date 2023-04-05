@@ -1,9 +1,12 @@
 import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
 import { ethers } from "ethers";
+import { Result } from "ethers/lib/utils";
 
-const IResolverAbi = require("../abi/IResolverService.json").abi;
+const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json")
+  .abi;
 const rollupAbi = require("../abi/rollup.json");
+const namehash = require("eth-ens-namehash");
 const { BigNumber } = ethers;
 const program = new Command();
 program
@@ -50,15 +53,21 @@ const server = new Server();
 
 server.add(IResolverAbi, [
   {
-    type: "addr(bytes32)",
-    func: async ([node], { to, data: _callData }) => {
+    type: "resolve",
+    func: async ([encodedName, data]: Result, request) => {
+      console.log("encodedName", encodedName);
+      const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
+      console.log("name", name);
+      const node = namehash.hash(name);
+      console.log("node", node);
       const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
 
       if (debug) {
+        const to = request?.to;
         console.log(1, {
           node,
           to,
-          _callData,
+          data,
           l1_provider_url,
           l2_provider_url,
           l2_resolver_address,
@@ -124,13 +133,14 @@ server.add(IResolverAbi, [
         (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
       );
       const finalProof = {
-        nodeIndex: lastBlockFinalized,
+        nodeIndex: blockNumber,
         blockHash,
         sendRoot: stateRootHash,
         encodedBlockArray,
         stateTrieWitness: accountProof,
         stateRoot,
         storageTrieWitness: storageProof,
+        node,
       };
       console.log(7, { finalProof });
       return [finalProof];
@@ -139,3 +149,15 @@ server.add(IResolverAbi, [
 ]);
 const app = server.makeApp("/");
 app.listen(options.port);
+
+function decodeDnsName(dnsname: Buffer) {
+  const labels = [];
+  let idx = 0;
+  while (true) {
+    const len = dnsname.readUInt8(idx);
+    if (len === 0) break;
+    labels.push(dnsname.slice(idx + 1, idx + len + 1).toString("utf8"));
+    idx += len + 1;
+  }
+  return labels.join(".");
+}

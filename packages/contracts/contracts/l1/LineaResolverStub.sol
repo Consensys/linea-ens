@@ -2,13 +2,11 @@
 pragma solidity ^0.8.9;
 pragma abicoder v2;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
-
 import { Lib_OVMCodec } from "@eth-optimism/contracts/libraries/codec/Lib_OVMCodec.sol";
 import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib_SecureMerkleTrie.sol";
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
+
 struct L2StateProof {
   uint64 nodeIndex;
   bytes32 blockHash;
@@ -17,10 +15,14 @@ struct L2StateProof {
   bytes stateTrieWitness;
   bytes32 stateRoot;
   bytes storageTrieWitness;
+  bytes node;
 }
 
 interface IResolverService {
-  function addr(bytes32 node) external view returns (L2StateProof memory proof);
+  function resolve(
+    bytes calldata name,
+    bytes calldata data
+  ) external view returns (L2StateProof memory proof);
 }
 
 interface IExtendedResolver {
@@ -72,16 +74,17 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes calldata data
   ) external view override returns (bytes memory) {
     bytes memory callData = abi.encodeWithSelector(
-      LineaResolverStub.resolve.selector,
+      IResolverService.resolve.selector,
       name,
       data
     );
+
     revert OffchainLookup(
       address(this),
       gateways,
       callData,
-      LineaResolverStub.bytesAddrWithProof.selector,
-      callData
+      LineaResolverStub.resolveWithProof.selector,
+      abi.encode(name)
     );
   }
 
@@ -93,14 +96,17 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes calldata extraData
   ) external view returns (bytes memory) {
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
-    bytes32 node = abi.decode(extraData, (bytes32));
+    // bytes32 node = abi.decode(extraData, (bytes32));
     // step 2: check blockHash against encoded block array
     require(
       proof.blockHash == keccak256(proof.encodedBlockArray),
       "blockHash encodedBlockArray mismatch"
     );
     // step 3: check storage value from derived value
-    bytes32 slot = keccak256(abi.encodePacked(node, uint256(1)));
+    // Here the node used should be in extra data but we need to find a way
+    // to convert extra data to an ens hashname in solidity, in the meantime we use
+    // the node sent by the gateway
+    bytes32 slot = keccak256(abi.encodePacked(proof.node, uint256(1)));
     bytes32 value = getStorageValue(
       l2resolver,
       slot,
@@ -116,75 +122,6 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
   function getl2Resolver() external view returns (address) {
     return l2resolver;
-  }
-
-  function addr(bytes32 node) public view returns (address) {
-    return _addr(node, LineaResolverStub.addrWithProof.selector);
-  }
-
-  function addr(
-    bytes32 node,
-    uint256 coinType
-  ) public view returns (bytes memory) {
-    if (coinType == 60) {
-      return
-        addressToBytes(
-          _addr(node, LineaResolverStub.bytesAddrWithProof.selector)
-        );
-    } else {
-      return addressToBytes(address(0));
-    }
-  }
-
-  function _addr(bytes32 node, bytes4 selector) private view returns (address) {
-    bytes memory callData = abi.encodeWithSelector(
-      IResolverService.addr.selector,
-      node
-    );
-    revert OffchainLookup(
-      address(this),
-      gateways,
-      callData,
-      selector,
-      abi.encode(node)
-    );
-  }
-
-  function addrWithProof(
-    bytes calldata response,
-    bytes calldata extraData
-  ) external view returns (address) {
-    return _addrWithProof(response, extraData);
-  }
-
-  function bytesAddrWithProof(
-    bytes calldata response,
-    bytes calldata extraData
-  ) external view returns (bytes memory) {
-    return addressToBytes(_addrWithProof(response, extraData));
-  }
-
-  function _addrWithProof(
-    bytes calldata response,
-    bytes calldata extraData
-  ) internal view returns (address) {
-    L2StateProof memory proof = abi.decode(response, (L2StateProof));
-    bytes32 node = abi.decode(extraData, (bytes32));
-    // step 2: check blockHash against encoded block array
-    require(
-      proof.blockHash == keccak256(proof.encodedBlockArray),
-      "blockHash encodedBlockArray mismatch"
-    );
-    // step 3: check storage value from derived value
-    bytes32 slot = keccak256(abi.encodePacked(node, uint256(1)));
-    bytes32 value = getStorageValue(
-      l2resolver,
-      slot,
-      proof.stateRoot,
-      proof.stateTrieWitness,
-      proof.storageTrieWitness
-    );
-    return address(uint160(uint256(value)));
   }
 
   function getStorageValue(

@@ -1839,6 +1839,10 @@ enquirer@^2.3.0:
   dependencies:
     ansi-colors "^4.1.1"
 
+ens-namehash@JonahGroendal/ens-namehash:
+  version "1.0.0"
+  resolved "https://codeload.github.com/JonahGroendal/ens-namehash/tar.gz/d956b0be0ae5d14191067ed398c4454e35f4558d"
+
 env-paths@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-2.2.1.tgz#420399d416ce1fbe9bc0a07c62fa68d67fd0f8f2"
