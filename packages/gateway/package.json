@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
+    "@ensdomains/ens-contracts": "^0.0.20",
     "eth-ens-namehash": "^2.0.8",
     "tsdx": "^0.14.1"
   }

@@ -1,12 +1,15 @@
 import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
-import { ethers } from "ethers";
+import { ethers, BytesLike } from "ethers";
 import { Result } from "ethers/lib/utils";
 
 const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json")
   .abi;
+const IResolverL2Abi = require("../../contracts/artifacts/contracts/l2/LineaResolver.sol/LineaResolver.json")
+  .abi;
+import { abi as Resolver_abi } from "@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json";
+const Resolver = new ethers.utils.Interface(Resolver_abi);
 const rollupAbi = require("../abi/rollup.json");
-const namehash = require("eth-ens-namehash");
 const { BigNumber } = ethers;
 const program = new Command();
 program
@@ -58,7 +61,7 @@ server.add(IResolverAbi, [
       console.log("encodedName", encodedName);
       const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
       console.log("name", name);
-      const node = namehash.hash(name);
+      const node = ethers.utils.namehash(name);
       console.log("node", node);
       const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
 
@@ -132,6 +135,10 @@ server.add(IResolverAbi, [
       const storageProof = ethers.utils.RLP.encode(
         (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
       );
+
+      // Result that will returned to the client after verification of the proof
+      const { result } = await getResult(name, data);
+
       const finalProof = {
         nodeIndex: blockNumber,
         blockHash,
@@ -141,6 +148,7 @@ server.add(IResolverAbi, [
         stateRoot,
         storageTrieWitness: storageProof,
         node,
+        result: result.toString(),
       };
       console.log(7, { finalProof });
       return [finalProof];
@@ -160,4 +168,33 @@ function decodeDnsName(dnsname: Buffer) {
     idx += len + 1;
   }
   return labels.join(".");
+}
+
+async function getResult(
+  name: string,
+  data: string
+): Promise<{ result: BytesLike; validUntil: number }> {
+  // Parse the data nested inside the second argument to `resolve`
+  const { signature, args } = Resolver.parseTransaction({ data });
+
+  if (ethers.utils.nameprep(name) !== name) {
+    throw new Error("Name must be normalised");
+  }
+
+  if (ethers.utils.namehash(name) !== args[0]) {
+    throw new Error("Name does not match namehash");
+  }
+
+  const resolverL2 = await new ethers.Contract(
+    l2_resolver_address,
+    IResolverL2Abi,
+    l2provider
+  );
+  const node = ethers.utils.namehash(name);
+  const result = await resolverL2.addr(node);
+
+  return {
+    result: Resolver.encodeFunctionResult(signature, [result]),
+    validUntil: Math.floor(Date.now() / 1000),
+  };
 }

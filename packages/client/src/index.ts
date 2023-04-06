@@ -48,66 +48,14 @@ if (chainId && chainName) {
 
 (async () => {
   const name = program.args[0];
+  console.log("name", name);
   const resolverFound = await provider.getResolver(name);
+  const node = namehash.hash(name);
+  console.log("node", node);
 
   if (resolverFound) {
     let ethAddress = await resolverFound.getAddress();
     console.log("ethAddress", ethAddress);
-    // console.log("resolverFound", resolverFound?.address);
-    // const resolver = new ethers.Contract(
-    //   resolverFound.address,
-    //   StubAbi,
-    //   provider
-    // );
-    // try {
-    //   if (debug) {
-    //     // this will throw OffchainLookup error
-    //     console.log(await resolver.callStatic["addr(bytes32)"](node));
-    //   } else {
-    //     // ethersJs takes care of calling the gateway and handling the revert
-    //     console.log(
-    //       "addr(bytes32)        ",
-    //       await resolver.callStatic["addr(bytes32)"](node, {
-    //         ccipReadEnabled: true,
-    //       })
-    //     );
-    //   }
-    // } catch (e: any) {
-    //   // Manually calling the gateway
-    //   console.log("error", e);
-    //   if (e.errorArgs) {
-    //     const { sender, urls, callData, callbackFunction, extraData } =
-    //       e.errorArgs;
-    //     console.log(1, { sender, urls, callData, callbackFunction, extraData });
-    //     const url = urls[0]
-    //       .replace(/{sender}/, sender)
-    //       .replace(/{data}/, callData);
-    //     console.log(2, { url });
-    //     const responseData: any = await (await fetch(url)).json();
-    //     console.log(3, { responseData });
-    //     if (responseData) {
-    //       try {
-    //         const encoded = defaultAbiCoder.encode(
-    //           ["bytes", "bytes"],
-    //           [responseData.data, extraData]
-    //         );
-    //         const data = hexConcat([callbackFunction, encoded]);
-    //         const result = await resolver.provider.call({
-    //           to: resolver.address,
-    //           data,
-    //         });
-    //         console.log(4, { result });
-    //         const decodedResult = resolver.interface.decodeFunctionResult(
-    //           "addrWithProof",
-    //           result
-    //         );
-    //         console.log(5, { decodedResult });
-    //       } catch (ee) {
-    //         console.log(6, { ee });
-    //       }
-    //     }
-    //   }
-    // }
   } else {
     console.log("No resolver found for:", name);
   }

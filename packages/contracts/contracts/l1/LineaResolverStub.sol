@@ -7,6 +7,8 @@ import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
 
+import "hardhat/console.sol";
+
 struct L2StateProof {
   uint64 nodeIndex;
   bytes32 blockHash;
@@ -16,6 +18,7 @@ struct L2StateProof {
   bytes32 stateRoot;
   bytes storageTrieWitness;
   bytes node;
+  bytes result;
 }
 
 interface IResolverService {
@@ -73,6 +76,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes calldata name,
     bytes calldata data
   ) external view override returns (bytes memory) {
+    console.log("name %s", string(name));
     bytes memory callData = abi.encodeWithSelector(
       IResolverService.resolve.selector,
       name,
@@ -115,9 +119,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.storageTrieWitness
     );
 
-    bytes memory result = abi.encodePacked(value);
-
-    return result;
+    return proof.result;
   }
 
   function getl2Resolver() external view returns (address) {
