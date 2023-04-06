@@ -3,11 +3,12 @@ import { Command } from "commander";
 import { ethers, BytesLike } from "ethers";
 import { Result } from "ethers/lib/utils";
 
-const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json")
+const IResolverAbi = require("../abi/IResolverService.json")
   .abi;
 const IResolverL2Abi = require("../../contracts/artifacts/contracts/l2/LineaResolver.sol/LineaResolver.json")
   .abi;
 import { abi as Resolver_abi } from "@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json";
+
 const Resolver = new ethers.utils.Interface(Resolver_abi);
 const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
