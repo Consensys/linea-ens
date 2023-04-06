@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: ens-gateway
+    restart: unless-stopped
+    networks:
+      - ensnetwork
+
+  certbot:
+      container_name: certbot
+      build: 
+        context: "certbot"
+        dockerfile: "Dockerfile"
+      restart: unless-stopped
+      volumes:
+        - ./nginx/etc/letsencrypt:/etc/letsencrypt
+        - ./nginx/etc/nginx/dhparam:/etc/nginx/dhparam
+        - ./nginx/var/www/_letsencrypt:/var/www/_letsencrypt
+        - ./nginx/var/www/certbot:/var/www/certbot
+      entrypoint: [ "/docker-entrypoint.d/certbot-entrypoint.sh" ]
+
+  nginx:
+      container_name: nginx
+      build:
+        context: "nginx"
+        dockerfile: "Dockerfile"
+      restart: unless-stopped
+      networks:
+        - ensnetwork
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - ./nginx/etc/letsencrypt:/etc/letsencrypt
+        - ./nginx/etc/nginx/dhparam:/etc/nginx/dhparam
+        - ./nginx/var/www/_letsencrypt:/var/www/_letsencrypt
+        - ./nginx/var/www/certbot:/var/www/certbot
+      depends_on:
+        - certbot
+      command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+networks:
+  ensnetwork:
