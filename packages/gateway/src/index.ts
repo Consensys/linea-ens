@@ -5,7 +5,7 @@ import { Result } from "ethers/lib/utils";
 
 const IResolverAbi = require("../abi/IResolverService.json")
   .abi;
-const IResolverL2Abi = require("../../contracts/artifacts/contracts/l2/LineaResolver.sol/LineaResolver.json")
+const IResolverL2Abi = require("../abi/LineaResolver.json")
   .abi;
 import { abi as Resolver_abi } from "@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json";
 
