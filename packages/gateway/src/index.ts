@@ -24,8 +24,6 @@ program
     "L2_PROVIDER_URL",
     "http://127.0.0.1:8545/"
   )
-  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "31337")
-  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "31337")
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
@@ -41,8 +39,6 @@ const {
   l2_provider_url,
   rollup_address,
   l2_resolver_address,
-  l1_chain_id,
-  l2_chain_id,
   debug,
 } = options;
 if (l2_resolver_address === undefined) {
@@ -74,8 +70,6 @@ server.add(IResolverAbi, [
           l1_provider_url,
           l2_provider_url,
           l2_resolver_address,
-          l1_chain_id,
-          l2_chain_id,
         });
         const blockNumber = (await l2provider.getBlock("latest")).number;
         console.log(2, { blockNumber, addrSlot });

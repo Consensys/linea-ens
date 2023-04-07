@@ -65,7 +65,7 @@ Once smart contracts are deployed, start the gateway:
 cd ../gateway
 yarn
 yarn build
-yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l1_chain_id 5 --l2_provider_url YOUR_GOERLI_L2_RPC_URL --l2_chain_id 59140
+yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL --l2_chain_id 59140
 ```
 
 ### Run Client test script
@@ -74,7 +74,7 @@ In a third terminal, run the demo app:
 
 ```bash
 cd packages/clients
-yarn start -r $ENS_REGISTRY_ADDRESS julink.lineatest.eth --l1_provider_url http://127.0.0.1:8545/ --chainId 5 --l2_provider_url YOUR_GOERLI_L2_RPC_URL
+yarn start -r $ENS_REGISTRY_ADDRESS julink.lineatest.eth --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL
 ```
 
 For Goerli, <b>ENS_REGISTRY_ADDRESS</b> is `0x112234455c3a32fd11230c42e7bccd4a84e02010`
