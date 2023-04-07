@@ -18,10 +18,30 @@ yarn hardhat node --fork YOUR_GOERLI_L1_RPC_URL
 
 In second terminal, deploy L1 and L2 smart contracts:
 
-Compile
+Set your `.env` config file. You can copy [env.example](./packages/contracts/.env.example):
 
 ```bash
 cd packages/contracts
+cp .env.example .env
+```
+
+Edit `.env` and set your config:
+
+| Var               | Description               | Default values                                            |
+| ----------------- | ------------------------- | --------------------------------------------------------- |
+| GOERLI_URL        | Goerli provider URL       |                                                           |
+| GOERLI_LINEA_URL  | Linea Goerli provider URL |                                                           |
+| PRIVATE_KEY       | Wallet private key        |                                                           |
+| ETHERSCAN_API_KEY | Etherscan API key         |                                                           |
+| L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                             |
+| L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                      |
+| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
+
+For local/L2 mode, `GOERLI_URL` is not required.
+
+Compile smart contracts:
+
+```bash
 yarn hardhat compile
 ```
 
@@ -31,7 +51,7 @@ Deploy L2 contracts first:
 npx hardhat run --network goerliLinea scripts/deployL2.ts
 ```
 
-Get the resolver address, then deploy L1 contracts.
+Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
 
 ```
 L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scripts/deployL1.ts
@@ -39,7 +59,7 @@ L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scr
 
 ### Start Gateway server
 
-Then start the gateway.
+Once contract are deployed, start the gateway:
 
 ```bash
 cd ../gateway
@@ -54,8 +74,10 @@ In a third terminal, run the demo app:
 
 ```bash
 cd packages/clients
-yarn start -r $ENS_REGISTRY_ADDRESS test.test --l1_provider_url http://127.0.0.1:8545/ --chainId 5 --l2_provider_url YOUR_GOERLI_L2_RPC_URL
+yarn start -r $ENS_REGISTRY_ADDRESS julink.lineatest.eth --l1_provider_url http://127.0.0.1:8545/ --chainId 5 --l2_provider_url YOUR_GOERLI_L2_RPC_URL
 ```
+
+For Goerli, <b>$ENS_REGISTRY_ADDRESS</b> is `0x112234455c3a32fd11230c42e7bccd4a84e02010`
 
 If sucessful, it should show the following output
 
