@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
-pragma abicoder v2;
 
 import { Lib_OVMCodec } from "@eth-optimism/contracts/libraries/codec/Lib_OVMCodec.sol";
 import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib_SecureMerkleTrie.sol";
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
-
-import "hardhat/console.sol";
 
 struct L2StateProof {
   uint64 nodeIndex;
@@ -120,12 +117,10 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
     require(
       keccak256(proof.result) == keccak256(abi.encode(value)),
-      "NEEDS TO BE EQUAL"
+      "LineaResolverStub: value different from expected result"
     );
-    console.logBytes(proof.result);
-    console.logBytes(abi.encode(value));
 
-    return abi.encode(value);
+    return proof.result;
   }
 
   function getl2Resolver() external view returns (address) {

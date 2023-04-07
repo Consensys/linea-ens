@@ -167,7 +167,7 @@ function decodeDnsName(dnsname: Buffer) {
 async function getResult(
   name: string,
   data: string
-): Promise<{ result: BytesLike; validUntil: number }> {
+): Promise<{ result: BytesLike }> {
   // Parse the data nested inside the second argument to `resolve`
   const { signature, args } = Resolver.parseTransaction({ data });
   console.log("signature", signature);
@@ -188,11 +188,7 @@ async function getResult(
   const node = ethers.utils.namehash(name);
   const result = await resolverL2.addr(node);
 
-  const test = Resolver.encodeFunctionResult(signature, [result]);
-  console.log("test", test);
-
   return {
     result: Resolver.encodeFunctionResult(signature, [result]),
-    validUntil: Math.floor(Date.now() / 1000),
   };
 }
