@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
-pragma abicoder v2;
 
 import { Lib_OVMCodec } from "@eth-optimism/contracts/libraries/codec/Lib_OVMCodec.sol";
 import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib_SecureMerkleTrie.sol";
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
-
-import "hardhat/console.sol";
 
 struct L2StateProof {
   uint64 nodeIndex;
@@ -76,7 +73,6 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes calldata name,
     bytes calldata data
   ) external view override returns (bytes memory) {
-    console.log("name %s", string(name));
     bytes memory callData = abi.encodeWithSelector(
       IResolverService.resolve.selector,
       name,
@@ -117,6 +113,11 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.stateRoot,
       proof.stateTrieWitness,
       proof.storageTrieWitness
+    );
+
+    require(
+      keccak256(proof.result) == keccak256(abi.encode(value)),
+      "LineaResolverStub: value different from expected result"
     );
 
     return proof.result;

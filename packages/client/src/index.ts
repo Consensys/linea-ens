@@ -1,21 +1,18 @@
 import { Command } from "commander";
 import { ethers } from "ethers";
-import fetch from "cross-fetch";
+import { REGISTRY_ADDRESS } from "./constants";
 
 const namehash = require("eth-ens-namehash");
-const StubAbi = require("../abi/LineaResolverStub.json").abi;
 const program = new Command();
-const { defaultAbiCoder, hexConcat } = require("ethers/lib/utils");
 program
-  .requiredOption("-r --registry <address>", "ENS registry address")
+  .requiredOption(
+    "-r --registry <address>",
+    "ENS registry address",
+    REGISTRY_ADDRESS
+  )
   .option(
     "-l1 --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
-    "http://127.0.0.1:8545/"
-  )
-  .option(
-    "-l2 --l2_provider_url <url2>",
-    "L2_PROVIDER_URL",
     "http://127.0.0.1:8545/"
   )
   .option("-i --chainId <chainId>", "chainId", "31337")
@@ -35,16 +32,12 @@ console.log("options", {
   chainName,
   debug,
 });
-let provider: ethers.providers.JsonRpcProvider;
-if (chainId && chainName) {
-  provider = new ethers.providers.JsonRpcProvider(l1_provider_url, {
-    chainId,
-    name: chainName,
-    ensAddress,
-  });
-} else {
-  provider = new ethers.providers.JsonRpcProvider(options.l1_provider_url);
-}
+
+const provider = new ethers.providers.JsonRpcProvider(l1_provider_url, {
+  chainId,
+  name: chainName,
+  ensAddress,
+});
 
 (async () => {
   const name = program.args[0];

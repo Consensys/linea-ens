@@ -25,8 +25,6 @@ program
     "L2_PROVIDER_URL",
     "http://127.0.0.1:8545/"
   )
-  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "31337")
-  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "31337")
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
@@ -42,8 +40,6 @@ const {
   l2_provider_url,
   rollup_address,
   l2_resolver_address,
-  l1_chain_id,
-  l2_chain_id,
   debug,
 } = options;
 if (l2_resolver_address === undefined) {
@@ -75,8 +71,6 @@ server.add(IResolverAbi, [
           l1_provider_url,
           l2_provider_url,
           l2_resolver_address,
-          l1_chain_id,
-          l2_chain_id,
         });
         const blockNumber = (await l2provider.getBlock("latest")).number;
         console.log(2, { blockNumber, addrSlot });
@@ -149,7 +143,7 @@ server.add(IResolverAbi, [
         stateRoot,
         storageTrieWitness: storageProof,
         node,
-        result: result.toString(),
+        result,
       };
       console.log(7, { finalProof });
       return [finalProof];
@@ -174,9 +168,10 @@ function decodeDnsName(dnsname: Buffer) {
 async function getResult(
   name: string,
   data: string
-): Promise<{ result: BytesLike; validUntil: number }> {
+): Promise<{ result: BytesLike }> {
   // Parse the data nested inside the second argument to `resolve`
   const { signature, args } = Resolver.parseTransaction({ data });
+  console.log("signature", signature);
 
   if (ethers.utils.nameprep(name) !== name) {
     throw new Error("Name must be normalised");
@@ -196,6 +191,5 @@ async function getResult(
 
   return {
     result: Resolver.encodeFunctionResult(signature, [result]),
-    validUntil: Math.floor(Date.now() / 1000),
   };
 }
