@@ -142,7 +142,7 @@ server.add(IResolverAbi, [
         stateRoot,
         storageTrieWitness: storageProof,
         node,
-        result: result.toString(),
+        result,
       };
       console.log(7, { finalProof });
       return [finalProof];
@@ -170,6 +170,7 @@ async function getResult(
 ): Promise<{ result: BytesLike; validUntil: number }> {
   // Parse the data nested inside the second argument to `resolve`
   const { signature, args } = Resolver.parseTransaction({ data });
+  console.log("signature", signature);
 
   if (ethers.utils.nameprep(name) !== name) {
     throw new Error("Name must be normalised");
@@ -186,6 +187,9 @@ async function getResult(
   );
   const node = ethers.utils.namehash(name);
   const result = await resolverL2.addr(node);
+
+  const test = Resolver.encodeFunctionResult(signature, [result]);
+  console.log("test", test);
 
   return {
     result: Resolver.encodeFunctionResult(signature, [result]),

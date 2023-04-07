@@ -3,10 +3,17 @@ import { REGISTRY_ADDRESS, ROLLUP_ADDRESSES } from "./constants";
 const ensRegistryAbi = require("../abi/ENSRegistry.json");
 const namehash = require("eth-ens-namehash");
 
+const HARDHAT_NETWORK_CHAIN_ID = 31337;
+
 let L2_RESOLVER_ADDRESS: string;
 async function main() {
-  const [owner] = await ethers.getSigners();
+  const [owner, hardhatAccount] = await ethers.getSigners();
   const chainId = await owner.getChainId();
+
+  // If on localhost we can send ETH to the owner so that we make sure we have enough for deployment
+  if (chainId === HARDHAT_NETWORK_CHAIN_ID) {
+    await hardhatAccount.sendTransaction({ value: ethers.utils.parseEther("100"), to: owner.address });
+  }
 
   if (process.env.L2_RESOLVER_ADDRESS) {
     L2_RESOLVER_ADDRESS = process.env.L2_RESOLVER_ADDRESS;
@@ -15,7 +22,7 @@ async function main() {
   }
 
   // Deploy Linea Resolver Stub to L1
-  const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "https://www.ensgateway.amineharty.me/{sender}/{data}.json";
+  const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "http://localhost:8080/{sender}/{data}.json";
   const rollupAddress = ROLLUP_ADDRESSES[network.name as keyof typeof ROLLUP_ADDRESSES];
   const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
   const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl], rollupAddress, L2_RESOLVER_ADDRESS);
@@ -29,7 +36,7 @@ async function main() {
   await tx.wait();
   console.log("L1 ENS name:", name, ", set to LineaResolverStub: ", lineaResolverStub.address);
 
-  if (chainId !== 31337) {
+  if (chainId !== HARDHAT_NETWORK_CHAIN_ID) {
     // Only verify on "live" blockchain
     setTimeout(async () => {
       await run("verify:verify", {

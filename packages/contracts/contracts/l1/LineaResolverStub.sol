@@ -76,7 +76,6 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes calldata name,
     bytes calldata data
   ) external view override returns (bytes memory) {
-    console.log("name %s", string(name));
     bytes memory callData = abi.encodeWithSelector(
       IResolverService.resolve.selector,
       name,
@@ -119,7 +118,14 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.storageTrieWitness
     );
 
-    return proof.result;
+    require(
+      keccak256(proof.result) == keccak256(abi.encode(value)),
+      "NEEDS TO BE EQUAL"
+    );
+    console.logBytes(proof.result);
+    console.logBytes(abi.encode(value));
+
+    return abi.encode(value);
   }
 
   function getl2Resolver() external view returns (address) {
