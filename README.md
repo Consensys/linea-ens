@@ -59,7 +59,7 @@ L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scr
 
 ### Start Gateway server
 
-Once contract are deployed, start the gateway:
+Once smart contracts are deployed, start the gateway:
 
 ```bash
 cd ../gateway
@@ -95,14 +95,14 @@ addr(bytes32)         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 
 ## Deploy gateway
 
-Create secret.yaml and update credentials
+Create secret.yaml and update credentials:
 
 ```
 cd gateway
 cp secret.yaml.org secret.yaml
 ```
 
-Deploy to app engine
+Deploy to app engine:
 
 ```
 gcloud app deploy goeril.app.yml
