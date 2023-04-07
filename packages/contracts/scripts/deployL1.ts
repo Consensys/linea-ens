@@ -25,9 +25,9 @@ async function main() {
   const registry = await new ethers.Contract(registryAddr, ensRegistryAbi, owner);
   const name = process.env.L1_ENS_NAME ? process.env.L1_ENS_NAME : "lineatest.eth";
   const node = namehash.hash(name);
-  console.log("L1 ENS name:", name, "node: ", node);
   let tx = await registry.setResolver(node, lineaResolverStub.address);
   await tx.wait();
+  console.log("L1 ENS name:", name, ", set to LineaResolverStub: ", lineaResolverStub.address);
 
   if (chainId !== 31337) {
     // Only verify on "live" blockchain

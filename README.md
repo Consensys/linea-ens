@@ -77,7 +77,7 @@ cd packages/clients
 yarn start -r $ENS_REGISTRY_ADDRESS julink.lineatest.eth --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL
 ```
 
-For Goerli, <b>ENS_REGISTRY_ADDRESS</b> is `0x112234455c3a32fd11230c42e7bccd4a84e02010`
+It is important to set the `ENS_REGISTRY_ADDRESS` to initialize the provider. For Goerli, <b>ENS_REGISTRY_ADDRESS</b> is `0x112234455c3a32fd11230c42e7bccd4a84e02010`
 
 If successful, it should show the following output:
 
