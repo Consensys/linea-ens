@@ -16,7 +16,7 @@ yarn hardhat node --fork YOUR_GOERLI_L1_RPC_URL
 
 ### Deploy contracts
 
-In second terminal, deploy L1 and L2 smart contracts:
+In second terminal, deploy L1 and L2 smart contracts.
 
 Set your `.env` config file. You can copy [env.example](./packages/contracts/.env.example):
 
@@ -77,9 +77,9 @@ cd packages/clients
 yarn start -r $ENS_REGISTRY_ADDRESS julink.lineatest.eth --l1_provider_url http://127.0.0.1:8545/ --chainId 5 --l2_provider_url YOUR_GOERLI_L2_RPC_URL
 ```
 
-For Goerli, <b>$ENS_REGISTRY_ADDRESS</b> is `0x112234455c3a32fd11230c42e7bccd4a84e02010`
+For Goerli, <b>ENS_REGISTRY_ADDRESS</b> is `0x112234455c3a32fd11230c42e7bccd4a84e02010`
 
-If sucessful, it should show the following output
+If successful, it should show the following output:
 
 ```bash
 addr(bytes32)         0xF110a41f75edEb224227747b64Be7f6A7f140abc
