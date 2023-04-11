@@ -1,5 +1,4 @@
 import { ethers, run } from "hardhat";
-const namehash = require("eth-ens-namehash");
 
 async function main() {
   const [owner] = await ethers.getSigners();
@@ -7,20 +6,23 @@ async function main() {
 
   // Deploy Linea Resolver to L2
   const LineaResolver = await ethers.getContractFactory("LineaResolver");
-  const lineaResolver = await LineaResolver.deploy();
+  const nftName = "Lineatest";
+  const symbol = "LTST";
+  const lineaResolver = await LineaResolver.deploy(nftName, symbol);
   await lineaResolver.deployed();
 
   // Test with subdomain with default "julink.lineatest.eth", assuming we still control lineatest.eth on L1
   const name = process.env.L2_ENS_NAME ? process.env.L2_ENS_NAME : "julink.lineatest.eth";
-  const node = namehash.hash(name);
-  const tx = await lineaResolver.setAddr(node, owner.address);
+  const node = ethers.utils.namehash(name);
+  const tx = await lineaResolver.mintSubdomain(node, owner.address);
   await tx.wait();
   console.log(`LineaResolver deployed to, L2_RESOLVER_ADDRESS: ${lineaResolver.address}`);
 
   if (chainId !== 31337) {
     setTimeout(async () => {
-      await run("verify", {
+      await run("verify:verify", {
         address: lineaResolver.address,
+        constructorArguments: [nftName, symbol],
       });
     }, 10000);
   }

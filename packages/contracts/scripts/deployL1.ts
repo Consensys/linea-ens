@@ -1,7 +1,6 @@
 import { ethers, network, run } from "hardhat";
 import { REGISTRY_ADDRESS, ROLLUP_ADDRESSES } from "./constants";
 const ensRegistryAbi = require("../abi/ENSRegistry.json");
-const namehash = require("eth-ens-namehash");
 
 const HARDHAT_NETWORK_CHAIN_ID = 31337;
 
@@ -31,7 +30,7 @@ async function main() {
   const registryAddr = REGISTRY_ADDRESS[network.name as keyof typeof REGISTRY_ADDRESS];
   const registry = await new ethers.Contract(registryAddr, ensRegistryAbi, owner);
   const name = process.env.L1_ENS_NAME ? process.env.L1_ENS_NAME : "lineatest.eth";
-  const node = namehash.hash(name);
+  const node = ethers.utils.namehash(name);
   let tx = await registry.setResolver(node, lineaResolverStub.address);
   await tx.wait();
   console.log("L1 ENS name:", name, ", set to LineaResolverStub: ", lineaResolverStub.address);

@@ -50,13 +50,13 @@ server.add(IResolverAbi, [
   {
     type: "resolve",
     func: async ([encodedName, data]: Result, request) => {
-      console.log("encodedName", encodedName);
       const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
-      console.log("name", name);
       const node = ethers.utils.namehash(name);
-      console.log("node", node);
 
       if (debug) {
+        console.log("encodedName", encodedName);
+        console.log("name", name);
+        console.log("node", node);
         const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
         const to = request?.to;
         console.log(1, {
@@ -113,26 +113,50 @@ server.add(IResolverAbi, [
         BigNumber.from(l2blockRaw.baseFeePerGas).toHexString(),
       ];
       const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
-      const slot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
-      const proof = await l2provider.send("eth_getProof", [
+
+      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "06");
+      const tokenId = await l2provider.getStorageAt(
         l2_resolver_address,
-        [slot],
+        tokenIdSlot
+      );
+      const ownerSlot = ethers.utils.keccak256(
+        tokenId + "00".repeat(31) + "02"
+      );
+
+      // Create proof for the tokenId slot
+      const tokenIdProof = await l2provider.send("eth_getProof", [
+        l2_resolver_address,
+        [tokenIdSlot],
         { blockHash },
       ]);
-      console.log(6, JSON.stringify(proof, null, 2));
-      const accountProof = ethers.utils.RLP.encode(proof.accountProof);
-      const storageProof = ethers.utils.RLP.encode(
-        (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
+      const accountProof = ethers.utils.RLP.encode(tokenIdProof.accountProof);
+      const tokenIdStorageProof = ethers.utils.RLP.encode(
+        (tokenIdProof.storageProof as any[]).filter(
+          (x) => x.key === tokenIdSlot
+        )[0].proof
+      );
+      console.log("tokenIdProof.storageProof", tokenIdProof.storageProof);
+
+      // Create proof for the owner slot
+      const ownerProof = await l2provider.send("eth_getProof", [
+        l2_resolver_address,
+        [ownerSlot],
+        { blockHash },
+      ]);
+      const ownerStorageProof = ethers.utils.RLP.encode(
+        (ownerProof.storageProof as any[]).filter((x) => x.key === ownerSlot)[0]
+          .proof
       );
 
       const finalProof = {
         blockHash,
         encodedBlockArray,
-        stateTrieWitness: accountProof,
+        accountProof,
         stateRoot,
-        storageTrieWitness: storageProof,
+        tokenIdStorageProof,
+        ownerStorageProof,
       };
-      console.log(7, { finalProof });
+      console.log(6, { finalProof });
       return [finalProof];
     },
   },

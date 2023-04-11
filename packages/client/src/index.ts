@@ -2,7 +2,6 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 import { REGISTRY_ADDRESS } from "./constants";
 
-const namehash = require("eth-ens-namehash");
 const program = new Command();
 program
   .requiredOption(
@@ -44,7 +43,7 @@ const provider = new ethers.providers.JsonRpcProvider(l1_provider_url, {
   console.log("name", name);
   const resolverFound = await provider.getResolver(name);
   console.log("resolverFound address", resolverFound?.address);
-  const node = namehash.hash(name);
+  const node = ethers.utils.namehash(name);
   console.log("node", node);
 
   if (resolverFound) {

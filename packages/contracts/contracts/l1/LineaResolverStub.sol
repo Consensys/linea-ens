@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity 0.8.9;
 
 import { Lib_OVMCodec } from "@eth-optimism/contracts/libraries/codec/Lib_OVMCodec.sol";
 import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib_SecureMerkleTrie.sol";
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
 
-import "hardhat/console.sol";
-
 struct L2StateProof {
   bytes32 blockHash;
   bytes encodedBlockArray;
-  bytes stateTrieWitness;
+  bytes accountProof;
   bytes32 stateRoot;
-  bytes storageTrieWitness;
+  bytes tokenIdStorageProof;
+  bytes ownerStorageProof;
 }
 
 interface IResolverService {
@@ -104,26 +103,32 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
     // bytes32 node = abi.decode(extraData, (bytes32));
-    // step 2: check blockHash against encoded block array
+    // step 1: check blockHash against encoded block array
     require(
       proof.blockHash == keccak256(proof.encodedBlockArray),
       "blockHash encodedBlockArray mismatch"
     );
 
-    // step 3: check storage value from derived value
-    // Here the node used should be in extra data but we need to find a way
-    // to convert extra data to an ens hashname in solidity, in the meantime we use
-    // the node sent by the gateway
-    bytes32 slot = keccak256(abi.encodePacked(node, uint256(1)));
-    bytes32 value = getStorageValue(
+    // step 2: check storage values, get itemId first and then get the address result
+    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(6)));
+    bytes32 tokenId = getStorageValue(
       l2resolver,
-      slot,
+      tokenIdSlot,
       proof.stateRoot,
-      proof.stateTrieWitness,
-      proof.storageTrieWitness
+      proof.accountProof,
+      proof.tokenIdStorageProof
     );
 
-    return abi.encode(value);
+    bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(2)));
+    bytes32 owner = getStorageValue(
+      l2resolver,
+      ownerSlot,
+      proof.stateRoot,
+      proof.accountProof,
+      proof.ownerStorageProof
+    );
+
+    return abi.encode(owner);
   }
 
   function getl2Resolver() external view returns (address) {
@@ -159,13 +164,6 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       ret := shr(mul(sub(32, len), 8), mload(add(_bytes, 32)))
     }
     return ret;
-  }
-
-  function addressToBytes(address a) internal pure returns (bytes memory b) {
-    b = new bytes(20);
-    assembly {
-      mstore(add(b, 32), mul(a, exp(256, 12)))
-    }
   }
 
   function supportsInterface(

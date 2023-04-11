@@ -1,5 +1,5 @@
 {
-  "name": "zkevm-resolver-client",
+  "name": "linea-resolver-client",
   "version": "1.0.0",
   "main": "index.ts",
   "license": "MIT",
@@ -9,18 +9,9 @@
   "dependencies": {
     "@types/node": "^18.11.17",
     "commander": "^9.4.1",
-    "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.3",
-    "eth-ens-namehash": "^2.0.8",
     "ethers": "^5.7.2",
-    "isomorphic-fetch": "^3.0.0",
-    "keccak256": "^1.0.6",
-    "merkle-patricia-tree": "^4.2.4",
-    "merkletreejs": "^0.3.9",
-    "random-bytes-seed": "^1.0.3",
-    "rlp": "^3.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4",
-    "web3": "^1.8.1"
+    "typescript": "^4.9.4"
   }
 }
