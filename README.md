@@ -51,6 +51,8 @@ Deploy L2 contracts first:
 npx hardhat run --network goerliLinea scripts/deployL2.ts
 ```
 
+> **_Imporant:_** Wait 10 minutes for Linea to synchronize with Goerli. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli.
+
 Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
 
 ```
@@ -65,7 +67,7 @@ Once smart contracts are deployed, start the gateway:
 cd ../gateway
 yarn
 yarn build
-yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL --l2_chain_id 59140
+yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL
 ```
 
 ### Run Client test script
@@ -80,7 +82,7 @@ yarn start julink.lineatest.eth
 If successful, it should show the following output:
 
 ```bash
-addr(bytes32)         0xF110a41f75edEb224227747b64Be7f6A7f140abc
+ethAddress         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 ```
 
 ## How to deploy to public net (goerli for example)
