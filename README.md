@@ -89,9 +89,9 @@ ethAddress         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 
 ## Deployed contracts
 
-- Linea goerli resolver = [...]
+- Linea goerli resolver = 0x176569440293dF1fA85D0Eb342A92c6470D662f9
 - goerli (gateway points to '[...]' ) = [...]
-- goerli test domain = [...]
+- goerli test domain = linearesolver.eth
 
 ## Deploy gateway
 
@@ -107,3 +107,5 @@ Deploy to app engine:
 ```
 gcloud app deploy goeril.app.yml
 ```
+
+yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --helper_address $HELPER_ADDRESS --l1_provider_url https://goerli.infura.io/v3/<INFURA_KEY> --l2_provider_url https://goerli.infura.io/v3/<INFURA_KEY> --l1_chain_id 5 --l2_chain_id 5
