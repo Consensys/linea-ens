@@ -6,7 +6,7 @@ import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { IERC721Receiver } from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 contract LineaResolver is Ownable, ERC721 {
-  mapping(string => uint256) public addresses;
+  mapping(bytes32 => uint256) public addresses;
   uint256 public tokenId;
 
   event AddrChanged(bytes32 indexed node, address a);
@@ -22,14 +22,14 @@ contract LineaResolver is Ownable, ERC721 {
   ) external returns (uint256) {
     string memory nodeStr = bytes32ToString(node);
 
-    require(addresses[nodeStr] == 0, "Sub-domain has already been registered");
+    require(addresses[bytes32(bytes(nodeStr))] == 0, "Sub-domain has already been registered");
     require(bytes(nodeStr).length != 0, "Sub-domain cannot be null");
     require(
       testAlphaNumeric(nodeStr) == true,
       "Sub-domain contains unsupported characters"
     );
-    
-    addresses[nodeStr] = tokenId;
+
+    addresses[node] = tokenId;
     emit AddrChanged(node, _addr);
     _mint(_addr, tokenId); // mint the new token with the current tokenId
     tokenId++; // increment tokenId
@@ -56,8 +56,7 @@ contract LineaResolver is Ownable, ERC721 {
   }
 
   function resolve(bytes32 node) external view returns (address) {
-    string memory nodeStr = bytes32ToString(node);
-    uint256 tokenId = addresses[nodeStr];
+    uint256 tokenId = addresses[node];
     return ownerOf(tokenId);
   }
 }
