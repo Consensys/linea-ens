@@ -10,8 +10,9 @@ async function main() {
   const lineaResolver = await LineaResolver.deploy();
   await lineaResolver.deployed();
 
-  // Test with subdomain "julink.lineatest.eth" assuming we still control lineatest.eth on L1
-  const node = namehash.hash("julink.lineatest.eth");
+  // Test with subdomain with default "julink.lineatest.eth", assuming we still control lineatest.eth on L1
+  const name = process.env.L2_ENS_NAME ? process.env.L2_ENS_NAME : "julink.lineatest.eth";
+  const node = namehash.hash(name);
   const tx = await lineaResolver.setAddr(node, owner.address);
   await tx.wait();
   console.log(`LineaResolver deployed to, L2_RESOLVER_ADDRESS: ${lineaResolver.address}`);

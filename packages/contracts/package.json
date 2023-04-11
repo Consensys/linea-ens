@@ -28,9 +28,11 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
+    "@ensdomains/ens-contracts": "^0.0.20",
     "@eth-optimism/contracts": "^0.5.40",
     "@openzeppelin/contracts": "^4.8.1",
     "dotenv": "^16.0.3",
+    "ens-namehash": "JonahGroendal/ens-namehash",
     "eth-ens-namehash": "^2.0.8"
   }
 }

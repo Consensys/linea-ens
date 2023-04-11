@@ -9,6 +9,28 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@ensdomains/buffer@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@ensdomains/buffer/-/buffer-0.1.1.tgz#6c275ba7e457e935405b67876f1f0d980c8baa63"
+  integrity sha512-92SfSiNS8XorgU7OUBHo/i1ZU7JV7iz/6bKuLPNVsMxV79/eI7fJR6jfJJc40zAHjs3ha+Xo965Idomlq3rqnw==
+
+"@ensdomains/ens-contracts@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@ensdomains/ens-contracts/-/ens-contracts-0.0.20.tgz#346eac70d666a7864142287ce1759b0f44bd8a5e"
+  integrity sha512-lAHQBVj2WtgbchcrE8ZuFI6DFq+O33wkLAGqsO2gcnn0EUJb65OJIdTqUfvfULKGJjkB2pyHfS/RgMSIW6h1Pw==
+  dependencies:
+    "@ensdomains/buffer" "^0.1.1"
+    "@ensdomains/solsha1" "0.0.3"
+    "@openzeppelin/contracts" "^4.1.0"
+    dns-packet "^5.3.0"
+
+"@ensdomains/solsha1@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@ensdomains/solsha1/-/solsha1-0.0.3.tgz#fd479da9d40aadb59ff4fb4ec50632e7d2275a83"
+  integrity sha512-uhuG5LzRt/UJC0Ux83cE2rCKwSleRePoYdQVcqPN1wyf3/ekMzT/KZUF9+v7/AG5w9jlMLCQkUM50vfjr0Yu9Q==
+  dependencies:
+    hash-test-vectors "^1.3.2"
+
 "@eth-optimism/contracts@^0.5.40":
   version "0.5.40"
   resolved "https://registry.yarnpkg.com/@eth-optimism/contracts/-/contracts-0.5.40.tgz#d13a04a15ea947a69055e6fc74d87e215d4c936a"
@@ -400,6 +422,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@leichtgewicht/ip-codec@^2.0.1":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
+  integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
+
 "@metamask/eth-sig-util@^4.0.0":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@metamask/eth-sig-util/-/eth-sig-util-4.0.1.tgz#3ad61f6ea9ad73ba5b19db780d40d9aae5157088"
@@ -691,6 +718,11 @@
     semver "^6.3.0"
     table "^6.8.0"
     undici "^5.14.0"
+
+"@openzeppelin/contracts@^4.1.0":
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.2.tgz#d815ade0027b50beb9bcca67143c6bcc3e3923d6"
+  integrity sha512-kEUOgPQszC0fSYWpbh2kT94ltOJwj1qfT2DWo+zVttmGmf97JZ99LspePNaeeaLhCImaHVeBbjaQFZQn7+Zc5g==
 
 "@openzeppelin/contracts@^4.8.1":
   version "4.8.1"
@@ -1796,6 +1828,13 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+dns-packet@^5.3.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/dns-packet/-/dns-packet-5.5.0.tgz#f59cbf3396c130957c56a6ad5fd3959ccdc30065"
+  integrity sha512-USawdAUzRkV6xrqTjiAEp6M9YagZEzWcSUaZTcIFAiyQWW1SoI6KyId8y2+/71wbgHKQAKd+iupLv4YvEwYWvA==
+  dependencies:
+    "@leichtgewicht/ip-codec" "^2.0.1"
+
 dotenv@^16.0.3:
   version "16.0.3"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
@@ -1838,6 +1877,10 @@ enquirer@^2.3.0:
   integrity sha512-yjNnPr315/FjS4zIsUxYguYUPP2e1NK4d7E7ZOLiyYCcbFBiTMyID+2wvm2w6+pZ/odMA7cRkjhsPbltwBOrLg==
   dependencies:
     ansi-colors "^4.1.1"
+
+ens-namehash@JonahGroendal/ens-namehash:
+  version "1.0.0"
+  resolved "https://codeload.github.com/JonahGroendal/ens-namehash/tar.gz/d956b0be0ae5d14191067ed398c4454e35f4558d"
 
 env-paths@^2.2.0:
   version "2.2.1"
@@ -2673,6 +2716,11 @@ hash-base@^3.0.0:
     inherits "^2.0.4"
     readable-stream "^3.6.0"
     safe-buffer "^5.2.0"
+
+hash-test-vectors@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/hash-test-vectors/-/hash-test-vectors-1.3.2.tgz#f050fde1aff46ec28dcf4f70e4e3238cd5000f4c"
+  integrity sha512-PKd/fitmsrlWGh3OpKbgNLE04ZQZsvs1ZkuLoQpeIKuwx+6CYVNdW6LaPIS1QAdZvV40+skk0w4YomKnViUnvQ==
 
 hash.js@1.1.3:
   version "1.1.3"
