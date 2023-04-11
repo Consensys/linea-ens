@@ -43,6 +43,7 @@ const provider = new ethers.providers.JsonRpcProvider(l1_provider_url, {
   const name = program.args[0];
   console.log("name", name);
   const resolverFound = await provider.getResolver(name);
+  console.log("resolverFound address", resolverFound?.address);
   const node = namehash.hash(name);
   console.log("node", node);
 

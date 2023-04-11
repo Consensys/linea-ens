@@ -6,16 +6,14 @@ import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
 
+import "hardhat/console.sol";
+
 struct L2StateProof {
-  uint64 nodeIndex;
   bytes32 blockHash;
-  bytes sendRoot;
   bytes encodedBlockArray;
   bytes stateTrieWitness;
   bytes32 stateRoot;
   bytes storageTrieWitness;
-  bytes node;
-  bytes result;
 }
 
 interface IResolverService {
@@ -84,7 +82,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       gateways,
       callData,
       LineaResolverStub.resolveWithProof.selector,
-      abi.encode(name)
+      data
     );
   }
 
@@ -95,6 +93,15 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes calldata response,
     bytes calldata extraData
   ) external view returns (bytes memory) {
+    // We only resolve if the addr(bytes32) is called otherwise we simply return an empty response
+    bytes4 signature = bytes4(extraData[0:4]);
+    if (signature != bytes4(0x3b3b57de)) {
+      return abi.encode("");
+    }
+
+    // This is the hash name of the domain name
+    bytes32 node = abi.decode(extraData[4:], (bytes32));
+
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
     // bytes32 node = abi.decode(extraData, (bytes32));
     // step 2: check blockHash against encoded block array
@@ -102,11 +109,12 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.blockHash == keccak256(proof.encodedBlockArray),
       "blockHash encodedBlockArray mismatch"
     );
+
     // step 3: check storage value from derived value
     // Here the node used should be in extra data but we need to find a way
     // to convert extra data to an ens hashname in solidity, in the meantime we use
     // the node sent by the gateway
-    bytes32 slot = keccak256(abi.encodePacked(proof.node, uint256(1)));
+    bytes32 slot = keccak256(abi.encodePacked(node, uint256(1)));
     bytes32 value = getStorageValue(
       l2resolver,
       slot,
@@ -115,12 +123,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.storageTrieWitness
     );
 
-    require(
-      keccak256(proof.result) == keccak256(abi.encode(value)),
-      "LineaResolverStub: value different from expected result"
-    );
-
-    return proof.result;
+    return abi.encode(value);
   }
 
   function getl2Resolver() external view returns (address) {

@@ -1,14 +1,10 @@
 import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
-import { ethers, BytesLike } from "ethers";
+import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
 
 const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json")
   .abi;
-const IResolverL2Abi = require("../../contracts/artifacts/contracts/l2/LineaResolver.sol/LineaResolver.json")
-  .abi;
-import { abi as Resolver_abi } from "@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json";
-const Resolver = new ethers.utils.Interface(Resolver_abi);
 const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
@@ -59,9 +55,9 @@ server.add(IResolverAbi, [
       console.log("name", name);
       const node = ethers.utils.namehash(name);
       console.log("node", node);
-      const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
 
       if (debug) {
+        const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
         const to = request?.to;
         console.log(1, {
           node,
@@ -88,7 +84,6 @@ server.add(IResolverAbi, [
       }
 
       const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
-      const stateRootHash = await rollup.stateRootHash();
       const blockNumber = lastBlockFinalized.toNumber();
       console.log(`Last block number finalized on L2 : ${blockNumber}`);
       const block = await l2provider.getBlock(blockNumber);
@@ -130,19 +125,12 @@ server.add(IResolverAbi, [
         (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
       );
 
-      // Result that will returned to the client after verification of the proof
-      const { result } = await getResult(name, data);
-
       const finalProof = {
-        nodeIndex: blockNumber,
         blockHash,
-        sendRoot: stateRootHash,
         encodedBlockArray,
         stateTrieWitness: accountProof,
         stateRoot,
         storageTrieWitness: storageProof,
-        node,
-        result,
       };
       console.log(7, { finalProof });
       return [finalProof];
@@ -162,33 +150,4 @@ function decodeDnsName(dnsname: Buffer) {
     idx += len + 1;
   }
   return labels.join(".");
-}
-
-async function getResult(
-  name: string,
-  data: string
-): Promise<{ result: BytesLike }> {
-  // Parse the data nested inside the second argument to `resolve`
-  const { signature, args } = Resolver.parseTransaction({ data });
-  console.log("signature", signature);
-
-  if (ethers.utils.nameprep(name) !== name) {
-    throw new Error("Name must be normalised");
-  }
-
-  if (ethers.utils.namehash(name) !== args[0]) {
-    throw new Error("Name does not match namehash");
-  }
-
-  const resolverL2 = await new ethers.Contract(
-    l2_resolver_address,
-    IResolverL2Abi,
-    l2provider
-  );
-  const node = ethers.utils.namehash(name);
-  const result = await resolverL2.addr(node);
-
-  return {
-    result: Resolver.encodeFunctionResult(signature, [result]),
-  };
 }
