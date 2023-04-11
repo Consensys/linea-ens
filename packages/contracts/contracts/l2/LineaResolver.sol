@@ -22,7 +22,7 @@ contract LineaResolver is Ownable, ERC721 {
   ) external returns (uint256) {
     string memory nodeStr = bytes32ToString(node);
 
-    require(addresses[bytes32(bytes(nodeStr))] == 0, "Sub-domain has already been registered");
+    require(addresses[node] == 0, "Sub-domain has already been registered");
     require(bytes(nodeStr).length != 0, "Sub-domain cannot be null");
     require(
       testAlphaNumeric(nodeStr) == true,
