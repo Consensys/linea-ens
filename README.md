@@ -11,10 +11,10 @@ In a terminal, setup a local node:
 ```bash
 cd packages/contracts
 yarn install
-yarn hardhat node --fork GOERLI_LINEA_URL
+yarn hardhat node --fork GOERLI_URL
 ```
 
-`GOERLI_LINEA_URL` is described in the config section bellow.
+`GOERLI_URL` is described in the config section bellow.
 
 ### Deploy contracts
 
@@ -67,7 +67,7 @@ Once smart contracts are deployed, start the gateway:
 
 ```bash
 cd ../gateway
-yarn
+yarn install
 yarn build
 yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL
 ```
@@ -78,6 +78,7 @@ In a third terminal, run the demo app:
 
 ```bash
 cd packages/clients
+yarn install
 yarn start julink.lineatest.eth
 ```
 
