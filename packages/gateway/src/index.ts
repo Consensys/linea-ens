@@ -135,7 +135,6 @@ server.add(IResolverAbi, [
           (x) => x.key === tokenIdSlot
         )[0].proof
       );
-      console.log("tokenIdProof.storageProof", tokenIdProof.storageProof);
 
       // Create proof for the owner slot
       const ownerProof = await l2provider.send("eth_getProof", [
