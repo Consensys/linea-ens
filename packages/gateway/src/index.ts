@@ -1,15 +1,10 @@
 import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
-import { ethers, BytesLike } from "ethers";
+import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
 
 const IResolverAbi = require("../abi/IResolverService.json")
   .abi;
-const IResolverL2Abi = require("../abi/LineaResolver.json")
-  .abi;
-import { abi as Resolver_abi } from "@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json";
-
-const Resolver = new ethers.utils.Interface(Resolver_abi);
 const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
@@ -55,14 +50,14 @@ server.add(IResolverAbi, [
   {
     type: "resolve",
     func: async ([encodedName, data]: Result, request) => {
-      console.log("encodedName", encodedName);
       const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
-      console.log("name", name);
       const node = ethers.utils.namehash(name);
-      console.log("node", node);
-      const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
 
       if (debug) {
+        console.log("encodedName", encodedName);
+        console.log("name", name);
+        console.log("node", node);
+        const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
         const to = request?.to;
         console.log(1, {
           node,
@@ -89,7 +84,6 @@ server.add(IResolverAbi, [
       }
 
       const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
-      const stateRootHash = await rollup.stateRootHash();
       const blockNumber = lastBlockFinalized.toNumber();
       console.log(`Last block number finalized on L2 : ${blockNumber}`);
       const block = await l2provider.getBlock(blockNumber);
@@ -119,33 +113,50 @@ server.add(IResolverAbi, [
         BigNumber.from(l2blockRaw.baseFeePerGas).toHexString(),
       ];
       const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
-      const slot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
-      const proof = await l2provider.send("eth_getProof", [
+
+      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "06");
+      const tokenId = await l2provider.getStorageAt(
         l2_resolver_address,
-        [slot],
-        { blockHash },
-      ]);
-      console.log(6, JSON.stringify(proof, null, 2));
-      const accountProof = ethers.utils.RLP.encode(proof.accountProof);
-      const storageProof = ethers.utils.RLP.encode(
-        (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
+        tokenIdSlot
+      );
+      const ownerSlot = ethers.utils.keccak256(
+        tokenId + "00".repeat(31) + "02"
       );
 
-      // Result that will returned to the client after verification of the proof
-      const { result } = await getResult(name, data);
+      // Create proof for the tokenId slot
+      const tokenIdProof = await l2provider.send("eth_getProof", [
+        l2_resolver_address,
+        [tokenIdSlot],
+        { blockHash },
+      ]);
+      const accountProof = ethers.utils.RLP.encode(tokenIdProof.accountProof);
+      const tokenIdStorageProof = ethers.utils.RLP.encode(
+        (tokenIdProof.storageProof as any[]).filter(
+          (x) => x.key === tokenIdSlot
+        )[0].proof
+      );
+      console.log("tokenIdProof.storageProof", tokenIdProof.storageProof);
+
+      // Create proof for the owner slot
+      const ownerProof = await l2provider.send("eth_getProof", [
+        l2_resolver_address,
+        [ownerSlot],
+        { blockHash },
+      ]);
+      const ownerStorageProof = ethers.utils.RLP.encode(
+        (ownerProof.storageProof as any[]).filter((x) => x.key === ownerSlot)[0]
+          .proof
+      );
 
       const finalProof = {
-        nodeIndex: blockNumber,
         blockHash,
-        sendRoot: stateRootHash,
         encodedBlockArray,
-        stateTrieWitness: accountProof,
+        accountProof,
         stateRoot,
-        storageTrieWitness: storageProof,
-        node,
-        result,
+        tokenIdStorageProof,
+        ownerStorageProof,
       };
-      console.log(7, { finalProof });
+      console.log(6, { finalProof });
       return [finalProof];
     },
   },
@@ -163,33 +174,4 @@ function decodeDnsName(dnsname: Buffer) {
     idx += len + 1;
   }
   return labels.join(".");
-}
-
-async function getResult(
-  name: string,
-  data: string
-): Promise<{ result: BytesLike }> {
-  // Parse the data nested inside the second argument to `resolve`
-  const { signature, args } = Resolver.parseTransaction({ data });
-  console.log("signature", signature);
-
-  if (ethers.utils.nameprep(name) !== name) {
-    throw new Error("Name must be normalised");
-  }
-
-  if (ethers.utils.namehash(name) !== args[0]) {
-    throw new Error("Name does not match namehash");
-  }
-
-  const resolverL2 = await new ethers.Contract(
-    l2_resolver_address,
-    IResolverL2Abi,
-    l2provider
-  );
-  const node = ethers.utils.namehash(name);
-  const result = await resolverL2.addr(node);
-
-  return {
-    result: Resolver.encodeFunctionResult(signature, [result]),
-  };
 }

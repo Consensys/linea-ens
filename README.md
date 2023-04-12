@@ -11,8 +11,10 @@ In a terminal, setup a local node:
 ```bash
 cd packages/contracts
 yarn install
-yarn hardhat node --fork YOUR_GOERLI_L1_RPC_URL
+yarn hardhat node --fork GOERLI_LINEA_URL
 ```
+
+`GOERLI_LINEA_URL` is described in the config section bellow.
 
 ### Deploy contracts
 
@@ -27,15 +29,15 @@ cp .env.example .env
 
 Edit `.env` and set your config:
 
-| Var               | Description               | Default values                                            |
-| ----------------- | ------------------------- | --------------------------------------------------------- |
-| GOERLI_URL        | Goerli provider URL       |                                                           |
-| GOERLI_LINEA_URL  | Linea Goerli provider URL |                                                           |
-| PRIVATE_KEY       | Wallet private key        |                                                           |
-| ETHERSCAN_API_KEY | Etherscan API key         |                                                           |
-| L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                             |
-| L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                      |
-| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
+| Var               | Description               | Default values                                                    |
+| ----------------- | ------------------------- | ----------------------------------------------------------------- |
+| GOERLI_URL        | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                          |
+| GOERLI_LINEA_URL  | Linea Goerli provider URL | https://consensys-zkevm-goerli-prealpha.infura.io/v3/<INFURA_KEY> |
+| PRIVATE_KEY       | Wallet private key        |                                                                   |
+| ETHERSCAN_API_KEY | Etherscan API key         |                                                                   |
+| L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                                     |
+| L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                              |
+| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json         |
 
 For local/L2 mode, `GOERLI_URL` is not required.
 
@@ -51,6 +53,8 @@ Deploy L2 contracts first:
 npx hardhat run --network goerliLinea scripts/deployL2.ts
 ```
 
+> **_Imporant:_** Wait 10 minutes for Linea to synchronize with Goerli. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli.
+
 Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
 
 ```
@@ -65,7 +69,7 @@ Once smart contracts are deployed, start the gateway:
 cd ../gateway
 yarn
 yarn build
-yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL --l2_chain_id 59140
+yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL
 ```
 
 ### Run Client test script
@@ -80,16 +84,16 @@ yarn start julink.lineatest.eth
 If successful, it should show the following output:
 
 ```bash
-addr(bytes32)         0xF110a41f75edEb224227747b64Be7f6A7f140abc
+ethAddress         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 ```
 
 ## How to deploy to public net (goerli for example)
 
 ## Deployed contracts
 
-- Linea goerli resolver = [...]
+- Linea goerli resolver = 0x176569440293dF1fA85D0Eb342A92c6470D662f9
 - goerli (gateway points to '[...]' ) = [...]
-- goerli test domain = [...]
+- goerli test domain = linearesolver.eth
 
 ## Deploy gateway
 
@@ -105,3 +109,5 @@ Deploy to app engine:
 ```
 gcloud app deploy goeril.app.yml
 ```
+
+yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --helper_address $HELPER_ADDRESS --l1_provider_url https://goerli.infura.io/v3/<INFURA_KEY> --l2_provider_url https://goerli.infura.io/v3/<INFURA_KEY> --l1_chain_id 5 --l2_chain_id 5
