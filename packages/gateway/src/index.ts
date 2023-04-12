@@ -1,28 +1,25 @@
 import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
 import { ethers } from "ethers";
+import { Result } from "ethers/lib/utils";
 
-const IResolverAbi = require("../abi/IResolverService.json").abi;
-const helperAbi = require("../abi/AssertionHelper.json").abi;
-
+const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json")
+  .abi;
 const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
 program
   .option("-r --l2_resolver_address <address>", "RESOLVER_ADDRESS")
-  .option("-h --helper_address <helper_address>", "HELPER_ADDRESS")
   .option(
     "-l1p --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
-    "http://localhost:8545"
+    "http://127.0.0.1:8545/"
   )
   .option(
     "-l2p --l2_provider_url <url2>",
     "L2_PROVIDER_URL",
-    "http://localhost:8545"
+    "http://127.0.0.1:8545/"
   )
-  .option("-l1c --l1_chain_id <chain1>", "L1_CHAIN_ID", "1337")
-  .option("-l2c --l2_chain_id <chain2>", "L2_CHAIN_ID", "412346")
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
@@ -37,37 +34,38 @@ const {
   l1_provider_url,
   l2_provider_url,
   rollup_address,
-  helper_address,
   l2_resolver_address,
-  l1_chain_id,
-  l2_chain_id,
   debug,
 } = options;
-if (helper_address === undefined || l2_resolver_address === undefined) {
-  throw "Must specify --l2_resolver_address and --helper_address";
+if (l2_resolver_address === undefined) {
+  throw "Must specify --l2_resolver_address";
 }
 
 const l1provider = new ethers.providers.JsonRpcProvider(l1_provider_url);
 const l2provider = new ethers.providers.JsonRpcProvider(l2_provider_url);
 const rollup = new ethers.Contract(rollup_address, rollupAbi, l1provider);
-const helper = new ethers.Contract(helper_address, helperAbi, l1provider);
 const server = new Server();
 
 server.add(IResolverAbi, [
   {
-    type: "addr(bytes32)",
-    func: async ([node], { to, data: _callData }) => {
-      const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
+    type: "resolve",
+    func: async ([encodedName, data]: Result, request) => {
+      const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
+      const node = ethers.utils.namehash(name);
+
       if (debug) {
+        console.log("encodedName", encodedName);
+        console.log("name", name);
+        console.log("node", node);
+        const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
+        const to = request?.to;
         console.log(1, {
           node,
           to,
-          _callData,
+          data,
           l1_provider_url,
           l2_provider_url,
           l2_resolver_address,
-          l1_chain_id,
-          l2_chain_id,
         });
         const blockNumber = (await l2provider.getBlock("latest")).number;
         console.log(2, { blockNumber, addrSlot });
@@ -84,15 +82,12 @@ server.add(IResolverAbi, [
           addressData,
         });
       }
-      const nodeIndex = await rollup.lastFinalizedStateRootHash();
-      console.log({
-        nodeIndex: nodeIndex.toString(),
-      });
-      const nodeEventFilter = await rollup.filters.NodeCreated(nodeIndex);
-      const nodeEvents = await rollup.queryFilter(nodeEventFilter);
-      const assertion = nodeEvents[0].args!.assertion;
-      const sendRoot = await helper.getSendRoot(assertion);
-      const blockHash = await helper.getBlockHash(assertion);
+
+      const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
+      const blockNumber = lastBlockFinalized.toNumber();
+      console.log(`Last block number finalized on L2 : ${blockNumber}`);
+      const block = await l2provider.getBlock(blockNumber);
+      const blockHash = block.hash;
       const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
         blockHash,
         false,
@@ -118,30 +113,65 @@ server.add(IResolverAbi, [
         BigNumber.from(l2blockRaw.baseFeePerGas).toHexString(),
       ];
       const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
-      const slot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
-      const proof = await l2provider.send("eth_getProof", [
+
+      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "06");
+      const tokenId = await l2provider.getStorageAt(
         l2_resolver_address,
-        [slot],
+        tokenIdSlot
+      );
+      const ownerSlot = ethers.utils.keccak256(
+        tokenId + "00".repeat(31) + "02"
+      );
+
+      // Create proof for the tokenId slot
+      const tokenIdProof = await l2provider.send("eth_getProof", [
+        l2_resolver_address,
+        [tokenIdSlot],
         { blockHash },
       ]);
-      console.log(6, JSON.stringify(proof, null, 2));
-      const accountProof = ethers.utils.RLP.encode(proof.accountProof);
-      const storageProof = ethers.utils.RLP.encode(
-        (proof.storageProof as any[]).filter((x) => x.key === slot)[0].proof
+      const accountProof = ethers.utils.RLP.encode(tokenIdProof.accountProof);
+      const tokenIdStorageProof = ethers.utils.RLP.encode(
+        (tokenIdProof.storageProof as any[]).filter(
+          (x) => x.key === tokenIdSlot
+        )[0].proof
       );
+      console.log("tokenIdProof.storageProof", tokenIdProof.storageProof);
+
+      // Create proof for the owner slot
+      const ownerProof = await l2provider.send("eth_getProof", [
+        l2_resolver_address,
+        [ownerSlot],
+        { blockHash },
+      ]);
+      const ownerStorageProof = ethers.utils.RLP.encode(
+        (ownerProof.storageProof as any[]).filter((x) => x.key === ownerSlot)[0]
+          .proof
+      );
+
       const finalProof = {
-        nodeIndex,
         blockHash,
-        sendRoot,
         encodedBlockArray,
-        stateTrieWitness: accountProof,
+        accountProof,
         stateRoot,
-        storageTrieWitness: storageProof,
+        tokenIdStorageProof,
+        ownerStorageProof,
       };
-      console.log(7, { finalProof });
+      console.log(6, { finalProof });
       return [finalProof];
     },
   },
 ]);
 const app = server.makeApp("/");
 app.listen(options.port);
+
+function decodeDnsName(dnsname: Buffer) {
+  const labels = [];
+  let idx = 0;
+  while (true) {
+    const len = dnsname.readUInt8(idx);
+    if (len === 0) break;
+    labels.push(dnsname.slice(idx + 1, idx + len + 1).toString("utf8"));
+    idx += len + 1;
+  }
+  return labels.join(".");
+}

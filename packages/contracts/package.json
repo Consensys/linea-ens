@@ -1,5 +1,5 @@
 {
-  "name": "Linea-resolver",
+  "name": "linea-resolver",
   "version": "0.0.1",
   "description": "Linea Resolver for ENS",
   "main": "index.js",
