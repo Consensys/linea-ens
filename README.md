@@ -11,8 +11,10 @@ In a terminal, setup a local node:
 ```bash
 cd packages/contracts
 yarn install
-yarn hardhat node --fork YOUR_GOERLI_L1_RPC_URL
+yarn hardhat node --fork GOERLI_LINEA_URL
 ```
+
+`GOERLI_LINEA_URL` is described in the config section bellow.
 
 ### Deploy contracts
 
