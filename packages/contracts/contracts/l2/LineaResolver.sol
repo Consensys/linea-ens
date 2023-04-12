@@ -12,7 +12,10 @@ contract LineaResolver is ERC721 {
   constructor(
     string memory _name,
     string memory _symbol
-  ) ERC721(_name, _symbol) {}
+  ) ERC721(_name, _symbol) {
+    // Start tokenId at index 1
+    tokenId = 1;
+  }
 
   function mintSubdomain(
     bytes32 node,
