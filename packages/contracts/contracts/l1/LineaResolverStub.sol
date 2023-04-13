@@ -43,7 +43,6 @@ abstract contract SupportsInterface is ISupportsInterface {
 
 contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   string[] public gateways;
-  address public rollup;
   address public l2resolver;
 
   error OffchainLookup(
@@ -54,9 +53,8 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes extraData
   );
 
-  constructor(string[] memory _gateways, address _rollup, address _l2resolver) {
+  constructor(string[] memory _gateways, address _l2resolver) {
     gateways = _gateways;
-    rollup = _rollup;
     l2resolver = _l2resolver;
   }
 

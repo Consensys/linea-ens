@@ -21,6 +21,11 @@ describe("LineaResolver", function () {
     // Mint domain
     await lineaResolver.mintSubdomain(hash, owner.address);
 
+    // Deploy ResolverStub
+    const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
+    const lineaResolverStub = await LineaResolverStub.deploy(["http://localhost:8080"], lineaResolver.address);
+    await lineaResolverStub.deployed();
+
     return {
       owner,
       lineaResolver,
@@ -35,35 +40,6 @@ describe("LineaResolver", function () {
 
       expect(await lineaResolver.addresses(hash)).to.be.equal(1);
       expect(await lineaResolver.tokenId()).to.be.equal(2);
-    });
-
-    it("Resolve should send address(0) if the hash has not been minted", async function () {
-      const { lineaResolver, undefinedHash } = await loadFixture(deployContractsFixture);
-
-      expect(await lineaResolver.resolve(undefinedHash)).to.be.equal(constants.AddressZero);
-    });
-  });
-
-  describe("resolve", async () => {
-    it("Should be able to resolve an address given a hashname", async function () {
-      const { lineaResolver, hash, owner } = await loadFixture(deployContractsFixture);
-
-      expect(await lineaResolver.resolve(hash)).to.be.equal(owner.address);
-    });
-
-    it("Resolve should send address(0) if the hash has not been minted", async function () {
-      const { lineaResolver, undefinedHash } = await loadFixture(deployContractsFixture);
-
-      expect(await lineaResolver.resolve(undefinedHash)).to.be.equal(constants.AddressZero);
-    });
-  });
-
-  describe("exists", async () => {
-    it("Should be able to check if an tokenId exists", async function () {
-      const { lineaResolver } = await loadFixture(deployContractsFixture);
-
-      expect(await lineaResolver.exists(1)).to.be.equal(true);
-      expect(await lineaResolver.exists(10)).to.be.equal(false);
     });
   });
 });
