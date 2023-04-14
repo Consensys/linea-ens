@@ -129,10 +129,6 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     return abi.encode(owner);
   }
 
-  function getl2Resolver() external view returns (address) {
-    return l2resolver;
-  }
-
   function getStorageValue(
     address target,
     bytes32 slot,
