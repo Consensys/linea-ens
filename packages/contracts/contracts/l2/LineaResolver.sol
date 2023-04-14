@@ -33,6 +33,13 @@ contract LineaResolver is ERC721 {
 
   function resolve(bytes32 node) external view returns (address) {
     uint256 _tokenId = addresses[node];
+    if (_tokenId == 0) {
+      return address(0);
+    }
     return ownerOf(_tokenId);
+  }
+
+  function exists(uint256 _tokenId) external view returns (bool) {
+    return _exists(_tokenId);
   }
 }
