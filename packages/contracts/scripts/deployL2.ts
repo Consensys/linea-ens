@@ -8,7 +8,8 @@ async function main() {
   const LineaResolver = await ethers.getContractFactory("LineaResolver");
   const nftName = "Lineatest";
   const symbol = "LTST";
-  const lineaResolver = await LineaResolver.deploy(nftName, symbol);
+  const baseUri = "http://localhost:3000/metadata/";
+  const lineaResolver = await LineaResolver.deploy(nftName, symbol, baseUri);
   await lineaResolver.deployed();
 
   // Test with subdomain with default "julink.lineatest.eth", assuming we still control lineatest.eth on L1

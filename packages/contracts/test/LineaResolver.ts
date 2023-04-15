@@ -15,7 +15,10 @@ describe("LineaResolver", function () {
 
     // Deploy Resolver
     const LineaResolver = await ethers.getContractFactory("LineaResolver");
-    const lineaResolver = await LineaResolver.deploy("Lineatest", "LTST");
+    const nftName = "Lineatest";
+    const symbol = "LTST";
+    const baseUri = "http://localhost:3000/metadata/";
+    const lineaResolver = await LineaResolver.deploy(nftName, symbol, baseUri);
     await lineaResolver.deployed();
 
     // Mint domain
