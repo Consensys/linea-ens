@@ -61,6 +61,8 @@ Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
 L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scripts/deployL1.ts
 ```
 
+Additional Smart contract development commands available in [./packages/contracts/README.md](./packages/contracts/README.md)
+
 ### Start Gateway server
 
 Once smart contracts are deployed, start the gateway:
