@@ -19,7 +19,7 @@ describe("LineaResolver", function () {
     await lineaResolver.deployed();
 
     // Mint domain
-    await lineaResolver.mintSubdomain(hash, owner.address);
+    await lineaResolver.mintSubdomain(domain, owner.address);
 
     return {
       owner,
