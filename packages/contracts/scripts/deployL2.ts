@@ -22,7 +22,7 @@ async function main() {
     setTimeout(async () => {
       await run("verify:verify", {
         address: lineaResolver.address,
-        constructorArguments: [nftName, symbol],
+        constructorArguments: [nftName, symbol, baseUri],
       });
     }, 10000);
   }
