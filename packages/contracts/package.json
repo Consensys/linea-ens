@@ -5,6 +5,15 @@
   "main": "index.js",
   "author": "Consensys",
   "license": "MIT",
+  "scripts": {
+    "test": "npx hardhat test",
+    "coverage": "npx hardhat coverage --solcoverjs ./.solcover.js",
+    "lint": "yarn lint:sol && yarn lint:ts && yarn prettier:check",
+    "lint:sol": "solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\"",
+    "lint:ts": "eslint ./ ",
+    "prettier": "prettier --config ./.prettierrc.yaml --write \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
+    "prettier:check": "prettier --check --config ./.prettierrc.yaml \"**/*.{js,json,md,sol,ts,yaml,yml}\""
+  },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
     "@ethersproject/providers": "^5.4.7",
@@ -28,6 +37,7 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
+    "@ensdomains/ens-contracts": "^0.0.20",
     "@eth-optimism/contracts": "^0.5.40",
     "@openzeppelin/contracts": "^4.8.1",
     "dotenv": "^16.0.3"
