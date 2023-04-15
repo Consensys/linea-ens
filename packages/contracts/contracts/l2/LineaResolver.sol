@@ -20,11 +20,18 @@ contract LineaResolver is
   AccessControlEnumerable,
   Ownable
 {
-  mapping(bytes32 => uint256) public addresses; // Mapping to store Ethereum domain names (as bytes32) and their corresponding addresses (as uint256)
-  mapping(uint256 => string) public tokenDomains; // Mapping to store token IDs (as uint256) and their corresponding domain name (as string)
+  // Mapping to store Ethereum domain names (as bytes32) and their corresponding addresses (as uint256)
+  mapping(bytes32 => uint256) public addresses;
+  // Mapping to store token IDs (as uint256) and their corresponding domain name (as string)
+  mapping(uint256 => string) public tokenDomains;
+  // Counter to keep track of token IDs for minting new tokens
   using Counters for Counters.Counter;
-  Counters.Counter private tokenIds; // Counter to keep track of token IDs for minting new tokens
-  string private _baseTokenURI; // Private string variable to store the base URI for the token URI generation
+  Counters.Counter private tokenIds;
+  // Private string variable to store the base URI for the token URI generation
+  string private _baseTokenURI;
+
+  // Optional mapping for token URIs
+  mapping(uint256 => string) private _tokenURIs;
 
   /**
    * @dev Emitted when the address associated with a specific node is changed.
@@ -54,12 +61,8 @@ contract LineaResolver is
    * @notice This function is used to mint a new subdomain token for the given name and address.
    * @param name The name of the subdomain to mint.
    * @param _addr The address associated with the subdomain.
-   * @return The ID of the newly minted subdomain token.
    */
-  function mintSubdomain(
-    string memory name,
-    address _addr
-  ) external returns (uint256) {
+  function mintSubdomain(string memory name, address _addr) external {
     (, bytes32 node) = NameEncoder.dnsEncodeName(name);
 
     string memory domain = _toLower(name);
@@ -68,14 +71,17 @@ contract LineaResolver is
     require(addresses[node] == 0, "Sub-domain has already been registered");
     require(bytes(domain).length != 0, "Sub-domain cannot be null");
 
+    _beforeTokenTransfer(address(0), _addr, newItemId, 1);
+
     addresses[node] = newItemId;
     tokenDomains[newItemId] = domain;
 
     emit AddrChanged(node, _addr);
     _mint(_addr, newItemId); // mint the new token with the current tokenIds
+
     tokenIds.increment(); // increment tokenIds
 
-    return newItemId;
+    _afterTokenTransfer(address(0), _addr, newItemId, 1);
   }
 
   /**
@@ -125,7 +131,17 @@ contract LineaResolver is
     override(ERC721URIStorage, ERC721)
     returns (string memory)
   {
-    return ERC721URIStorage.tokenURI(tokenId);
+    _requireMinted(tokenId);
+
+    string memory _tokenURI = Strings.toString(tokenId);
+    string memory base = _baseTokenURI;
+
+    // If there is no base URI, return the token URI.
+    if (bytes(base).length == 0) {
+      return _tokenURI;
+    }
+    // Concatenate the baseURI and tokenURI (via abi.encodePacked).
+    return string(abi.encodePacked(base, _tokenURI));
   }
 
   /**
@@ -155,10 +171,14 @@ contract LineaResolver is
   ) internal virtual override(ERC721URIStorage, ERC721) {
     address owner = ERC721.ownerOf(tokenId);
 
+    _beforeTokenTransfer(owner, address(0), tokenId, 1);
+
     delete tokenDomains[tokenId];
     ERC721URIStorage._burn(tokenId);
 
     emit Transfer(owner, address(0), tokenId);
+
+    _afterTokenTransfer(owner, address(0), tokenId, 1);
   }
 
   /**
