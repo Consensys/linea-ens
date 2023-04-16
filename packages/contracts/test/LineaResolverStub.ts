@@ -2,6 +2,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import { defaultAbiCoder } from "@ethersproject/abi";
+// We use mocked results from the gateway and L2 resolver for the unit tests
 import { DOMAIN_NAME, EXPECTED_RESOLVE_WITH_PROOF_RESULT, GATEWAY_URL, L2_RESOLVER_ADDRESS, MOCKED_PROOF } from "./mocks/proof";
 
 describe("LineaResolver", function () {
@@ -40,6 +41,7 @@ describe("LineaResolver", function () {
   describe("resolveWithProof", async () => {
     it("Should return the expected address", async function () {
       const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
+      // We prefix with the function signature 'addr(bytes32)' as bytes4
       const extraData = "0x3b3b57de" + hash.slice(2);
       const result = await lineaResolverStub.resolveWithProof(
         defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF)]),
@@ -54,6 +56,16 @@ describe("LineaResolver", function () {
       await expect(
         lineaResolverStub.resolveWithProof(defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF)]), extraData),
       ).to.be.revertedWith("Invalid large internal hash");
+    });
+
+    it("Should return empty bytes if the function signature is not the one expected", async function () {
+      const { lineaResolverStub, undefinedHash } = await loadFixture(deployContractsFixture);
+      const extraData = "0x00000000" + undefinedHash.slice(2);
+      const result = await lineaResolverStub.resolveWithProof(
+        defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF)]),
+        extraData,
+      );
+      expect(result).to.be.equal("0x");
     });
   });
 

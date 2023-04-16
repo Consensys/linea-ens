@@ -93,7 +93,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     // We only resolve if the addr(bytes32) is called otherwise we simply return an empty response
     bytes4 signature = bytes4(extraData[0:4]);
     if (signature != bytes4(0x3b3b57de)) {
-      return abi.encode("");
+      return "";
     }
 
     // This is the hash name of the domain name
