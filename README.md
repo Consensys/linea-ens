@@ -62,7 +62,7 @@ For local/L2 mode, `GOERLI_URL` is not required.
 Compile smart contracts:
 
 ```bash
-yarn hardhat compile
+yarn compile
 ```
 
 Deploy L2 contracts first:

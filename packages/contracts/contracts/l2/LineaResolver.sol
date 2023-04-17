@@ -143,9 +143,7 @@ contract LineaResolver is ERC721, Ownable {
    * @param tokenId The ID of the ERC721 token to retrieve the name for.
    * @return The name associated with the specified ERC721 token ID.
    */
-  function tokenName(
-    uint256 tokenId
-  ) public view virtual returns (string memory) {
+  function tokenName(uint256 tokenId) public view returns (string memory) {
     return tokenDomains[tokenId];
   }
 
