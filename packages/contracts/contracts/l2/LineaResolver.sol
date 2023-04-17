@@ -123,7 +123,7 @@ contract LineaResolver is ERC721, Ownable {
    */
   function tokenURI(
     uint256 tokenId
-  ) public view virtual override returns (string memory) {
+  ) public view override returns (string memory) {
     _requireMinted(tokenId);
 
     string memory _tokenURI = Strings.toString(tokenId);
