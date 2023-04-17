@@ -26,7 +26,7 @@ contract LineaResolver is
   mapping(uint256 => string) public tokenDomains;
   // Counter to keep track of token IDs for minting new tokens
   using Counters for Counters.Counter;
-  Counters.Counter private tokenIds;
+  Counters.Counter private _tokenIds;
   // Private string variable to store the base URI for the token URI generation
   string private _baseTokenURI;
 
@@ -53,7 +53,7 @@ contract LineaResolver is
     string memory baseURI
   ) ERC721(_name, _symbol) {
     _baseTokenURI = baseURI;
-    tokenIds.increment();
+    _tokenIds.increment();
   }
 
   /**
@@ -66,7 +66,7 @@ contract LineaResolver is
     (, bytes32 node) = NameEncoder.dnsEncodeName(name);
 
     string memory domain = _toLower(name);
-    uint256 newItemId = tokenIds.current();
+    uint256 newItemId = _tokenIds.current();
 
     require(addresses[node] == 0, "Sub-domain has already been registered");
     require(bytes(domain).length != 0, "Sub-domain cannot be null");
@@ -77,9 +77,9 @@ contract LineaResolver is
     tokenDomains[newItemId] = domain;
 
     emit AddrChanged(node, _addr);
-    _mint(_addr, newItemId); // mint the new token with the current tokenIds
+    _mint(_addr, newItemId); // mint the new token with the current _tokenIds
 
-    tokenIds.increment(); // increment tokenIds
+    _tokenIds.increment(); // increment tokenIds
 
     _afterTokenTransfer(address(0), _addr, newItemId, 1);
   }
