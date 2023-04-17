@@ -3,7 +3,7 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
 
-const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json").abi;
+const IResolverAbi = require("../abi/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
 require("dotenv").config();
 const { BigNumber } = ethers;
@@ -12,7 +12,7 @@ program
   .option(
     "-r --l2_resolver_address <address>",
     "L2_RESOLVER_ADDRESS",
-    "0x756877316A15944cb5fE548318DaC094B7E216F2"
+    ""
   )
   .option(
     "-l1p --l1_provider_url <url1>",
@@ -27,7 +27,7 @@ program
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
-    "0xE87d317eB8dcc9afE24d9f63D6C760e52Bc18A40"
+    ""
   )
   .option("-d --debug", "debug", false)
   .option("-p --port <number>", "Port number to serve on", "8080");
