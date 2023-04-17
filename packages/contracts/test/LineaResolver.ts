@@ -165,28 +165,4 @@ describe("LineaResolver", function () {
       await expect(lineaResolver.connect(unknown).burn(tokenId)).to.be.revertedWith("Caller is not owner or approved");
     });
   });
-
-  describe("supportsInterface", async () => {
-    // Test supportsInterface for success
-    it("should return true for ERC721Enumerable interface", async () => {
-      const { lineaResolver } = await loadFixture(deployContractsFixture);
-      // Interface ID for ERC721Enumerable
-      const interfaceId = "0x780e9d63";
-
-      // Check if supportsInterface returns true for ERC721Enumerable interface
-      const result = await lineaResolver.supportsInterface(interfaceId);
-      expect(result).to.be.true;
-    });
-
-    // Test supportsInterface for fail
-    it("should return false for non-existing interface", async () => {
-      const { lineaResolver } = await loadFixture(deployContractsFixture);
-      // Interface ID for an arbitrary non-existing interface
-      const interfaceId = "0x12345678";
-
-      // Check if supportsInterface returns false for non-existing interface
-      const result = await lineaResolver.supportsInterface(interfaceId);
-      expect(result).to.be.false;
-    });
-  });
 });

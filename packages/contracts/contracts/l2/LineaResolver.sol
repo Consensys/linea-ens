@@ -2,9 +2,7 @@
 pragma solidity 0.8.18;
 
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
@@ -14,12 +12,7 @@ import "@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
 @dev A Solidity contract that implements an ERC721 token for resolving Ethereum domain names to addresses.
 @author ConsenSys
 */
-contract LineaResolver is
-  ERC721Enumerable,
-  ERC721URIStorage,
-  AccessControlEnumerable,
-  Ownable
-{
+contract LineaResolver is ERC721, Ownable {
   // Mapping to store Ethereum domain names (as bytes32) and their corresponding addresses (as uint256)
   mapping(bytes32 => uint256) public addresses;
   // Mapping to store token IDs (as uint256) and their corresponding domain name (as string)
@@ -29,9 +22,6 @@ contract LineaResolver is
   Counters.Counter private _tokenIds;
   // Private string variable to store the base URI for the token URI generation
   string private _baseTokenURI;
-
-  // Optional mapping for token URIs
-  mapping(uint256 => string) private _tokenURIs;
 
   /**
    * @dev Emitted when the address associated with a specific node is changed.
@@ -71,8 +61,6 @@ contract LineaResolver is
     require(addresses[node] == 0, "Sub-domain has already been registered");
     require(bytes(domain).length != 0, "Sub-domain cannot be null");
 
-    _beforeTokenTransfer(address(0), _addr, newItemId, 1);
-
     addresses[node] = newItemId;
     tokenDomains[newItemId] = domain;
 
@@ -80,8 +68,6 @@ contract LineaResolver is
     _mint(_addr, newItemId); // mint the new token with the current _tokenIds
 
     _tokenIds.increment(); // increment tokenIds
-
-    _afterTokenTransfer(address(0), _addr, newItemId, 1);
   }
 
   /**
@@ -124,13 +110,7 @@ contract LineaResolver is
    */
   function tokenURI(
     uint256 tokenId
-  )
-    public
-    view
-    virtual
-    override(ERC721URIStorage, ERC721)
-    returns (string memory)
-  {
+  ) public view virtual override returns (string memory) {
     _requireMinted(tokenId);
 
     string memory _tokenURI = Strings.toString(tokenId);
@@ -157,31 +137,6 @@ contract LineaResolver is
   }
 
   /**
-   * @dev Internal function to burn an ERC721 token.
-   * @param tokenId The token ID to burn.
-   *
-   * Requirements:
-   * - The caller must be the owner of the token.
-   *
-   * Emits a {Transfer} event with the `to` address set to address(0).
-   * Deletes the token name from the `tokenDomains` mapping.
-   */
-  function _burn(
-    uint256 tokenId
-  ) internal virtual override(ERC721URIStorage, ERC721) {
-    address owner = ERC721.ownerOf(tokenId);
-
-    _beforeTokenTransfer(owner, address(0), tokenId, 1);
-
-    delete tokenDomains[tokenId];
-    ERC721URIStorage._burn(tokenId);
-
-    emit Transfer(owner, address(0), tokenId);
-
-    _afterTokenTransfer(owner, address(0), tokenId, 1);
-  }
-
-  /**
    * @dev Burns a specific ERC721 token.
    * @notice This function is used to burn a specific ERC721 token by its token ID.
    * @param tokenId The ID of the ERC721 token to be burned.
@@ -192,49 +147,7 @@ contract LineaResolver is
       "Caller is not owner or approved"
     );
     _burn(tokenId);
-  }
-
-  /**
-   * @dev See {IERC165-supportsInterface}.
-   * @param interfaceId the interfaceId you want to know if that contracts supports (in bytes4 format)
-   * @return bool true/false statement if the Turn smart-contract supports a given interface
-   * (e.g. IERC721Enumerable, IAccessControlEnumerable or any of their respective parent classes)
-   */
-  function supportsInterface(
-    bytes4 interfaceId
-  )
-    public
-    view
-    override(AccessControlEnumerable, ERC721Enumerable, ERC721)
-    returns (bool)
-  {
-    return
-      AccessControlEnumerable.supportsInterface(interfaceId) ||
-      ERC721Enumerable.supportsInterface(interfaceId);
-  }
-
-  /**
-   * @dev Hook that is called before any token transfer. This includes minting
-   * and burning.
-   *
-   * Calling conditions:
-   *
-   * - When `from` and `to` are both non-zero, ``from``'s `tokenId` will be
-   * transferred to `to`.
-   * - When `from` is zero, `tokenId` will be minted for `to`.
-   * - When `to` is zero, ``from``'s `tokenId` will be burned.
-   * - `from` cannot be the zero address.
-   * - `to` cannot be the zero address.
-   *
-   * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
-   */
-  function _beforeTokenTransfer(
-    address from,
-    address to,
-    uint256 tokenId,
-    uint256 batchSize
-  ) internal override(ERC721Enumerable, ERC721) {
-    ERC721Enumerable._beforeTokenTransfer(from, to, tokenId, batchSize);
+    delete tokenDomains[tokenId];
   }
 
   /**
