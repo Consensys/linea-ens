@@ -33,6 +33,9 @@ contract LineaResolver is
   // Optional mapping for token URIs
   mapping(uint256 => string) private _tokenURIs;
 
+  // Fees to send to mint a sub domain, initial set to 0.001 ETH
+  uint256 public baseFee = 1000000000000000;
+
   /**
    * @dev Emitted when the address associated with a specific node is changed.
    * @param node The bytes32 value representing the node whose address is being changed.
@@ -62,7 +65,9 @@ contract LineaResolver is
    * @param name The name of the subdomain to mint.
    * @param _addr The address associated with the subdomain.
    */
-  function mintSubdomain(string memory name, address _addr) external {
+  function mintSubdomain(string memory name, address _addr) external payable {
+    require(msg.value >= baseFee, "LineaResolver: insufficient fees");
+
     (, bytes32 node) = NameEncoder.dnsEncodeName(name);
 
     string memory domain = _toLower(name);
@@ -114,6 +119,14 @@ contract LineaResolver is
     require(bytes(baseURI).length != 0, "Base URI cannot be empty");
     _baseTokenURI = baseURI;
     return _baseTokenURI;
+  }
+
+  /**
+   * @dev Sets the base fee to mint a sub domain
+   * @param newBaseFee the new base fee used to send to mint a sub domain
+   */
+  function setBaseFee(uint256 newBaseFee) external onlyOwner {
+    baseFee = newBaseFee;
   }
 
   /**
