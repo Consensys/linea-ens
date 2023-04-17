@@ -3,8 +3,7 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
 
-const IResolverAbi = require("../abi/IResolverService.json")
-  .abi;
+const IResolverAbi = require("../abi/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
 const { BigNumber } = ethers;
 const program = new Command();
