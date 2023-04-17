@@ -43,7 +43,6 @@ abstract contract SupportsInterface is ISupportsInterface {
 
 contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   string[] public gateways;
-  address public rollup;
   address public l2resolver;
 
   error OffchainLookup(
@@ -54,9 +53,8 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes extraData
   );
 
-  constructor(string[] memory _gateways, address _rollup, address _l2resolver) {
+  constructor(string[] memory _gateways, address _l2resolver) {
     gateways = _gateways;
-    rollup = _rollup;
     l2resolver = _l2resolver;
   }
 
@@ -94,8 +92,9 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   ) external view returns (bytes memory) {
     // We only resolve if the addr(bytes32) is called otherwise we simply return an empty response
     bytes4 signature = bytes4(extraData[0:4]);
+
     if (signature != bytes4(0x3b3b57de)) {
-      return abi.encode("");
+      return "";
     }
 
     // This is the hash name of the domain name
@@ -111,7 +110,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
     // step 2: check storage values, get itemId first and then get the address result
     bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(6)));
-    bytes32 tokenId = getStorageValue(
+    (bool tokenIdExists, bytes32 tokenId) = getStorageValue(
       l2resolver,
       tokenIdSlot,
       proof.stateRoot,
@@ -119,8 +118,12 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.tokenIdStorageProof
     );
 
+    if (!tokenIdExists) {
+      return "";
+    }
+
     bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(2)));
-    bytes32 owner = getStorageValue(
+    (, bytes32 owner) = getStorageValue(
       l2resolver,
       ownerSlot,
       proof.stateRoot,
@@ -131,27 +134,31 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     return abi.encode(owner);
   }
 
-  function getl2Resolver() external view returns (address) {
-    return l2resolver;
-  }
-
   function getStorageValue(
     address target,
     bytes32 slot,
     bytes32 stateRoot,
     bytes memory stateTrieWitness,
     bytes memory storageTrieWitness
-  ) internal pure returns (bytes32) {
-    (bool exists, bytes memory encodedResolverAccount) = Lib_SecureMerkleTrie
-      .get(abi.encodePacked(target), stateTrieWitness, stateRoot);
-    require(exists, "Account does not exist");
+  ) internal pure returns (bool exists, bytes32) {
+    (
+      bool accountExists,
+      bytes memory encodedResolverAccount
+    ) = Lib_SecureMerkleTrie.get(
+        abi.encodePacked(target),
+        stateTrieWitness,
+        stateRoot
+      );
+    require(accountExists, "Account does not exist");
     Lib_OVMCodec.EVMAccount memory account = Lib_OVMCodec.decodeEVMAccount(
       encodedResolverAccount
     );
     (bool storageExists, bytes memory retrievedValue) = Lib_SecureMerkleTrie
       .get(abi.encodePacked(slot), storageTrieWitness, account.storageRoot);
-    require(storageExists, "Storage value does not exist");
-    return toBytes32PadLeft(Lib_RLPReader.readBytes(retrievedValue));
+    if (storageExists) {
+      return (true, toBytes32PadLeft(Lib_RLPReader.readBytes(retrievedValue)));
+    }
+    return (false, bytes32(0));
   }
 
   // Ported old function from Lib_BytesUtils.sol
