@@ -8,10 +8,6 @@ on:
   release:
     types:
     - released
-env:
-  L1_PROVIDER_URL: ${{ secrets.L1_PROVIDER_URL }}
-  L2_PROVIDER_URL: ${{ secrets.L2_PROVIDER_URL }}
-  L2_RESOLVER_ADDRESS: ${{ secrets.L2_RESOLVER_ADDRESS }}
 
 jobs:
   publish:
@@ -50,6 +46,10 @@ jobs:
           context: "{{defaultContext}}:packages/gateway"
           push: false
           tags: consensys/linea-resolvery:${{ env.DOCKER_TAG }}
+        env:
+          L1_PROVIDER_URL: ${{ secrets.L1_PROVIDER_URL }}
+          L2_PROVIDER_URL: ${{ secrets.L2_PROVIDER_URL }}
+          L2_RESOLVER_ADDRESS: ${{ secrets.L2_RESOLVER_ADDRESS }}
 
       - name: Docker Image Build and Publish
         id: docker-build-publish
