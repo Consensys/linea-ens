@@ -3,11 +3,15 @@ name: Docker Image
 on:
   push:
     branches:
-      - develop
+      - feat/add-env-var-from-github-secret
   pull_request:
   release:
     types:
     - released
+env:
+  L1_PROVIDER_URL: ${{ secrets.L1_PROVIDER_URL }}
+  L2_PROVIDER_URL: ${{ secrets.L2_PROVIDER_URL }}
+  L2_RESOLVER_ADDRESS: ${{ secrets.L2_RESOLVER_ADDRESS }}
 
 jobs:
   publish:
