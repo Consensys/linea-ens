@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import { defaultAbiCoder } from "@ethersproject/abi";
 // We use mocked results from the gateway and L2 resolver for the unit tests
-import { DOMAIN_NAME, EXPECTED_RESOLVE_WITH_PROOF_RESULT, GATEWAY_URL, L2_RESOLVER_ADDRESS, MOCKED_PROOF } from "./mocks/proof";
+import { DOMAIN_NAME, EXPECTED_RESOLVE_WITH_PROOF_RESULT, GATEWAY_URL, L2_RESOLVER_ADDRESS, MOCKED_PROOF, MOCKED_PROOF_UNDEFINED } from "./mocks/proof";
 
 describe("LineaResolver", function () {
   async function deployContractsFixture() {
@@ -67,6 +67,16 @@ describe("LineaResolver", function () {
       );
       expect(result).to.be.equal("0x");
     });
+
+    it("Should return empty bytes if the domain does not exists but the proof is correct", async function () {
+      const { lineaResolverStub, undefinedHash } = await loadFixture(deployContractsFixture);
+      const extraData = "0x3b3b57de" + undefinedHash.slice(2);
+      const result = await lineaResolverStub.resolveWithProof(
+        defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_UNDEFINED)]),
+        extraData,
+      );
+      expect(result).to.be.equal("0x");
+    });
   });
 
   describe("resolve", async () => {
@@ -79,6 +89,22 @@ describe("LineaResolver", function () {
       } catch (error) {
         expect(error.errorName).to.equal("OffchainLookup");
       }
+    });
+  });
+
+  describe("supportsInterface", async () => {
+    it("should return true for valid interfaceId", async () => {
+      const { lineaResolverStub } = await loadFixture(deployContractsFixture);
+      const anotherInterfaceId = "0x9061b923";
+      const result = await lineaResolverStub.supportsInterface(anotherInterfaceId);
+      expect(result).to.be.equal(true);
+    });
+
+    it("should return false for invalid interfaceId", async () => {
+      const { lineaResolverStub } = await loadFixture(deployContractsFixture);
+      const invalidInterfaceId = "0x89abcdef";
+      const result = await lineaResolverStub.supportsInterface(invalidInterfaceId);
+      expect(result).to.be.equal(false);
     });
   });
 });

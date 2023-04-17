@@ -123,17 +123,13 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     }
 
     bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(2)));
-    (bool ownerExists, bytes32 owner) = getStorageValue(
+    (, bytes32 owner) = getStorageValue(
       l2resolver,
       ownerSlot,
       proof.stateRoot,
       proof.accountProof,
       proof.ownerStorageProof
     );
-
-    if (!ownerExists) {
-      return "";
-    }
 
     return abi.encode(owner);
   }
