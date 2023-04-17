@@ -8,13 +8,13 @@ async function main() {
   const LineaResolver = await ethers.getContractFactory("LineaResolver");
   const nftName = "Lineatest";
   const symbol = "LTST";
-  const lineaResolver = await LineaResolver.deploy(nftName, symbol);
+  const baseUri = "http://localhost:3000/metadata/";
+  const lineaResolver = await LineaResolver.deploy(nftName, symbol, baseUri);
   await lineaResolver.deployed();
 
   // Test with subdomain with default "julink.lineatest.eth", assuming we still control lineatest.eth on L1
   const name = process.env.L2_ENS_NAME ? process.env.L2_ENS_NAME : "julink.lineatest.eth";
-  const node = ethers.utils.namehash(name);
-  const tx = await lineaResolver.mintSubdomain(node, owner.address);
+  const tx = await lineaResolver.mintSubdomain(name, owner.address);
   await tx.wait();
   console.log(`LineaResolver deployed to, L2_RESOLVER_ADDRESS: ${lineaResolver.address}`);
 
@@ -22,7 +22,7 @@ async function main() {
     setTimeout(async () => {
       await run("verify:verify", {
         address: lineaResolver.address,
-        constructorArguments: [nftName, symbol],
+        constructorArguments: [nftName, symbol, baseUri],
       });
     }, 10000);
   }

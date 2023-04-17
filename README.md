@@ -1,6 +1,24 @@
 # Linea Resolver
 
-This repository contains smart contracts and a node.js gateway server that together allow storing ENS names on Linea using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
+This repository contains smart contracts and a Node.js Gateway server that together allow storing ENS names on Linea using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
+
+## Components
+
+### Contracts
+
+LineaResolverStub is a L1 (Ethereum) ENS resolver contract that implements the proposed protocol, with functions to return the gateway address and required prefix for a query, and to verify the response from the gateway.
+
+LineaResolver is an L2 (Linea) ENS resolver contract that stores and returns the data necessary to resolve an ENS name.
+
+Additional Smart Contracts documentation available in [./packages/contracts/README.md](./packages/contracts/README.md)
+
+### Gateway
+
+A node-based gateway server that answers queries for L2 Gateway function calls relating to Optimism-based L2 resolvers.
+
+### Client
+
+A very simple script that tests if ccip-read integration is working.
 
 ## Test in a mixed local/L2 mode
 
@@ -44,7 +62,7 @@ For local/L2 mode, `GOERLI_URL` is not required.
 Compile smart contracts:
 
 ```bash
-yarn hardhat compile
+yarn compile
 ```
 
 Deploy L2 contracts first:
@@ -110,5 +128,3 @@ Deploy to app engine:
 ```
 gcloud app deploy goeril.app.yml
 ```
-
-yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --helper_address $HELPER_ADDRESS --l1_provider_url https://goerli.infura.io/v3/<INFURA_KEY> --l2_provider_url https://goerli.infura.io/v3/<INFURA_KEY> --l1_chain_id 5 --l2_chain_id 5
