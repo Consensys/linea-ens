@@ -112,7 +112,6 @@ contract LineaResolver is ERC721, Ownable {
    * @param newBaseFee the new base fee used to send to mint a sub domain
    */
   function setBaseFee(uint256 newBaseFee) external onlyOwner {
-    require(newBaseFee >= 0, "Fees cannot be negative");
     baseFee = newBaseFee;
   }
 

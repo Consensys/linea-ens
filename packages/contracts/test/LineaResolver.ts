@@ -7,6 +7,7 @@ describe("LineaResolver", function () {
   async function deployContractsFixture() {
     const [owner, unknown] = await ethers.getSigners();
 
+    const baseFee = 1000000000000000;
     const domain = "julink.lineatest.eth";
     const hash = ethers.utils.namehash(domain);
 
@@ -22,7 +23,7 @@ describe("LineaResolver", function () {
     await lineaResolver.deployed();
 
     // Mint domain
-    await lineaResolver.mintSubdomain(domain, owner.address);
+    await lineaResolver.mintSubdomain(domain, owner.address, { value: baseFee });
 
     return {
       owner,
@@ -32,18 +33,27 @@ describe("LineaResolver", function () {
       lineaResolver,
       hash,
       undefinedHash,
+      baseFee,
     };
   }
 
   describe("mintSubdomain", async () => {
     it("Should format the domain to lowercase", async function () {
-      const { lineaResolver, owner } = await loadFixture(deployContractsFixture);
+      const { lineaResolver, owner, baseFee } = await loadFixture(deployContractsFixture);
 
       const domain = "JULINK42.lineatest.eth";
-      await lineaResolver.mintSubdomain(domain, owner.address);
+      await lineaResolver.mintSubdomain(domain, owner.address, { value: baseFee });
       const name = await lineaResolver.tokenName(2);
 
       expect(name).to.be.equal(domain.toLowerCase());
+    });
+    it("Should revert the fee are too low", async function () {
+      const { lineaResolver, owner, baseFee } = await loadFixture(deployContractsFixture);
+
+      const domain = "JULINK42.lineatest.eth";
+      const tooLowFee = baseFee - 1;
+
+      await expect(lineaResolver.mintSubdomain(domain, owner.address, { value: tooLowFee })).to.be.revertedWith("LineaResolver: insufficient fees");
     });
   });
 
@@ -118,7 +128,7 @@ describe("LineaResolver", function () {
       await expect(lineaResolver.tokenURI(tokenId)).to.be.revertedWith("ERC721: invalid token ID");
     });
     it("Should return only tokenId when Base URI is empty", async function () {
-      const { domain, owner } = await loadFixture(deployContractsFixture);
+      const { domain, owner, baseFee } = await loadFixture(deployContractsFixture);
 
       // Deploy Resolver
       const LineaResolver = await ethers.getContractFactory("LineaResolver");
@@ -130,7 +140,7 @@ describe("LineaResolver", function () {
 
       const tokenId = 1;
       // Mint domain
-      await lineaResolver.mintSubdomain(domain, owner.address);
+      await lineaResolver.mintSubdomain(domain, owner.address, { value: baseFee });
 
       const tokenUri = await lineaResolver.tokenURI(tokenId);
 
@@ -146,6 +156,24 @@ describe("LineaResolver", function () {
       const name = await lineaResolver.tokenName(tokenId);
 
       await expect(name).to.be.equal(domain);
+    });
+  });
+
+  describe("setBaseFee", async () => {
+    it("Should change the base fee", async function () {
+      const newbaseFee = 2000000000000000;
+      const { lineaResolver } = await loadFixture(deployContractsFixture);
+
+      await lineaResolver.setBaseFee(newbaseFee);
+      const fee = await lineaResolver.baseFee();
+
+      await expect(fee).to.be.equal(newbaseFee);
+    });
+    it("Should revert if caller is not owner", async function () {
+      const newbaseFee = 2000000000000000;
+      const { lineaResolver, unknown } = await loadFixture(deployContractsFixture);
+
+      await expect(lineaResolver.connect(unknown).setBaseFee(newbaseFee)).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 
