@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
+    "dotenv": "^16.0.3",
     "tsdx": "^0.14.1"
   }
 }

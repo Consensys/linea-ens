@@ -3,13 +3,17 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
 
-const IResolverAbi = require("../abi/IResolverService.json")
-  .abi;
+const IResolverAbi = require("../../contracts/artifacts/contracts/l1/LineaResolverStub.sol/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
+require("dotenv").config();
 const { BigNumber } = ethers;
 const program = new Command();
 program
-  .option("-r --l2_resolver_address <address>", "RESOLVER_ADDRESS")
+  .option(
+    "-r --l2_resolver_address <address>",
+    "L2_RESOLVER_ADDRESS",
+    "0x756877316A15944cb5fE548318DaC094B7E216F2"
+  )
   .option(
     "-l1p --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
@@ -29,14 +33,23 @@ program
   .option("-p --port <number>", "Port number to serve on", "8080");
 program.parse(process.argv);
 const options = program.opts();
-console.log({ options });
-const {
-  l1_provider_url,
-  l2_provider_url,
-  rollup_address,
-  l2_resolver_address,
-  debug,
-} = options;
+
+const l1_provider_url = process.env.L1_PROVIDER_URL || options.l1_provider_url;
+const l2_provider_url = process.env.L2_PROVIDER_URL || options.l2_provider_url;
+const l2_resolver_address =
+  process.env.L2_RESOLVER_ADDRESS || options.l2_resolver_address;
+
+
+
+const { rollup_address, debug, port } = options;
+
+console.log({l1_provider_url});
+console.log({l2_provider_url}); 
+console.log({l2_resolver_address});
+console.log({rollup_address});
+console.log({debug});
+console.log({port});
+
 if (l2_resolver_address === undefined) {
   throw "Must specify --l2_resolver_address";
 }
