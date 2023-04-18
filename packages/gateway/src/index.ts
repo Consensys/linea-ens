@@ -64,32 +64,14 @@ server.add(IResolverAbi, [
         console.log("encodedName", encodedName);
         console.log("name", name);
         console.log("node", node);
-        // Slot Index of "mapping(bytes32 => uint256) public addresses" = 7
-        const tokenIdSlot = ethers.utils.keccak256(
-          node + "00".repeat(31) + "07"
-        );
         const to = request?.to;
-        console.log(1, {
+        console.log({
           node,
           to,
           data,
           l1_provider_url,
           l2_provider_url,
           l2_resolver_address,
-        });
-        const blockNumber = (await l2provider.getBlock("latest")).number;
-        console.log(2, { blockNumber, tokenIdSlot });
-        let tokenData;
-        try {
-          tokenData = await l2provider.getStorageAt(
-            l2_resolver_address,
-            tokenIdSlot
-          );
-        } catch (e) {
-          console.log(3, { e });
-        }
-        console.log(4, {
-          tokenData,
         });
       }
 
@@ -102,7 +84,6 @@ server.add(IResolverAbi, [
         blockHash,
         false,
       ]);
-      console.log(5, { l2blockRaw });
       const stateRoot = l2blockRaw.stateRoot;
       const blockarray = [
         l2blockRaw.parentHash,
@@ -124,7 +105,9 @@ server.add(IResolverAbi, [
       ];
       const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
 
-      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "07");
+      // we get the slot address of the variable 'mapping(bytes32 => uint256) public addresses'
+      // which is at index 11 of the L2 resolver contract
+      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "0B");
       const tokenId = await l2provider.getStorageAt(
         l2_resolver_address,
         tokenIdSlot
@@ -165,7 +148,7 @@ server.add(IResolverAbi, [
         tokenIdStorageProof,
         ownerStorageProof,
       };
-      console.log(6, { finalProof });
+      console.log({ finalProof });
       return [finalProof];
     },
   },
