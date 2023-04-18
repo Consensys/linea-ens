@@ -105,6 +105,20 @@ If successful, it should show the following output:
 ```bash
 ethAddress         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 ```
+### Uint tests
+
+```bash
+cd packages/contracts
+yarn test
+```
+### Test coverage
+
+This project uses the Hardhat plugin [solidity-coverage](https://github.com/sc-forks/solidity-coverage/blob/master/HARDHAT_README.md) to assess the overall coverage of the unit tests.
+To generate a boilerplate report, use the following command:
+
+```shell
+yarn coverage
+```
 
 ## How to deploy to public net (goerli for example)
 
