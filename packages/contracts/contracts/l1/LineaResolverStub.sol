@@ -109,7 +109,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     );
 
     // step 2: check storage values, get itemId first and then get the address result
-    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(6)));
+    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(7)));
     (bool tokenIdExists, bytes32 tokenId) = getStorageValue(
       l2resolver,
       tokenIdSlot,

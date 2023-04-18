@@ -9,11 +9,7 @@ require("dotenv").config();
 const { BigNumber } = ethers;
 const program = new Command();
 program
-  .option(
-    "-r --l2_resolver_address <address>",
-    "L2_RESOLVER_ADDRESS",
-    ""
-  )
+  .option("-r --l2_resolver_address <address>", "L2_RESOLVER_ADDRESS", "")
   .option(
     "-l1p --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
@@ -27,7 +23,7 @@ program
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
-    ""
+    "0xE87d317eB8dcc9afE24d9f63D6C760e52Bc18A40"
   )
   .option("-d --debug", "debug", false)
   .option("-p --port <number>", "Port number to serve on", "8080");
@@ -39,16 +35,14 @@ const l2_provider_url = process.env.L2_PROVIDER_URL || options.l2_provider_url;
 const l2_resolver_address =
   process.env.L2_RESOLVER_ADDRESS || options.l2_resolver_address;
 
-
-
 const { rollup_address, debug, port } = options;
 
-console.log({l1_provider_url});
-console.log({l2_provider_url}); 
-console.log({l2_resolver_address});
-console.log({rollup_address});
-console.log({debug});
-console.log({port});
+console.log({ l1_provider_url });
+console.log({ l2_provider_url });
+console.log({ l2_resolver_address });
+console.log({ rollup_address });
+console.log({ debug });
+console.log({ port });
 
 if (l2_resolver_address === undefined) {
   throw "Must specify --l2_resolver_address";
@@ -70,7 +64,10 @@ server.add(IResolverAbi, [
         console.log("encodedName", encodedName);
         console.log("name", name);
         console.log("node", node);
-        const addrSlot = ethers.utils.keccak256(node + "00".repeat(31) + "01");
+        // Slot Index of "mapping(bytes32 => uint256) public addresses" = 7
+        const tokenIdSlot = ethers.utils.keccak256(
+          node + "00".repeat(31) + "07"
+        );
         const to = request?.to;
         console.log(1, {
           node,
@@ -81,18 +78,18 @@ server.add(IResolverAbi, [
           l2_resolver_address,
         });
         const blockNumber = (await l2provider.getBlock("latest")).number;
-        console.log(2, { blockNumber, addrSlot });
-        let addressData;
+        console.log(2, { blockNumber, tokenIdSlot });
+        let tokenData;
         try {
-          addressData = await l2provider.getStorageAt(
+          tokenData = await l2provider.getStorageAt(
             l2_resolver_address,
-            addrSlot
+            tokenIdSlot
           );
         } catch (e) {
           console.log(3, { e });
         }
         console.log(4, {
-          addressData,
+          tokenData,
         });
       }
 
@@ -127,7 +124,7 @@ server.add(IResolverAbi, [
       ];
       const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
 
-      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "06");
+      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "07");
       const tokenId = await l2provider.getStorageAt(
         l2_resolver_address,
         tokenIdSlot
