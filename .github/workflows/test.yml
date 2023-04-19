@@ -3,10 +3,10 @@ name: "Execute lint and test"
 on:
   pull_request:
     branches:
-      - github-action-test-before-merging
+      - develop
   push:
     branches:
-      - github-action-test-before-merging
+      - develop
 jobs:
   test-smart-contracts-and-build-gateway:
     runs-on: ubuntu-latest
