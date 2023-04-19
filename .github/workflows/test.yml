@@ -8,17 +8,22 @@ on:
     branches:
       - github-action-test-before-merging
 jobs:
-  test-smart-contracts:
+  test-smart-contracts-and-build-gateway:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
-        working-directory: ./path/to/another/directory
+        working-directory: ./packages/contracts
         run: yarn install
       - name: Lint the code
-        working-directory: ./path/to/another/directory
+        working-directory: ./packages/contracts
         run: yarn lint
       - name: Run tests
-        working-directory: ./path/to/another/directory
+        working-directory: ./packages/contracts
         run: yarn hardhat test
+      - name: Build Gateway
+        working-directory: ./packages/gateway
+        run: |
+          yarn install
+          yarn build
