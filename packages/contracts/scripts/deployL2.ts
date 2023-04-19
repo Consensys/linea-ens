@@ -24,7 +24,7 @@ async function main() {
         address: lineaResolver.address,
         constructorArguments: [nftName, symbol, baseUri],
       });
-    }, 20000);
+    }, 30000);
   }
 }
 

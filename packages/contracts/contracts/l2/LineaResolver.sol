@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 
-import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -12,7 +12,7 @@ import "@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
 @dev A Solidity contract that implements an ERC721 token for resolving Ethereum domain names to addresses.
 @author ConsenSys
 */
-contract LineaResolver is ERC721, Ownable {
+contract LineaResolver is ERC721Enumerable, Ownable {
   // Mapping to store Ethereum domain names (as bytes32) and their corresponding addresses (as uint256)
   mapping(bytes32 => uint256) public addresses;
   // Mapping to store token IDs (as uint256) and their corresponding domain name (as string)
