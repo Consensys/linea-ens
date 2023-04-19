@@ -1,0 +1,24 @@
+name: "Execute lint and test"
+
+on:
+  pull_request:
+    branches:
+      - github-action-test-before-merging
+  push:
+    branches:
+      - github-action-test-before-merging
+jobs:
+  test-smart-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        working-directory: ./path/to/another/directory
+        run: yarn install
+      - name: Lint the code
+        working-directory: ./path/to/another/directory
+        run: yarn lint
+      - name: Run tests
+        working-directory: ./path/to/another/directory
+        run: yarn hardhat test
