@@ -12,15 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Node.js 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
       - name: Run Slither
         uses: crytic/slither-action@v0.3.0
         id: slither
         with:
+          node-version: 16
           target: 'packages/contracts'
           sarif: results.sarif
           fail-on: none
