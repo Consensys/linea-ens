@@ -15,6 +15,9 @@ jobs:
       - name: Run Slither
         uses: crytic/slither-action@v0.3.0
         id: slither
+        env:
+          GOERLI_LINEA_URL: ${{ secrets.GOERLI_LINEA_URL }}
+          GOERLI_URL: ${{ secrets.GOERLI_URL }}
         with:
           node-version: 16
           target: 'packages/contracts'
