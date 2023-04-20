@@ -47,6 +47,7 @@ describe("LineaResolver", function () {
 
       expect(name).to.be.equal(domain.toLowerCase());
     });
+
     it("Should revert if the fees are too low", async function () {
       const { lineaResolver, owner, baseFee } = await loadFixture(deployContractsFixture);
 
@@ -54,6 +55,18 @@ describe("LineaResolver", function () {
       const tooLowFee = baseFee - 1;
 
       await expect(lineaResolver.mintSubdomain(domain, owner.address, { value: tooLowFee })).to.be.revertedWith("LineaResolver: insufficient fees");
+    });
+
+    it("Should not be able to mint twice the same sub domain", async function () {
+      const { lineaResolver, owner, baseFee, domain } = await loadFixture(deployContractsFixture);
+
+      await expect(lineaResolver.mintSubdomain(domain, owner.address, { value: baseFee })).to.be.revertedWith("Sub-domain has already been registered");
+    });
+
+    it("Should not be able to mint an empty domain", async function () {
+      const { lineaResolver, owner, baseFee } = await loadFixture(deployContractsFixture);
+
+      await expect(lineaResolver.mintSubdomain("", owner.address, { value: baseFee })).to.be.revertedWith("Sub-domain cannot be null");
     });
   });
 
@@ -91,11 +104,13 @@ describe("LineaResolver", function () {
 
       expect(tokenURI).to.be.equal(new URL(tokenId.toString(), newBaseUri).toString());
     });
+
     it("Should revert if Base URI is empty", async function () {
       const { lineaResolver } = await loadFixture(deployContractsFixture);
 
       await expect(lineaResolver.setBaseTokenURI("")).to.be.revertedWith("Base URI cannot be empty");
     });
+
     it("Should not be able to be called by non-owner", async function () {
       const { lineaResolver, unknown } = await loadFixture(deployContractsFixture);
       const newBaseUri = "http://localhost:3001/metadata/";
@@ -114,12 +129,14 @@ describe("LineaResolver", function () {
 
       await expect(tokenUri).to.be.equal(expectedUri);
     });
+
     it("Should revert if token does not exists", async function () {
       const tokenId = 0;
       const { lineaResolver } = await loadFixture(deployContractsFixture);
 
       await expect(lineaResolver.tokenURI(tokenId)).to.be.revertedWith("ERC721: invalid token ID");
     });
+
     it("Should return only tokenId when Base URI is empty", async function () {
       const { domain, owner, baseFee } = await loadFixture(deployContractsFixture);
 
@@ -163,6 +180,7 @@ describe("LineaResolver", function () {
 
       await expect(fee).to.be.equal(newbaseFee);
     });
+
     it("Should revert if caller is not owner", async function () {
       const newbaseFee = 2000000000000000;
       const { lineaResolver, unknown } = await loadFixture(deployContractsFixture);
@@ -180,12 +198,14 @@ describe("LineaResolver", function () {
 
       await expect(lineaResolver.ownerOf(tokenId)).to.be.revertedWith("ERC721: invalid token ID");
     });
+
     it("Should revert if not token owner", async function () {
       const tokenId = 1;
       const { lineaResolver, unknown } = await loadFixture(deployContractsFixture);
 
       await expect(lineaResolver.connect(unknown).burn(tokenId)).to.be.revertedWith("Caller is not owner or approved");
     });
+
     it("Should not be able to burn a token twice", async function () {
       const tokenId = 1;
       const { lineaResolver } = await loadFixture(deployContractsFixture);
