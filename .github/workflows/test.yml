@@ -21,7 +21,10 @@ jobs:
         run: yarn lint
       - name: Run tests
         working-directory: ./packages/contracts
-        run: yarn hardhat test
+        env:
+          GOERLI_LINEA_URL: ${{ secrets.GOERLI_LINEA_URL }}
+          GOERLI_URL: ${{ secrets.GOERLI_URL }}
+        run: yarn test
       - name: Build Gateway
         working-directory: ./packages/gateway
         run: |
