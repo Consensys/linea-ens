@@ -3,7 +3,15 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import { defaultAbiCoder } from "@ethersproject/abi";
 // We use mocked results from the gateway and L2 resolver for the unit tests
-import { DOMAIN_NAME, EXPECTED_RESOLVE_WITH_PROOF_RESULT, GATEWAY_URL, L2_RESOLVER_ADDRESS, MOCKED_PROOF, MOCKED_PROOF_UNDEFINED } from "./mocks/proof";
+import {
+  DOMAIN_NAME,
+  EXPECTED_RESOLVE_WITH_PROOF_RESULT,
+  GATEWAY_URL,
+  L2_RESOLVER_ADDRESS,
+  MOCKED_PROOF,
+  MOCKED_PROOF_UNDEFINED,
+  MOCKED_PROOF_ACCOUNT_NOT_EXISTS,
+} from "./mocks/proof";
 
 describe("LineaResolver", function () {
   async function deployContractsFixture() {
@@ -77,6 +85,30 @@ describe("LineaResolver", function () {
       );
       expect(result).to.be.equal("0x");
     });
+
+    it("Should revert when blockHash is not valid", async function () {
+      const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
+      const extraData = "0x3b3b57de" + hash.slice(2);
+      const proofWithInvalidBlockHash = { ...MOCKED_PROOF };
+      proofWithInvalidBlockHash.blockHash = "0x94ea534b47baee0ba1b851ea15ffd0435de5389022baf665d5f59dac55c140b1";
+      await expect(
+        lineaResolverStub.resolveWithProof(
+          defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(proofWithInvalidBlockHash)]),
+          extraData,
+        ),
+      ).to.revertedWith("blockHash encodedBlockArray mismatch");
+    });
+
+    it("Should revert if the given resolver address does not exist", async function () {
+      const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
+      const extraData = "0x3b3b57de" + hash.slice(2);
+      await expect(
+        lineaResolverStub.resolveWithProof(
+          defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_ACCOUNT_NOT_EXISTS)]),
+          extraData,
+        ),
+      ).to.revertedWith("Account does not exist");
+    });
   });
 
   describe("resolve", async () => {
@@ -96,6 +128,13 @@ describe("LineaResolver", function () {
     it("should return true for valid interfaceId", async () => {
       const { lineaResolverStub } = await loadFixture(deployContractsFixture);
       const anotherInterfaceId = "0x9061b923";
+      const result = await lineaResolverStub.supportsInterface(anotherInterfaceId);
+      expect(result).to.be.equal(true);
+    });
+
+    it("should return true for valid interfaceId for the abstract SupportsInterface contract", async () => {
+      const { lineaResolverStub } = await loadFixture(deployContractsFixture);
+      const anotherInterfaceId = "0x01ffc9a7";
       const result = await lineaResolverStub.supportsInterface(anotherInterfaceId);
       expect(result).to.be.equal(true);
     });
