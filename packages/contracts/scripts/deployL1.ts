@@ -1,6 +1,6 @@
 import { ethers, network, run } from "hardhat";
 import { REGISTRY_ADDRESS } from "./constants";
-const ensRegistryAbi = require("../abi/ENSRegistry.json");
+import ensRegistryAbi from "../abi/ENSRegistry.json";
 
 const HARDHAT_NETWORK_CHAIN_ID = 31337;
 
@@ -30,7 +30,7 @@ async function main() {
   const registry = await new ethers.Contract(registryAddr, ensRegistryAbi, owner);
   const name = process.env.L1_ENS_NAME ? process.env.L1_ENS_NAME : "lineatest.eth";
   const node = ethers.utils.namehash(name);
-  let tx = await registry.setResolver(node, lineaResolverStub.address);
+  const tx = await registry.setResolver(node, lineaResolverStub.address);
   await tx.wait();
   console.log("L1 ENS name:", name, ", set to LineaResolverStub: ", lineaResolverStub.address);
 
