@@ -45,7 +45,7 @@ jobs:
         with:
           context: "{{defaultContext}}:packages/gateway"
           push: false
-          tags: consensys/linea-resolvery:${{ env.DOCKER_TAG }}
+          tags: consensys/linea-resolver:${{ env.DOCKER_TAG }}
 
       - name: Docker Image Build and Publish
         id: docker-build-publish
