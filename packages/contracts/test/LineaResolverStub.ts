@@ -10,10 +10,10 @@ import {
   L2_RESOLVER_ADDRESS,
   MOCKED_PROOF,
   MOCKED_PROOF_UNDEFINED,
-  MOCKED_PROOF_ACCOUNT_NOT_EXISTS,
+  MOCKED_PROOF_INVALID_STATE_ROOT,
 } from "./mocks/proof";
 
-describe("LineaResolver", function () {
+describe("LineaResolverStub", function () {
   async function deployContractsFixture() {
     const [owner] = await ethers.getSigners();
 
@@ -23,9 +23,14 @@ describe("LineaResolver", function () {
     const undefinedDomain = "undefined.lineatest.eth";
     const undefinedHash = ethers.utils.namehash(undefinedDomain);
 
+    // Deploy FakeRollup
+    const FakeRollup = await ethers.getContractFactory("FakeRollup");
+    const fakeRollup = await FakeRollup.deploy();
+    await fakeRollup.deployed();
+
     // Deploy ResolverStub
     const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
-    const lineaResolverStub = await LineaResolverStub.deploy(gateways, L2_RESOLVER_ADDRESS);
+    const lineaResolverStub = await LineaResolverStub.deploy(gateways, L2_RESOLVER_ADDRESS, fakeRollup.address);
     await lineaResolverStub.deployed();
 
     return {
@@ -50,7 +55,7 @@ describe("LineaResolver", function () {
     it("Should return the expected address", async function () {
       const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
       // We prefix with the function signature 'addr(bytes32)' as bytes4
-      const extraData = "0x3b3b57de" + hash.slice(2);
+      const extraData = `0x3b3b57de${hash.slice(2)}`;
       const result = await lineaResolverStub.resolveWithProof(
         defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF)]),
         extraData,
@@ -60,7 +65,7 @@ describe("LineaResolver", function () {
 
     it("Should revert if hash does not match the proof", async function () {
       const { lineaResolverStub, undefinedHash } = await loadFixture(deployContractsFixture);
-      const extraData = "0x3b3b57de" + undefinedHash.slice(2);
+      const extraData = `0x3b3b57de${undefinedHash.slice(2)}`;
       await expect(
         lineaResolverStub.resolveWithProof(defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF)]), extraData),
       ).to.be.revertedWith("Invalid large internal hash");
@@ -68,7 +73,7 @@ describe("LineaResolver", function () {
 
     it("Should return empty bytes if the function signature is not the one expected", async function () {
       const { lineaResolverStub, undefinedHash } = await loadFixture(deployContractsFixture);
-      const extraData = "0x00000000" + undefinedHash.slice(2);
+      const extraData = `0x00000000${undefinedHash.slice(2)}`;
       const result = await lineaResolverStub.resolveWithProof(
         defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF)]),
         extraData,
@@ -78,7 +83,7 @@ describe("LineaResolver", function () {
 
     it("Should return empty bytes if the domain does not exists but the proof is correct", async function () {
       const { lineaResolverStub, undefinedHash } = await loadFixture(deployContractsFixture);
-      const extraData = "0x3b3b57de" + undefinedHash.slice(2);
+      const extraData = `0x3b3b57de${undefinedHash.slice(2)}`;
       const result = await lineaResolverStub.resolveWithProof(
         defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_UNDEFINED)]),
         extraData,
@@ -88,7 +93,7 @@ describe("LineaResolver", function () {
 
     it("Should revert when blockHash is not valid", async function () {
       const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
-      const extraData = "0x3b3b57de" + hash.slice(2);
+      const extraData = `0x3b3b57de${hash.slice(2)}`;
       const proofWithInvalidBlockHash = { ...MOCKED_PROOF };
       proofWithInvalidBlockHash.blockHash = "0x94ea534b47baee0ba1b851ea15ffd0435de5389022baf665d5f59dac55c140b1";
       await expect(
@@ -96,25 +101,25 @@ describe("LineaResolver", function () {
           defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(proofWithInvalidBlockHash)]),
           extraData,
         ),
-      ).to.revertedWith("blockHash encodedBlockArray mismatch");
+      ).to.revertedWith("LineaResolverStub: blockHash encodedBlockArray mismatch");
     });
 
-    it("Should revert if the given resolver address does not exist", async function () {
+    it("Should revert if the given state root is invalid", async function () {
       const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
-      const extraData = "0x3b3b57de" + hash.slice(2);
+      const extraData = `0x3b3b57de${hash.slice(2)}`;
       await expect(
         lineaResolverStub.resolveWithProof(
-          defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_ACCOUNT_NOT_EXISTS)]),
+          defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_INVALID_STATE_ROOT)]),
           extraData,
         ),
-      ).to.revertedWith("Account does not exist");
+      ).to.revertedWith("LineaResolverStub: invalid state root");
     });
   });
 
   describe("resolve", async () => {
     it("Should revert with OffchainLookup when calling resolve", async function () {
       const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
-      const extraData = "0x3b3b57de" + hash.slice(2);
+      const extraData = `0x3b3b57de${hash.slice(2)}`;
       const encodedName = ethers.utils.dnsEncode(DOMAIN_NAME);
       try {
         await lineaResolverStub.resolve(encodedName, extraData);
