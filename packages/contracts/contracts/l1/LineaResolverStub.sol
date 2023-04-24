@@ -33,6 +33,10 @@ interface ISupportsInterface {
   function supportsInterface(bytes4 interfaceID) external pure returns (bool);
 }
 
+interface IRollup {
+  function stateRootHash() external view returns (bytes32);
+}
+
 abstract contract SupportsInterface is ISupportsInterface {
   function supportsInterface(
     bytes4 interfaceID
@@ -44,6 +48,7 @@ abstract contract SupportsInterface is ISupportsInterface {
 contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   string[] public gateways;
   address public l2resolver;
+  address public rollup;
 
   error OffchainLookup(
     address sender,
@@ -53,9 +58,18 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes extraData
   );
 
-  constructor(string[] memory _gateways, address _l2resolver) {
+  /**
+   * @dev The Linea Resolver on L1 will use the gateway passed as parameter to resolve
+   * the node, it needs to the resolver address on L2 to verify the returned result
+   * as well as the linea rollup address
+   * @param _gateways the urls to call to get the address from the resolver on L2
+   * @param _l2resolver the address of the resolver on L2
+   * @param _rollup the address of the linea rollup contract
+   */
+  constructor(string[] memory _gateways, address _l2resolver, address _rollup) {
     gateways = _gateways;
     l2resolver = _l2resolver;
+    rollup = _rollup;
   }
 
   /**
@@ -101,14 +115,20 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes32 node = abi.decode(extraData[4:], (bytes32));
 
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
-    // bytes32 node = abi.decode(extraData, (bytes32));
-    // step 1: check blockHash against encoded block array
+
+    // step 1: check that the right state root was used to calculate the proof
     require(
-      proof.blockHash == keccak256(proof.encodedBlockArray),
-      "blockHash encodedBlockArray mismatch"
+      IRollup(rollup).stateRootHash() == proof.stateRoot,
+      "LineaResolverStub: invalid state root"
     );
 
-    // step 2: check storage values, get itemId first and then get the address result
+    // step 2: check blockHash against encoded block array
+    require(
+      proof.blockHash == keccak256(proof.encodedBlockArray),
+      "LineaResolverStub: blockHash encodedBlockArray mismatch"
+    );
+
+    // step 3: check storage values, get itemId first and then get the address result
     // the index slot 11 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver
     // the index slot 2 is for 'mapping(uint256 => address) private _owners' in the L2 resolver
     bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(11)));
@@ -151,7 +171,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
         stateTrieWitness,
         stateRoot
       );
-    require(accountExists, "Account does not exist");
+    require(accountExists, "LineaResolverStub: Account does not exist");
     Lib_OVMCodec.EVMAccount memory account = Lib_OVMCodec.decodeEVMAccount(
       encodedResolverAccount
     );

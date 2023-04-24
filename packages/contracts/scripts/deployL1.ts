@@ -1,5 +1,5 @@
 import { ethers, network, run } from "hardhat";
-import { REGISTRY_ADDRESS } from "./constants";
+import { REGISTRY_ADDRESS, ROLLUP_ADDRESS } from "./constants";
 import ensRegistryAbi from "../abi/ENSRegistry.json";
 
 const HARDHAT_NETWORK_CHAIN_ID = 31337;
@@ -21,9 +21,10 @@ async function main() {
   }
 
   // Deploy Linea Resolver Stub to L1
-  const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "http://localhost:8080/{sender}/{data}.json";
+  const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "https://ensgw1.dev.linea.build/{sender}/{data}.json";
+  const rollupAddr = ROLLUP_ADDRESS[network.name as keyof typeof ROLLUP_ADDRESS];
   const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
-  const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl], L2_RESOLVER_ADDRESS);
+  const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl], L2_RESOLVER_ADDRESS, rollupAddr);
   await lineaResolverStub.deployed();
   console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
   const registryAddr = REGISTRY_ADDRESS[network.name as keyof typeof REGISTRY_ADDRESS];
@@ -39,7 +40,7 @@ async function main() {
     setTimeout(async () => {
       await run("verify:verify", {
         address: lineaResolverStub.address,
-        constructorArguments: [[gatewayUrl], L2_RESOLVER_ADDRESS],
+        constructorArguments: [[gatewayUrl], L2_RESOLVER_ADDRESS, rollupAddr],
       });
     }, 20000);
   }
