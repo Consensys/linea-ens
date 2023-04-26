@@ -57,99 +57,117 @@ server.add(IResolverAbi, [
   {
     type: "resolve",
     func: async ([encodedName, data]: Result, request) => {
-      const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
-      const node = ethers.utils.namehash(name);
+      try {
+        console.log("--------------------REQUEST START--------------------\n");
+        console.log(`Request timestamp: ${new Date().toUTCString()}`);
+        const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
+        const node = ethers.utils.namehash(name);
 
-      if (debug) {
-        console.log("encodedName", encodedName);
-        console.log("name", name);
-        console.log("node", node);
-        const to = request?.to;
-        console.log({
-          node,
-          to,
-          data,
-          l1_provider_url,
-          l2_provider_url,
+        if (debug) {
+          console.log("encodedName", encodedName);
+          console.log("name", name);
+          console.log("node", node);
+          const to = request?.to;
+          console.log({
+            node,
+            to,
+            data,
+            l1_provider_url,
+            l2_provider_url,
+            l2_resolver_address,
+          });
+        }
+
+        const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
+        console.log(`lastBlockFinalized: ${lastBlockFinalized}`);
+        const blockNumber = lastBlockFinalized.toNumber();
+        const block = await l2provider.getBlock(blockNumber);
+        const blockHash = block.hash;
+        const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
+          blockHash,
+          false,
+        ]);
+        const stateRoot = l2blockRaw.stateRoot;
+        console.log(`stateRoot: ${stateRoot}`);
+        const blockarray = [
+          l2blockRaw.parentHash,
+          l2blockRaw.sha3Uncles,
+          l2blockRaw.miner,
+          l2blockRaw.stateRoot,
+          l2blockRaw.transactionsRoot,
+          l2blockRaw.receiptsRoot,
+          l2blockRaw.logsBloom,
+          BigNumber.from(l2blockRaw.difficulty).toHexString(),
+          BigNumber.from(l2blockRaw.number).toHexString(),
+          BigNumber.from(l2blockRaw.gasLimit).toHexString(),
+          BigNumber.from(l2blockRaw.gasUsed).toHexString(),
+          BigNumber.from(l2blockRaw.timestamp).toHexString(),
+          l2blockRaw.extraData,
+          l2blockRaw.mixHash,
+          l2blockRaw.nonce,
+          BigNumber.from(l2blockRaw.baseFeePerGas).toHexString(),
+        ];
+        const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
+
+        // we get the slot address of the variable 'mapping(bytes32 => uint256) public addresses'
+        // which is at index 11 of the L2 resolver contract
+        const tokenIdSlot = ethers.utils.keccak256(
+          `${node}${"00".repeat(31)}0B`
+        );
+        const tokenId = await l2provider.getStorageAt(
           l2_resolver_address,
-        });
+          tokenIdSlot
+        );
+        console.log(`tokenId: ${stateRoot}`);
+        const ownerSlot = ethers.utils.keccak256(
+          `${tokenId}${"00".repeat(31)}02`
+        );
+
+        // Create proof for the tokenId slot
+        const tokenIdProof = await l2provider.send("eth_getProof", [
+          l2_resolver_address,
+          [tokenIdSlot],
+          { blockHash },
+        ]);
+        const accountProof = ethers.utils.RLP.encode(tokenIdProof.accountProof);
+        const tokenIdStorageProof = ethers.utils.RLP.encode(
+          // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+          (tokenIdProof.storageProof as any[]).filter(
+            (x) => x.key === tokenIdSlot
+          )[0].proof
+        );
+        console.log(
+          `tokenIdStorageProof: ${tokenIdStorageProof.slice(0, 50)}...`
+        );
+
+        // Create proof for the owner slot
+        const ownerProof = await l2provider.send("eth_getProof", [
+          l2_resolver_address,
+          [ownerSlot],
+          { blockHash },
+        ]);
+        const ownerStorageProof = ethers.utils.RLP.encode(
+          // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+          (ownerProof.storageProof as any[]).filter(
+            (x) => x.key === ownerSlot
+          )[0].proof
+        );
+        console.log(`ownerStorageProof: ${ownerStorageProof.slice(0, 50)}...`);
+
+        const finalProof = {
+          blockHash,
+          encodedBlockArray,
+          accountProof,
+          stateRoot,
+          tokenIdStorageProof,
+          ownerStorageProof,
+        };
+        console.log("\n--------------------REQUEST END--------------------\n");
+        return [finalProof];
+      } catch (error) {
+        console.log(`Error occured: ${error}`);
+        throw error;
       }
-
-      const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
-      const blockNumber = lastBlockFinalized.toNumber();
-      console.log(`Last block number finalized on L2 : ${blockNumber}`);
-      const block = await l2provider.getBlock(blockNumber);
-      const blockHash = block.hash;
-      const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
-        blockHash,
-        false,
-      ]);
-      const stateRoot = l2blockRaw.stateRoot;
-      const blockarray = [
-        l2blockRaw.parentHash,
-        l2blockRaw.sha3Uncles,
-        l2blockRaw.miner,
-        l2blockRaw.stateRoot,
-        l2blockRaw.transactionsRoot,
-        l2blockRaw.receiptsRoot,
-        l2blockRaw.logsBloom,
-        BigNumber.from(l2blockRaw.difficulty).toHexString(),
-        BigNumber.from(l2blockRaw.number).toHexString(),
-        BigNumber.from(l2blockRaw.gasLimit).toHexString(),
-        BigNumber.from(l2blockRaw.gasUsed).toHexString(),
-        BigNumber.from(l2blockRaw.timestamp).toHexString(),
-        l2blockRaw.extraData,
-        l2blockRaw.mixHash,
-        l2blockRaw.nonce,
-        BigNumber.from(l2blockRaw.baseFeePerGas).toHexString(),
-      ];
-      const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
-
-      // we get the slot address of the variable 'mapping(bytes32 => uint256) public addresses'
-      // which is at index 11 of the L2 resolver contract
-      const tokenIdSlot = ethers.utils.keccak256(node + "00".repeat(31) + "0B");
-      const tokenId = await l2provider.getStorageAt(
-        l2_resolver_address,
-        tokenIdSlot
-      );
-      const ownerSlot = ethers.utils.keccak256(
-        tokenId + "00".repeat(31) + "02"
-      );
-
-      // Create proof for the tokenId slot
-      const tokenIdProof = await l2provider.send("eth_getProof", [
-        l2_resolver_address,
-        [tokenIdSlot],
-        { blockHash },
-      ]);
-      const accountProof = ethers.utils.RLP.encode(tokenIdProof.accountProof);
-      const tokenIdStorageProof = ethers.utils.RLP.encode(
-        (tokenIdProof.storageProof as any[]).filter(
-          (x) => x.key === tokenIdSlot
-        )[0].proof
-      );
-
-      // Create proof for the owner slot
-      const ownerProof = await l2provider.send("eth_getProof", [
-        l2_resolver_address,
-        [ownerSlot],
-        { blockHash },
-      ]);
-      const ownerStorageProof = ethers.utils.RLP.encode(
-        (ownerProof.storageProof as any[]).filter((x) => x.key === ownerSlot)[0]
-          .proof
-      );
-
-      const finalProof = {
-        blockHash,
-        encodedBlockArray,
-        accountProof,
-        stateRoot,
-        tokenIdStorageProof,
-        ownerStorageProof,
-      };
-      console.log({ finalProof });
-      return [finalProof];
     },
   },
 ]);
@@ -162,7 +180,7 @@ function decodeDnsName(dnsname: Buffer) {
   while (true) {
     const len = dnsname.readUInt8(idx);
     if (len === 0) break;
-    labels.push(dnsname.slice(idx + 1, idx + len + 1).toString("utf8"));
+    labels.push(dnsname.subarray(idx + 1, idx + len + 1).toString("utf8"));
     idx += len + 1;
   }
   return labels.join(".");
