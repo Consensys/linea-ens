@@ -55,7 +55,7 @@ Edit `.env` and set your config:
 | ETHERSCAN_API_KEY | Etherscan API key         |                                                                   |
 | L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                                     |
 | L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                              |
-| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json         |
+| GATEWAY_URL       | Primary gateway URL       | http://localhost:8080/{sender}/{data}.json                        |
 
 For local/L2 mode, `GOERLI_URL` is not required.
 
@@ -105,12 +105,14 @@ If successful, it should show the following output:
 ```bash
 ethAddress         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 ```
-### Uint tests
+
+### Unit tests
 
 ```bash
 cd packages/contracts
 yarn test
 ```
+
 ### Test coverage
 
 This project uses the Hardhat plugin [solidity-coverage](https://github.com/sc-forks/solidity-coverage/blob/master/HARDHAT_README.md) to assess the overall coverage of the unit tests.
