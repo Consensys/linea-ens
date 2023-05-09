@@ -37,12 +37,14 @@ const l2_resolver_address =
 
 const { rollup_address, debug, port } = options;
 
-console.log({ l1_provider_url });
-console.log({ l2_provider_url });
-console.log({ l2_resolver_address });
-console.log({ rollup_address });
-console.log({ debug });
-console.log({ port });
+console.log({
+  l1_provider_url,
+  l2_provider_url,
+  l2_resolver_address,
+  rollup_address,
+  debug,
+  port,
+});
 
 if (l2_resolver_address === undefined) {
   throw "Must specify --l2_resolver_address";
@@ -64,9 +66,11 @@ server.add(IResolverAbi, [
         const node = ethers.utils.namehash(name);
 
         if (debug) {
-          console.log("encodedName", encodedName);
-          console.log("name", name);
-          console.log("node", node);
+          console.log({
+            encodedName,
+            name,
+            node,
+          });
           const to = request?.to;
           console.log({
             node,
@@ -79,7 +83,7 @@ server.add(IResolverAbi, [
         }
 
         const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
-        console.log(`lastBlockFinalized: ${lastBlockFinalized}`);
+        console.log({ lastBlockFinalized });
         const blockNumber = lastBlockFinalized.toNumber();
         const block = await l2provider.getBlock(blockNumber);
         const blockHash = block.hash;
@@ -88,7 +92,7 @@ server.add(IResolverAbi, [
           false,
         ]);
         const stateRoot = l2blockRaw.stateRoot;
-        console.log(`stateRoot: ${stateRoot}`);
+        console.log({ stateRoot });
         const blockarray = [
           l2blockRaw.parentHash,
           l2blockRaw.sha3Uncles,
@@ -118,7 +122,7 @@ server.add(IResolverAbi, [
           l2_resolver_address,
           tokenIdSlot
         );
-        console.log(`tokenId: ${stateRoot}`);
+        console.log({ tokenId: stateRoot });
         const ownerSlot = ethers.utils.keccak256(
           `${tokenId}${"00".repeat(31)}02`
         );
@@ -136,9 +140,8 @@ server.add(IResolverAbi, [
             (x) => x.key === tokenIdSlot
           )[0].proof
         );
-        console.log(
-          `tokenIdStorageProof: ${tokenIdStorageProof.slice(0, 50)}...`
-        );
+        const slicedTokenIdStorageProof = tokenIdStorageProof.slice(0, 50);
+        console.log({ tokenIdStorageProof: slicedTokenIdStorageProof });
 
         // Create proof for the owner slot
         const ownerProof = await l2provider.send("eth_getProof", [
@@ -152,7 +155,8 @@ server.add(IResolverAbi, [
             (x) => x.key === ownerSlot
           )[0].proof
         );
-        console.log(`ownerStorageProof: ${ownerStorageProof.slice(0, 50)}...`);
+        const slicedOwnerStorageProof = ownerStorageProof.slice(0, 50);
+        console.log({ ownerStorageProof: slicedOwnerStorageProof });
 
         const finalProof = {
           blockHash,
