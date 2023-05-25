@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 
-import { ERC721EnumerableUpgradeable } from"@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import { Strings } from"@openzeppelin/contracts/utils/Strings.sol";
-import { Counters } from"@openzeppelin/contracts/utils/Counters.sol";
+import { ERC721EnumerableUpgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
+import { Counters } from "@openzeppelin/contracts/utils/Counters.sol";
 import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import { NameEncoder } from"@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
+import { NameEncoder } from "@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
 
 /**
 @title LineaResolver
