@@ -1,4 +1,4 @@
-import { ethers, run } from "hardhat";
+import { ethers, run, upgrades } from "hardhat";
 
 async function main() {
   const [owner] = await ethers.getSigners();
@@ -9,7 +9,7 @@ async function main() {
   const nftName = "Lineatest";
   const symbol = "LTST";
   const baseUri = "http://localhost:3000/metadata/";
-  const lineaResolver = await LineaResolver.deploy(nftName, symbol, baseUri);
+  const lineaResolver = await upgrades.deployProxy(LineaResolver, [nftName, symbol, baseUri]);
   await lineaResolver.deployed();
 
   // Test with subdomain with default "julink.lineatest.eth", assuming we still control lineatest.eth on L1

@@ -1,5 +1,5 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { expect } from "chai";
 import { constants } from "ethers";
 
@@ -19,7 +19,7 @@ describe("LineaResolver", function () {
     const nftName = "Lineatest";
     const symbol = "LTST";
     const baseUri = "http://localhost:3000/metadata/";
-    const lineaResolver = await LineaResolver.deploy(nftName, symbol, baseUri);
+    const lineaResolver = await upgrades.deployProxy(LineaResolver, [nftName, symbol, baseUri]);
     await lineaResolver.deployed();
 
     // Mint domain
@@ -145,7 +145,7 @@ describe("LineaResolver", function () {
       const nftName = "Lineatest";
       const symbol = "LTST";
       const baseUri = "";
-      const lineaResolver = await LineaResolver.deploy(nftName, symbol, baseUri);
+      const lineaResolver = await upgrades.deployProxy(LineaResolver, [nftName, symbol, baseUri]);
       await lineaResolver.deployed();
 
       const tokenId = 1;

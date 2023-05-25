@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
+import { ERC721EnumerableUpgradeable } from"@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import { Strings } from"@openzeppelin/contracts/utils/Strings.sol";
+import { Counters } from"@openzeppelin/contracts/utils/Counters.sol";
+import { OwnableUpgradeable } from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { NameEncoder } from"@ensdomains/ens-contracts/contracts/utils/NameEncoder.sol";
 
 /**
 @title LineaResolver
 @dev A Solidity contract that implements an ERC721 token for resolving Ethereum domain names to addresses.
 @author ConsenSys
 */
-contract LineaResolver is ERC721Enumerable, Ownable {
+contract LineaResolver is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   // Mapping to store Ethereum domain names (as bytes32) and their corresponding addresses (as uint256)
   mapping(bytes32 => uint256) public addresses;
   // Mapping to store token IDs (as uint256) and their corresponding domain name (as string)
@@ -24,7 +24,7 @@ contract LineaResolver is ERC721Enumerable, Ownable {
   string private _baseTokenURI;
 
   // Fees to send to mint a sub domain, initial set to 0.001 ETH
-  uint256 public baseFee = 1000000000000000;
+  uint256 public baseFee;
 
   /**
    * @dev Emitted when the address associated with a specific node is changed.
@@ -33,20 +33,29 @@ contract LineaResolver is ERC721Enumerable, Ownable {
    */
   event AddrChanged(bytes32 indexed node, address a);
 
+  /// @dev Disable constructor for safety
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() {
+    _disableInitializers();
+  }
+
   /**
-   * @dev Constructor function to initialize the ERC721 contract with the given name, symbol, and base URI.
+   * @dev Function to initialize the ERC721 contract with the given name, symbol, and base URI.
    * @notice This constructor function is used to initialize the ERC721 contract with the given name, symbol, and base URI.
    * @param _name The name of the ERC721 token.
    * @param _symbol The symbol of the ERC721 token.
    * @param baseURI The base URI for the token URI.
    */
-  constructor(
+  function initialize(
     string memory _name,
     string memory _symbol,
     string memory baseURI
-  ) ERC721(_name, _symbol) {
+  ) external initializer {
+    __ERC721_init(_name, _symbol);
+    __Ownable_init();
     _baseTokenURI = baseURI;
     _tokenIds.increment();
+    baseFee = 1000000000000000;
   }
 
   /**
