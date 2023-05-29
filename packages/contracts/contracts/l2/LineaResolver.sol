@@ -26,6 +26,8 @@ contract LineaResolver is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   // Fees to send to mint a sub domain, initial set to 0.001 ETH
   uint256 public baseFee;
 
+  uint256 private constant BASE_FEE = 1e15;
+
   /**
    * @dev Emitted when the address associated with a specific node is changed.
    * @param node The bytes32 value representing the node whose address is being changed.
@@ -55,7 +57,7 @@ contract LineaResolver is ERC721EnumerableUpgradeable, OwnableUpgradeable {
     __Ownable_init();
     _baseTokenURI = baseURI;
     _tokenIds.increment();
-    baseFee = 1000000000000000;
+    baseFee = BASE_FEE;
   }
 
   /**
