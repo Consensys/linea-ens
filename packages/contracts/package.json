@@ -52,6 +52,8 @@
     "@ensdomains/ens-contracts": "^0.0.20",
     "@eth-optimism/contracts": "^0.5.40",
     "@openzeppelin/contracts": "^4.8.1",
+    "@openzeppelin/contracts-upgradeable": "^4.9.0",
+    "@openzeppelin/hardhat-upgrades": "^1.26.0",
     "dotenv": "^16.0.3"
   }
 }
