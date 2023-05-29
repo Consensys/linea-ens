@@ -114,17 +114,18 @@ server.add(IResolverAbi, [
         const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
 
         // we get the slot address of the variable 'mapping(bytes32 => uint256) public addresses'
-        // which is at index 11 of the L2 resolver contract
+        // which is at index 251 of the L2 resolver contract
         const tokenIdSlot = ethers.utils.keccak256(
-          `${node}${"00".repeat(31)}0B`
+          `${node}${"00".repeat(31)}FB`
         );
         const tokenId = await l2provider.getStorageAt(
           l2_resolver_address,
           tokenIdSlot
         );
-        console.log({ tokenId: stateRoot });
+        console.log({ tokenId });
+        // owner variable is at index 103
         const ownerSlot = ethers.utils.keccak256(
-          `${tokenId}${"00".repeat(31)}02`
+          `${tokenId}${"00".repeat(31)}67`
         );
 
         // Create proof for the tokenId slot

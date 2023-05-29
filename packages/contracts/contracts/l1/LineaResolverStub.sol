@@ -129,9 +129,9 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     );
 
     // step 3: check storage values, get itemId first and then get the address result
-    // the index slot 11 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver
-    // the index slot 2 is for 'mapping(uint256 => address) private _owners' in the L2 resolver
-    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(11)));
+    // the index slot 251 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver
+    // the index slot 103 is for 'mapping(uint256 => address) private _owners' in the L2 resolver
+    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(251)));
     (bool tokenIdExists, bytes32 tokenId) = getStorageValue(
       l2resolver,
       tokenIdSlot,
@@ -144,7 +144,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       return "";
     }
 
-    bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(2)));
+    bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(103)));
     (, bytes32 owner) = getStorageValue(
       l2resolver,
       ownerSlot,
