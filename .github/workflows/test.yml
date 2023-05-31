@@ -22,8 +22,8 @@ jobs:
       - name: Run tests
         working-directory: ./packages/contracts
         env:
-          GOERLI_LINEA_URL: ${{ secrets.GOERLI_LINEA_URL }}
-          GOERLI_URL: ${{ secrets.GOERLI_URL }}
+          L2_PROVIDER_URL: ${{ secrets.L2_PROVIDER_URL }}
+          L1_PROVIDER_URL: ${{ secrets.L1_PROVIDER_URL }}
         run: yarn test
       - name: Build Gateway
         working-directory: ./packages/gateway

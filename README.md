@@ -29,10 +29,10 @@ In a terminal, setup a local node:
 ```bash
 cd packages/contracts
 yarn install
-yarn hardhat node --fork GOERLI_URL
+yarn hardhat node --fork L1_PROVIDER_URL
 ```
 
-`GOERLI_URL` is described in the config section bellow.
+`L1_PROVIDER_URL` is described in the config section bellow.
 
 ### Deploy contracts
 
@@ -47,17 +47,17 @@ cp .env.example .env
 
 Edit `.env` and set your config:
 
-| Var               | Description               | Default values                                            |
-| ----------------- | ------------------------- | --------------------------------------------------------- |
-| GOERLI_URL        | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
-| GOERLI_LINEA_URL  | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
-| PRIVATE_KEY       | Wallet private key        |                                                           |
-| ETHERSCAN_API_KEY | Etherscan API key         |                                                           |
-| L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                             |
-| L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                      |
-| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
+| Var                   | Description               | Default values                                            |
+| --------------------- | ------------------------- | --------------------------------------------------------- |
+| L1_PROVIDER_URL       | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
+| L2_PROVIDER_URL       | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
+| PRIVATE_KEY           | Wallet private key        |                                                           |
+| ETHERSCAN_API_KEY     | Etherscan API key         |                                                           |
+| L1_ENS_DOMAIN         | L1 ENS name               | lineatest.eth                                             |
+| L2_ENS_SUBDOMAIN_TEST | L2 ENS name               | julink.lineatest.eth                                      |
+| GATEWAY_URL           | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
 
-For local/L2 mode, `GOERLI_URL` is not required.
+For local/L2 mode, `L1_PROVIDER_URL` is not required.
 
 Compile smart contracts:
 
@@ -87,7 +87,7 @@ Once smart contracts are deployed, start the gateway:
 cd ../gateway
 yarn install
 yarn build
-yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $GOERLI_LINEA_URL
+yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $L2_PROVIDER_URL
 ```
 
 ### Run Client test script

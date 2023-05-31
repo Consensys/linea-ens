@@ -29,7 +29,7 @@ async function main() {
   console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
   const registryAddr = REGISTRY_ADDRESS[network.name as keyof typeof REGISTRY_ADDRESS];
   const registry = await new ethers.Contract(registryAddr, ensRegistryAbi, owner);
-  const name = process.env.L1_ENS_NAME ? process.env.L1_ENS_NAME : "lineatest.eth";
+  const name = process.env.L1_ENS_DOMAIN ? process.env.L1_ENS_DOMAIN : "lineatest.eth";
   const node = ethers.utils.namehash(name);
   const tx = await registry.setResolver(node, lineaResolverStub.address);
   await tx.wait();
