@@ -9,5 +9,5 @@ pragma solidity 0.8.18;
 contract FakeRollup {
   // root hash of the current rollup state
   bytes32 public stateRootHash =
-    0x834eba60b0c12e36268806a52a5bbd413a6b257ed3c21acc24be5de25896532e;
+    0x06263c3a0a8795755e30ec09dea189b3bb8e6e93c0037c9cce5c14ac24b992ec;
 }
