@@ -10,7 +10,9 @@ LineaResolverStub is a L1 (Ethereum) ENS resolver contract that implements the p
 
 LineaResolver is an L2 (Linea) ENS resolver contract that stores and returns the data necessary to resolve an ENS name.
 
-Additional Smart Contracts documentation available in [./packages/contracts/README.md](./packages/contracts/README.md)
+Additionally, LineaResolver implements the ERC721 Non-Fungible Token (NFT) standard. Each subdomain registered through the LineaResolver contract is represented as a unique ERC721 token, allowing for the ownership and transfer of these subdomains in a standardized, interoperable manner across Ethereum-based platforms.
+
+More Smart Contracts documentation available in [./packages/contracts/README.md](./packages/contracts/README.md)
 
 ### Gateway
 
@@ -26,7 +28,7 @@ A very simple script that tests if ccip-read integration is working.
 
 In a terminal, setup a local node:
 
-```bash
+```shell
 cd packages/contracts
 yarn install
 yarn hardhat node --fork L1_PROVIDER_URL
@@ -40,34 +42,37 @@ In second terminal, deploy L1 and L2 smart contracts.
 
 Set your `.env` config file. You can copy [env.example](./packages/contracts/.env.example):
 
-```bash
+```shell
 cd packages/contracts
 cp .env.example .env
 ```
 
 Edit `.env` and set your config:
 
-| Var                   | Description               | Default values                                            |
-| --------------------- | ------------------------- | --------------------------------------------------------- |
-| L1_PROVIDER_URL       | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
-| L2_PROVIDER_URL       | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
-| PRIVATE_KEY           | Wallet private key        |                                                           |
-| ETHERSCAN_API_KEY     | Etherscan API key         |                                                           |
-| L1_ENS_DOMAIN         | L1 ENS name               | lineatest.eth                                             |
-| L2_ENS_SUBDOMAIN_TEST | L2 ENS name               | julink.lineatest.eth                                      |
-| GATEWAY_URL           | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
+| Var                      | Description               | Default values                                            |
+| ------------------------ | ------------------------- | --------------------------------------------------------- |
+| L1_PROVIDER_URL          | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
+| L1_ENS_DOMAIN            | L1 ENS name               | lineatest.eth                                             |
+| GATEWAY_URL              | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
+| L2_PROVIDER_URL          | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
+| L2_ENS_SUBDOMAIN_TEST    | L2 ENS name               | julink.lineatest.eth                                      |
+| L2_RESOLVER_NFT_NAME     | L2 Resolver NFT name      | Lineatest                                                 |
+| L2_RESOLVER_NFT_SYMBOL   | L2 Resolver NFT symbol    | LTST                                                      |
+| L2_RESOLVER_NFT_BASE_URI | L2 Resolver NFT Base URI  | http://localhost:3000/metadata/                           |
+| PRIVATE_KEY              | Wallet private key        |                                                           |
+| ETHERSCAN_API_KEY        | Etherscan API key         |                                                           |
 
 For local/L2 mode, `L1_PROVIDER_URL` is not required.
 
 Compile smart contracts:
 
-```bash
+```shell
 yarn compile
 ```
 
 Deploy L2 contracts first:
 
-```bash
+```shell
 npx hardhat run --network goerliLinea scripts/deployL2.ts
 ```
 
@@ -83,7 +88,7 @@ L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scr
 
 Once smart contracts are deployed, start the gateway:
 
-```bash
+```shell
 cd ../gateway
 yarn install
 yarn build
@@ -94,7 +99,7 @@ yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://1
 
 In a third terminal, run the demo app:
 
-```bash
+```shell
 cd packages/clients
 yarn install
 yarn start julink.lineatest.eth
@@ -102,13 +107,13 @@ yarn start julink.lineatest.eth
 
 If successful, it should show the following output:
 
-```bash
+```shell
 ethAddress         0xF110a41f75edEb224227747b64Be7f6A7f140abc
 ```
 
-### Uint tests
+### Unit tests
 
-```bash
+```shell
 cd packages/contracts
 yarn test
 ```
