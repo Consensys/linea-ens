@@ -26,7 +26,7 @@ program
     "0xE87d317eB8dcc9afE24d9f63D6C760e52Bc18A40"
   )
   .option("-d --debug", "debug")
-  .option("-p --port <number>", "Port number to serve on", "8081");
+  .option("-p --port <number>", "Port number to serve on", "8080");
 program.parse(process.argv);
 const options = program.opts();
 options.debug = options.debug || false;
