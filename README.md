@@ -26,12 +26,12 @@ A very simple script that tests if ccip-read integration is working.
 
 ### Setup local node
 
-In a terminal, setup a local node:
+In a terminal, setup a L1 local node:
 
 ```shell
 cd packages/contracts
 yarn install
-yarn hardhat node --fork L1_PROVIDER_URL
+yarn hardhat node --fork <L1_PROVIDER_URL>
 ```
 
 `L1_PROVIDER_URL` is described in the config section bellow.
@@ -49,18 +49,18 @@ cp .env.example .env
 
 Edit `.env` and set your config:
 
-| Var                      | Description               | Default values                                            |
-| ------------------------ | ------------------------- | --------------------------------------------------------- |
-| L1_PROVIDER_URL          | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
-| L1_ENS_DOMAIN            | L1 ENS name               | lineatest.eth                                             |
-| GATEWAY_URL              | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
-| L2_PROVIDER_URL          | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
-| L2_ENS_SUBDOMAIN_TEST    | L2 ENS name               | julink.lineatest.eth                                      |
-| L2_RESOLVER_NFT_NAME     | L2 Resolver NFT name      | Lineatest                                                 |
-| L2_RESOLVER_NFT_SYMBOL   | L2 Resolver NFT symbol    | LTST                                                      |
-| L2_RESOLVER_NFT_BASE_URI | L2 Resolver NFT Base URI  | http://localhost:3000/metadata/                           |
-| PRIVATE_KEY              | Wallet private key        |                                                           |
-| ETHERSCAN_API_KEY        | Etherscan API key         |                                                           |
+| Var                      | Description              | Default values                                 |
+| ------------------------ | ------------------------ | ---------------------------------------------- |
+| L1_PROVIDER_URL          | L1 provider URL          | https://goerli.infura.io/v3/<INFURA_KEY>       |
+| L1_ENS_DOMAIN            | L1 ENS name              | lineatest.eth                                  |
+| GATEWAY_URL              | Primary gateway URL      | http://localhost:8080/{sender}/{data}.json     |
+| L2_PROVIDER_URL          | L2 provider URL          | https://linea-goerli.infura.io/v3/<INFURA_KEY> |
+| L2_ENS_SUBDOMAIN_TEST    | L2 ENS name              | julink.lineatest.eth                           |
+| L2_RESOLVER_NFT_NAME     | L2 Resolver NFT name     | Lineatest                                      |
+| L2_RESOLVER_NFT_SYMBOL   | L2 Resolver NFT symbol   | LTST                                           |
+| L2_RESOLVER_NFT_BASE_URI | L2 Resolver NFT Base URI | http://localhost:3000/metadata/                |
+| PRIVATE_KEY              | Wallet private key       |                                                |
+| ETHERSCAN_API_KEY        | Etherscan API key        |                                                |
 
 For local/L2 mode, `L1_PROVIDER_URL` is not required.
 
@@ -102,6 +102,7 @@ In a third terminal, run the demo app:
 ```shell
 cd packages/clients
 yarn install
+yarn build
 yarn start julink.lineatest.eth
 ```
 
@@ -131,8 +132,8 @@ yarn coverage
 
 ## Deployed contracts
 
-- Linea goerli resolver = 0x176569440293dF1fA85D0Eb342A92c6470D662f9
-- goerli (gateway points to '[...]' ) = [...]
+- Linea Goerli resolver = 0x176569440293dF1fA85D0Eb342A92c6470D662f9
+- Gateway = https://ensgw1.dev.linea.build/
 - goerli test domain = linearesolver.eth
 
 ## Deploy gateway

@@ -20,10 +20,14 @@ async function main() {
 
   if (chainId !== 31337) {
     setTimeout(async () => {
-      await run("verify:verify", {
-        address: lineaResolver.address,
-        constructorArguments: [nftName, symbol, baseUri],
-      });
+      console.error("Verify on Etherscan");
+      try {
+        await run("verify:verify", {
+          address: lineaResolver.address,
+        });
+      } catch (error) {
+        console.error(error.message);
+      }
     }, 30000);
   }
 }
