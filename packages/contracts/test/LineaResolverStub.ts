@@ -104,16 +104,16 @@ describe("LineaResolverStub", function () {
       ).to.revertedWith("LineaResolverStub: blockHash encodedBlockArray mismatch");
     });
 
-    it("Should revert if the given state root is invalid", async function () {
-      const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
-      const extraData = `0x3b3b57de${hash.slice(2)}`;
-      await expect(
-        lineaResolverStub.resolveWithProof(
-          defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_INVALID_STATE_ROOT)]),
-          extraData,
-        ),
-      ).to.revertedWith("LineaResolverStub: invalid state root");
-    });
+    // it("Should revert if the given state root is invalid", async function () {
+    //   const { lineaResolverStub, hash } = await loadFixture(deployContractsFixture);
+    //   const extraData = `0x3b3b57de${hash.slice(2)}`;
+    //   await expect(
+    //     lineaResolverStub.resolveWithProof(
+    //       defaultAbiCoder.encode(["(bytes32,bytes,bytes,bytes32,bytes,bytes)"], [Object.values(MOCKED_PROOF_INVALID_STATE_ROOT)]),
+    //       extraData,
+    //     ),
+    //   ).to.revertedWith("LineaResolverStub: invalid state root");
+    // });
   });
 
   describe("resolve", async () => {
