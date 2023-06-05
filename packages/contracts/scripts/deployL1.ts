@@ -38,10 +38,15 @@ async function main() {
   if (chainId !== HARDHAT_NETWORK_CHAIN_ID) {
     // Only verify on "live" blockchain
     setTimeout(async () => {
-      await run("verify:verify", {
-        address: lineaResolverStub.address,
-        constructorArguments: [[gatewayUrl], L2_RESOLVER_ADDRESS, rollupAddr],
-      });
+      console.log("Verify on Etherscan");
+      try {
+        await run("verify:verify", {
+          address: lineaResolverStub.address,
+          constructorArguments: [[gatewayUrl], L2_RESOLVER_ADDRESS, rollupAddr],
+        });
+      } catch (error) {
+        console.error(error.message);
+      }
     }, 20000);
   }
 }

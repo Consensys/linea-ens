@@ -130,10 +130,23 @@ yarn coverage
 
 ## How to deploy to public net (goerli for example)
 
+Deploy L2 contracts first:
+
+```shell
+npx hardhat run --network goerliLinea scripts/deployL2.ts
+```
+
+Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
+
+```
+L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network goerli scripts/deployL1.ts
+```
+
 ## Deployed contracts
 
-- Linea Goerli resolver = 0x176569440293dF1fA85D0Eb342A92c6470D662f9
-- Gateway = https://ensgw1.dev.linea.build/
+- Goerli resolver stub = -
+- Linea Goerli resolver = 0xCcA59f9eaa814Bedd0d3e7C41b7Bc624BB6fDd37
+- Gateway = https://ensgw1.dev.linea.build/{sender}/{data}.json
 - goerli test domain = linearesolver.eth
 
 ## Deploy gateway
