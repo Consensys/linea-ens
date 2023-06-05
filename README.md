@@ -26,7 +26,7 @@ A very simple script that tests if ccip-read integration is working.
 
 ### Setup local node
 
-In a terminal, setup a L1 local node:
+In a terminal, setup a forked L1 local node:
 
 ```shell
 cd packages/contracts
