@@ -4,6 +4,8 @@
 
 Linea ENS Resolver allows to resolve ENS domains on Linea.
 
+Deployment documentation available in [README.md](./../../README.md)
+
 ## Install
 
 ### Packages
@@ -14,92 +16,7 @@ To install packages, execute:
 yarn
 ```
 
-### Config
-
-To setup config, copy the `.env.example` to `.env`, for example:
-
-```shell
-cp .env.example .env
-```
-
-Edit `.env` and add your configuration values.
-
-| Var               | Description               | Default values                                            |
-| ----------------- | ------------------------- | --------------------------------------------------------- |
-| GOERLI_URL        | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
-| GOERLI_LINEA_URL  | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
-| PRIVATE_KEY       | Wallet private key        |                                                           |
-| ETHERSCAN_API_KEY | Etherscan API key         |                                                           |
-| L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                             |
-| L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                      |
-| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
-
-## Deploy
-
-### On mixed local/L2 mode
-
-### Setup local node
-
-In a terminal, setup a local node:
-
-```bash
-cd packages/contracts
-yarn install
-yarn hardhat node --fork GOERLI_URL
-```
-
-`GOERLI_URL` is described in the config section bellow.
-
-### Deploy contracts
-
-In second terminal, deploy L1 and L2 smart contracts.
-
-Set your `.env` config file. You can copy [env.example](./packages/contracts/.env.example):
-
-```bash
-cd packages/contracts
-cp .env.example .env
-```
-
-Edit `.env` and set your config:
-
-| Var               | Description               | Default values                                            |
-| ----------------- | ------------------------- | --------------------------------------------------------- |
-| GOERLI_URL        | Goerli provider URL       | https://goerli.infura.io/v3/<INFURA_KEY>                  |
-| GOERLI_LINEA_URL  | Linea Goerli provider URL | https://linea-goerli.infura.io/v3/<INFURA_KEY>            |
-| PRIVATE_KEY       | Wallet private key        |                                                           |
-| ETHERSCAN_API_KEY | Etherscan API key         |                                                           |
-| L1_ENS_NAME       | L1 ENS name               | lineatest.eth                                             |
-| L2_ENS_NAME       | L2 ENS name               | julink.lineatest.eth                                      |
-| GATEWAY_URL       | Primary gateway URL       | https://www.ensgateway.amineharty.me/{sender}/{data}.json |
-
-For local/L2 mode, `GOERLI_URL` is not required.
-
-Compile smart contracts:
-
-```bash
-yarn hardhat compile
-```
-
-Deploy L2 contracts first:
-
-```bash
-npx hardhat run --network goerliLinea scripts/deployL2.ts
-```
-
-> **_Imporant:_** Wait 10 minutes for Linea to synchronize with Goerli. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli.
-
-Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
-
-```
-L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scripts/deployL1.ts
-```
-
-### On a Goerli Testnet network
-
-[...]
-
-### Development
+## Development
 
 ### Compile
 

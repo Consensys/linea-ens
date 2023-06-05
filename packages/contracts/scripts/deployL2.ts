@@ -6,24 +6,29 @@ async function main() {
 
   // Deploy Linea Resolver to L2
   const LineaResolver = await ethers.getContractFactory("LineaResolver");
-  const nftName = "Lineatest";
-  const symbol = "LTST";
-  const baseUri = "http://localhost:3000/metadata/";
+  const nftName = process.env.L2_RESOLVER_NFT_NAME;
+  const symbol = process.env.L2_RESOLVER_NFT_SYMBOL;
+  const baseUri = process.env.L2_RESOLVER_NFT_BASE_URI;
   const lineaResolver = await upgrades.deployProxy(LineaResolver, [nftName, symbol, baseUri]);
   await lineaResolver.deployed();
-
+  console.log(`LineaResolver deployed to, L2_RESOLVER_ADDRESS: ${lineaResolver.address}`);
   // Test with subdomain with default "julink.lineatest.eth", assuming we still control lineatest.eth on L1
-  const name = process.env.L2_ENS_NAME ? process.env.L2_ENS_NAME : "julink.lineatest.eth";
+  const name = process.env.L2_ENS_SUBDOMAIN_TEST ? process.env.L2_ENS_SUBDOMAIN_TEST : "julink.lineatest.eth";
   const tx = await lineaResolver.mintSubdomain(name, owner.address, { value: ethers.utils.parseEther("0.001") });
   await tx.wait();
-  console.log(`LineaResolver deployed to, L2_RESOLVER_ADDRESS: ${lineaResolver.address}`);
+  console.log(`Subdomain minted: ${process.env.L2_ENS_SUBDOMAIN_TEST}`);
 
   if (chainId !== 31337) {
+    // Only verify on "live" blockchain
     setTimeout(async () => {
-      await run("verify:verify", {
-        address: lineaResolver.address,
-        constructorArguments: [nftName, symbol, baseUri],
-      });
+      console.error("Verify on Etherscan");
+      try {
+        await run("verify:verify", {
+          address: lineaResolver.address,
+        });
+      } catch (error) {
+        console.error(error.message);
+      }
     }, 30000);
   }
 }

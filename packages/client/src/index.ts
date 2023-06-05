@@ -24,7 +24,7 @@ const options = program.opts();
 const ensAddress = options.registry;
 const chainId = parseInt(options.chainId);
 const { chainName, l1_provider_url, debug } = options;
-console.log('options', {
+console.log('Options:', {
   l1_provider_url,
   ensAddress,
   chainId,
@@ -40,15 +40,15 @@ const provider = new ethers.providers.JsonRpcProvider(l1_provider_url, {
 
 (async () => {
   const name = program.args[0];
-  console.log('name', name);
-  const resolverFound = await provider.getResolver(name);
-  console.log('resolverFound address', resolverFound?.address);
+  console.log('Subdomain name:', name);
   const node = ethers.utils.namehash(name);
-  console.log('node', node);
+  console.log('Subdomain node:', node);
+  const resolverFound = await provider.getResolver(name);
+  console.log('Resolver found at address:', resolverFound?.address);
 
   if (resolverFound) {
     let ethAddress = await resolverFound.getAddress();
-    console.log('ethAddress', ethAddress);
+    console.log('ETH address for ', name, 'is:', ethAddress);
   } else {
     console.log('No resolver found for:', name);
   }

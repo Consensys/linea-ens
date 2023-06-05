@@ -25,10 +25,11 @@ program
     "ROLLUP_ADDRESS",
     "0xE87d317eB8dcc9afE24d9f63D6C760e52Bc18A40"
   )
-  .option("-d --debug", "debug", false)
+  .option("-d --debug", "debug")
   .option("-p --port <number>", "Port number to serve on", "8080");
 program.parse(process.argv);
 const options = program.opts();
+options.debug = options.debug || false;
 
 const l1_provider_url = process.env.L1_PROVIDER_URL || options.l1_provider_url;
 const l2_provider_url = process.env.L2_PROVIDER_URL || options.l2_provider_url;

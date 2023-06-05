@@ -13,11 +13,11 @@ const config: HardhatUserConfig = {
   solidity: "0.8.18",
   networks: {
     goerli: {
-      url: process.env.GOERLI_URL,
+      url: process.env.L1_PROVIDER_URL,
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     goerliLinea: {
-      url: process.env.GOERLI_LINEA_URL,
+      url: process.env.L2_PROVIDER_URL,
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     localhost: {

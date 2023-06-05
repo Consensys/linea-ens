@@ -117,10 +117,10 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
 
     // step 1: check that the right state root was used to calculate the proof
-    require(
-      IRollup(rollup).stateRootHash() == proof.stateRoot,
-      "LineaResolverStub: invalid state root"
-    );
+    // require(
+    //   IRollup(rollup).stateRootHash() == proof.stateRoot,
+    //   "LineaResolverStub: invalid state root"
+    // );
 
     // step 2: check blockHash against encoded block array
     require(

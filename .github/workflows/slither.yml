@@ -16,11 +16,11 @@ jobs:
         uses: crytic/slither-action@v0.3.0
         id: slither
         env:
-          GOERLI_LINEA_URL: ${{ secrets.GOERLI_LINEA_URL }}
-          GOERLI_URL: ${{ secrets.GOERLI_URL }}
+          L2_PROVIDER_URL: ${{ secrets.L2_PROVIDER_URL }}
+          L1_PROVIDER_URL: ${{ secrets.L1_PROVIDER_URL }}
         with:
           node-version: 16
-          target: 'packages/contracts'
+          target: "packages/contracts"
           sarif: results.sarif
           fail-on: none
 
