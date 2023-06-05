@@ -6,29 +6,24 @@
     {
       "inputs": [
         {
-          "internalType": "bytes32",
-          "name": "node",
-          "type": "bytes32"
+          "internalType": "bytes",
+          "name": "name",
+          "type": "bytes"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
         }
       ],
-      "name": "addr",
+      "name": "resolve",
       "outputs": [
         {
           "components": [
             {
-              "internalType": "uint64",
-              "name": "nodeIndex",
-              "type": "uint64"
-            },
-            {
               "internalType": "bytes32",
               "name": "blockHash",
               "type": "bytes32"
-            },
-            {
-              "internalType": "bytes",
-              "name": "sendRoot",
-              "type": "bytes"
             },
             {
               "internalType": "bytes",
@@ -37,7 +32,7 @@
             },
             {
               "internalType": "bytes",
-              "name": "stateTrieWitness",
+              "name": "accountProof",
               "type": "bytes"
             },
             {
@@ -47,7 +42,12 @@
             },
             {
               "internalType": "bytes",
-              "name": "storageTrieWitness",
+              "name": "tokenIdStorageProof",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "ownerStorageProof",
               "type": "bytes"
             }
           ],

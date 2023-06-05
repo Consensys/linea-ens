@@ -1,5 +1,5 @@
 {
-  "name": "zkevm-resolver-gateway",
+  "name": "linea-resolver-gateway",
   "version": "1.0.0",
   "main": "dist/index.js",
   "author": "Consensys",
@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
+    "dotenv": "^16.0.3",
     "tsdx": "^0.14.1"
   }
 }

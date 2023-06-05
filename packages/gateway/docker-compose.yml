@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: ens-gateway
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    env_file:
+      - .env.uat
+    networks:
+      - ensnetwork
+
+networks:
+  ensnetwork:
