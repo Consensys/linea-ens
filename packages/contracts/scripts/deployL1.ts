@@ -39,7 +39,6 @@ async function main() {
     // Only verify on "live" blockchain
     setTimeout(async () => {
       console.log("Verify on Etherscan");
-
       try {
         await run("verify:verify", {
           address: lineaResolverStub.address,
