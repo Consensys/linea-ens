@@ -21,7 +21,7 @@ async function main() {
   if (chainId !== 31337) {
     // Only verify on "live" blockchain
     setTimeout(async () => {
-      console.error("Verify on Etherscan");
+      console.log("Verify on Etherscan");
       try {
         await run("verify:verify", {
           address: lineaResolver.address,
