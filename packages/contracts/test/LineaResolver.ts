@@ -7,7 +7,7 @@ describe("LineaResolver", function () {
   async function deployContractsFixture() {
     const [owner, unknown] = await ethers.getSigners();
 
-    const baseFee = 1000000000000000;
+    const baseFee = "10000000000000000";
     const domain = "julink.lineatest.eth";
     const hash = ethers.utils.namehash(domain);
 
@@ -49,10 +49,10 @@ describe("LineaResolver", function () {
     });
 
     it("Should revert if the fees are too low", async function () {
-      const { lineaResolver, owner, baseFee } = await loadFixture(deployContractsFixture);
+      const { lineaResolver, owner } = await loadFixture(deployContractsFixture);
 
       const domain = "JULINK42.lineatest.eth";
-      const tooLowFee = baseFee - 1;
+      const tooLowFee = "9999999999999999";
 
       await expect(lineaResolver.mintSubdomain(domain, owner.address, { value: tooLowFee })).to.be.revertedWith("LineaResolver: insufficient fees");
     });

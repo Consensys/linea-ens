@@ -23,10 +23,10 @@ contract LineaResolver is ERC721EnumerableUpgradeable, OwnableUpgradeable {
   // Private string variable to store the base URI for the token URI generation
   string private _baseTokenURI;
 
-  // Fees to send to mint a sub domain, initial set to 0.001 ETH
+  // Fees to send to mint a sub domain, initial set to 0.01 ETH
   uint256 public baseFee;
 
-  uint256 private constant BASE_FEE = 1e15;
+  uint256 private constant BASE_FEE = 1e16;
 
   /**
    * @dev Emitted when the address associated with a specific node is changed.

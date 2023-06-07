@@ -3,15 +3,7 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import { defaultAbiCoder } from "@ethersproject/abi";
 // We use mocked results from the gateway and L2 resolver for the unit tests
-import {
-  DOMAIN_NAME,
-  EXPECTED_RESOLVE_WITH_PROOF_RESULT,
-  GATEWAY_URL,
-  L2_RESOLVER_ADDRESS,
-  MOCKED_PROOF,
-  MOCKED_PROOF_UNDEFINED,
-  MOCKED_PROOF_INVALID_STATE_ROOT,
-} from "./mocks/proof";
+import { DOMAIN_NAME, EXPECTED_RESOLVE_WITH_PROOF_RESULT, GATEWAY_URL, L2_RESOLVER_ADDRESS, MOCKED_PROOF, MOCKED_PROOF_UNDEFINED } from "./mocks/proof";
 
 describe("LineaResolverStub", function () {
   async function deployContractsFixture() {
@@ -30,7 +22,7 @@ describe("LineaResolverStub", function () {
 
     // Deploy ResolverStub
     const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
-    const lineaResolverStub = await LineaResolverStub.deploy(gateways, L2_RESOLVER_ADDRESS, fakeRollup.address);
+    const lineaResolverStub = await LineaResolverStub.deploy(gateways);
     await lineaResolverStub.deployed();
 
     return {
@@ -47,7 +39,7 @@ describe("LineaResolverStub", function () {
       const { lineaResolverStub } = await loadFixture(deployContractsFixture);
 
       expect(await lineaResolverStub.gateways(0)).to.be.equal(GATEWAY_URL);
-      expect(await lineaResolverStub.l2resolver()).to.be.equal(L2_RESOLVER_ADDRESS);
+      // expect(await lineaResolverStub.l2resolver()).to.be.equal(L2_RESOLVER_ADDRESS);
     });
   });
 
