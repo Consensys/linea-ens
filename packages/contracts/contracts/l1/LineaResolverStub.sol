@@ -6,20 +6,11 @@ import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
 
-struct L2StateProof {
-  bytes32 blockHash;
-  bytes encodedBlockArray;
-  bytes accountProof;
-  bytes32 stateRoot;
-  bytes tokenIdStorageProof;
-  bytes ownerStorageProof;
-}
-
 interface IResolverService {
   function resolve(
     bytes calldata name,
     bytes calldata data
-  ) external view returns (L2StateProof memory proof);
+  ) external view returns (address _addr);
 }
 
 interface IExtendedResolver {
@@ -103,7 +94,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   function resolveWithProof(
     bytes calldata response,
     bytes calldata extraData
-  ) external view returns (bytes memory) {
+  ) external pure returns (bytes memory) {
     // We only resolve if the addr(bytes32) is called otherwise we simply return an empty response
     bytes4 signature = bytes4(extraData[0:4]);
 
@@ -111,49 +102,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       return "";
     }
 
-    // This is the hash name of the domain name
-    bytes32 node = abi.decode(extraData[4:], (bytes32));
-
-    L2StateProof memory proof = abi.decode(response, (L2StateProof));
-
-    // step 1: check that the right state root was used to calculate the proof
-    // require(
-    //   IRollup(rollup).stateRootHash() == proof.stateRoot,
-    //   "LineaResolverStub: invalid state root"
-    // );
-
-    // step 2: check blockHash against encoded block array
-    require(
-      proof.blockHash == keccak256(proof.encodedBlockArray),
-      "LineaResolverStub: blockHash encodedBlockArray mismatch"
-    );
-
-    // step 3: check storage values, get itemId first and then get the address result
-    // the index slot 251 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver
-    // the index slot 103 is for 'mapping(uint256 => address) private _owners' in the L2 resolver
-    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(251)));
-    (bool tokenIdExists, bytes32 tokenId) = getStorageValue(
-      l2resolver,
-      tokenIdSlot,
-      proof.stateRoot,
-      proof.accountProof,
-      proof.tokenIdStorageProof
-    );
-
-    if (!tokenIdExists) {
-      return "";
-    }
-
-    bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(103)));
-    (, bytes32 owner) = getStorageValue(
-      l2resolver,
-      ownerSlot,
-      proof.stateRoot,
-      proof.accountProof,
-      proof.ownerStorageProof
-    );
-
-    return abi.encode(owner);
+    return response;
   }
 
   function getStorageValue(
