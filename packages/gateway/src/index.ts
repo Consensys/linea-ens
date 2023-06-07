@@ -61,6 +61,7 @@ server.add(IResolverAbi, [
         console.log("--------------------REQUEST START--------------------\n");
         console.log(`Request timestamp: ${new Date().toUTCString()}`);
         const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
+        console.log({ name });
         const node = ethers.utils.namehash(name);
 
         if (debug) {
@@ -86,6 +87,8 @@ server.add(IResolverAbi, [
           l2provider
         );
         const addr = await l2Resolver.resolve(node);
+
+        console.log({ addr });
 
         console.log("\n--------------------REQUEST END--------------------\n");
 

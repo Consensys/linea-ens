@@ -24,7 +24,7 @@ async function main() {
   const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "http://localhost:8080/{sender}/{data}.json";
   const rollupAddr = ROLLUP_ADDRESS[network.name as keyof typeof ROLLUP_ADDRESS];
   const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
-  const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl], L2_RESOLVER_ADDRESS, rollupAddr);
+  const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl]);
   await lineaResolverStub.deployed();
   console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
   const registryAddr = REGISTRY_ADDRESS[network.name as keyof typeof REGISTRY_ADDRESS];

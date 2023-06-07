@@ -1,13 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.18;
 
-import { Lib_OVMCodec } from "@eth-optimism/contracts/libraries/codec/Lib_OVMCodec.sol";
-import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib_SecureMerkleTrie.sol";
-import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
-import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
-
-import { console } from "hardhat/console.sol";
-
 interface IResolverService {
   function resolve(
     bytes calldata name,
@@ -40,8 +33,6 @@ abstract contract SupportsInterface is ISupportsInterface {
 
 contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   string[] public gateways;
-  address public l2resolver;
-  address public rollup;
 
   error OffchainLookup(
     address sender,
@@ -53,16 +44,11 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
   /**
    * @dev The Linea Resolver on L1 will use the gateway passed as parameter to resolve
-   * the node, it needs to the resolver address on L2 to verify the returned result
-   * as well as the linea rollup address
+   * the node.
    * @param _gateways the urls to call to get the address from the resolver on L2
-   * @param _l2resolver the address of the resolver on L2
-   * @param _rollup the address of the linea rollup contract
    */
-  constructor(string[] memory _gateways, address _l2resolver, address _rollup) {
+  constructor(string[] memory _gateways) {
     gateways = _gateways;
-    l2resolver = _l2resolver;
-    rollup = _rollup;
   }
 
   /**
@@ -96,7 +82,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   function resolveWithProof(
     bytes calldata response,
     bytes calldata extraData
-  ) external view returns (bytes memory) {
+  ) external pure returns (bytes memory) {
     // We only resolve if the addr(bytes32) is called otherwise we simply return an empty response
     bytes4 signature = bytes4(extraData[0:4]);
 
@@ -104,37 +90,10 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       return "";
     }
 
-    address addr = abi.decode(response, (address));
-    console.log(addr);
+    bytes memory test4 = bytes(response[64:84]);
+    bytes32 result = toBytes32PadLeft(test4);
 
-    return abi.encode(addr);
-  }
-
-  function getStorageValue(
-    address target,
-    bytes32 slot,
-    bytes32 stateRoot,
-    bytes memory stateTrieWitness,
-    bytes memory storageTrieWitness
-  ) internal pure returns (bool exists, bytes32) {
-    (
-      bool accountExists,
-      bytes memory encodedResolverAccount
-    ) = Lib_SecureMerkleTrie.get(
-        abi.encodePacked(target),
-        stateTrieWitness,
-        stateRoot
-      );
-    require(accountExists, "LineaResolverStub: Account does not exist");
-    Lib_OVMCodec.EVMAccount memory account = Lib_OVMCodec.decodeEVMAccount(
-      encodedResolverAccount
-    );
-    (bool storageExists, bytes memory retrievedValue) = Lib_SecureMerkleTrie
-      .get(abi.encodePacked(slot), storageTrieWitness, account.storageRoot);
-    if (storageExists) {
-      return (true, toBytes32PadLeft(Lib_RLPReader.readBytes(retrievedValue)));
-    }
-    return (false, bytes32(0));
+    return abi.encode(result);
   }
 
   // Ported old function from Lib_BytesUtils.sol
