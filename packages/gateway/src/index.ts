@@ -86,11 +86,10 @@ server.add(IResolverAbi, [
           l2provider
         );
         const addr = await l2Resolver.resolve(node);
-        console.log({ addr });
 
         console.log("\n--------------------REQUEST END--------------------\n");
 
-        return addr;
+        return [addr];
       } catch (error) {
         console.log(`Error occured: ${error}`);
         throw error;

@@ -6,11 +6,13 @@ import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
 
+import { console } from "hardhat/console.sol";
+
 interface IResolverService {
   function resolve(
     bytes calldata name,
     bytes calldata data
-  ) external view returns (address _addr);
+  ) external view returns (address addr);
 }
 
 interface IExtendedResolver {
@@ -94,7 +96,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
   function resolveWithProof(
     bytes calldata response,
     bytes calldata extraData
-  ) external pure returns (bytes memory) {
+  ) external view returns (bytes memory) {
     // We only resolve if the addr(bytes32) is called otherwise we simply return an empty response
     bytes4 signature = bytes4(extraData[0:4]);
 
@@ -102,7 +104,10 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       return "";
     }
 
-    return response;
+    address addr = abi.decode(response, (address));
+    console.log(addr);
+
+    return abi.encode(addr);
   }
 
   function getStorageValue(
