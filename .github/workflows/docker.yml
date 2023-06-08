@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - release-v0.1.0-without-proof
   pull_request:
   release:
     types:
