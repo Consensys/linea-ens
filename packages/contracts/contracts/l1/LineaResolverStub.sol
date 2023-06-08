@@ -90,8 +90,8 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       return "";
     }
 
-    bytes memory test4 = bytes(response[64:84]);
-    bytes32 result = toBytes32PadLeft(test4);
+    bytes memory addrBytes = bytes(response[64:84]);
+    bytes32 result = toBytes32PadLeft(addrBytes);
 
     return abi.encode(result);
   }
