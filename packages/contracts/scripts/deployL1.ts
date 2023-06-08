@@ -35,6 +35,7 @@ async function main() {
   await tx.wait();
   console.log("L1 ENS name:", name, ", set to LineaResolverStub: ", lineaResolverStub.address);
 
+  /*
   if (chainId !== HARDHAT_NETWORK_CHAIN_ID) {
     // Only verify on "live" blockchain
     setTimeout(async () => {
@@ -49,6 +50,7 @@ async function main() {
       }
     }, 20000);
   }
+  */
 }
 
 // We recommend this pattern to be able to use async/await everywhere
