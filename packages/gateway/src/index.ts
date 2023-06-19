@@ -2,12 +2,14 @@ import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
 import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
+const winston = require("winston");
 
 const IResolverAbi = require("../abi/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
 require("dotenv").config();
 const { BigNumber } = ethers;
 const program = new Command();
+
 program
   .option("-r --l2_resolver_address <address>", "L2_RESOLVER_ADDRESS", "")
   .option(
@@ -27,6 +29,7 @@ program
   )
   .option("-d --debug", "debug")
   .option("-p --port <number>", "Port number to serve on", "8080");
+
 program.parse(process.argv);
 const options = program.opts();
 options.debug = options.debug || false;
@@ -38,7 +41,14 @@ const l2_resolver_address =
 
 const { rollup_address, debug, port } = options;
 
-console.log({
+const logger = winston.createLogger({
+  level: debug ? "debug" : "info",
+  format: winston.format.json(),
+  defaultMeta: { service: "ens-gateway" },
+  transports: [new winston.transports.Console()],
+});
+
+logger.info({
   l1_provider_url,
   l2_provider_url,
   l2_resolver_address,
@@ -48,6 +58,7 @@ console.log({
 });
 
 if (l2_resolver_address === undefined) {
+  logger.error({ error: "Must specify --l2_resolver_address" });
   throw "Must specify --l2_resolver_address";
 }
 
@@ -61,19 +72,18 @@ server.add(IResolverAbi, [
     type: "resolve",
     func: async ([encodedName, data]: Result, request) => {
       try {
-        console.log("--------------------REQUEST START--------------------\n");
-        console.log(`Request timestamp: ${new Date().toUTCString()}`);
         const name = decodeDnsName(Buffer.from(encodedName.slice(2), "hex"));
         const node = ethers.utils.namehash(name);
 
         if (debug) {
-          console.log({
+          logger.debug({
             encodedName,
             name,
             node,
           });
+
           const to = request?.to;
-          console.log({
+          logger.debug({
             node,
             to,
             data,
@@ -84,7 +94,7 @@ server.add(IResolverAbi, [
         }
 
         const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
-        console.log({ lastBlockFinalized });
+        logger.info({ lastBlockFinalized });
         const blockNumber = lastBlockFinalized.toNumber();
         const block = await l2provider.getBlock(blockNumber);
         const blockHash = block.hash;
@@ -93,7 +103,7 @@ server.add(IResolverAbi, [
           false,
         ]);
         const stateRoot = l2blockRaw.stateRoot;
-        console.log({ stateRoot });
+        logger.info({ stateRoot });
         const blockarray = [
           l2blockRaw.parentHash,
           l2blockRaw.sha3Uncles,
@@ -114,8 +124,6 @@ server.add(IResolverAbi, [
         ];
         const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
 
-        // we get the slot address of the variable 'mapping(bytes32 => uint256) public addresses'
-        // which is at index 251 of the L2 resolver contract
         const tokenIdSlot = ethers.utils.keccak256(
           `${node}${"00".repeat(31)}FB`
         );
@@ -123,13 +131,12 @@ server.add(IResolverAbi, [
           l2_resolver_address,
           tokenIdSlot
         );
-        console.log({ tokenId });
-        // owner variable is at index 103
+        logger.info({ tokenId });
+
         const ownerSlot = ethers.utils.keccak256(
           `${tokenId}${"00".repeat(31)}67`
         );
 
-        // Create proof for the tokenId slot
         const tokenIdProof = await l2provider.send("eth_getProof", [
           l2_resolver_address,
           [tokenIdSlot],
@@ -143,9 +150,8 @@ server.add(IResolverAbi, [
           )[0].proof
         );
         const slicedTokenIdStorageProof = tokenIdStorageProof.slice(0, 50);
-        console.log({ tokenIdStorageProof: slicedTokenIdStorageProof });
+        logger.info({ tokenIdStorageProof: slicedTokenIdStorageProof });
 
-        // Create proof for the owner slot
         const ownerProof = await l2provider.send("eth_getProof", [
           l2_resolver_address,
           [ownerSlot],
@@ -158,7 +164,7 @@ server.add(IResolverAbi, [
           )[0].proof
         );
         const slicedOwnerStorageProof = ownerStorageProof.slice(0, 50);
-        console.log({ ownerStorageProof: slicedOwnerStorageProof });
+        logger.info({ ownerStorageProof: slicedOwnerStorageProof });
 
         const finalProof = {
           blockHash,
@@ -168,10 +174,9 @@ server.add(IResolverAbi, [
           tokenIdStorageProof,
           ownerStorageProof,
         };
-        console.log("\n--------------------REQUEST END--------------------\n");
         return [finalProof];
       } catch (error) {
-        console.log(`Error occured: ${error}`);
+        logger.error({ error });
         throw error;
       }
     },
