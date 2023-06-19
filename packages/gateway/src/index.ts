@@ -2,7 +2,7 @@ import { Server } from "@chainlink/ccip-read-server";
 import { Command } from "commander";
 import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
-const winston = require("winston");
+import { createLogger, format, transports } from "winston";
 
 const IResolverAbi = require("../abi/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
@@ -41,11 +41,11 @@ const l2_resolver_address =
 
 const { rollup_address, debug, port } = options;
 
-const logger = winston.createLogger({
+const logger = createLogger({
   level: debug ? "debug" : "info",
-  format: winston.format.json(),
+  format: format.json(),
   defaultMeta: { service: "ens-gateway" },
-  transports: [new winston.transports.Console()],
+  transports: [new transports.Console()],
 });
 
 logger.info({
