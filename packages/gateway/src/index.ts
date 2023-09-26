@@ -157,6 +157,9 @@ server.add(IResolverAbi, [
           [ownerSlot],
           { blockHash },
         ]);
+
+        console.log({ ownerProof });
+        console.log({ test: ownerProof.storageProof });
         const ownerStorageProof = ethers.utils.RLP.encode(
           // rome-ignore lint/suspicious/noExplicitAny: <explanation>
           (ownerProof.storageProof as any[]).filter(
