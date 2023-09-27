@@ -39,7 +39,9 @@ const l2_provider_url = process.env.L2_PROVIDER_URL || options.l2_provider_url;
 const l2_resolver_address =
   process.env.L2_RESOLVER_ADDRESS || options.l2_resolver_address;
 
-const { rollup_address, debug, port } = options;
+const rollup_address = process.env.ROLLUP_ADDRESS || options.rollup_address;
+
+const { debug, port } = options;
 
 const logger = createLogger({
   level: debug ? "debug" : "info",
@@ -93,8 +95,9 @@ server.add(IResolverAbi, [
           });
         }
 
-        const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
+        const lastBlockFinalized = await rollup.currentL2BlockNumber();
         logger.info({ lastBlockFinalized });
+        logger.info({ lastBlockFinalized: lastBlockFinalized.toString() });
         const blockNumber = lastBlockFinalized.toNumber();
         const block = await l2provider.getBlock(blockNumber);
         const blockHash = block.hash;
@@ -176,6 +179,7 @@ server.add(IResolverAbi, [
           stateRoot,
           tokenIdStorageProof,
           ownerStorageProof,
+          l2blockNumber: blockNumber,
         };
         return [finalProof];
       } catch (error) {

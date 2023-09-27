@@ -49,6 +49,11 @@
               "internalType": "bytes",
               "name": "ownerStorageProof",
               "type": "bytes"
+            },
+            {
+              "internalType": "uint256",
+              "name": "l2blockNumber",
+              "type": "uint256"
             }
           ],
           "internalType": "struct L2StateProof",

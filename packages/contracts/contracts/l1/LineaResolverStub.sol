@@ -6,6 +6,8 @@ import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib
 import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
 import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
 
+import "hardhat/console.sol";
+
 struct L2StateProof {
   bytes32 blockHash;
   bytes encodedBlockArray;
@@ -13,6 +15,7 @@ struct L2StateProof {
   bytes32 stateRoot;
   bytes tokenIdStorageProof;
   bytes ownerStorageProof;
+  uint256 l2blockNumber;
 }
 
 interface IResolverService {
@@ -34,7 +37,9 @@ interface ISupportsInterface {
 }
 
 interface IRollup {
-  function stateRootHash() external view returns (bytes32);
+  function stateRootHashes(
+    uint256 l2blockNumber
+  ) external view returns (bytes32);
 }
 
 abstract contract SupportsInterface is ISupportsInterface {
@@ -116,11 +121,13 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
 
+    console.logBytes32(proof.stateRoot);
+    console.logBytes32(IRollup(rollup).stateRootHashes(proof.l2blockNumber));
     // step 1: check that the right state root was used to calculate the proof
-    // require(
-    //   IRollup(rollup).stateRootHash() == proof.stateRoot,
-    //   "LineaResolverStub: invalid state root"
-    // );
+    require(
+      IRollup(rollup).stateRootHashes(proof.l2blockNumber) == proof.stateRoot,
+      "LineaResolverStub: invalid state root"
+    );
 
     // step 2: check blockHash against encoded block array
     require(
