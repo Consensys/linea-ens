@@ -49,7 +49,7 @@
     "typescript": ">=4.5.0"
   },
   "dependencies": {
-    "@ensdomains/ens-contracts": "^0.0.20",
+    "@ensdomains/ens-contracts": "^0.0.22",
     "@eth-optimism/contracts": "^0.5.40",
     "@openzeppelin/contracts": "^4.8.1",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
