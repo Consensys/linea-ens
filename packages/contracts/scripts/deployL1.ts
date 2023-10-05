@@ -23,7 +23,22 @@ async function main() {
   // Deploy Linea Resolver Stub to L1
   const gatewayUrl = process.env.GATEWAY_URL ? process.env.GATEWAY_URL : "http://localhost:8080/{sender}/{data}.json";
   const rollupAddr = ROLLUP_ADDRESS[network.name as keyof typeof ROLLUP_ADDRESS];
-  const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub");
+
+  const Mimc = await ethers.getContractFactory("Mimc");
+  const mimc = await Mimc.deploy();
+
+  const SparseMerkleProof = await ethers.getContractFactory("SparseMerkleProof", {
+    libraries: {
+      Mimc: mimc.address,
+    },
+  });
+  const sparseMerkleProof = await SparseMerkleProof.deploy();
+
+  const LineaResolverStub = await ethers.getContractFactory("LineaResolverStub", {
+    libraries: {
+      SparseMerkleProof: sparseMerkleProof.address,
+    },
+  });
   const lineaResolverStub = await LineaResolverStub.deploy([gatewayUrl], L2_RESOLVER_ADDRESS, rollupAddr);
   await lineaResolverStub.deployed();
   console.log(`LineaResolverStub deployed to ${lineaResolverStub.address}`);
