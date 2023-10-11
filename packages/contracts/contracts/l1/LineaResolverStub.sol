@@ -126,9 +126,11 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     bytes32 stateRoot = IRollup(rollup).stateRootHashes(proof.l2blockNumber);
     // step 1: check that the right state root was used to calculate the proof
     require(
-      IRollup(rollup).stateRootHashes(proof.l2blockNumber) != bytes32(0),
+      stateRoot != bytes32(0),
       "LineaResolverStub: invalid state root"
     );
+
+    console.logBytes32(stateRoot);
 
     // step 2: verify the account proof
     // the index slot 251 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver

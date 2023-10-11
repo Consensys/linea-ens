@@ -3,7 +3,6 @@ import { Command } from "commander";
 import { ethers } from "ethers";
 import { Result } from "ethers/lib/utils";
 import { createLogger, format, transports } from "winston";
-import mimcProofTest from "./mimcProofTest.json";
 
 const IResolverAbi = require("../abi/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
@@ -99,7 +98,7 @@ server.add(IResolverAbi, [
         const lastBlockFinalized = await rollup.currentL2BlockNumber();
         logger.info({ lastBlockFinalized });
         logger.info({ lastBlockFinalized: lastBlockFinalized.toString() });
-        const blockNumber = 1640075;
+        const blockNumber = 1695609;
 
         const tokenIdSlot = ethers.utils.keccak256(
           `${node}${"00".repeat(31)}FB`
@@ -114,29 +113,32 @@ server.add(IResolverAbi, [
           `${tokenId}${"00".repeat(31)}67`
         );
 
+        console.log({ l2_resolver_address });
+        console.log({ tokenIdSlot });
+        console.log({ ownerSlot });
+
         const testProof = await l2provider.send("rollup_getProof", [
           l2_resolver_address,
           [tokenIdSlot, ownerSlot],
-          "0x2D46A",
+          "0x19df79",
         ]);
 
-        console.log({ testProof });
-
         const finalProof = {
-          accountProof:
-            mimcProofTest.result.accountProof.proof.proofRelatedNodes,
-          tokenIdProof:
-            mimcProofTest.result.storageProofs[0].proof.proofRelatedNodes,
-          addressProof:
-            mimcProofTest.result.storageProofs[0].proof.proofRelatedNodes,
-          accountLeafIndex: mimcProofTest.result.accountProof.leafIndex,
-          tokenIdLeafIndex: mimcProofTest.result.storageProofs[0].leafIndex,
-          addressLeafIndex: mimcProofTest.result.storageProofs[0].leafIndex,
-          accountValue: mimcProofTest.result.accountProof.proof.value,
-          tokenIdValue: mimcProofTest.result.storageProofs[0].proof.value,
-          addressValue: mimcProofTest.result.storageProofs[0].proof.value,
+          accountProof: testProof.accountProof.proof.proofRelatedNodes,
+          tokenIdProof: testProof.storageProofs[0].proof.proofRelatedNodes,
+          addressProof: testProof.storageProofs[1].proof.proofRelatedNodes,
+          accountLeafIndex: testProof.accountProof.leafIndex,
+          tokenIdLeafIndex: testProof.storageProofs[0].leafIndex,
+          addressLeafIndex: testProof.storageProofs[1].leafIndex,
+          accountValue: testProof.accountProof.proof.value,
+          tokenIdValue: testProof.storageProofs[0].proof.value,
+          addressValue: testProof.storageProofs[1].proof.value,
           l2blockNumber: blockNumber,
         };
+
+        console.log({
+          finalProof,
+        });
         return [finalProof];
       } catch (error) {
         logger.error({ error });
