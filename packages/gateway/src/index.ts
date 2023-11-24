@@ -96,9 +96,8 @@ server.add(IResolverAbi, [
         }
 
         const lastBlockFinalized = await rollup.currentL2BlockNumber();
-        logger.info({ lastBlockFinalized });
-        logger.info({ lastBlockFinalized: lastBlockFinalized.toString() });
-        const blockNumber = 1695609;
+        const blockNumber = lastBlockFinalized.toNumber();
+        const blockNumberHex = "0x" + blockNumber.toString(16);
 
         const tokenIdSlot = ethers.utils.keccak256(
           `${node}${"00".repeat(31)}FB`
@@ -120,7 +119,7 @@ server.add(IResolverAbi, [
         const testProof = await l2provider.send("rollup_getProof", [
           l2_resolver_address,
           [tokenIdSlot, ownerSlot],
-          "0x19df79",
+          blockNumberHex,
         ]);
 
         const finalProof = {
