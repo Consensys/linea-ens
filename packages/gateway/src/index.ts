@@ -112,26 +112,22 @@ server.add(IResolverAbi, [
           `${tokenId}${"00".repeat(31)}67`
         );
 
-        console.log({ l2_resolver_address });
-        console.log({ tokenIdSlot });
-        console.log({ ownerSlot });
-
-        const testProof = await l2provider.send("rollup_getProof", [
+        const proof = await l2provider.send("rollup_getProof", [
           l2_resolver_address,
           [tokenIdSlot, ownerSlot],
           blockNumberHex,
         ]);
 
         const finalProof = {
-          accountProof: testProof.accountProof.proof.proofRelatedNodes,
-          tokenIdProof: testProof.storageProofs[0].proof.proofRelatedNodes,
-          addressProof: testProof.storageProofs[1].proof.proofRelatedNodes,
-          accountLeafIndex: testProof.accountProof.leafIndex,
-          tokenIdLeafIndex: testProof.storageProofs[0].leafIndex,
-          addressLeafIndex: testProof.storageProofs[1].leafIndex,
-          accountValue: testProof.accountProof.proof.value,
-          tokenIdValue: testProof.storageProofs[0].proof.value,
-          addressValue: testProof.storageProofs[1].proof.value,
+          accountProof: proof.accountProof.proof.proofRelatedNodes,
+          tokenIdProof: proof.storageProofs[0].proof.proofRelatedNodes,
+          addressProof: proof.storageProofs[1].proof.proofRelatedNodes,
+          accountLeafIndex: proof.accountProof.leafIndex,
+          tokenIdLeafIndex: proof.storageProofs[0].leafIndex,
+          addressLeafIndex: proof.storageProofs[1].leafIndex,
+          accountValue: proof.accountProof.proof.value,
+          tokenIdValue: proof.storageProofs[0].proof.value,
+          addressValue: proof.storageProofs[1].proof.value,
           l2blockNumber: blockNumber,
         };
 

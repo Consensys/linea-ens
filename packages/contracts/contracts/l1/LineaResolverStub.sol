@@ -130,8 +130,6 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       "LineaResolverStub: invalid state root"
     );
 
-    console.logBytes32(stateRoot);
-
     // step 2: verify the account proof
     // the index slot 251 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver
     // the index slot 103 is for 'mapping(uint256 => address) private _owners' in the L2 resolver
@@ -163,14 +161,20 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.accountValue
     );
 
+    // Calculate the  tokenId storage slot to use as key
+    bytes32 tokenIdSlot = keccak256(abi.encode(node,251));
+
     // Verify the tokenId key and value
     verifyKeyValue(
       account,
       proof.tokenIdLeafIndex,
       proof.tokenIdProof,
       proof.tokenIdValue,
-      abi.encodePacked(node)
+      tokenIdSlot
     );
+
+    // Calculate the owner storage slot to use as key
+    bytes32 ownerSlot = keccak256(abi.encode(proof.tokenIdValue,103));
 
     // Verify the address key and value
     verifyKeyValue(
@@ -178,7 +182,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
       proof.addressLeafIndex,
       proof.addressProof,
       proof.addressValue,
-      abi.encodePacked(proof.tokenIdValue)
+      ownerSlot
     );
 
     return abi.encode(proof.addressValue);
@@ -189,7 +193,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     uint256 leafIndex,
     bytes[] memory proof,
     bytes32 value,
-    bytes memory key
+    bytes32 key
   ) private pure {
     bool storageProofVerified = SparseMerkleProof.verifyProof(
       proof,
@@ -204,7 +208,7 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
     );
 
     // Verify the key
-    bytes32 hKey = SparseMerkleProof.mimcHash(key);
+    bytes32 hKey = SparseMerkleProof.hashStorageValue(key);
     require(storageLeaf.hKey == hKey, "LineaResolverStub: key invalid");
 
     // Verify the storage value
