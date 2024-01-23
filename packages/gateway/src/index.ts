@@ -6,8 +6,8 @@ import { createLogger, format, transports } from "winston";
 
 const IResolverAbi = require("../abi/IResolverService.json").abi;
 const rollupAbi = require("../abi/rollup.json");
+
 require("dotenv").config();
-const { BigNumber } = ethers;
 const program = new Command();
 
 program
@@ -25,7 +25,7 @@ program
   .option(
     "-ru --rollup_address <rollup_address>",
     "ROLLUP_ADDRESS",
-    "0xE87d317eB8dcc9afE24d9f63D6C760e52Bc18A40"
+    "0x70BaD09280FD342D02fe64119779BC1f0791BAC2"
   )
   .option("-d --debug", "debug")
   .option("-p --port <number>", "Port number to serve on", "8080");
@@ -39,7 +39,9 @@ const l2_provider_url = process.env.L2_PROVIDER_URL || options.l2_provider_url;
 const l2_resolver_address =
   process.env.L2_RESOLVER_ADDRESS || options.l2_resolver_address;
 
-const { rollup_address, debug, port } = options;
+const rollup_address = process.env.ROLLUP_ADDRESS || options.rollup_address;
+
+const { debug, port } = options;
 
 const logger = createLogger({
   level: debug ? "debug" : "info",
@@ -93,36 +95,9 @@ server.add(IResolverAbi, [
           });
         }
 
-        const lastBlockFinalized = await rollup.lastFinalizedBatchHeight();
-        logger.info({ lastBlockFinalized });
+        const lastBlockFinalized = await rollup.currentL2BlockNumber();
         const blockNumber = lastBlockFinalized.toNumber();
-        const block = await l2provider.getBlock(blockNumber);
-        const blockHash = block.hash;
-        const l2blockRaw = await l2provider.send("eth_getBlockByHash", [
-          blockHash,
-          false,
-        ]);
-        const stateRoot = l2blockRaw.stateRoot;
-        logger.info({ stateRoot });
-        const blockarray = [
-          l2blockRaw.parentHash,
-          l2blockRaw.sha3Uncles,
-          l2blockRaw.miner,
-          l2blockRaw.stateRoot,
-          l2blockRaw.transactionsRoot,
-          l2blockRaw.receiptsRoot,
-          l2blockRaw.logsBloom,
-          BigNumber.from(l2blockRaw.difficulty).toHexString(),
-          BigNumber.from(l2blockRaw.number).toHexString(),
-          BigNumber.from(l2blockRaw.gasLimit).toHexString(),
-          BigNumber.from(l2blockRaw.gasUsed).toHexString(),
-          BigNumber.from(l2blockRaw.timestamp).toHexString(),
-          l2blockRaw.extraData,
-          l2blockRaw.mixHash,
-          l2blockRaw.nonce,
-          BigNumber.from(l2blockRaw.baseFeePerGas).toHexString(),
-        ];
-        const encodedBlockArray = ethers.utils.RLP.encode(blockarray);
+        const blockNumberHex = "0x" + blockNumber.toString(16);
 
         const tokenIdSlot = ethers.utils.keccak256(
           `${node}${"00".repeat(31)}FB`
@@ -137,43 +112,28 @@ server.add(IResolverAbi, [
           `${tokenId}${"00".repeat(31)}67`
         );
 
-        const tokenIdProof = await l2provider.send("eth_getProof", [
+        const proof = await l2provider.send("rollup_getProof", [
           l2_resolver_address,
-          [tokenIdSlot],
-          { blockHash },
+          [tokenIdSlot, ownerSlot],
+          blockNumberHex,
         ]);
-        const accountProof = ethers.utils.RLP.encode(tokenIdProof.accountProof);
-        const tokenIdStorageProof = ethers.utils.RLP.encode(
-          // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-          (tokenIdProof.storageProof as any[]).filter(
-            (x) => x.key === tokenIdSlot
-          )[0].proof
-        );
-        const slicedTokenIdStorageProof = tokenIdStorageProof.slice(0, 50);
-        logger.info({ tokenIdStorageProof: slicedTokenIdStorageProof });
-
-        const ownerProof = await l2provider.send("eth_getProof", [
-          l2_resolver_address,
-          [ownerSlot],
-          { blockHash },
-        ]);
-        const ownerStorageProof = ethers.utils.RLP.encode(
-          // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-          (ownerProof.storageProof as any[]).filter(
-            (x) => x.key === ownerSlot
-          )[0].proof
-        );
-        const slicedOwnerStorageProof = ownerStorageProof.slice(0, 50);
-        logger.info({ ownerStorageProof: slicedOwnerStorageProof });
 
         const finalProof = {
-          blockHash,
-          encodedBlockArray,
-          accountProof,
-          stateRoot,
-          tokenIdStorageProof,
-          ownerStorageProof,
+          accountProof: proof.accountProof.proof.proofRelatedNodes,
+          tokenIdProof: proof.storageProofs[0].proof.proofRelatedNodes,
+          addressProof: proof.storageProofs[1].proof.proofRelatedNodes,
+          accountLeafIndex: proof.accountProof.leafIndex,
+          tokenIdLeafIndex: proof.storageProofs[0].leafIndex,
+          addressLeafIndex: proof.storageProofs[1].leafIndex,
+          accountValue: proof.accountProof.proof.value,
+          tokenIdValue: proof.storageProofs[0].proof.value,
+          addressValue: proof.storageProofs[1].proof.value,
+          l2blockNumber: blockNumber,
         };
+
+        console.log({
+          finalProof,
+        });
         return [finalProof];
       } catch (error) {
         logger.error({ error });

@@ -1,18 +1,23 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.18;
+pragma solidity 0.8.19;
 
-import { Lib_OVMCodec } from "@eth-optimism/contracts/libraries/codec/Lib_OVMCodec.sol";
-import { Lib_SecureMerkleTrie } from "@eth-optimism/contracts/libraries/trie/Lib_SecureMerkleTrie.sol";
-import { Lib_RLPReader } from "@eth-optimism/contracts/libraries/rlp/Lib_RLPReader.sol";
-import { Lib_BytesUtils } from "@eth-optimism/contracts/libraries/utils/Lib_BytesUtils.sol";
+import { SparseMerkleProof } from "./lib/SparseMerkleProof.sol";
+
+import "hardhat/console.sol";
+
+uint256 constant LAST_LEAF_INDEX = 41;
 
 struct L2StateProof {
-  bytes32 blockHash;
-  bytes encodedBlockArray;
-  bytes accountProof;
-  bytes32 stateRoot;
-  bytes tokenIdStorageProof;
-  bytes ownerStorageProof;
+  bytes[] accountProof;
+  bytes[] tokenIdProof;
+  bytes[] addressProof;
+  uint256 accountLeafIndex;
+  uint256 tokenIdLeafIndex;
+  uint256 addressLeafIndex;
+  bytes accountValue;
+  bytes32 tokenIdValue;
+  bytes32 addressValue;
+  uint256 l2blockNumber;
 }
 
 interface IResolverService {
@@ -34,7 +39,9 @@ interface ISupportsInterface {
 }
 
 interface IRollup {
-  function stateRootHash() external view returns (bytes32);
+  function stateRootHashes(
+    uint256 l2blockNumber
+  ) external view returns (bytes32);
 }
 
 abstract contract SupportsInterface is ISupportsInterface {
@@ -116,83 +123,97 @@ contract LineaResolverStub is IExtendedResolver, SupportsInterface {
 
     L2StateProof memory proof = abi.decode(response, (L2StateProof));
 
+    bytes32 stateRoot = IRollup(rollup).stateRootHashes(proof.l2blockNumber);
     // step 1: check that the right state root was used to calculate the proof
-    // require(
-    //   IRollup(rollup).stateRootHash() == proof.stateRoot,
-    //   "LineaResolverStub: invalid state root"
-    // );
-
-    // step 2: check blockHash against encoded block array
     require(
-      proof.blockHash == keccak256(proof.encodedBlockArray),
-      "LineaResolverStub: blockHash encodedBlockArray mismatch"
+      stateRoot != bytes32(0),
+      "LineaResolverStub: invalid state root"
     );
 
-    // step 3: check storage values, get itemId first and then get the address result
+    // step 2: verify the account proof
     // the index slot 251 is for 'mapping(bytes32 => uint256) public addresses' in the L2 resolver
     // the index slot 103 is for 'mapping(uint256 => address) private _owners' in the L2 resolver
-    bytes32 tokenIdSlot = keccak256(abi.encodePacked(node, uint256(251)));
-    (bool tokenIdExists, bytes32 tokenId) = getStorageValue(
-      l2resolver,
-      tokenIdSlot,
-      proof.stateRoot,
+
+    bool accountProofVerified = SparseMerkleProof.verifyProof(
       proof.accountProof,
-      proof.tokenIdStorageProof
+      proof.accountLeafIndex,
+      stateRoot
     );
 
-    if (!tokenIdExists) {
-      return "";
-    }
+    require(accountProofVerified, "LineaResolverStub: invalid account proof");
 
-    bytes32 ownerSlot = keccak256(abi.encodePacked(tokenId, uint256(103)));
-    (, bytes32 owner) = getStorageValue(
-      l2resolver,
-      ownerSlot,
-      proof.stateRoot,
-      proof.accountProof,
-      proof.ownerStorageProof
+    // Verify the account value
+    bytes32 hAccountValue = SparseMerkleProof.hashAccountValue(
+      proof.accountValue
     );
 
-    return abi.encode(owner);
+    SparseMerkleProof.Leaf memory accountLeaf = SparseMerkleProof.getLeaf(
+      proof.accountProof[41]
+    );
+
+    require(
+      accountLeaf.hValue == hAccountValue,
+      "LineaResolverStub: account value invalid"
+    );
+
+    // Get the account to verify the storage values
+    SparseMerkleProof.Account memory account = SparseMerkleProof.getAccount(
+      proof.accountValue
+    );
+
+    // Calculate the  tokenId storage slot to use as key
+    bytes32 tokenIdSlot = keccak256(abi.encode(node,251));
+
+    // Verify the tokenId key and value
+    verifyKeyValue(
+      account,
+      proof.tokenIdLeafIndex,
+      proof.tokenIdProof,
+      proof.tokenIdValue,
+      tokenIdSlot
+    );
+
+    // Calculate the owner storage slot to use as key
+    bytes32 ownerSlot = keccak256(abi.encode(proof.tokenIdValue,103));
+
+    // Verify the address key and value
+    verifyKeyValue(
+      account,
+      proof.addressLeafIndex,
+      proof.addressProof,
+      proof.addressValue,
+      ownerSlot
+    );
+
+    return abi.encode(proof.addressValue);
   }
 
-  function getStorageValue(
-    address target,
-    bytes32 slot,
-    bytes32 stateRoot,
-    bytes memory stateTrieWitness,
-    bytes memory storageTrieWitness
-  ) internal pure returns (bool exists, bytes32) {
-    (
-      bool accountExists,
-      bytes memory encodedResolverAccount
-    ) = Lib_SecureMerkleTrie.get(
-        abi.encodePacked(target),
-        stateTrieWitness,
-        stateRoot
-      );
-    require(accountExists, "LineaResolverStub: Account does not exist");
-    Lib_OVMCodec.EVMAccount memory account = Lib_OVMCodec.decodeEVMAccount(
-      encodedResolverAccount
+  function verifyKeyValue(
+    SparseMerkleProof.Account memory account,
+    uint256 leafIndex,
+    bytes[] memory proof,
+    bytes32 value,
+    bytes32 key
+  ) private pure {
+    bool storageProofVerified = SparseMerkleProof.verifyProof(
+      proof,
+      leafIndex,
+      account.storageRoot
     );
-    (bool storageExists, bytes memory retrievedValue) = Lib_SecureMerkleTrie
-      .get(abi.encodePacked(slot), storageTrieWitness, account.storageRoot);
-    if (storageExists) {
-      return (true, toBytes32PadLeft(Lib_RLPReader.readBytes(retrievedValue)));
-    }
-    return (false, bytes32(0));
-  }
 
-  // Ported old function from Lib_BytesUtils.sol
-  function toBytes32PadLeft(
-    bytes memory _bytes
-  ) internal pure returns (bytes32) {
-    bytes32 ret;
-    uint256 len = _bytes.length <= 32 ? _bytes.length : 32;
-    assembly {
-      ret := shr(mul(sub(32, len), 8), mload(add(_bytes, 32)))
-    }
-    return ret;
+    require(storageProofVerified, "LineaResolverStub: invalid storage proof");
+
+    SparseMerkleProof.Leaf memory storageLeaf = SparseMerkleProof.getLeaf(
+      proof[LAST_LEAF_INDEX]
+    );
+
+    // Verify the key
+    bytes32 hKey = SparseMerkleProof.hashStorageValue(key);
+    require(storageLeaf.hKey == hKey, "LineaResolverStub: key invalid");
+
+    // Verify the storage value
+    bytes32 hValue = SparseMerkleProof.hashStorageValue(value);
+    require(storageLeaf.hValue == hValue, "LineaResolverStub: value invalid");
   }
 
   function supportsInterface(

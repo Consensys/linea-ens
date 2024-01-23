@@ -21,34 +21,54 @@
         {
           "components": [
             {
-              "internalType": "bytes32",
-              "name": "blockHash",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes",
-              "name": "encodedBlockArray",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes",
+              "internalType": "bytes[]",
               "name": "accountProof",
+              "type": "bytes[]"
+            },
+            {
+              "internalType": "bytes[]",
+              "name": "tokenIdProof",
+              "type": "bytes[]"
+            },
+            {
+              "internalType": "bytes[]",
+              "name": "addressProof",
+              "type": "bytes[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "accountLeafIndex",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenIdLeafIndex",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "addressLeafIndex",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "accountValue",
               "type": "bytes"
             },
             {
               "internalType": "bytes32",
-              "name": "stateRoot",
+              "name": "tokenIdValue",
               "type": "bytes32"
             },
             {
-              "internalType": "bytes",
-              "name": "tokenIdStorageProof",
-              "type": "bytes"
+              "internalType": "bytes32",
+              "name": "addressValue",
+              "type": "bytes32"
             },
             {
-              "internalType": "bytes",
-              "name": "ownerStorageProof",
-              "type": "bytes"
+              "internalType": "uint256",
+              "name": "l2blockNumber",
+              "type": "uint256"
             }
           ],
           "internalType": "struct L2StateProof",
