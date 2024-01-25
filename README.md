@@ -24,6 +24,36 @@ A very simple script that tests if ccip-read integration is working.
 
 ## Test in a mixed local/L2 mode
 
+### Create a domain name on ENS goerli L1
+
+Go to https://app.ens.domains/ and register a new test domain that will your subdomain on Linea goerli
+
+### Setup env
+
+In `packages/contracts` the .env.example and replace the values:
+
+```shell
+cd packages/contracts
+cp .env.example .env
+```
+
+Edit `.env` and set your config:
+
+| Var                      | Description                                                      | Default values                                 |
+| ------------------------ | ---------------------------------------------------------------- | ---------------------------------------------- |
+| L1_PROVIDER_URL          | L1 provider URL                                                  | https://goerli.infura.io/v3/<INFURA_KEY>       |
+| L1_ENS_DOMAIN            | L1 ENS name you created                                          | lineatest.eth                                  |
+| GATEWAY_URL              | Local gateway                                                    | http://localhost:8080/{sender}/{data}.json     |
+| L2_PROVIDER_URL          | L2 provider URL                                                  | https://linea-goerli.infura.io/v3/<INFURA_KEY> |
+| L2_ENS_SUBDOMAIN_TEST    | L2 ENS name                                                      | test.lineatest.eth                             |
+| L2_RESOLVER_NFT_NAME     | L2 Resolver NFT name                                             | Lineatest                                      |
+| L2_RESOLVER_NFT_SYMBOL   | L2 Resolver NFT symbol                                           | LTST                                           |
+| L2_RESOLVER_NFT_BASE_URI | L2 Resolver NFT Base URI                                         | http://localhost:3000/metadata/                |
+| L2_RESOLVER_ADDRESS      | L2 Resolver address you deploy later                             |                                                |
+| PRIVATE_KEY              | Wallet private key(The one used to create the domain name on L1) |                                                |
+| ETHERSCAN_API_KEY        | Etherscan API key                                                |                                                |
+| LINEASCAN_API_KEY        | Etherscan API key                                                |                                                |
+
 ### Setup local node
 
 In a terminal, setup a forked L1 local node:
@@ -34,37 +64,11 @@ yarn install
 yarn hardhat node --fork <L1_PROVIDER_URL>
 ```
 
-`L1_PROVIDER_URL` is described in the config section bellow.
+`L1_PROVIDER_URL` is the RPC endpoint for the L1 chain to be forked.
 
 ### Deploy contracts
 
-In second terminal, deploy L1 and L2 smart contracts.
-
-Set your `.env` config file. You can copy [env.example](./packages/contracts/.env.example):
-
-```shell
-cd packages/contracts
-cp .env.example .env
-```
-
-Edit `.env` and set your config:
-
-| Var                      | Description              | Default values                                 |
-| ------------------------ | ------------------------ | ---------------------------------------------- |
-| L1_PROVIDER_URL          | L1 provider URL          | https://goerli.infura.io/v3/<INFURA_KEY>       |
-| L1_ENS_DOMAIN            | L1 ENS name              | lineatest.eth                                  |
-| GATEWAY_URL              | Primary gateway URL      | http://localhost:8080/{sender}/{data}.json     |
-| L2_PROVIDER_URL          | L2 provider URL          | https://linea-goerli.infura.io/v3/<INFURA_KEY> |
-| L2_ENS_SUBDOMAIN_TEST    | L2 ENS name              | julink.lineatest.eth                           |
-| L2_RESOLVER_NFT_NAME     | L2 Resolver NFT name     | Lineatest                                      |
-| L2_RESOLVER_NFT_SYMBOL   | L2 Resolver NFT symbol   | LTST                                           |
-| L2_RESOLVER_NFT_BASE_URI | L2 Resolver NFT Base URI | http://localhost:3000/metadata/                |
-| PRIVATE_KEY              | Wallet private key       |                                                |
-| ETHERSCAN_API_KEY        | Etherscan API key        |                                                |
-
-For local/L2 mode, `L1_PROVIDER_URL` is not required.
-
-Compile smart contracts:
+In a second terminal, compile smart contracts:
 
 ```shell
 yarn compile
@@ -76,12 +80,27 @@ Deploy L2 contracts first:
 npx hardhat run --network goerliLinea scripts/deployL2.ts
 ```
 
+You should get the result:
+
+```shell
+LineaResolver deployed to, L2_RESOLVER_ADDRESS: `YOUR_CONTRACT_ADDRESS`
+Subdomain minted: `L2_ENS_SUBDOMAIN_TEST`
+```
+
 > **_Imporant:_** Wait 10 minutes for Linea to synchronize with Goerli. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli.
 
-Get the `L2_RESOLVER_ADDRESS` resolver address, then deploy L1 contracts:
+Get the `L2_RESOLVER_ADDRESS` resolver address and add it to your .env, then deploy L1 contracts:
 
+```shell
+npx hardhat run --network localhost scripts/deployL1.ts
 ```
-L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network localhost scripts/deployL1.ts
+
+You should get the result:
+
+```shell
+LineaResolverStub deployed to `YOUR_CONTRACT_ADDRESS`
+{ name: `L1_ENS_DOMAIN` }
+L1 ENS name: test-linea.eth , set to LineaResolverStub: `YOUR_CONTRACT_ADDRESS`
 ```
 
 ### Start Gateway server
