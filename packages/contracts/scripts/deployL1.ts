@@ -45,7 +45,6 @@ async function main() {
   const registryAddr = REGISTRY_ADDRESS[network.name as keyof typeof REGISTRY_ADDRESS];
   const registry = await new ethers.Contract(registryAddr, ensRegistryAbi, owner);
   const name = process.env.L1_ENS_DOMAIN ? process.env.L1_ENS_DOMAIN : "lineatest.eth";
-  console.log({ name });
   const node = ethers.utils.namehash(name);
   const tx = await registry.setResolver(node, lineaResolverStub.address);
   await tx.wait();
