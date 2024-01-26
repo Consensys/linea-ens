@@ -26,7 +26,7 @@ A very simple script that tests if ccip-read integration is working.
 
 ### Create a domain name on ENS goerli L1
 
-Go to https://app.ens.domains/ and register a new test domain that will your subdomain on Linea goerli
+Go to https://app.ens.domains/ and register a new test domain on goerli L1 that will be your subdomain on Linea goerli.
 
 ### Setup env
 
@@ -37,7 +37,7 @@ cd packages/contracts
 cp .env.example .env
 ```
 
-Edit `.env` and set your config:
+Edit `.env` copy set your config:
 
 | Var                      | Description                                                      | Default values                                 |
 | ------------------------ | ---------------------------------------------------------------- | ---------------------------------------------- |
@@ -87,7 +87,7 @@ LineaResolver deployed to, L2_RESOLVER_ADDRESS: `YOUR_CONTRACT_ADDRESS`
 Subdomain minted: `L2_ENS_SUBDOMAIN_TEST`
 ```
 
-> **_Imporant:_** Wait 10 minutes for Linea to synchronize with Goerli. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli.
+> **_Imporant:_** You'll have to wait about 12 hours for Linea to finalize the block on which your contract has been deployed. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli. This mean you can the deployments but you'll to wait for the final step to test.
 
 Get the `L2_RESOLVER_ADDRESS` resolver address and add it to your .env, then deploy L1 contracts:
 
@@ -105,24 +105,36 @@ L1 ENS name: test-linea.eth , set to LineaResolverStub: `YOUR_CONTRACT_ADDRESS`
 
 ### Start Gateway server
 
-Once smart contracts are deployed, start the gateway:
+In `packages/gateway` copy .env.example :
+
+```shell
+cd packages/gateway
+cp .env.example .env
+```
+
+Edit `.env` and replace the values:
+
+| Var                 | Description                                 | Default values                                 |
+| ------------------- | ------------------------------------------- | ---------------------------------------------- |
+| L2_PROVIDER_URL     | L2 provider URL                             | https://linea-goerli.infura.io/v3/<INFURA_KEY> |
+| L2_RESOLVER_ADDRESS | L2 Resolver address you deployed previously |                                                |
+
+Start the gateway:
 
 ```shell
 cd ../gateway
 yarn install
-yarn build
-yarn start --l2_resolver_address $L2_RESOLVER_ADDRESS --l1_provider_url http://127.0.0.1:8545/ --l2_provider_url $L2_PROVIDER_URL
+yarn build && yarn start
 ```
 
 ### Run Client test script
 
-In a third terminal, run the demo app:
+In a third terminal, run the demo app(Replace `L2_ENS_SUBDOMAIN_TEST` by your value ):
 
 ```shell
 cd packages/clients
 yarn install
-yarn build
-yarn start julink.lineatest.eth
+yarn build && yarn start `L2_ENS_SUBDOMAIN_TEST`
 ```
 
 If successful, it should show the following output:
@@ -163,10 +175,7 @@ L2_RESOLVER_ADDRESS=$L2_RESOLVER_ADDRESS npx hardhat run --network goerli script
 
 ## Deployed contracts
 
-- Goerli resolver stub = -
-- Linea Goerli resolver = 0xCcA59f9eaa814Bedd0d3e7C41b7Bc624BB6fDd37
-- Gateway = https://ensgw1.dev.linea.build/{sender}/{data}.json
-- goerli test domain = linearesolver.eth
+TBD
 
 ## Deploy gateway
 
