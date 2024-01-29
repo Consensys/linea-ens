@@ -51,8 +51,8 @@ Edit `.env` copy set your config:
 | L2_RESOLVER_NFT_BASE_URI | L2 Resolver NFT Base URI                                         | http://localhost:3000/metadata/                |
 | L2_RESOLVER_ADDRESS      | L2 Resolver address you deploy later                             |                                                |
 | PRIVATE_KEY              | Wallet private key(The one used to create the domain name on L1) |                                                |
-| ETHERSCAN_API_KEY        | Etherscan API key                                                |                                                |
-| LINEASCAN_API_KEY        | Etherscan API key                                                |                                                |
+| ETHERSCAN_API_KEY        | Etherscan API key to verify contracts when deploying on L1       |                                                |
+| LINEASCAN_API_KEY        | Lineascan API key to verify contracts when deploying on L2       |                                                |
 
 ### Setup local node
 
