@@ -87,7 +87,7 @@ LineaResolver deployed to, L2_RESOLVER_ADDRESS: `YOUR_CONTRACT_ADDRESS`
 Subdomain minted: `L2_ENS_SUBDOMAIN_TEST`
 ```
 
-> **_Imporant:_** You'll have to wait about 12 hours for Linea to finalize the block on which your contract has been deployed. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli. This mean you can the deployments but you'll to wait for the final step to test.
+> **_Imporant:_** You'll have to wait about 12 hours for Linea to finalize the block on which your contract has been deployed. This will allow the domain registered on Linea to be recognized by the state hash written in Goerli. This mean you can continue the deployments but you'll have to wait for the final step to test.
 
 Get the `L2_RESOLVER_ADDRESS` resolver address and add it to your .env, then deploy L1 contracts:
 
