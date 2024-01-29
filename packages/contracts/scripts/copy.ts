@@ -1,11 +1,13 @@
 import * as fs from "fs";
 import * as path from "path";
 
-const fromDir = path.join(__dirname, "../artifacts/contracts/l1/LineaResolverStub.sol");
-const toDir = path.join(__dirname, "../../gateway/abi");
+export const copyAbiToGateway = () => {
+  const fromDir = path.join(__dirname, "../artifacts/contracts/l1/LineaResolverStub.sol");
+  const toDir = path.join(__dirname, "../../gateway/abi");
 
-const jsonFile = fs.readFileSync(path.join(fromDir, "IResolverService.json"), {
-  encoding: "utf8",
-});
+  const jsonFile = fs.readFileSync(path.join(fromDir, "IResolverService.json"), {
+    encoding: "utf8",
+  });
 
-fs.writeFileSync(path.join(toDir, "IResolverService.json"), jsonFile);
+  fs.writeFileSync(path.join(toDir, "IResolverService.json"), jsonFile);
+};

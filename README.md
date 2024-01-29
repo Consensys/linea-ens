@@ -132,7 +132,7 @@ yarn build && yarn start
 In a third terminal, run the demo app(Replace `L2_ENS_SUBDOMAIN_TEST` by your value ):
 
 ```shell
-cd packages/clients
+cd packages/client
 yarn install
 yarn build && yarn start `L2_ENS_SUBDOMAIN_TEST`
 ```

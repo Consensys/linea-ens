@@ -13,8 +13,7 @@
     "lint:ts": "eslint ./ ",
     "prettier": "prettier --config ./.prettierrc.yaml --write \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
     "prettier:check": "prettier --check --config ./.prettierrc.yaml \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
-    "compile": "hardhat compile && yarn copy",
-    "copy": "ts-node scripts/copy.ts"
+    "compile": "hardhat compile"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
