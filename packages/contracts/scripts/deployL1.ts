@@ -1,6 +1,7 @@
 import { ethers, network, run } from "hardhat";
 import { REGISTRY_ADDRESS, ROLLUP_ADDRESS } from "./constants";
 import ensRegistryAbi from "../abi/ENSRegistry.json";
+import { copyAbiToGateway } from "./copy";
 
 const HARDHAT_NETWORK_CHAIN_ID = 31337;
 
@@ -49,6 +50,9 @@ async function main() {
   const tx = await registry.setResolver(node, lineaResolverStub.address);
   await tx.wait();
   console.log("L1 ENS name:", name, ", set to LineaResolverStub: ", lineaResolverStub.address);
+
+  // Copy the Abi to the gateway folder
+  copyAbiToGateway();
 
   if (chainId !== HARDHAT_NETWORK_CHAIN_ID) {
     // Only verify on "live" blockchain
