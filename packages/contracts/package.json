@@ -53,6 +53,7 @@
     "@openzeppelin/contracts": "^4.9.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@openzeppelin/hardhat-upgrades": "^1.26.0",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "hardhat-storage-layout": "^0.1.7"
   }
 }
