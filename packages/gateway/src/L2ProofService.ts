@@ -30,8 +30,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   async getProvableBlock(): Promise<number> {
     const lastBlockFinalized = await this.rollup.currentL2BlockNumber();
     if (!lastBlockFinalized) throw new Error("No block found");
-    const block = lastBlockFinalized.toNumber();
-    return block;
+    return lastBlockFinalized;
   }
 
   /**
@@ -66,8 +65,8 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     return AbiCoder.defaultAbiCoder().encode(
       [
         "uint256",
-        "tuple(bytes, uint256, tuple(bytes, bytes[]))",
-        "tuple(bytes, uint256, tuple(bytes, bytes[]))[]",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof)[]",
       ],
       [blockNo, proof.accountProof, proof.storageProofs]
     );

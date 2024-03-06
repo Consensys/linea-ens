@@ -1,5 +1,5 @@
-import type { HandlerDescription } from '@chainlink/ccip-read-server';
-import type { Fragment, Interface, JsonFragment } from '@ethersproject/abi';
+import { HandlerDescription } from "@chainlink/ccip-read-server";
+import { Fragment, Interface, JsonFragment } from "@ethersproject/abi";
 import {
   concat,
   dataSlice,
@@ -7,9 +7,9 @@ import {
   solidityPackedKeccak256,
   toBigInt,
   zeroPadValue,
-} from 'ethers';
+} from "ethers";
 
-import type { IProofService, ProvableBlock } from './IProofService.js';
+import { IProofService, ProvableBlock } from "./IProofService";
 
 const OP_CONSTANT = 0x00;
 const OP_BACKREF = 0x20;
@@ -91,11 +91,11 @@ export class EVMGateway<T extends ProvableBlock> {
        * The final result of this hashing operation is used as the base slot number for the storage
        * lookup. This mirrors Solidity's recursive hashing operation for determining storage slot locations.
        */
-      'function getStorageSlots(address addr, bytes32[] memory commands, bytes[] memory constants) external view returns(bytes memory witness)',
+      "function getStorageSlots(address addr, bytes32[] memory commands, bytes[] memory constants) external view returns(bytes memory witness)",
     ];
     server.add(abi, [
       {
-        type: 'getStorageSlots',
+        type: "getStorageSlots",
         func: async (args) => {
           try {
             const [addr, commands, constants] = args;
@@ -159,7 +159,7 @@ export class EVMGateway<T extends ProvableBlock> {
       case OP_BACKREF:
         return await (await requests[operand]).value();
       default:
-        throw new Error('Unrecognized opcode');
+        throw new Error("Unrecognized opcode");
     }
   }
 
@@ -184,7 +184,7 @@ export class EVMGateway<T extends ProvableBlock> {
         requests
       );
       slot = toBigInt(
-        solidityPackedKeccak256(['bytes', 'uint256'], [index, slot])
+        solidityPackedKeccak256(["bytes", "uint256"], [index, slot])
       );
     }
 
@@ -203,7 +203,7 @@ export class EVMGateway<T extends ProvableBlock> {
     if (firstValue[31] & 0x01) {
       // Long value: first slot is `length * 2 + 1`, following slots are data.
       const len = (Number(toBigInt(firstValue)) - 1) / 2;
-      const hashedSlot = toBigInt(solidityPackedKeccak256(['uint256'], [slot]));
+      const hashedSlot = toBigInt(solidityPackedKeccak256(["uint256"], [slot]));
       const slotNumbers = Array(Math.ceil(len / 32))
         .fill(BigInt(hashedSlot))
         .map((i, idx) => i + BigInt(idx));

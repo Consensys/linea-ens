@@ -1,3 +1,3 @@
-export { EVMGateway, StorageLayout } from './EVMGateway.js';
-export { EVMProofHelper, StateProof } from './EVMProofHelper.js';
-export type { IProofService, ProvableBlock } from './IProofService.js';
+export { EVMGateway, StorageLayout } from './EVMGateway';
+export { EVMProofHelper, StateProof } from './EVMProofHelper';
+export type { IProofService, ProvableBlock } from './IProofService';

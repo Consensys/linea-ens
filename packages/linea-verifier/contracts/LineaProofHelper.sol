@@ -1,24 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 import {SparseMerkleProof} from "./lib/SparseMerkleProof.sol";
+import "hardhat/console.sol";
 
 uint256 constant LAST_LEAF_INDEX = 41;
 
-struct Proof {
+struct AccountProof {
     bytes value;
     bytes[] proofRelatedNodes;
 }
 
-struct ProofStruct {
-    bytes key;
-    uint256 leafIndex;
-    Proof proof;
+struct StorageProof {
+    bytes32 value;
+    bytes[] proofRelatedNodes;
 }
 
-struct StateProof {
-    uint256 blockNo;
-    ProofStruct accountProof;
-    ProofStruct[] storageProofs;
+struct AccountProofStruct {
+    address key;
+    uint256 leafIndex;
+    AccountProof proof;
+}
+
+struct StorageProofStruct {
+    bytes32 key;
+    uint256 leafIndex;
+    StorageProof proof;
 }
 
 uint8 constant OP_CONSTANT = 0x00;
@@ -29,13 +35,6 @@ library EVMProofHelper {
     error AccountNotFound(address);
     error UnknownOpcode(uint8);
     error InvalidSlotSize(uint256 size);
-
-    function getFixedValue(bytes memory value) private pure returns (bytes32) {
-        // RLP encoded storage slots are stored without leading 0 bytes.
-        // Casting to bytes32 appends trailing 0 bytes, so we have to bit shift to get the
-        // original fixed-length representation back.
-        return bytes32(value) >> (256 - 8 * value.length);
-    }
 
     function executeOperation(
         bytes1 operation,
@@ -76,28 +75,60 @@ library EVMProofHelper {
         }
     }
 
-    function getDynamicValue(uint256 slot, bytes memory value) private pure {
-        uint256 firstValue = uint256(getFixedValue(value));
+    // function getDynamicValue(uint256 slot, bytes32 value) private pure {
+    //     uint256 firstValue = uint256(value);
+    //     if (firstValue & 0x01 == 0x01) {
+    //         // Long value: first slot is `length * 2 + 1`, following slots are data.
+    //         uint256 length = (firstValue - 1) / 2;
+    //         slot = uint256(keccak256(abi.encodePacked(slot)));
+    //         // This is horribly inefficient - O(n^2). A better approach would be to build an array of words and concatenate them
+    //         // all at once, but we're trying to avoid writing new library code.
+    //         while (length > 0) {
+    //             if (length < 32) {
+    //                 slot++;
+    //                 length = 0;
+    //             } else {
+    //                 slot++;
+    //                 length -= 32;
+    //             }
+    //         }
+    //     }
+    // }
+
+    function getDynamicValue(
+        uint256 slot,
+        uint256 proofIdx,
+        StorageProofStruct[] memory values
+    ) private pure returns (bytes memory value, uint256 newProofIdx) {
+        uint256 firstValue = uint256(values[proofIdx++].proof.value);
         if (firstValue & 0x01 == 0x01) {
             // Long value: first slot is `length * 2 + 1`, following slots are data.
             uint256 length = (firstValue - 1) / 2;
+            value = "";
             slot = uint256(keccak256(abi.encodePacked(slot)));
             // This is horribly inefficient - O(n^2). A better approach would be to build an array of words and concatenate them
             // all at once, but we're trying to avoid writing new library code.
             while (length > 0) {
                 if (length < 32) {
                     slot++;
+                    value = bytes.concat(value, values[proofIdx++].proof.value);
                     length = 0;
                 } else {
                     slot++;
+                    value = bytes.concat(value, values[proofIdx++].proof.value);
                     length -= 32;
                 }
             }
+            return (value, proofIdx);
+        } else {
+            // Short value: least significant byte is `length * 2`, other bytes are data.
+            uint256 length = (firstValue & 0xFF) / 2;
+            return (abi.encode(firstValue), proofIdx);
         }
     }
 
     function verifyAccountProof(
-        ProofStruct memory accountProof,
+        AccountProofStruct memory accountProof,
         bytes32 stateRoot
     ) private pure returns (bool) {
         bool accountProofVerified = SparseMerkleProof.verifyProof(
@@ -105,7 +136,7 @@ library EVMProofHelper {
             accountProof.leafIndex,
             stateRoot
         );
-
+        console.log("After 1");
         require(
             accountProofVerified,
             "LineaResolverStub: invalid account proof"
@@ -167,15 +198,18 @@ library EVMProofHelper {
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes32 stateRoot,
-        ProofStruct memory accountProof,
-        ProofStruct[] memory storageProofs
+        AccountProofStruct memory accountProof,
+        StorageProofStruct[] memory storageProofs
     ) internal pure returns (bytes[] memory values) {
+        console.log("Before 1");
+        console.logBytes32(stateRoot);
+        console.logBytes(accountProof.proof.value);
         verifyAccountProof(accountProof, stateRoot);
 
         SparseMerkleProof.Account memory account = SparseMerkleProof.getAccount(
             accountProof.proof.value
         );
-
+        uint256 proofIdx = 0;
         values = new bytes[](commands.length);
         for (uint256 i = 0; i < storageProofs.length; i++) {
             bytes32 command = commands[i];
@@ -185,22 +219,23 @@ library EVMProofHelper {
                 values
             );
             if (!isDynamic) {
-                values[i] = abi.encode(
-                    getFixedValue(storageProofs[i].proof.value)
-                );
+                values[i] = abi.encode(storageProofs[i].proof.value);
                 if (values[i].length > 32) {
                     revert InvalidSlotSize(values[i].length);
                 }
             } else {
-                getDynamicValue(slot, storageProofs[i].proof.value);
-                values[i] = storageProofs[i].proof.value;
+                (values[i], proofIdx) = getDynamicValue(
+                    slot,
+                    proofIdx,
+                    storageProofs
+                );
             }
 
             verifyStorageProof(
                 account,
                 storageProofs[i].leafIndex,
                 storageProofs[i].proof.proofRelatedNodes,
-                bytes32(storageProofs[i].proof.value),
+                storageProofs[i].proof.value,
                 slot
             );
         }

@@ -1,6 +1,6 @@
 import { EVMGateway } from "./evm-gateway";
 import { JsonRpcProvider } from "ethers";
-import { L2ProofService, L2ProvableBlock } from "./L2ProofService.js";
+import { L2ProofService, L2ProvableBlock } from "./L2ProofService";
 
 export type L1Gateway = EVMGateway<L2ProvableBlock>;
 
