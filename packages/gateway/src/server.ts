@@ -36,17 +36,12 @@ const providerL1 = new ethers.JsonRpcProvider(l1ProviderUrl);
 const providerL2 = new ethers.JsonRpcProvider(l2ProviderUrl, 59140, {
   staticNetwork: true,
 });
-console.log({ l2ProviderUrl });
 const gateway = new EVMGateway(
   new L2ProofService(providerL1, providerL2, rollupAddress)
 );
 const server = new Server();
 gateway.add(server);
 const app = server.makeApp("/");
-
-const slot = ethers.keccak256(`${"0x1"}${"00".repeat(31)}3`);
-
-console.log({ slot });
 
 (async () => {
   app.listen(port, function() {

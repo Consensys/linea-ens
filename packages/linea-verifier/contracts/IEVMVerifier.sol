@@ -1,12 +1,12 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.19;
 
 interface IEVMVerifier {
-  function gatewayURLs() external view returns (string[] memory);
+    function gatewayURLs() external view returns (string[] memory);
 
-  function getStorageValues(
-    bytes32[] memory commands,
-    bytes[] memory constants,
-    bytes memory proof
-  ) external view returns (bytes[] memory values);
+    function getStorageValues(
+        bytes32[] memory commands,
+        bytes[] memory constants,
+        bytes memory proof
+    ) external view returns (bytes[] memory values);
 }

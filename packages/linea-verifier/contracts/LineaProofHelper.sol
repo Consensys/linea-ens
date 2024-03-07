@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.19;
 import {SparseMerkleProof} from "./lib/SparseMerkleProof.sol";
 import "hardhat/console.sol";
 
@@ -31,7 +31,7 @@ uint8 constant OP_CONSTANT = 0x00;
 uint8 constant OP_BACKREF = 0x20;
 uint8 constant FLAG_DYNAMIC = 0x01;
 
-library EVMProofHelper {
+library LineaProofHelper {
     error AccountNotFound(address);
     error UnknownOpcode(uint8);
     error InvalidSlotSize(uint256 size);
@@ -98,33 +98,76 @@ library EVMProofHelper {
     function getDynamicValue(
         uint256 slot,
         uint256 proofIdx,
-        StorageProofStruct[] memory values
+        StorageProofStruct[] memory storageProofs,
+        SparseMerkleProof.Account memory account
     ) private pure returns (bytes memory value, uint256 newProofIdx) {
-        uint256 firstValue = uint256(values[proofIdx++].proof.value);
-        if (firstValue & 0x01 == 0x01) {
+        bytes32 firstValue = storageProofs[proofIdx].proof.value;
+        verifyStorageProof(
+            account,
+            storageProofs[proofIdx].leafIndex,
+            storageProofs[proofIdx].proof.proofRelatedNodes,
+            firstValue,
+            bytes32(slot)
+        );
+        uint256 firstValueUint = uint256(firstValue);
+        proofIdx++;
+        if (firstValueUint & 0x01 == 0x01) {
             // Long value: first slot is `length * 2 + 1`, following slots are data.
-            uint256 length = (firstValue - 1) / 2;
+            uint256 length = (firstValueUint - 1) / 2;
             value = "";
             slot = uint256(keccak256(abi.encodePacked(slot)));
             // This is horribly inefficient - O(n^2). A better approach would be to build an array of words and concatenate them
             // all at once, but we're trying to avoid writing new library code.
             while (length > 0) {
+                verifyStorageProof(
+                    account,
+                    storageProofs[proofIdx].leafIndex,
+                    storageProofs[proofIdx].proof.proofRelatedNodes,
+                    storageProofs[proofIdx].proof.value,
+                    bytes32(slot)
+                );
+                console.log("proofIdx");
+                console.log(proofIdx);
                 if (length < 32) {
                     slot++;
-                    value = bytes.concat(value, values[proofIdx++].proof.value);
+                    value = bytes.concat(
+                        value,
+                        sliceBytes(
+                            abi.encode(storageProofs[proofIdx++].proof.value),
+                            0,
+                            length
+                        )
+                    );
                     length = 0;
                 } else {
                     slot++;
-                    value = bytes.concat(value, values[proofIdx++].proof.value);
+                    value = bytes.concat(
+                        value,
+                        storageProofs[proofIdx++].proof.value
+                    );
                     length -= 32;
                 }
             }
             return (value, proofIdx);
         } else {
-            // Short value: least significant byte is `length * 2`, other bytes are data.
-            uint256 length = (firstValue & 0xFF) / 2;
-            return (abi.encode(firstValue), proofIdx);
+            uint256 length = (firstValueUint & 0xFF) / 2;
+            return (sliceBytes(abi.encode(firstValue), 0, length), proofIdx);
         }
+    }
+
+    function sliceBytes(
+        bytes memory data,
+        uint256 start,
+        uint256 length
+    ) public pure returns (bytes memory) {
+        require(start + length <= data.length, "sliceBytes: out of range");
+
+        bytes memory result = new bytes(length);
+        for (uint256 i = 0; i < length; i++) {
+            result[i] = data[i + start];
+        }
+
+        return result;
     }
 
     function verifyAccountProof(
@@ -136,7 +179,7 @@ library EVMProofHelper {
             accountProof.leafIndex,
             stateRoot
         );
-        console.log("After 1");
+
         require(
             accountProofVerified,
             "LineaResolverStub: invalid account proof"
@@ -163,10 +206,8 @@ library EVMProofHelper {
         uint256 leafIndex,
         bytes[] memory proof,
         bytes32 value,
-        uint256 slot
+        bytes32 key
     ) private pure {
-        bytes32 key = keccak256(abi.encode(slot));
-
         bool storageProofVerified = SparseMerkleProof.verifyProof(
             proof,
             leafIndex,
@@ -201,17 +242,13 @@ library EVMProofHelper {
         AccountProofStruct memory accountProof,
         StorageProofStruct[] memory storageProofs
     ) internal pure returns (bytes[] memory values) {
-        console.log("Before 1");
-        console.logBytes32(stateRoot);
-        console.logBytes(accountProof.proof.value);
         verifyAccountProof(accountProof, stateRoot);
-
         SparseMerkleProof.Account memory account = SparseMerkleProof.getAccount(
             accountProof.proof.value
         );
         uint256 proofIdx = 0;
         values = new bytes[](commands.length);
-        for (uint256 i = 0; i < storageProofs.length; i++) {
+        for (uint256 i = 0; i < commands.length; i++) {
             bytes32 command = commands[i];
             (bool isDynamic, uint256 slot) = computeFirstSlot(
                 command,
@@ -219,7 +256,14 @@ library EVMProofHelper {
                 values
             );
             if (!isDynamic) {
-                values[i] = abi.encode(storageProofs[i].proof.value);
+                verifyStorageProof(
+                    account,
+                    storageProofs[proofIdx].leafIndex,
+                    storageProofs[proofIdx].proof.proofRelatedNodes,
+                    storageProofs[proofIdx].proof.value,
+                    bytes32(slot)
+                );
+                values[i] = abi.encode(storageProofs[proofIdx++].proof.value);
                 if (values[i].length > 32) {
                     revert InvalidSlotSize(values[i].length);
                 }
@@ -227,17 +271,10 @@ library EVMProofHelper {
                 (values[i], proofIdx) = getDynamicValue(
                     slot,
                     proofIdx,
-                    storageProofs
+                    storageProofs,
+                    account
                 );
             }
-
-            verifyStorageProof(
-                account,
-                storageProofs[i].leafIndex,
-                storageProofs[i].proof.proofRelatedNodes,
-                storageProofs[i].proof.value,
-                slot
-            );
         }
     }
 }

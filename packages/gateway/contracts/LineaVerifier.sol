@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.19;
 
 import {IEVMVerifier} from "linea-verifier/contracts/IEVMVerifier.sol";
-import {StorageProofStruct, AccountProofStruct, EVMProofHelper} from "linea-verifier/contracts/LineaProofHelper.sol";
+import {StorageProofStruct, AccountProofStruct, LineaProofHelper} from "linea-verifier/contracts/LineaProofHelper.sol";
 import "hardhat/console.sol";
 
 interface IRollup {
@@ -33,7 +33,7 @@ contract LineaVerifier is IEVMVerifier {
                 proof,
                 (uint256, AccountProofStruct, StorageProofStruct[])
             );
-        console.log(blockNo);
+
         bytes32 stateRoot = IRollup(_rollup).stateRootHashes(blockNo);
         require(
             stateRoot != bytes32(0),
@@ -41,7 +41,7 @@ contract LineaVerifier is IEVMVerifier {
         );
 
         return
-            EVMProofHelper.getStorageValues(
+            LineaProofHelper.getStorageValues(
                 commands,
                 constants,
                 stateRoot,

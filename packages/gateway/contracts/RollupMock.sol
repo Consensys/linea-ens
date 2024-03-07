@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-contract TestL2 {
+contract RollupMock {
     uint256 latest; // Slot 0
     string name; // Slot 1
     mapping(uint256 => uint256) highscores; // Slot 2

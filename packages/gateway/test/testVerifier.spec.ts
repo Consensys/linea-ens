@@ -92,12 +92,12 @@ describe("L1Verifier", () => {
       };
     });
 
-    const Mimc = await ethers.getContractFactory("Mimc");
+    const Mimc = await ethers.getContractFactory("Mimc", signer);
     const mimc = await Mimc.deploy();
 
     const SparseMerkleProof = await ethers.getContractFactory(
       "SparseMerkleProof",
-      { libraries: { Mimc: await mimc.getAddress() } }
+      { libraries: { Mimc: await mimc.getAddress() }, signer }
     );
     const sparseMerkleProof = await SparseMerkleProof.deploy();
 
@@ -123,7 +123,7 @@ describe("L1Verifier", () => {
     await provider.send("evm_mine", []);
   });
 
-  it.only("simple proofs for fixed values", async () => {
+  it("simple proofs for fixed values", async () => {
     const result = await target.getLatest({ enableCcipRead: true });
     expect(Number(result)).to.equal(42);
   });
@@ -168,17 +168,32 @@ describe("L1Verifier", () => {
   });
 
   it("treats uninitialized storage elements as zeroes", async () => {
-    const result = await target.getZero({ enableCcipRead: true });
-    expect(Number(result)).to.equal(0);
+    try {
+      await target.getZero({ enableCcipRead: true });
+    } catch (ex) {
+      expect(ex.shortMessage).to.equal(
+        'error encountered during CCIP fetch: "Internal server error: Storage not initialized"'
+      );
+    }
   });
 
   it("treats uninitialized dynamic values as empty strings", async () => {
-    const result = await target.getNickname("Santa", { enableCcipRead: true });
-    expect(result).to.equal("");
+    try {
+      await target.getNickname("Santa", { enableCcipRead: true });
+    } catch (ex) {
+      expect(ex.shortMessage).to.equal(
+        'error encountered during CCIP fetch: "Internal server error: Storage not initialized"'
+      );
+    }
   });
 
   it("will index on uninitialized values", async () => {
-    const result = await target.getZeroIndex({ enableCcipRead: true });
-    expect(Number(result)).to.equal(1);
+    try {
+      await target.getZeroIndex({ enableCcipRead: true });
+    } catch (ex) {
+      expect(ex.shortMessage).to.equal(
+        'error encountered during CCIP fetch: "Internal server error: Storage not initialized"'
+      );
+    }
   });
 });

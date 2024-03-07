@@ -1,6 +1,6 @@
 import { AbiCoder, AddressLike, JsonRpcProvider, Contract } from "ethers";
 
-import { EVMProofHelper, IProofService } from "./evm-gateway";
+import { EVMProofHelper, IProofService, StateProof } from "./evm-gateway";
 
 import rollupAbi from "./abi/rollup.json";
 
@@ -62,6 +62,9 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     slots: bigint[]
   ): Promise<string> {
     const proof = await this.helper.getProofs(blockNo, address, slots);
+    if (!this.checkStorageInitialized(proof)) {
+      throw "Storage not initialized";
+    }
     return AbiCoder.defaultAbiCoder().encode(
       [
         "uint256",
@@ -70,5 +73,15 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
       ],
       [blockNo, proof.accountProof, proof.storageProofs]
     );
+  }
+
+  checkStorageInitialized(proof: StateProof): boolean {
+    for (let storageProof of proof.storageProofs) {
+      if (storageProof.leftProof || storageProof.rightProof) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

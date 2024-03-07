@@ -7,6 +7,8 @@ interface ProofStruct {
     value: string;
     proofRelatedNodes: string[];
   };
+  leftProof: { value: string; proofRelatedNodes: string[] } | undefined;
+  rightProof: { value: string; proofRelatedNodes: string[] } | undefined;
 }
 
 export interface StateProof {
