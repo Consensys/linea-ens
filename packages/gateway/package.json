@@ -13,12 +13,12 @@
     "start": "node dist/index.js",
     "build": "tsdx build",
     "gcp-build": "tsdx build",
-    "test": "tsdx test",
     "lint": "tsdx lint",
-    "prepare": "NODE_ENV=development tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "clean": "rm -fr node_modules dist"
+    "clean": "rm -fr node_modules dist",
+    "test": "mocha test/testVerifier.spec.ts --timeout 10000",
+    "compile": "hardhat compile"
   },
   "module": "dist/gateway.esm.js",
   "size-limit": [
@@ -33,6 +33,7 @@
   ],
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
+    "@ethersproject/abi": "^5.4.7",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
@@ -58,7 +59,7 @@
     "linea-verifier": "^1.0.0",
     "solidity-coverage": "^0.8.1",
     "supertest": "^6.3.3",
-    "ts-node": "8.0.0",
+    "ts-node": "10.9.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.6.2",
     "typechain": "^8.2.0",

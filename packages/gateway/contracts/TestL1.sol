@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 import {EVMFetcher} from "linea-verifier/contracts/EVMFetcher.sol";
 import {EVMFetchTarget} from "linea-verifier/contracts/EVMFetchTarget.sol";
 import {IEVMVerifier} from "linea-verifier/contracts/IEVMVerifier.sol";
-import "hardhat/console.sol";
 
 contract TestL1 is EVMFetchTarget {
     using EVMFetcher for EVMFetcher.EVMFetchRequest;

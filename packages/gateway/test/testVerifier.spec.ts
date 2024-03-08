@@ -15,8 +15,6 @@ import { ethers } from "hardhat";
 import { EthereumProvider } from "hardhat/types";
 import request from "supertest";
 
-const localGatewayUrl = "http://localhost:8081";
-
 type ethersObj = typeof ethersT &
   Omit<HardhatEthersHelpers, "provider"> & {
     provider: Omit<HardhatEthersProvider, "_hardhatProvider"> & {
@@ -33,40 +31,41 @@ declare module "hardhat/types/runtime" {
 }
 
 describe("L1Verifier", () => {
-  let provider: BrowserProvider;
+  let l1Provider: BrowserProvider;
   let l2Provider: JsonRpcProvider;
-  let l2ResolverContract: string;
-  let l1RollupContract: string;
+  let l2TestContract: string;
   let signer: Signer;
-  let verifier: Contract;
   let target: Contract;
 
   before(async () => {
-    if (!process.env.L1_PROVIDER_URL) {
-      throw "No L1_PROVIDER_URL found in env file";
-    }
     if (!process.env.L2_PROVIDER_URL) {
       throw "No L2_PROVIDER_URL found in env file";
     }
-    if (!process.env.L2_RESOLVER_ADDRESS) {
-      throw "No L2_RESOLVER_ADDRESS found in env file";
+    if (!process.env.L2_CONTRACT_TEST_ADDRESS) {
+      throw "No L2_CONTRACT_TEST_ADDRESS found in env file";
     }
-    if (!process.env.L1_ROLLUP_ADDRESS) {
-      throw "No L1_ROLLUP_ADDRESS found in env file";
-    }
+
     // Hack to get a 'real' ethers provider from hardhat. The default `HardhatProvider`
     // doesn't support CCIP-read.
     // @ts-ignore
-    provider = new ethers.JsonRpcProvider(process.env.L1_PROVIDER_URL);
-    l2Provider = new ethers.JsonRpcProvider(process.env.L2_PROVIDER_URL);
-    l2ResolverContract = process.env.L2_RESOLVER_ADDRESS;
-    l1RollupContract = process.env.L1_ROLLUP_ADDRESS;
-    // provider.on("debug", (x: any) => console.log(JSON.stringify(x, undefined, 2)));
-    signer = await provider.getSigner(0);
+    l1Provider = new ethers.BrowserProvider(ethers.provider._hardhatProvider);
+    l2Provider = new ethers.JsonRpcProvider(
+      process.env.L2_PROVIDER_URL,
+      59140,
+      {
+        staticNetwork: true,
+      }
+    );
+    l2TestContract = process.env.L2_CONTRACT_TEST_ADDRESS;
+    signer = await l1Provider.getSigner(0);
+
+    const Rollup = await ethers.getContractFactory("RollupMock", signer);
+    const rollup = await Rollup.deploy();
+
     const gateway = makeL2Gateway(
-      (provider as unknown) as JsonRpcProvider,
+      (l1Provider as unknown) as JsonRpcProvider,
       l2Provider,
-      l2ResolverContract
+      await rollup.getAddress()
     );
     const server = new Server();
     gateway.add(server);
@@ -101,26 +100,28 @@ describe("L1Verifier", () => {
     );
     const sparseMerkleProof = await SparseMerkleProof.deploy();
 
-    const l1VerifierFactory = await ethers.getContractFactory("LineaVerifier", {
-      libraries: {
-        SparseMerkleProof: await sparseMerkleProof.getAddress(),
-      },
-      signer,
-    });
-
-    // verifier = await l1VerifierFactory.deploy(["test:"], l1RollupContract);
-    verifier = await l1VerifierFactory.deploy(
-      [localGatewayUrl],
-      l1RollupContract
+    const TestLineaVerifier = await ethers.getContractFactory(
+      "TestLineaVerifier",
+      {
+        libraries: {
+          SparseMerkleProof: await sparseMerkleProof.getAddress(),
+        },
+        signer,
+      }
     );
 
-    const testL1Factory = await ethers.getContractFactory("TestL1", signer);
-    target = await testL1Factory.deploy(
-      await verifier.getAddress(),
-      l2ResolverContract
+    const testLineaVerifier = await TestLineaVerifier.deploy(
+      ["test:"],
+      await rollup.getAddress()
+    );
+
+    const TestL1 = await ethers.getContractFactory("TestL1", signer);
+    target = await TestL1.deploy(
+      await testLineaVerifier.getAddress(),
+      l2TestContract
     );
     // Mine an empty block so we have something to prove against
-    await provider.send("evm_mine", []);
+    await l1Provider.send("evm_mine", []);
   });
 
   it("simple proofs for fixed values", async () => {
@@ -168,32 +169,12 @@ describe("L1Verifier", () => {
   });
 
   it("treats uninitialized storage elements as zeroes", async () => {
-    try {
-      await target.getZero({ enableCcipRead: true });
-    } catch (ex) {
-      expect(ex.shortMessage).to.equal(
-        'error encountered during CCIP fetch: "Internal server error: Storage not initialized"'
-      );
-    }
+    const result = await target.getZero({ enableCcipRead: true });
+    expect(Number(result)).to.equal(0);
   });
 
   it("treats uninitialized dynamic values as empty strings", async () => {
-    try {
-      await target.getNickname("Santa", { enableCcipRead: true });
-    } catch (ex) {
-      expect(ex.shortMessage).to.equal(
-        'error encountered during CCIP fetch: "Internal server error: Storage not initialized"'
-      );
-    }
-  });
-
-  it("will index on uninitialized values", async () => {
-    try {
-      await target.getZeroIndex({ enableCcipRead: true });
-    } catch (ex) {
-      expect(ex.shortMessage).to.equal(
-        'error encountered during CCIP fetch: "Internal server error: Storage not initialized"'
-      );
-    }
+    const result = await target.getNickname("Santa", { enableCcipRead: true });
+    expect(result).to.equal("");
   });
 });

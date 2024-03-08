@@ -61,27 +61,39 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     address: AddressLike,
     slots: bigint[]
   ): Promise<string> {
-    const proof = await this.helper.getProofs(blockNo, address, slots);
-    if (!this.checkStorageInitialized(proof)) {
-      throw "Storage not initialized";
-    }
+    let proof = await this.helper.getProofs(blockNo, address, slots);
+    proof = this.checkStorageInitialized(proof);
     return AbiCoder.defaultAbiCoder().encode(
       [
         "uint256",
         "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
-        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof)[]",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
       ],
       [blockNo, proof.accountProof, proof.storageProofs]
     );
   }
 
-  checkStorageInitialized(proof: StateProof): boolean {
+  /**
+   * rollup_getProof returns a different structure when a storage proof is
+   * unitialized, to handle this case we return unitialized for this particular storage
+   * @param proof
+   * @returns modifier proof with the
+   */
+  checkStorageInitialized(proof: StateProof): StateProof {
     for (let storageProof of proof.storageProofs) {
       if (storageProof.leftProof || storageProof.rightProof) {
-        return false;
+        storageProof.proof = storageProof.leftProof;
+        storageProof.leafIndex = storageProof.leftLeafIndex;
+        storageProof.initialized = false;
+        delete storageProof.leftProof;
+        delete storageProof.rightProof;
+        delete storageProof.leftLeafIndex;
+        delete storageProof.rightLeafIndex;
+      } else {
+        storageProof.initialized = true;
       }
     }
 
-    return true;
+    return proof;
   }
 }

@@ -3,7 +3,6 @@ pragma solidity ^0.8.19;
 
 import {IEVMVerifier} from "./IEVMVerifier.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import "hardhat/console.sol";
 
 /**
  * @dev Callback implementation for users of `EVMFetcher`. If you use `EVMFetcher`, your contract must

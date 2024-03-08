@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 import {SparseMerkleProof} from "./lib/SparseMerkleProof.sol";
-import "hardhat/console.sol";
 
 uint256 constant LAST_LEAF_INDEX = 41;
 
@@ -25,6 +24,7 @@ struct StorageProofStruct {
     bytes32 key;
     uint256 leafIndex;
     StorageProof proof;
+    bool initialized;
 }
 
 uint8 constant OP_CONSTANT = 0x00;
@@ -75,32 +75,15 @@ library LineaProofHelper {
         }
     }
 
-    // function getDynamicValue(uint256 slot, bytes32 value) private pure {
-    //     uint256 firstValue = uint256(value);
-    //     if (firstValue & 0x01 == 0x01) {
-    //         // Long value: first slot is `length * 2 + 1`, following slots are data.
-    //         uint256 length = (firstValue - 1) / 2;
-    //         slot = uint256(keccak256(abi.encodePacked(slot)));
-    //         // This is horribly inefficient - O(n^2). A better approach would be to build an array of words and concatenate them
-    //         // all at once, but we're trying to avoid writing new library code.
-    //         while (length > 0) {
-    //             if (length < 32) {
-    //                 slot++;
-    //                 length = 0;
-    //             } else {
-    //                 slot++;
-    //                 length -= 32;
-    //             }
-    //         }
-    //     }
-    // }
-
     function getDynamicValue(
         uint256 slot,
         uint256 proofIdx,
         StorageProofStruct[] memory storageProofs,
         SparseMerkleProof.Account memory account
     ) private pure returns (bytes memory value, uint256 newProofIdx) {
+        if (!storageProofs[proofIdx].initialized) {
+            return ("", proofIdx++);
+        }
         bytes32 firstValue = storageProofs[proofIdx].proof.value;
         verifyStorageProof(
             account,
@@ -116,8 +99,6 @@ library LineaProofHelper {
             uint256 length = (firstValueUint - 1) / 2;
             value = "";
             slot = uint256(keccak256(abi.encodePacked(slot)));
-            // This is horribly inefficient - O(n^2). A better approach would be to build an array of words and concatenate them
-            // all at once, but we're trying to avoid writing new library code.
             while (length > 0) {
                 verifyStorageProof(
                     account,
@@ -126,10 +107,9 @@ library LineaProofHelper {
                     storageProofs[proofIdx].proof.value,
                     bytes32(slot)
                 );
-                console.log("proofIdx");
-                console.log(proofIdx);
+                slot++;
+
                 if (length < 32) {
-                    slot++;
                     value = bytes.concat(
                         value,
                         sliceBytes(
@@ -138,13 +118,14 @@ library LineaProofHelper {
                             length
                         )
                     );
+
                     length = 0;
                 } else {
-                    slot++;
                     value = bytes.concat(
                         value,
                         storageProofs[proofIdx++].proof.value
                     );
+
                     length -= 32;
                 }
             }
@@ -256,16 +237,24 @@ library LineaProofHelper {
                 values
             );
             if (!isDynamic) {
-                verifyStorageProof(
-                    account,
-                    storageProofs[proofIdx].leafIndex,
-                    storageProofs[proofIdx].proof.proofRelatedNodes,
-                    storageProofs[proofIdx].proof.value,
-                    bytes32(slot)
-                );
-                values[i] = abi.encode(storageProofs[proofIdx++].proof.value);
-                if (values[i].length > 32) {
-                    revert InvalidSlotSize(values[i].length);
+                if (!storageProofs[proofIdx].initialized) {
+                    values[i] = abi.encode(0);
+                } else {
+                    verifyStorageProof(
+                        account,
+                        storageProofs[proofIdx].leafIndex,
+                        storageProofs[proofIdx].proof.proofRelatedNodes,
+                        storageProofs[proofIdx].proof.value,
+                        bytes32(slot)
+                    );
+
+                    values[i] = abi.encode(
+                        storageProofs[proofIdx++].proof.value
+                    );
+
+                    if (values[i].length > 32) {
+                        revert InvalidSlotSize(values[i].length);
+                    }
                 }
             } else {
                 (values[i], proofIdx) = getDynamicValue(

@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {IEVMVerifier} from "linea-verifier/contracts/IEVMVerifier.sol";
-import {StorageProofStruct, AccountProofStruct, LineaProofHelper} from "linea-verifier/contracts/LineaProofHelper.sol";
-import "hardhat/console.sol";
+import {IEVMVerifier} from "./IEVMVerifier.sol";
+import {StorageProofStruct, AccountProofStruct, LineaProofHelper} from "./LineaProofHelper.sol";
 
 interface IRollup {
     function stateRootHashes(
@@ -11,7 +10,7 @@ interface IRollup {
     ) external view returns (bytes32);
 }
 
-contract LineaVerifier is IEVMVerifier {
+abstract contract LineaVerifier is IEVMVerifier {
     string[] public _gatewayURLs;
     address public _rollup;
 

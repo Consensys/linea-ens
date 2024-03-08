@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 import {IEVMVerifier} from "./IEVMVerifier.sol";
 import {EVMFetchTarget} from "./EVMFetchTarget.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import "hardhat/console.sol";
 
 interface IEVMGateway {
     function getStorageSlots(

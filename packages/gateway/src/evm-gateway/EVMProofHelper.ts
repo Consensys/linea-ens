@@ -3,12 +3,15 @@ import { toBeHex, AddressLike, JsonRpcProvider } from "ethers";
 interface ProofStruct {
   key: string;
   leafIndex: number;
+  leftLeafIndex: number | undefined;
+  rightLeafIndex: number | undefined;
   proof: {
     value: string;
     proofRelatedNodes: string[];
   };
   leftProof: { value: string; proofRelatedNodes: string[] } | undefined;
   rightProof: { value: string; proofRelatedNodes: string[] } | undefined;
+  initialized: boolean | true;
 }
 
 export interface StateProof {

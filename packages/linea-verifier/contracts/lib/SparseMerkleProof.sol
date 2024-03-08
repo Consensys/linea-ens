@@ -2,7 +2,6 @@
 pragma solidity 0.8.19;
 
 import {Mimc} from "./Mimc.sol";
-import "hardhat/console.sol";
 
 library SparseMerkleProof {
     using Mimc for *;
