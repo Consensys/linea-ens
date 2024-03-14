@@ -30,6 +30,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const ethOwnedResolver = await ethers.getContract('OwnedResolver', owner)
 
+  // Deploy the PohVerifier contract
+  const pohVerifierDeployment = await deploy('PohVerifier', {
+    from: deployer,
+    log: true,
+  })
+
+  // Ensure the deployment was successful before proceeding
+  if (!pohVerifierDeployment.newlyDeployed) {
+    console.error('Failed to deploy PohVerifier')
+    return
+  }
+
   const deployArgs = {
     from: deployer,
     args: [
@@ -40,6 +52,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       reverseRegistrar.address,
       nameWrapper.address,
       registry.address,
+      pohVerifierDeployment.address,
     ],
     log: true,
   }
