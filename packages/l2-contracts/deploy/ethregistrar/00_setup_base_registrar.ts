@@ -8,7 +8,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments, network } = hre
   const { deployer, owner } = await getNamedAccounts()
 
-  console.log('owner: ',owner,' deployer: ',deployer);
   if (!network.tags.use_root) {
     return true
   }
@@ -18,9 +17,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   console.log('Running base registrar setup')
 
-  console.log('here 1');
   const tx1 = await registrar.transferOwnership(owner, { from: deployer })
-  console.log('here 2');
   console.log(
     `Transferring ownership of registrar to owner (tx: ${tx1.hash})...`,
   )

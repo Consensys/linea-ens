@@ -160,12 +160,15 @@ yarn
 ```
 yarn test
 ```
+
 ### How to deploy
 
-Example : 
+Example :
+
 ```
 npx hardhat --network lineaGoerli deploy
 ```
+
 ### How to publish
 
 ```

@@ -87,13 +87,13 @@ const config: HardhatUserConfig = {
     },
     lineaGoerli: {
       url: `https://linea-goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: [ 'use_root'],
+      tags: ['use_root'],
       chainId: 59140,
       accounts: real_accounts,
     },
     lineaMainnet: {
       url: `https://linea-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: [ 'use_root'],
+      tags: ['use_root'],
       chainId: 59144,
       accounts: real_accounts,
     },

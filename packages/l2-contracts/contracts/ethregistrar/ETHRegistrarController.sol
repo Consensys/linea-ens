@@ -15,6 +15,9 @@ import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {INameWrapper} from "../wrapper/INameWrapper.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
 
+// Import PohVerifier contract
+import "./PohVerifier.sol";
+
 error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
 error NameNotAvailable(string name);
@@ -51,6 +54,8 @@ contract ETHRegistrarController is
     INameWrapper public immutable nameWrapper;
 
     mapping(bytes32 => uint256) public commitments;
+    // Mapping to keep track of addresses that have successfully registered using registerPoh
+    mapping(address => bool) public hasRegisteredPoh;
 
     event NameRegistered(
         string name,
@@ -67,6 +72,8 @@ contract ETHRegistrarController is
         uint256 expires
     );
 
+    PohVerifier public pohVerifier;
+
     constructor(
         BaseRegistrarImplementation _base,
         IPriceOracle _prices,
@@ -74,7 +81,8 @@ contract ETHRegistrarController is
         uint256 _maxCommitmentAge,
         ReverseRegistrar _reverseRegistrar,
         INameWrapper _nameWrapper,
-        ENS _ens
+        ENS _ens,
+        PohVerifier _pohVerifier
     ) ReverseClaimer(_ens, msg.sender) {
         if (_maxCommitmentAge <= _minCommitmentAge) {
             revert MaxCommitmentAgeTooLow();
@@ -90,6 +98,7 @@ contract ETHRegistrarController is
         maxCommitmentAge = _maxCommitmentAge;
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
+        pohVerifier = _pohVerifier;
     }
 
     function rentPrice(
@@ -145,6 +154,48 @@ contract ETHRegistrarController is
         commitments[commitment] = block.timestamp;
     }
 
+    function registerPoh(
+        string calldata name,
+        address owner,
+        uint256 duration,
+        bytes32 secret,
+        address resolver,
+        bytes[] calldata data,
+        bool reverseRecord,
+        uint16 ownerControlledFuses,
+        bytes memory signature,
+        address human
+    ) public payable {
+        // Check if the address has already registered using registerPoh
+        require(
+            !hasRegisteredPoh[human],
+            "Address has already registered using PoH"
+        );
+        require(
+            pohVerifier.verify(signature, human),
+            "POH verification failed"
+        );
+
+        _register(
+            name,
+            owner,
+            duration,
+            secret,
+            resolver,
+            data,
+            reverseRecord,
+            ownerControlledFuses
+        );
+
+        // Mark this address as having successfully registered
+        hasRegisteredPoh[human] = true;
+    }
+
+    // Function to check if an address has successfully registered using registerPoh
+    function redeemed(address _address) public view returns (bool) {
+        return hasRegisteredPoh[_address];
+    }
+
     function register(
         string calldata name,
         address owner,
@@ -154,11 +205,40 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    ) public payable override {
+    ) public payable {
         IPriceOracle.Price memory price = rentPrice(name, duration);
         if (msg.value < price.base + price.premium) {
             revert InsufficientValue();
         }
+        _register(
+            name,
+            owner,
+            duration,
+            secret,
+            resolver,
+            data,
+            reverseRecord,
+            ownerControlledFuses
+        );
+
+        if (msg.value > (price.base + price.premium)) {
+            payable(msg.sender).transfer(
+                msg.value - (price.base + price.premium)
+            );
+        }
+    }
+
+    function _register(
+        string calldata name,
+        address owner,
+        uint256 duration,
+        bytes32 secret,
+        address resolver,
+        bytes[] calldata data,
+        bool reverseRecord,
+        uint16 ownerControlledFuses
+    ) internal {
+        IPriceOracle.Price memory price = rentPrice(name, duration);
 
         _consumeCommitment(
             name,
@@ -199,12 +279,6 @@ contract ETHRegistrarController is
             price.premium,
             expires
         );
-
-        if (msg.value > (price.base + price.premium)) {
-            payable(msg.sender).transfer(
-                msg.value - (price.base + price.premium)
-            );
-        }
     }
 
     function renew(
