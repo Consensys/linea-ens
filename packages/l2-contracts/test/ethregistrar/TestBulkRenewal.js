@@ -65,6 +65,12 @@ contract('BulkRenewal', function (accounts) {
       EMPTY_ADDRESS,
     )
 
+
+    // Deploy PohVerifier contract
+    const PohVerifier = await ethers.getContractFactory('PohVerifier')
+    const pohVerifier = await PohVerifier.deploy()
+    await pohVerifier.deployed()
+
     // Set up a dummy price oracle and a controller
     const dummyOracle = await DummyOracle.new(toBN(100000000))
     priceOracle = await StablePriceOracle.new(
@@ -79,6 +85,7 @@ contract('BulkRenewal', function (accounts) {
       EMPTY_ADDRESS,
       nameWrapper.address,
       ens.address,
+      pohVerifier.address,
       { from: ownerAccount },
     )
     var wrapperAddress = await controller.nameWrapper()
