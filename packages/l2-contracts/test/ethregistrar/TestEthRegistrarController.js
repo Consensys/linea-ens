@@ -115,6 +115,12 @@ contract('ETHRegistrarController', function () {
       dummyOracle.address,
       [0, 0, 4, 2, 1],
     )
+
+    // Deploy PohVerifier contract
+    const PohVerifier = await ethers.getContractFactory('PohVerifier')
+    const pohVerifier = await PohVerifier.deploy()
+    await pohVerifier.deployed()
+
     controller = await deploy(
       'ETHRegistrarController',
       baseRegistrar.address,
@@ -124,6 +130,7 @@ contract('ETHRegistrarController', function () {
       reverseRegistrar.address,
       nameWrapper.address,
       ens.address,
+      pohVerifier.address,
     )
     controller2 = controller.connect(signers[1])
     await nameWrapper.setController(controller.address, true)
