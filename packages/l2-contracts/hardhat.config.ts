@@ -9,6 +9,7 @@ import 'hardhat-abi-exporter'
 import 'hardhat-contract-sizer'
 import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
+import '@nomicfoundation/hardhat-verify'
 import { HardhatUserConfig } from 'hardhat/config'
 import { promisify } from 'util'
 
@@ -152,6 +153,22 @@ const config: HardhatUserConfig = {
     contracts: [
       {
         artifacts: [archivedDeploymentPath],
+      },
+    ],
+  },
+  etherscan: {
+    apiKey: {
+      lineaGoerli: process.env.LINEASCAN_API_KEY ?? '',
+      lineaMainnet: process.env.LINEASCAN_API_KEY ?? '',
+    },
+    customChains: [
+      {
+        network: 'lineaGoerli',
+        chainId: 59140,
+        urls: {
+          apiURL: 'https://api-goerli.lineascan.build/api',
+          browserURL: 'https://goerli.lineascan.build/',
+        },
       },
     ],
   },
