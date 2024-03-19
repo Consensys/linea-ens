@@ -17,7 +17,7 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "clean": "rm -fr node_modules dist",
-    "test": "mocha test/testVerifier.spec.ts --timeout 10000",
+    "test": "mocha test/testVerifier.spec.ts --timeout 10000 --exit",
     "compile": "hardhat compile"
   },
   "module": "dist/gateway.esm.js",
@@ -42,11 +42,6 @@
     "@openzeppelin/contracts": "^4.9.3",
     "@typechain/ethers-v6": "^0.4.0",
     "@typechain/hardhat": "^8.0.0",
-    "@types/chai": "^4.2.0",
-    "@types/express": "^4.17.18",
-    "@types/mocha": ">=9.1.0",
-    "@types/node": "12.0.0",
-    "@types/supertest": "^2.0.14",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "chai": "^4.2.0",
@@ -57,6 +52,7 @@
     "hardhat": "^2.21.0",
     "hardhat-gas-reporter": "^1.0.8",
     "linea-verifier": "^1.0.0",
+    "mocha": "^10.3.0",
     "solidity-coverage": "^0.8.1",
     "supertest": "^6.3.3",
     "ts-node": "10.9.2",
@@ -65,5 +61,12 @@
     "typechain": "^8.2.0",
     "typescript": "^5.3.3",
     "winston": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.0",
+    "@types/express": "^4.17.18",
+    "@types/mocha": ">=9.1.0",
+    "@types/node": "12.0.0",
+    "@types/supertest": "^2.0.14"
   }
 }
