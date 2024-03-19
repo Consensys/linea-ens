@@ -50,10 +50,11 @@
   "dependencies": {
     "@ensdomains/ens-contracts": "^0.0.22",
     "@eth-optimism/contracts": "^0.5.40",
-    "@openzeppelin/contracts": "^4.9.3",
-    "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "@openzeppelin/contracts": "^4.9.6",
+    "@openzeppelin/contracts-upgradeable": "^4.9.6",
     "@openzeppelin/hardhat-upgrades": "^1.26.0",
     "dotenv": "^16.0.3",
-    "hardhat-storage-layout": "^0.1.7"
+    "hardhat-storage-layout": "^0.1.7",
+    "linea-resolver-gateway": "^1.0.0"
   }
 }
