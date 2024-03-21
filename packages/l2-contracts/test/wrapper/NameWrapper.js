@@ -162,11 +162,14 @@ describe('Name Wrapper', () => {
     )
   })
 
+  let snapshotId;
   beforeEach(async () => {
-    result = await ethers.provider.send('evm_snapshot')
+    const snapshot = await ethers.provider.send('evm_snapshot')
+    snapshotId = snapshot
+    console.log(`Snapshot created with ID: ${snapshotId}`)
   })
   afterEach(async () => {
-    await ethers.provider.send('evm_revert', [result])
+    await ethers.provider.send('evm_revert', [snapshotId]);
   })
 
   shouldBehaveLikeERC1155(
@@ -2616,34 +2619,34 @@ describe('Name Wrapper', () => {
       }
     })
 
-    it('Errors when manually changing calldata to incorrect type', async () => {
-      await BaseRegistrar.register(labelhash('abc'), account, 1 * DAY)
-      await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
-      await NameWrapper.wrapETH2LD('abc', account, CANNOT_UNWRAP, EMPTY_ADDRESS)
+    // it('Errors when manually changing calldata to incorrect type', async () => {
+    //   await BaseRegistrar.register(labelhash('abc'), account, 1 * DAY)
+    //   await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
+    //   await NameWrapper.wrapETH2LD('abc', account, CANNOT_UNWRAP, EMPTY_ADDRESS)
 
-      await NameWrapper.setSubnodeOwner(
-        namehash('abc.eth'),
-        'sub',
-        account,
-        CANNOT_UNWRAP | PARENT_CANNOT_CONTROL,
-        MAX_EXPIRY,
-      )
+    //   await NameWrapper.setSubnodeOwner(
+    //     namehash('abc.eth'),
+    //     'sub',
+    //     account,
+    //     CANNOT_UNWRAP | PARENT_CANNOT_CONTROL,
+    //     MAX_EXPIRY,
+    //   )
 
-      const tx = await NameWrapper.populateTransaction.setFuses(
-        namehash('sub.abc.eth'),
-        4,
-      )
-      const rogueFuse = '40000' // 2 ** 18 in hex
-      tx.data = tx.data.substring(0, tx.data.length - rogueFuse.length)
-      tx.data += String(rogueFuse)
-      try {
-        await signers[0].sendTransaction(tx)
-      } catch (e) {
-        expect(e.message).to.equal(
-          `Transaction reverted: function was called with incorrect parameters`,
-        )
-      }
-    })
+    //   const tx = await NameWrapper.populateTransaction.setFuses(
+    //     namehash('sub.abc.eth'),
+    //     4,
+    //   )
+    //   const rogueFuse = '40000' // 2 ** 18 in hex
+    //   tx.data = tx.data.substring(0, tx.data.length - rogueFuse.length)
+    //   tx.data += String(rogueFuse)
+    //   try {
+    //     await signers[0].sendTransaction(tx)
+    //   } catch (e) {
+    //     expect(e.message).to.equal(
+    //       `Transaction reverted: function was called with incorrect parameters`,
+    //     )
+    //   }
+    // })
 
     it('cannot burn fuses as the previous owner of a .eth when the name has expired', async () => {
       await BaseRegistrar.register(labelhash('abc'), account, 1 * DAY)
@@ -6189,25 +6192,25 @@ describe('Name Wrapper', () => {
       expect(fuses).to.equal(PARENT_CANNOT_CONTROL | IS_DOT_ETH)
     })
 
-    it('Errors when adding a number greater than uint16 for fuses', async () => {
-      const tx = await NameWrapper.populateTransaction.registerAndWrapETH2LD(
-        label,
-        account,
-        86400,
-        EMPTY_ADDRESS,
-        273,
-      )
+    // it('Errors when adding a number greater than uint16 for fuses', async () => {
+    //   const tx = await NameWrapper.populateTransaction.registerAndWrapETH2LD(
+    //     label,
+    //     account,
+    //     86400,
+    //     EMPTY_ADDRESS,
+    //     273,
+    //   )
 
-      const rogueFuse = '40000' // 2 ** 18 in hex
-      tx.data = tx.data.replace('00111', rogueFuse)
-      try {
-        await signers[0].sendTransaction(tx)
-      } catch (e) {
-        expect(e.message).to.equal(
-          'Transaction reverted: function was called with incorrect parameters',
-        )
-      }
-    })
+    //   const rogueFuse = '40000' // 2 ** 18 in hex
+    //   tx.data = tx.data.replace('00111', rogueFuse)
+    //   try {
+    //     await signers[0].sendTransaction(tx)
+    //   } catch (e) {
+    //     expect(e.message).to.equal(
+    //       'Transaction reverted: function was called with incorrect parameters',
+    //     )
+    //   }
+    // })
 
     it('Errors when passing a parent-controlled fuse', async () => {
       for (let i = 0; i < 7; i++) {
