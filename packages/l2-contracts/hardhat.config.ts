@@ -9,7 +9,7 @@ import 'hardhat-abi-exporter'
 import 'hardhat-contract-sizer'
 import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
-import '@nomicfoundation/hardhat-verify'
+import '@nomiclabs/hardhat-etherscan'
 import { HardhatUserConfig } from 'hardhat/config'
 import { promisify } from 'util'
 

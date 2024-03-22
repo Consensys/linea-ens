@@ -1,7 +1,1 @@
-{
-  "workspaces": [
-    "client",
-    "gateway",
-    "linea-verifier"
-  ]
-}
+{}
