@@ -1,5 +1,7 @@
 {
-    "workspaces": [
-        "packages/*"
-    ]
+  "workspaces": [
+    "client",
+    "gateway",
+    "linea-verifier"
+  ]
 }
