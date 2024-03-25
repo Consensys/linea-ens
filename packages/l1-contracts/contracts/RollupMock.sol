@@ -3,7 +3,7 @@ pragma solidity ^0.8.25;
 
 contract RollupMock {
     function currentL2BlockNumber() public pure returns (uint256) {
-        return 4120264;
+        return 20720;
     }
 
     function stateRootHashes(
