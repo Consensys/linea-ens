@@ -1,0 +1,357 @@
+{
+  "input": {
+    "profileEditor": {
+      "tabs": {
+        "avatar": {
+          "dropdown": {
+            "selectNFT": "选择 NFT",
+            "uploadImage": "上传图像"
+          },
+          "nft": {
+            "title": "选择一个 NFT",
+            "searchPlaceholder": "搜索 NFT",
+            "loading": "正在加载您的 NFT",
+            "unknown": "未知 NFT",
+            "noNFTs": "此地址上未找到 NFT。",
+            "selected": {
+              "title": "选择 NFT",
+              "subtitle": "您确定要使用该 NFT 吗?"
+            },
+            "noResults": "未找到结果。"
+          },
+          "image": {
+            "title": "编辑图像",
+            "upload": {
+              "title": "上传头像",
+              "subtitle": "您需要在一条消息上签名才能上传头像，这不涉及任何费用。",
+              "action": "签名并上传"
+            }
+          }
+        },
+        "general": {
+          "label": "通用",
+          "name": {
+            "label": "昵称",
+            "placeholder": "约翰·史密斯"
+          },
+          "url": {
+            "label": "网站",
+            "placeholder": "https://ens.domains"
+          },
+          "location": {
+            "label": "位置",
+            "placeholder": "元宇宙"
+          },
+          "description": {
+            "label": "简介",
+            "placeholder": "我是一个来自田纳西州的农民。"
+          }
+        },
+        "accounts": {
+          "label": "账户",
+          "addAccount": "添加账户",
+          "noOptions": "没有可用的账户",
+          "placeholder": {
+            "default": "在此添加用户名",
+            "com.twitter": "例如 nicksdjohnson",
+            "com.github": "例如 arachnid",
+            "com.discord": "例如 nickjohnson",
+            "org.telegram": "例如 nicksdjohnson",
+            "email": "例如 hello@example.com"
+          }
+        },
+        "address": {
+          "label": "地址",
+          "addAddress": "添加地址",
+          "noOptions": "没有可用的地址",
+          "placeholder": {
+            "default": "在此添加地址",
+            "ETH": "0xD9hbQK...",
+            "BNB": "0xD9hbQK...",
+            "BTC": "3FZbgi29...",
+            "LTC": "3FZbgi29...",
+            "SOL": "D4kA7VzHnmV...",
+            "DOT": "1D4kA7VxH...",
+            "DOGE": "DFabcd12..."
+          }
+        },
+        "contentHash": {
+          "label": "网站",
+          "addContentHash": "添加去中心化网站",
+          "placeholder": {
+            "default": "在此添加 url",
+            "ipfs": "ipfs://...",
+            "skynet": "sia://...",
+            "arweave": "ar://...",
+            "swarm": "bzz://...",
+            "onion": "onion3://..."
+          }
+        },
+        "other": {
+          "label": "其他",
+          "addRecord": "添加记录",
+          "createRecord": "输入记录名...",
+          "placeholder": {
+            "default": "添加记录值..."
+          }
+        }
+      },
+      "warningOverlay": {
+        "action": {
+          "learnMoreResolvers": "了解更多关于解析器的信息",
+          "updateResolver": "更新解析器",
+          "setResolver": "设置解析器",
+          "ignoreUpdate": "忽略该提示并继续使用当前的解析器。下次会重新提示您。"
+        },
+        "invalidResolver": {
+          "title": "未经授权的解析器",
+          "subtitle": "您没有权限设置此解析器的记录。需要更新到最新的解析器来编辑您的个人资料。",
+          "action": "更新解析器"
+        },
+        "migrateProfileSelector": {
+          "title": "个人资料",
+          "subtitle": "不同解析器上的个人资料记录不匹配。您需要使用哪组记录？",
+          "option": {
+            "latest": "新解析器上的个人资料记录",
+            "current": "当前的个人资料记录",
+            "reset": "重置您的个人资料",
+            "resetSubtitle": "删除所有个人资料记录"
+          }
+        },
+        "migrateProfileWarning": {
+          "title": "迁移个人资料",
+          "subtitle": "正在将个人资料记录迁移到最新的解析器。这将彻底清除最新解析器上原有的记录，并用当前记录替换它们。"
+        },
+        "migrateRegistry": {
+          "title": "注册表过期",
+          "subtitle": "在对该名称进行操作之前，您需要迁移注册表。",
+          "action": "迁移"
+        },
+        "noResolver": {
+          "title": "未设置解析器",
+          "subtitle": "在编辑个人资料之前，需要设置解析器。",
+          "action": "更新"
+        },
+        "resetProfile": {
+          "title": "重置个人资料",
+          "subtitle": "正在重置您的个人资料记录。当前所有的个人资料信息将会丢失，如 ETH 地址，头像和社交平台等记录。通过编辑您的个人资料可以重新添加这些记录。"
+        },
+        "resolverNotNameWrapperAware": {
+          "title": "解析器不兼容",
+          "subtitle": "您当前的解析器与包装名称不兼容。在编辑个人资料之前，需要先更新解析器。",
+          "toggle": {
+            "title": "转移个人资料",
+            "subtitle": "取消选择将只更新您的解析器。"
+          }
+        },
+        "resolverOutOfDate": {
+          "title": "解析器已过时",
+          "subtitle": "解析器已经过时了。建议您在编辑个人资料之前更新解析器。"
+        },
+        "resolverOutOfSync": {
+          "title": "解析器未同步",
+          "subtitle": "您使用的不是最新的公共解析器，但您在那里存储了个人资料记录。建议您在编辑个人资料之前切换到最新的公共解析器。"
+        },
+        "transferOrResetProfile": {
+          "title": "个人资料",
+          "subtitle": "您可以在更新解析器之前将当前个人资料转移到新的解析器。",
+          "toggle": {
+            "title": "转移个人资料",
+            "subtitle": "取消选择将只更新您的解析器。"
+          }
+        },
+        "updateResolverOrResetProfile": {
+          "title": "个人资料",
+          "subtitle": "您可以将当前个人资料保留到新解析器上，或者重置解析器并删除所有个人资料记录。",
+          "toggle": {
+            "title": "保留当前的个人资料",
+            "subtitle": "取消选择将重置您的个人资料。"
+          }
+        },
+        "links": {
+          "learnMoreResolvers": "了解更多关于解析器的信息"
+        }
+      },
+      "intro": {
+        "resetProfile": {
+          "title": "重置个人资料",
+          "description": "从最新的解析器中删除所有个人资料记录，然后更新解析器。"
+        },
+        "migrateProfile": {
+          "title": "迁移个人资料",
+          "description": "将您当前的个人资料记录迁移到最新的解析器。"
+        },
+        "migrateCurrentProfile": {
+          "title": "迁移个人资料",
+          "description": "将您当前的个人资料记录迁移到最新的解析器。"
+        }
+      }
+    },
+    "editResolver": {
+      "title": "编辑解析器",
+      "latestLabel": "使用最新的解析器",
+      "etherscan": "Etherscan",
+      "latestMessage": "您已经在使用最新的解析器",
+      "customLabel": "自定义解析器",
+      "customPlaceholder": "输入自定义解析器地址"
+    },
+    "extendNames": {
+      "title_one": "名称续期",
+      "title_other": "续期 {{count}} 个名称",
+      "invoice": {
+        "extension": "续期 {{count}} 年",
+        "transaction": "交易费",
+        "total": "预估总额"
+      },
+      "bannerMsg": "一次续期数年可以避免每年进行交易，从而节省网络成本。",
+      "gasLimitError": "资金不足"
+    },
+    "transferProfile": {
+      "title": "转移个人资料",
+      "message1": "在升级之前，如果愿意，您可以转移当前的个人资料，否则在升级时这些个人资料会被重置。",
+      "message2": "您要转移当前的个人资料吗?"
+    },
+    "revokePermissions": {
+      "views": {
+        "revokeWarning": {
+          "title": "这些更改将是永久性的",
+          "subtitle": "权限调整是一项高级功能，它会给您的名称带来的永久性的更改。您将无法撤消这些更改，并且只有在名称过期时才会重置这些更改。",
+          "subtitle2": "请先确保您有信心使用此功能，再继续操作。<infoLink>了解更多关于权限的信息</infoLink>"
+        },
+        "revokePCC": {
+          "title": "放弃所有权",
+          "subtitle": "此操作会把名称的所有权转让给管理员 ({{account}})。除非您同时也是管理员，否则您将无法再管理该名称。"
+        },
+        "grantExtendExpiry": {
+          "title": "更改权限",
+          "fuses": {
+            "CAN_EXTEND_EXPIRY": "授予此权限: 延长有效期"
+          }
+        },
+        "setExpiry": {
+          "title": "设置名称的有效期",
+          "subtitle": "设置权限有效期。该日期不能超过其父名称 ({{parent}}) 的到期时间。",
+          "subtitleWithCEE": "设置该名称的有效期。这将取代它现有的权限有效期 ({{expiry}})，并且不能晚于它的父名称 ({{parent}}) 的到期时间。",
+          "options": {
+            "max": "最晚",
+            "custom": "选择较早的日期"
+          },
+          "error": {
+            "required": "使用自定义日期，必须要选择一个日期",
+            "min": "日期必须晚于 {{date}}",
+            "max": "日期必须早于 {{date}}"
+          }
+        },
+        "revokeAdditional": {
+          "title": "撤销权限",
+          "subtitle": "在放弃所有权之前，您需要撤销该名称的某些权限吗? 需要撤销权限的话，您只能现在操作。",
+          "action": {
+            "title": "撤销其他权限",
+            "description": "除非您同时也是管理员，否则在此之后您将无法撤销其他权限。"
+          }
+        },
+        "revokeUnwrap": {
+          "title": "撤销权限",
+          "subtitle": "您必须先撤销这项权限，才能撤销其他权限。这是为了防止权限被移除。",
+          "fuses": {
+            "CANNOT_UNWRAP": "撤销此权限: 解除包装"
+          }
+        },
+        "revokePermissions": {
+          "title": "撤销权限",
+          "unwrapSubtitle": "选择此项可激活其他选项",
+          "fuses": {
+            "CAN_EXTEND_EXPIRY": "授予此权限: 延长有效期",
+            "CANNOT_UNWRAP": "撤销此权限: 解除包装",
+            "CANNOT_CREATE_SUBDOMAIN": "撤销此权限: 创建子名称",
+            "CANNOT_TRANSFER": "撤销此权限: 发送名称",
+            "CANNOT_SET_RESOLVER": "撤销此权限: 设置解析器",
+            "CANNOT_SET_TTL": "撤销此权限: 设置 TTL",
+            "CANNOT_BURN_FUSES": "撤销此权限: 更改权限",
+            "CANNOT_APPROVE": "撤销此权限: 更改续期管理员"
+          }
+        },
+        "revokeChangeFuses": {
+          "title": "撤销权限",
+          "subtitle": "一旦撤销此权限，您将永远无法再更改其他权限。只能在名称过期时才会被重置。",
+          "fuses": {
+            "CANNOT_BURN_FUSES": "撤销此权限: 更改权限"
+          }
+        },
+        "revokeChangeFusesWarning": {
+          "title": "剩余的权限将被锁定",
+          "subtitle": "在撤销 “更改权限” 后，权限和自定义保险丝将永久锁定在其当前状态。只有在名称过期时才会重置。"
+        }
+      },
+      "action": {
+        "revoke": "撤销"
+      }
+    },
+    "unknownLabels": {
+      "title": "确认您的名称",
+      "subtitle": "您有些名称的标签是未知的，请先将它们输入后再继续。"
+    },
+    "deleteEmancipatedSubnameWarning": {
+      "title": "不能重新创建该子名称",
+      "message": "删除该子名称意味着不能再使用或重新创建它，一直到它过期 {{date}}。由于父名称控制权限已被撤销，因此该操作也无法撤消。"
+    },
+    "deleteSubnameNotParentWarning": {
+      "title": "不能重新创建该子名称",
+      "message": "只有父名称(<b>{{parentOwner}}</b>) 的 {{ownershipTerm}} 可以重新创建该子名称。如果该子名称被删除，您将无法自己重新创建它。"
+    },
+    "selectPrimaryName": {
+      "title": "选择一个主名称",
+      "errors": {
+        "noNamesFound": "未找到名称",
+        "noEligibleNames": "没有符合条件的名称"
+      }
+    },
+    "resetPrimaryName": {
+      "title": "移除主名称",
+      "description": "移除后它不会再作为当前地址的名称来显示。但是，发送到该名称的交易仍将解析到当前地址，除非您删除该名称的 ETH 记录。"
+    }
+  },
+  "transaction": {
+    "extendNames": {
+      "actionValue": "续期",
+      "costValue": "{{value}} + 网络费",
+      "warning": "为该名称续期不会让您获得它的所有权"
+    },
+    "deleteSubname": {
+      "warning": "大家好"
+    }
+  },
+  "intro": {
+    "migrateAndUpdateResolver": {
+      "title": "需要先完成一项操作",
+      "heading": "您需要先升级解析器，然后才能保存您编辑的个人资料。",
+      "link": "了解更多关于解析器升级的信息",
+      "warning": "请注意，一旦您取消该选项，那您的更改将无法保存。"
+    },
+    "syncManager": {
+      "description": "同步管理员会让您成为该名称的新管理员。当前管理员 <b>({{manager}})</b> 将会失去管理权限。",
+      "wrappedWarning": "同步管理员也将解除该名称的包装，这会烧毁 NFT 并重置所有权限。"
+    },
+    "selectPrimaryName": {
+      "updateEthAddress": {
+        "title": "更新 ETH 地址",
+        "description": "该名称的 ETH 地址和当前钱包无法匹配。要使用该名称作为您的主名称，您需要先更新该名称的 ETH 地址记录。"
+      },
+      "noResolver": {
+        "title": "未设置解析器",
+        "description": "要使用该名称作为您的主名称，您需要先设置一个解析器并更新该名称的 ETH 地址记录。"
+      },
+      "invalidResolver": {
+        "title": "未经授权的解析器",
+        "description": "要使用此名称作为您的主名称，您需要先设置一个有效的解析器并更新该名称的 ETH 地址记录。"
+      }     
+    },
+    "multiStepSubnameDelete": {
+      "title": "删除子名称",
+      "description": "删除该子名称需要执行多次交易"
+    }
+  },
+  "errors": {
+    "duplicateKey": "{{value}} 键已经存在"
+  }
+}
