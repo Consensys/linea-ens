@@ -31,7 +31,7 @@ contract PohVerifier is EIP712, Ownable {
     function verify(
         bytes memory signature,
         address human
-    ) public view returns (bool) {
+    ) public view virtual returns (bool) {
         bytes32 digest = _hashTypedDataV4(
             keccak256(abi.encode(keccak256("POH(address to)"), human))
         );

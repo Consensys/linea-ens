@@ -30,6 +30,7 @@ contract('ETHRegistrarController', function () {
   let baseRegistrar
   let controller
   let controller2 // controller signed by accounts[1]
+  let controllerPoh
   let priceOracle
   let reverseRegistrar
   let nameWrapper
@@ -120,6 +121,29 @@ contract('ETHRegistrarController', function () {
     const PohVerifier = await ethers.getContractFactory('PohVerifier')
     const pohVerifier = await PohVerifier.deploy()
     await pohVerifier.deployed()
+
+    // Deploy the mock PohVerifier
+    const MockPohVerifier = await ethers.getContractFactory('MockPohVerifier')
+    mockPohVerifier = await MockPohVerifier.deploy()
+    await mockPohVerifier.deployed()
+
+    // Deploy the ETHRegistrarController with the mock PohVerifier's address
+    const ETHRegistrarController = await ethers.getContractFactory(
+      'ETHRegistrarController',
+    )
+    controllerPoh = await ETHRegistrarController.deploy(
+      baseRegistrar.address,
+      priceOracle.address,
+      600,
+      86400,
+      reverseRegistrar.address,
+      nameWrapper.address,
+      ens.address,
+      mockPohVerifier.address,
+    )
+    await controllerPoh.deployed()
+
+    await nameWrapper.setController(controllerPoh.address, true)
 
     controller = await deploy(
       'ETHRegistrarController',
@@ -227,6 +251,61 @@ contract('ETHRegistrarController', function () {
       'InsufficientValue()',
     )
   })
+
+  it('should allow registration with Proof of Humanity', async function () {
+    const name = 'pohname';
+    const duration = 28 * 24 * 60 * 60; // 28 days in seconds
+    const secret = ethers.utils.formatBytes32String('secret');
+    const human = signers[1].address; 
+    const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)); // Mock signature
+  
+    // Generate a commitment for the registration
+    const commitment = await controllerPoh.makeCommitment(
+      name,
+      human,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0
+    );
+  
+    // Commit the registration
+    await controllerPoh.commit(commitment);
+  
+    // Advance time to satisfy the minCommitmentAge requirement
+    await ethers.provider.send('evm_increaseTime', [600]); // Increase time by 600 seconds
+    await ethers.provider.send('evm_mine'); // Mine the next block
+  
+    // Calculate the required registration cost 
+    const cost = ethers.utils.parseEther('0.1'); 
+  
+    // Perform the registration using registerPoh
+    const tx = await controllerPoh.registerPoh(
+      name,
+      human,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+      signature,
+      human,
+      { value: cost }
+    );
+  
+    // Wait for the transaction to be mined
+    await tx.wait();
+  
+    // Check for the NameRegistered event to confirm registration
+    await expect(tx)
+      .to.emit(controllerPoh, 'NameRegistered');
+  
+    // Verify that the address is marked as having registered using PoH
+    expect(await controllerPoh.redeemed(human)).to.equal(true);
+  });
 
   it('should report registered names as unavailable', async () => {
     const name = 'newname'
