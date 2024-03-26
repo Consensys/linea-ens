@@ -1,0 +1,101 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
+/* eslint-disable no-await-in-loop */
+import { EncodeFusesInputObject, RecordOptions } from '@ensdomains/ensjs/utils'
+import { createSubname, unwrapName } from '@ensdomains/ensjs/wallet'
+
+import { Accounts, createAccounts, User } from '../../accounts'
+import { Contracts } from '../../contracts'
+import {
+  testClient,
+  waitForTransaction,
+  walletClient,
+} from '../../contracts/utils/addTestContracts'
+import { Provider } from '../../provider'
+import { generateRecords } from './generateRecords'
+
+// type Fuse = ParentFuses['fuse'] | ChildFuses['fuse']
+
+export type WrappedSubname = {
+  name: string
+  nameOwner: User
+  label: string
+  owner: User
+  resolver?: `0x${string}`
+  records?: RecordOptions
+  fuses?: EncodeFusesInputObject
+  duration?: number
+  type?: 'wrapped' | 'legacy'
+  subnames?: Omit<WrappedSubname, 'name' | 'nameOwner '>[]
+}
+
+type Dependencies = {
+  provider: Provider
+  accounts: Accounts
+  contracts: Contracts
+}
+
+const DEFAULT_RESOLVER = testClient.chain.contracts.ensPublicResolver.address
+
+export const generateWrappedSubname =
+  ({ provider, accounts, contracts }: Dependencies) =>
+  async ({
+    name,
+    nameOwner,
+    label,
+    owner,
+    resolver = DEFAULT_RESOLVER,
+    records,
+    fuses,
+    duration = 31536000,
+    subnames,
+    type,
+  }: WrappedSubname) => {
+    const subname = `${label}.${name}`
+    console.log('generating wrapped subname:', subname)
+
+    const blockTimestamp = await provider.getBlockTimestamp()
+    const expiry = duration + blockTimestamp
+
+    // Make subname with resolver
+
+    const tx = await createSubname(walletClient, {
+      name: `${label}.${name}`,
+      contract: 'nameWrapper',
+      fuses,
+      owner: createAccounts().getAddress(owner) as `0x${string}`,
+      account: createAccounts().getAddress(nameOwner) as `0x${string}`,
+      resolverAddress: resolver,
+      expiry,
+    })
+    await waitForTransaction(tx)
+
+    // Make records
+    if (records) {
+      await generateRecords()({
+        name: `${label}.${name}`,
+        owner,
+        resolver,
+        records,
+      })
+    }
+
+    if (type === 'legacy') {
+      const wrapTx = await unwrapName(walletClient, {
+        name: `${label}.${name}`,
+        newOwnerAddress: createAccounts().getAddress(owner) as `0x${string}`,
+        account: createAccounts().getAddress(owner) as `0x${string}`,
+      })
+      await waitForTransaction(wrapTx)
+    }
+
+    const _subNames = (subnames || []).map((subName) => ({
+      ...subName,
+      name: `${label}.${name}`,
+      nameOwner: owner,
+      resolver: subName.resolver ?? DEFAULT_RESOLVER,
+    }))
+    for (const eachSubname of _subNames) {
+      await generateWrappedSubname({ accounts, provider, contracts })({ ...eachSubname })
+    }
+  }
