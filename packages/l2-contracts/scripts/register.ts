@@ -1,16 +1,11 @@
 import { ethers } from 'ethers'
-import * as fs from 'fs'
-require('dotenv').config({ path: '../.env' })
+import 'dotenv/config'
 
-const registrarControllerAbi = JSON.parse(
-  fs.readFileSync('./RegistrarController_abi.json', 'utf8'),
-)
-const resolverAbi = JSON.parse(
-  fs.readFileSync('./PublicResolver_abi.json', 'utf8'),
-)
+import registrarControllerAbi from '../deployments/lineaSepolia/ETHRegistrarController.json'
+import resolverAbi from '../deployments/lineaSepolia/PublicResolver.json'
 
-const registrarControllerAddress = '0x44411C605eb7e009cad03f3847cfbbFCF8895130'
-const resolverAddress = '0x310D7A96d8179bf4601b22299643Bf39b3fBcbb8' // PublicResolver address
+const registrarControllerAddress = registrarControllerAbi.address
+const resolverAddress = resolverAbi.address // PublicResolver address
 
 const provider = new ethers.providers.JsonRpcProvider(
   `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -21,19 +16,19 @@ if (!process.env.OWNER_KEY) {
 const wallet = new ethers.Wallet(process.env.OWNER_KEY, provider)
 const registrarController = new ethers.Contract(
   registrarControllerAddress,
-  registrarControllerAbi,
+  registrarControllerAbi.abi,
   wallet,
 )
-const resolver = new ethers.Contract(resolverAddress, resolverAbi, wallet)
+const resolver = new ethers.Contract(resolverAddress, resolverAbi.abi, wallet)
 
 // Domain details
-const domainName = 'wanted.linea'
+const domainName = 'test.linea'
 const duration = 365 * 24 * 60 * 60 // 1 year in seconds
 const secret = ethers.utils.formatBytes32String('SECRET')
 
 async function main() {
   const owner = wallet.address
-  const reverseRecord = false
+  const reverseRecord = true
   const ownerControlledFuses = 0 // Fuses, 0 for no restrictions
 
   // Encode the calls to the resolver contract
@@ -41,7 +36,7 @@ async function main() {
     resolver.interface.encodeFunctionData('setAddr(bytes32,address)', [
       ethers.utils.namehash(domainName + '.eth'),
       owner,
-    ])
+    ]),
   ]
 
   const commitment = await registrarController.makeCommitment(
@@ -75,7 +70,7 @@ async function main() {
       ownerControlledFuses,
       {
         value: ethers.utils.parseEther('0.01'),
-        gasLimit: ethers.BigNumber.from('1000000'),
+        gasLimit: 1000_000,
       },
     )
     await txRegister.wait()

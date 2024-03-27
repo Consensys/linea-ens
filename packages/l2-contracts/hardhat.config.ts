@@ -103,6 +103,7 @@ const config: HardhatUserConfig = {
       tags: ['use_root'],
       chainId: 59141,
       accounts: real_accounts,
+      gasPrice: 1000_000_000,
     },
   },
   mocha: {},

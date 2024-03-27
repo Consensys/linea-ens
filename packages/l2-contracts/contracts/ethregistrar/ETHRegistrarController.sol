@@ -14,6 +14,7 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {INameWrapper} from "../wrapper/INameWrapper.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
+import {NameEncoder} from "../utils/NameEncoder.sol";
 
 // Import PohVerifier contract
 import "./PohVerifier.sol";
@@ -264,7 +265,7 @@ contract ETHRegistrarController is
         );
 
         if (data.length > 0) {
-            _setRecords(resolver, keccak256(bytes(name)), data);
+            _setRecords(resolver, name, data);
         }
 
         if (reverseRecord) {
@@ -341,11 +342,12 @@ contract ETHRegistrarController is
 
     function _setRecords(
         address resolverAddress,
-        bytes32 label,
+        string memory name,
         bytes[] calldata data
     ) internal {
-        // use hardcoded .eth namehash
-        bytes32 nodehash = keccak256(abi.encodePacked(ETH_NODE, label));
+        (, bytes32 nodehash) = NameEncoder.dnsEncodeName(
+            string.concat(name, ".eth")
+        );
         Resolver resolver = Resolver(resolverAddress);
         resolver.multicallWithNodeCheck(nodehash, data);
     }
