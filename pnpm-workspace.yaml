@@ -3,3 +3,4 @@ packages:
   - "packages/gateway"
   - "packages/linea-verifier"
   - "packages/l1-contracts"
+  - "packages/ens-app-v3"
