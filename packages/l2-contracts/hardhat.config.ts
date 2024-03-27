@@ -168,6 +168,7 @@ const config: HardhatUserConfig = {
       lineaGoerli: process.env.LINEASCAN_API_KEY ?? '',
       lineaSepolia: process.env.LINEASCAN_API_KEY ?? '',
       lineaMainnet: process.env.LINEASCAN_API_KEY ?? '',
+      sepolia: process.env.ETHERSCAN_API_KEY ?? '',
     },
     customChains: [
       {
