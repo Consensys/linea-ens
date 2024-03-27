@@ -3,7 +3,7 @@ pragma solidity ^0.8.25;
 
 import {LineaVerifier} from "linea-verifier/contracts/LineaVerifier.sol";
 
-contract TestLineaVerifier is LineaVerifier {
+contract Verifier is LineaVerifier {
     constructor(
         string[] memory urls,
         address rollup
