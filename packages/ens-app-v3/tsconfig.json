@@ -1,0 +1,75 @@
+{
+  "ts-node": {
+    "experimentalResolver": true,
+    "files": true,
+    "compilerOptions": {
+      "module": "CommonJS",
+      "target": "ESNext",
+      "moduleResolution": "node",
+      "strict": true,
+      "esModuleInterop": true,
+      "allowJs": true,
+      "checkJs": false,
+      "plugins": [
+        {
+          "name": "typescript-styled-plugin",
+          "tags": ["styled", "css", "mq"]
+        }
+      ]
+    }
+  },
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "downlevelIteration": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "rootDir": ".",
+    "baseUrl": "./",
+    "incremental": true,
+    "noErrorTruncation": true,
+    "paths": {
+      "@app/*": ["./src/*"],
+      "@public/*": ["./public/*"],
+      "@root/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin",
+        "tags": ["styled", "css", "mq"],
+        "validate": false,
+        "lint": {
+          "validProperties": ["flex-gap"]
+        }
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "mdx.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next.config.mjs",
+    "vitest.config.mts",
+    "test/*.mts",
+    "test/**/*.ts",
+    "typings-custom/generated/*.d.ts",
+    "typings-custom/local-contracts.d.ts"
+  ],
+  "exclude": [
+    "**/*.ignore.ts",
+    "**/*.ignore.tsx",
+    "functions/**/*",
+    "deploy/**/*",
+    "hardhat.config.ts"
+  ]
+}

@@ -17,9 +17,9 @@ import request from "supertest";
 import packet from "dns-packet";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
-const name = "linea.eth";
-const node = ethers.namehash(name);
-const encodedname = encodeName(name);
+const domainName = "linea.eth";
+const node = ethers.namehash(domainName);
+const encodedname = encodeName(domainName);
 
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 const EMPTY_BYTES32 =
@@ -228,7 +228,7 @@ describe("Crosschain Resolver", () => {
 
   it("should allow owner to set target", async () => {
     await target.setTarget(node, signerAddress);
-    const result = await target.getTarget(encodeName(name), 0);
+    const result = await target.getTarget(encodeName(domainName), 0);
     expect(result[1]).to.equal(signerAddress);
   });
 
