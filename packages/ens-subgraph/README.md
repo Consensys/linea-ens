@@ -77,3 +77,15 @@ Here we have example queries, so that you don't have to type them in yourself ea
 }
 
 ```
+
+# Build
+
+1/ yarn codegen
+2/ graph codegen && graph build
+
+# Authenticate in CLI
+graph auth --studio d2010a0f3e4eb8ccf9552d813066dcc1
+
+# Deploy Subgraph
+graph deploy --studio ens-sepolia
+
