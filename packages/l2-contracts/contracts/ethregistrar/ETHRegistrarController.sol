@@ -58,6 +58,10 @@ contract ETHRegistrarController is
     // Mapping to keep track of addresses that have successfully registered using registerPoh
     mapping(address => bool) public hasRegisteredPoh;
 
+    PohVerifier public pohVerifier;
+
+    string public constant BASE_DOMAIN = ".linea.eth";
+
     event NameRegistered(
         string name,
         bytes32 indexed label,
@@ -72,8 +76,6 @@ contract ETHRegistrarController is
         uint256 cost,
         uint256 expires
     );
-
-    PohVerifier public pohVerifier;
 
     constructor(
         BaseRegistrarImplementation _base,
@@ -346,7 +348,7 @@ contract ETHRegistrarController is
         bytes[] calldata data
     ) internal {
         (, bytes32 nodehash) = NameEncoder.dnsEncodeName(
-            string.concat(name, ".eth")
+            string.concat(name, BASE_DOMAIN)
         );
         Resolver resolver = Resolver(resolverAddress);
         resolver.multicallWithNodeCheck(nodehash, data);
@@ -361,7 +363,7 @@ contract ETHRegistrarController is
             msg.sender,
             owner,
             resolver,
-            string.concat(name, ".eth")
+            string.concat(name, BASE_DOMAIN)
         );
     }
 }

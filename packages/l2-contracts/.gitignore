@@ -8,3 +8,5 @@ node_modules
 build
 forge-cache
 out
+typings-custom
+.env.local
