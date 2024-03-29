@@ -57,7 +57,7 @@ async function main() {
   console.log('Commitment made. Waiting for the minCommitmentAge...')
 
   const signature =
-    '0xa5cac7e279a8f9c52fbe7f565334e8e83a013afa1448608de97243f3b5dd58d617b82f594de9f2f4906126ba17a122a4bd05e0742b8fa0783030660e37deb1e71c'
+    '0xb998ef2a75d94d76e0d2b5bbafa01edb40e7d2f955b59a2ea115afeada4b273365d433516e1597a726ca8c2a3dda27147830a9f6f8db3fb5184dd7a9df5d77c31b'
   const human = owner
 
   // Wait for the minCommitmentAge + a buffer (1 minute) to ensure the commitment is ready
