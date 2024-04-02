@@ -48,6 +48,8 @@ contract NameWrapper is
     uint64 private constant GRACE_PERIOD = 90 days;
     bytes32 private constant ETH_NODE =
         0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+    bytes32 private constant LINEA_ETH_NODE =
+        0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3;
     bytes32 private constant ETH_LABELHASH =
         0x4f5b812789fc606be1b3b16908db13fc7a9adf7ca72641f84d75b47069d3d7f0;
     bytes32 private constant ROOT_NODE =
@@ -276,7 +278,7 @@ contract NameWrapper is
      * @param resolver Resolver contract address
      */
 
-    function wrapETH2LD(
+    function wrapLineaETH3LD(
         string calldata label,
         address wrappedOwner,
         uint16 ownerControlledFuses,
@@ -289,7 +291,7 @@ contract NameWrapper is
             !registrar.isApprovedForAll(registrant, msg.sender)
         ) {
             revert Unauthorised(
-                _makeNode(ETH_NODE, bytes32(tokenId)),
+                _makeNode(LINEA_ETH_NODE, bytes32(tokenId)),
                 msg.sender
             );
         }
@@ -302,7 +304,7 @@ contract NameWrapper is
 
         expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
 
-        _wrapETH2LD(
+        _wrapLineaETH3LD(
             label,
             wrappedOwner,
             ownerControlledFuses,
@@ -322,7 +324,7 @@ contract NameWrapper is
      * @return registrarExpiry The expiry date of the new name on the .eth registrar, in seconds since the Unix epoch.
      */
 
-    function registerAndWrapETH2LD(
+    function registerAndWrapLineaETH3LD(
         string calldata label,
         address wrappedOwner,
         uint256 duration,
@@ -331,7 +333,7 @@ contract NameWrapper is
     ) external onlyController returns (uint256 registrarExpiry) {
         uint256 tokenId = uint256(keccak256(bytes(label)));
         registrarExpiry = registrar.register(tokenId, address(this), duration);
-        _wrapETH2LD(
+        _wrapLineaETH3LD(
             label,
             wrappedOwner,
             ownerControlledFuses,
@@ -424,7 +426,7 @@ contract NameWrapper is
      * @param controller Sets the owner in the registry to this address
      */
 
-    function unwrapETH2LD(
+    function unwrapLineaETH3LD(
         bytes32 labelhash,
         address registrant,
         address controller
@@ -432,7 +434,7 @@ contract NameWrapper is
         if (registrant == address(this)) {
             revert IncorrectTargetOwner(registrant);
         }
-        _unwrap(_makeNode(ETH_NODE, labelhash), controller);
+        _unwrap(_makeNode(LINEA_ETH_NODE, labelhash), controller);
         registrar.safeTransferFrom(
             address(this),
             registrant,
@@ -895,7 +897,7 @@ contract NameWrapper is
 
         uint64 expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
 
-        _wrapETH2LD(label, owner, ownerControlledFuses, expiry, resolver);
+        _wrapLineaETH3LD(label, owner, ownerControlledFuses, expiry, resolver);
 
         return IERC721Receiver(to).onERC721Received.selector;
     }
@@ -1083,7 +1085,7 @@ contract NameWrapper is
         return expiry;
     }
 
-    function _wrapETH2LD(
+    function _wrapLineaETH3LD(
         string memory label,
         address wrappedOwner,
         uint32 fuses,
@@ -1091,9 +1093,9 @@ contract NameWrapper is
         address resolver
     ) private {
         bytes32 labelhash = keccak256(bytes(label));
-        bytes32 node = _makeNode(ETH_NODE, labelhash);
+        bytes32 node = _makeNode(LINEA_ETH_NODE, labelhash);
         // hardcode dns-encoded eth string for gas savings
-        bytes memory name = _addLabel(label, "\x03eth\x00");
+        bytes memory name = _addLabel(label, "\x04linea\x03eth\x00");
         names[node] = name;
 
         _wrap(

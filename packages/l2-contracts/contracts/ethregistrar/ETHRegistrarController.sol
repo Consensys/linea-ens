@@ -258,7 +258,7 @@ contract ETHRegistrarController is
             )
         );
 
-        uint256 expires = nameWrapper.registerAndWrapETH2LD(
+        uint256 expires = nameWrapper.registerAndWrapLineaETH3LD(
             name,
             owner,
             duration,

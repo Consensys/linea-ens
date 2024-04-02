@@ -25,11 +25,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const tx2 = await root
     .connect(await ethers.getSigner(owner))
-    .setSubnodeOwner('0x' + keccak256('eth'), registrar.address)
+    .setSubnodeOwner('0x' + keccak256('eth'), owner)
   console.log(
     `Setting owner of eth node to registrar on root (tx: ${tx2.hash})...`,
   )
   await tx2.wait()
+
+  const ens = await ethers.getContract('ENSRegistry')
+  const tx3 = await ens
+    .connect(await ethers.getSigner(owner))
+    .setSubnodeOwner(
+      ethers.utils.namehash('eth'),
+      '0x' + keccak256('linea'),
+      registrar.address,
+    )
+  console.log(
+    `Setting owner of linea.eth node to registrar on root (tx: ${tx2.hash})...`,
+  )
+  await tx3.wait()
 }
 
 func.id = 'setupRegistrar'
