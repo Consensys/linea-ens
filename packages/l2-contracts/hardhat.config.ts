@@ -194,7 +194,7 @@ const config: HardhatUserConfig = {
           apiURL: 'https://api.lineascan.build/api',
           browserURL: 'https://lineascan.build/',
         },
-      },
+      }
     ],
   },
 }

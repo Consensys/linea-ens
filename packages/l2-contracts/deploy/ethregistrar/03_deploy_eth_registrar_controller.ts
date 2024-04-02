@@ -32,7 +32,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   // Deploy the PohVerifier contract
   const pohVerifierDeployment = await deploy('PohVerifier', {
-    from: deployer,
+    from: owner,
     log: true,
   })
 
