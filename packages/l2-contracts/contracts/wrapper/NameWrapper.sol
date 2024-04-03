@@ -70,6 +70,12 @@ contract NameWrapper is
         /* Burn PARENT_CANNOT_CONTROL and CANNOT_UNWRAP fuses for ROOT_NODE and ETH_NODE and set expiry to max */
 
         _setData(
+            uint256(LINEA_ETH_NODE),
+            address(0),
+            uint32(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP),
+            MAX_EXPIRY
+        );
+        _setData(
             uint256(ETH_NODE),
             address(0),
             uint32(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP),
@@ -83,6 +89,7 @@ contract NameWrapper is
         );
         names[ROOT_NODE] = "\x00";
         names[ETH_NODE] = "\x03eth\x00";
+        names[LINEA_ETH_NODE] = "\x05linea\x03eth\x00";
     }
 
     function supportsInterface(
@@ -1095,7 +1102,7 @@ contract NameWrapper is
         bytes32 labelhash = keccak256(bytes(label));
         bytes32 node = _makeNode(LINEA_ETH_NODE, labelhash);
         // hardcode dns-encoded eth string for gas savings
-        bytes memory name = _addLabel(label, "\x04linea\x03eth\x00");
+        bytes memory name = _addLabel(label, "\x05linea\x03eth\x00");
         names[node] = name;
 
         _wrap(

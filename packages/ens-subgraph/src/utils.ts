@@ -9,6 +9,8 @@ export function createEventID(event: ethereum.Event): string {
     .concat(event.logIndex.toString());
 }
 
+export const LINEA_ETH_NODE =
+  "0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3";
 export const ETH_NODE =
   "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae";
 export const ROOT_NODE =

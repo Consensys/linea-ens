@@ -45,7 +45,7 @@ export const sepoliaWithEns = {
   },
   subgraphs: {
     ens: {
-      url: 'https://api.studio.thegraph.com/query/51602/ens-sepolia-sub-grqaph/version/latest',
+      url: 'https://api.studio.thegraph.com/query/69290/ens-sepolia/v0.0.8',
     },
   },
 } as unknown as CheckedChainWithEns<Chain>

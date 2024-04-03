@@ -21,10 +21,10 @@ export const sepoliaCustom = /*#__PURE__*/ defineChain({
       address: '0xca11bde05977b3631167028862be2a173976ca11',
       blockCreated: 751532,
     },
-    ensRegistry: { address: '0x9125C4f492Ca725A2EAE5d9Df5643F6f41Fe77BE' },
+    ensRegistry: { address: '0x82D6247c272Ae0AB7AA2946ee688e74dAB976c67' },
     ensUniversalResolver: {
-      address: '0xc220298fc159a220cF5B1d0d13f41905b516750A',
-      blockCreated: 5_570_763,
+      address: '0xbfBBFcd69651303A65D91741500C008631A9D8a0',
+      blockCreated: 5_619_027,
     },
   },
   testnet: true,
@@ -32,33 +32,33 @@ export const sepoliaCustom = /*#__PURE__*/ defineChain({
 
 export const sepoliaCustomEnsAddresses = {
   ensBaseRegistrarImplementation: {
-    address: '0x0d5446e2050DCDc373DbB13A2e6a81D89E85FEb6',
+    address: '0x7A6D957A8F18e55a03ff6DC11Fd990fc95Df5e1F',
   },
   ensBulkRenewal: {
-    address: '0xC3D5b20d5836Eba0bf4Cd006E8A67AA4ae33b7da',
+    address: '0xdae615B58daCf164b85F67A56A0c29818A7486f1',
   },
   ensDnsRegistrar: {
-    address: '0xcE4694e52Ce8fd7961e05b4a261284B6e990ccB8',
+    address: '0xd6D15eE266376eBb2C61bEa07Bd1f94b60d33E44',
   },
   ensDnssecImpl: {
-    address: '0x33AA3713a15DaEC42cB834Df9aA8916d15090f85',
+    address: '0x28F15B034f9744d43548ac64DCE04ed77BdBd832',
   },
   ensEthRegistrarController: {
-    address: '0xE2f076220c4e456A10398A8482d84BE1E8b82516',
+    address: '0x88fa401201AAEAC81A41328702CEE34b1dde13db',
   },
   ensNameWrapper: {
-    address: '0x0Fb19ba94805a816471C84c90F167285bA888FD3',
+    address: '0x5C8c5e4E8cdd36439197EC1c8a1832CB8186bEA1',
   },
   ensPublicResolver: {
-    address: '0x7161c2eEf390ef14053E13012D6E761938820127',
+    address: '0x806d1eb5FAB72B1F6D7CAd2d1C4959145f5cE001',
   },
   ensRegistry: {
-    address: '0x9125C4f492Ca725A2EAE5d9Df5643F6f41Fe77BE',
+    address: '0x82D6247c272Ae0AB7AA2946ee688e74dAB976c67',
   },
   ensReverseRegistrar: {
-    address: '0xD0Ed1FaA2C78012Dc506FA5f67939778963008f3',
+    address: '0x625479950cB2947442eb8a81450F15F9B496664a',
   },
   ensUniversalResolver: {
-    address: '0xc220298fc159a220cF5B1d0d13f41905b516750A',
+    address: '0xbfBBFcd69651303A65D91741500C008631A9D8a0',
   },
 }
