@@ -5,7 +5,7 @@ import {
   checkValidLabel,
   concat,
   createEventID,
-  ETH_NODE,
+  LINEA_ETH_NODE,
   uint256ToByteArray,
 } from "./utils";
 
@@ -35,7 +35,7 @@ import {
 
 const GRACE_PERIOD_SECONDS = BigInt.fromI32(7776000); // 90 days
 
-var rootNode: ByteArray = ByteArray.fromHexString(ETH_NODE);
+var rootNode: ByteArray = ByteArray.fromHexString(LINEA_ETH_NODE);
 
 export function handleNameRegistered(event: NameRegisteredEvent): void {
   let account = new Account(event.params.owner.toHex());
@@ -56,7 +56,7 @@ export function handleNameRegistered(event: NameRegisteredEvent): void {
   let labelName = ens.nameByHash(label.toHexString());
   if (checkValidLabel(labelName)) {
     domain.labelName = labelName;
-    domain.name = labelName! + ".eth";
+    domain.name = labelName! + "linea.eth";
     registration.labelName = labelName;
   }
   domain.save();

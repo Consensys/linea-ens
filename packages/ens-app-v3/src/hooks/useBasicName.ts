@@ -35,7 +35,7 @@ export const useBasicName = ({
 }: UseBasicNameOptions) => {
   const validation = useValidate({ input: name!, enabled: enabled && !!name })
 
-  const { name: _normalisedName, isValid, isShort, isETH, is2LD } = validation
+  const { name: _normalisedName, isValid, isShort, isETH, is2LD, is3LD } = validation
 
   const normalisedName = normalised ? name! : _normalisedName
 
@@ -61,7 +61,10 @@ export const useBasicName = ({
     isLoading: isExpiryLoading,
     isCachedData: isExpiryCachedData,
     refetchIfEnabled: refetchExpiry,
-  } = useExpiry({ name: normalisedName, enabled: commonEnabled && !isRoot && isETH && is2LD })
+  } = useExpiry({
+    name: normalisedName,
+    enabled: commonEnabled && !isRoot && isETH && (is2LD || is3LD),
+  })
   const {
     data: priceData,
     isLoading: isPriceLoading,
@@ -70,7 +73,7 @@ export const useBasicName = ({
   } = usePrice({
     nameOrNames: normalisedName,
     duration: yearsToSeconds(1),
-    enabled: commonEnabled && !isRoot && isETH && is2LD,
+    enabled: commonEnabled && !isRoot && isETH && (is2LD || is3LD),
   })
   const {
     data: addrData,
@@ -146,7 +149,7 @@ export const useBasicName = ({
       enabled &&
       subgraphEnabled &&
       registrationStatus === 'gracePeriod' &&
-      is2LD &&
+      (is2LD || is3LD) &&
       isETH &&
       !isWrapped,
   })

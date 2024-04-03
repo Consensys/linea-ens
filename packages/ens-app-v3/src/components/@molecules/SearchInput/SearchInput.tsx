@@ -224,7 +224,7 @@ export const SearchInput = ({
 
   const isEmpty = inputVal === ''
   const inputIsAddress = useMemo(() => isAddress(inputVal), [inputVal])
-  const { isValid, isETH, is2LD, isShort, type, name } = useValidate({
+  const { isValid, isETH, is2LD, isShort, type, name, is3LD } = useValidate({
     input: inputVal,
     enabled: !inputIsAddress && !isEmpty,
   })
@@ -251,7 +251,7 @@ export const SearchInput = ({
         value: t('search.errors.invalid'),
       }
     }
-    if (isETH && is2LD && isShort) {
+    if (isETH && (is2LD || is3LD) && isShort) {
       return {
         type: 'error',
         value: t('search.errors.tooShort'),
@@ -265,7 +265,7 @@ export const SearchInput = ({
     return {
       type: 'name',
     }
-  }, [isEmpty, inputIsAddress, isValid, isETH, is2LD, isShort, type, t])
+  }, [isEmpty, inputIsAddress, isValid, isETH, is2LD, is3LD, isShort, type, t])
 
   const extraItems = useMemo(() => {
     if (history.length > 0) {

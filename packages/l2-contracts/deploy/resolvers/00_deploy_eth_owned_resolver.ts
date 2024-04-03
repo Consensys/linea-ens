@@ -25,7 +25,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const tx = await registrar.setResolver(ethOwnedResolver.address)
   await tx.wait()
 
-  const resolver = await registry.resolver(ethers.utils.namehash('eth'))
+  const resolver = await registry.resolver(ethers.utils.namehash('linea.eth'))
   console.log(`set resolver for .eth to ${resolver}`)
   if (!ethOwnedResolver.newlyDeployed) return
 }

@@ -17,7 +17,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const deployArgs = {
     from: deployer,
-    args: [registry.address, namehash.hash('eth')],
+    args: [registry.address, namehash.hash('linea.eth')],
     log: true,
   }
 

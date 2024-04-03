@@ -1,14 +1,14 @@
 import { ethers } from 'ethers'
 import 'dotenv/config'
 
-import registrarControllerAbi from '../deployments/lineaSepolia/ETHRegistrarController.json'
-import resolverAbi from '../deployments/lineaSepolia/PublicResolver.json'
+import registrarControllerAbi from '../deployments/sepolia/ETHRegistrarController.json'
+import resolverAbi from '../deployments/sepolia/PublicResolver.json'
 
 const registrarControllerAddress = registrarControllerAbi.address
 const resolverAddress = resolverAbi.address // PublicResolver address
 
 const provider = new ethers.providers.JsonRpcProvider(
-  `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+  `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
 )
 if (!process.env.OWNER_KEY) {
   throw new Error('OWNER_KEY environment variable is not set.')
@@ -22,7 +22,7 @@ const registrarController = new ethers.Contract(
 const resolver = new ethers.Contract(resolverAddress, resolverAbi.abi, wallet)
 
 // Domain details
-const domainName = 'test.linea'
+const domainName = 'longtestname'
 const duration = 365 * 24 * 60 * 60 // 1 year in seconds
 const secret = ethers.utils.formatBytes32String('SECRET')
 
@@ -34,7 +34,7 @@ async function main() {
   // Encode the calls to the resolver contract
   const data = [
     resolver.interface.encodeFunctionData('setAddr(bytes32,address)', [
-      ethers.utils.namehash(domainName + '.eth'),
+      ethers.utils.namehash(domainName + '.linea.eth'),
       owner,
     ]),
   ]
@@ -75,7 +75,7 @@ async function main() {
     )
     await txRegister.wait()
 
-    console.log('Domain registered:', domainName + '.eth')
+    console.log('Domain registered:', domainName + '.linea.eth')
   }, (60 + 60) * 1000)
 }
 
