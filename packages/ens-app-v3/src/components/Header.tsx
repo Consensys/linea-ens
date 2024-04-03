@@ -11,8 +11,9 @@ import { useInitial } from '@app/hooks/useInitial'
 import { legacyFavouritesRoute, routes } from '@app/routes'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
 
-import ENSFull from '../assets/ENSFull.svg'
-import ENSWithGradient from '../assets/ENSWithGradient.svg'
+// import ENSFull from '../assets/ENSFull.svg'
+// import ENSWithGradient from '../assets/ENSWithGradient.svg'
+import Linea from '../assets/linea/Linea.svg'
 import BaseLink from './@atoms/BaseLink'
 import { RouteItem } from './@atoms/RouteItem/RouteItem'
 import Hamburger from './@molecules/Hamburger/Hamburger'
@@ -202,11 +203,7 @@ export const Header = () => {
             </BaseLink>
           )}
         >
-          {router.asPath === '/' ? (
-            <ENSFull height={space['12']} />
-          ) : (
-            <ENSWithGradient height={space['12']} />
-          )}
+          {router.asPath === '/' ? <Linea height={space['12']} /> : <Linea height={space['12']} />}
         </ConditionalWrapper>
         {router.asPath !== '/' && breakpoints.sm && (
           <>
