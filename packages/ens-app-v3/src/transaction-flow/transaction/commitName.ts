@@ -1,8 +1,8 @@
 import type { TFunction } from 'react-i18next'
 
 import { RegistrationParameters } from '@ensdomains/ensjs/utils'
-import { commitName } from '@ensdomains/ensjs/wallet'
 
+import commitName from '@app/ensJsOverrides/commitName'
 import { Transaction, TransactionDisplayItem, TransactionFunctionParameters } from '@app/types'
 
 type Data = RegistrationParameters & { name: string }

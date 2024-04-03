@@ -24,7 +24,7 @@ export type RegistrationStatus =
 
 export const getRegistrationStatus = ({
   timestamp,
-  validation: { isETH, is2LD, isShort, type },
+  validation: { isETH, is2LD, isShort, type, is3LD },
   ownerData,
   wrapperData,
   expiryData,
@@ -33,7 +33,11 @@ export const getRegistrationStatus = ({
   supportedTLD,
 }: {
   timestamp: number
-  validation: Partial<Omit<ParsedInputResult, 'normalised' | 'isValid'>>
+  validation: Partial<
+    Omit<ParsedInputResult, 'normalised' | 'isValid'> & {
+      is3LD: boolean | undefined
+    }
+  >
   ownerData?: GetOwnerReturnType
   wrapperData?: GetWrapperDataReturnType
   expiryData?: GetExpiryReturnType
@@ -41,7 +45,7 @@ export const getRegistrationStatus = ({
   addrData?: GetAddressRecordReturnType
   supportedTLD?: boolean | null
 }): RegistrationStatus => {
-  if (isETH && is2LD && isShort) {
+  if (isETH && (is2LD || is3LD) && isShort) {
     return 'short'
   }
 
@@ -51,7 +55,7 @@ export const getRegistrationStatus = ({
     return 'unsupportedTLD'
   }
 
-  if (isETH && is2LD) {
+  if (isETH && (is2LD || is3LD)) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     if (expiryData && expiryData.expiry) {
       const { expiry: _expiry, gracePeriod } = expiryData
@@ -70,14 +74,14 @@ export const getRegistrationStatus = ({
     return 'available'
   }
   if (ownerData && ownerData.owner !== emptyAddress) {
-    if (is2LD) {
+    if (is2LD || is3LD) {
       return 'imported'
     }
-    return 'owned'
+    return 'registered'
   }
-  if (type === 'name' && !is2LD) {
+  if (type === 'name' && !(is2LD || is3LD)) {
     // more than 2 labels
-    return 'notOwned'
+    return 'available'
   }
 
   if (
