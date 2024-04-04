@@ -9,11 +9,7 @@ import { I18nextProvider } from 'react-i18next'
 import { IntercomProvider } from 'react-use-intercom'
 import { createGlobalStyle, keyframes, ThemeProvider } from 'styled-components'
 
-import {
-  darkTheme as thorinDarkTheme,
-  ThorinGlobalStyles,
-  lightTheme as thorinLightTheme,
-} from '@ensdomains/thorin'
+import { ThorinGlobalStyles, lightTheme as thorinLightTheme } from '@ensdomains/thorin'
 
 import { Notifications } from '@app/components/Notifications'
 import { TestnetWarning } from '@app/components/TestnetWarning'
@@ -123,23 +119,6 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `
-
-thorinDarkTheme.colors.accent = '#ffffff'
-thorinDarkTheme.colors.accentBright = '#ffffff'
-thorinDarkTheme.colors.grey = '#ffffff'
-thorinDarkTheme.colors.greyActive = '#ffffff'
-thorinDarkTheme.colors.greyBright = '#ffffff'
-thorinDarkTheme.colors.greyDim = '#ffffff'
-thorinDarkTheme.colors.greyLight = '#ffffff'
-thorinDarkTheme.colors.greyPrimary = '#ffffff'
-thorinDarkTheme.colors.greySurface = '#ffffff'
-thorinDarkTheme.colors.green = '#ffffff'
-thorinDarkTheme.colors.greenActive = '#ffffff'
-thorinDarkTheme.colors.text = '#ffffff'
-thorinDarkTheme.colors.textPrimary = '#ffffff'
-thorinDarkTheme.colors.textSecondary = '#ffffff'
-thorinDarkTheme.colors.textTertiary = '#ffffff'
-thorinDarkTheme.colors.textTertiary = '#ffffff'
 
 const breakpoints = {
   xs: '(min-width: 360px)',

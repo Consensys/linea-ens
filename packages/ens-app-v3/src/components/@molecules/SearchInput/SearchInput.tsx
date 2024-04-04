@@ -316,7 +316,7 @@ export const SearchInput = ({
     if (selectedItem.type === 'nameWithDotEth') {
       selectedItem = {
         type: 'name',
-        value: `${normalisedOutput}.eth`,
+        value: `${normalisedOutput}.linea.eth`,
       }
     }
     if (!selectedItem.value) {

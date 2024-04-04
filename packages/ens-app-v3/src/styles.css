@@ -1,9 +1,5 @@
 @import url('/fonts/fonts.css');
 
-html, body {
-  background-color: #000 !important;
-}
-
 .intercom-lightweight-app,
 #intercom-container {
   position: relative;
