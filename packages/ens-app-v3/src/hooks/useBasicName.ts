@@ -35,7 +35,7 @@ export const useBasicName = ({
 }: UseBasicNameOptions) => {
   const validation = useValidate({ input: name!, enabled: enabled && !!name })
 
-  const { name: _normalisedName, isValid, isShort, isETH, is2LD, is3LD } = validation
+  const { name: _normalisedName, isValid, isShort, is3LD, isLineaDotETH } = validation
 
   const normalisedName = normalised ? name! : _normalisedName
 
@@ -63,7 +63,7 @@ export const useBasicName = ({
     refetchIfEnabled: refetchExpiry,
   } = useExpiry({
     name: normalisedName,
-    enabled: commonEnabled && !isRoot && isETH && (is2LD || is3LD),
+    enabled: commonEnabled && !isRoot && isLineaDotETH && is3LD,
   })
   const {
     data: priceData,
@@ -73,7 +73,7 @@ export const useBasicName = ({
   } = usePrice({
     nameOrNames: normalisedName,
     duration: yearsToSeconds(1),
-    enabled: commonEnabled && !isRoot && isETH && (is2LD || is3LD),
+    enabled: commonEnabled && !isRoot && isLineaDotETH && is3LD,
   })
   const {
     data: addrData,
@@ -82,7 +82,7 @@ export const useBasicName = ({
     refetchIfEnabled: refetchAddr,
   } = useAddressRecord({
     name: normalisedName,
-    enabled: commonEnabled && !isRoot && !isETH,
+    enabled: commonEnabled && !isRoot && !isLineaDotETH,
   })
 
   const publicCallsLoading =
@@ -149,8 +149,8 @@ export const useBasicName = ({
       enabled &&
       subgraphEnabled &&
       registrationStatus === 'gracePeriod' &&
-      (is2LD || is3LD) &&
-      isETH &&
+      is3LD &&
+      isLineaDotETH &&
       !isWrapped,
   })
 

@@ -23,7 +23,7 @@ import { BackdropSurface, mq, Portal, Typography } from '@ensdomains/thorin'
 import { useLocalStorage } from '@app/hooks/useLocalStorage'
 import { createQueryKey } from '@app/hooks/useQueryOptions'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
-import { useValidate, validate, ValidationResult } from '@app/hooks/useValidate'
+import { useValidate, validate } from '@app/hooks/useValidate'
 import { useElementSize } from '@app/hooks/useWindowSize'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
 import { getRegistrationStatus } from '@app/utils/registrationStatus'
@@ -224,7 +224,7 @@ export const SearchInput = ({
 
   const isEmpty = inputVal === ''
   const inputIsAddress = useMemo(() => isAddress(inputVal), [inputVal])
-  const { isValid, isETH, is2LD, isShort, type, name, is3LD } = useValidate({
+  const { isValid, isLineaDotETH, isShort, type, name, is3LD } = useValidate({
     input: inputVal,
     enabled: !inputIsAddress && !isEmpty,
   })
@@ -251,7 +251,7 @@ export const SearchInput = ({
         value: t('search.errors.invalid'),
       }
     }
-    if (isETH && (is2LD || is3LD) && isShort) {
+    if (isLineaDotETH && is3LD && isShort) {
       return {
         type: 'error',
         value: t('search.errors.tooShort'),
@@ -265,7 +265,7 @@ export const SearchInput = ({
     return {
       type: 'name',
     }
-  }, [isEmpty, inputIsAddress, isValid, isETH, is2LD, is3LD, isShort, type, t])
+  }, [isEmpty, inputIsAddress, isValid, isLineaDotETH, is3LD, isShort, type, t])
 
   const extraItems = useMemo(() => {
     if (history.length > 0) {
@@ -334,15 +334,8 @@ export const SearchInput = ({
         ? `/address/${selectedItem.value}`
         : `/profile/${selectedItem.value}`
     if (selectedItem.type === 'nameWithDotEth' || selectedItem.type === 'name') {
-      const currentValidation =
-        queryClient.getQueryData<ValidationResult>(
-          createQueryKey({
-            queryDependencyType: 'independent',
-            functionName: 'validate',
-            params: { input: selectedItem.value },
-          }),
-        ) || validate(selectedItem.value)
-      if (currentValidation.is2LD && currentValidation.isETH && currentValidation.isShort) {
+      const currentValidation = validate(selectedItem.value)
+      if (currentValidation.is3LD && currentValidation.isLineaDotETH && currentValidation.isShort) {
         return
       }
       const ownerData = queryClient.getQueryData<GetOwnerReturnType>(

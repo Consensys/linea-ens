@@ -5,7 +5,8 @@ import {
   GetPriceReturnType,
   GetWrapperDataReturnType,
 } from '@ensdomains/ensjs/public'
-import { ParsedInputResult } from '@ensdomains/ensjs/utils'
+
+import { ParsedInputResult } from '@app/ensJsOverrides/utils/validation'
 
 import { emptyAddress } from './constants'
 
@@ -24,7 +25,7 @@ export type RegistrationStatus =
 
 export const getRegistrationStatus = ({
   timestamp,
-  validation: { isETH, is2LD, isShort, type, is3LD },
+  validation: { isShort, type, is3LD, isLineaDotETH },
   ownerData,
   wrapperData,
   expiryData,
@@ -45,17 +46,17 @@ export const getRegistrationStatus = ({
   addrData?: GetAddressRecordReturnType
   supportedTLD?: boolean | null
 }): RegistrationStatus => {
-  if (isETH && (is2LD || is3LD) && isShort) {
+  if (isLineaDotETH && is3LD && isShort) {
     return 'short'
   }
 
   if (!ownerData && ownerData !== null && !wrapperData) return 'invalid'
 
-  if (!isETH && !supportedTLD) {
+  if (!isLineaDotETH && !supportedTLD) {
     return 'unsupportedTLD'
   }
 
-  if (isETH && (is2LD || is3LD)) {
+  if (isLineaDotETH && is3LD) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     if (expiryData && expiryData.expiry) {
       const { expiry: _expiry, gracePeriod } = expiryData
@@ -74,14 +75,14 @@ export const getRegistrationStatus = ({
     return 'available'
   }
   if (ownerData && ownerData.owner !== emptyAddress) {
-    if (is2LD || is3LD) {
+    if (is3LD) {
       return 'imported'
     }
     return 'registered'
   }
-  if (type === 'name' && !(is2LD || is3LD)) {
+  if (type === 'name' && !is3LD) {
     // more than 2 labels
-    return 'available'
+    return 'notOwned'
   }
 
   if (
