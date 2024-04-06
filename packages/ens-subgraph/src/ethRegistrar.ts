@@ -56,7 +56,7 @@ export function handleNameRegistered(event: NameRegisteredEvent): void {
   let labelName = ens.nameByHash(label.toHexString());
   if (checkValidLabel(labelName)) {
     domain.labelName = labelName;
-    domain.name = labelName! + "linea.eth";
+    domain.name = labelName! + ".linea.eth";
     registration.labelName = labelName;
   }
   domain.save();
@@ -101,7 +101,7 @@ function setNamePreimage(name: string, label: Bytes, cost: BigInt): void {
   let domain = Domain.load(crypto.keccak256(concat(rootNode, label)).toHex())!;
   if (domain.labelName != name) {
     domain.labelName = name;
-    domain.name = name + ".eth";
+    domain.name = name + ".linea.eth";
     domain.save();
   }
 

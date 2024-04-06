@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { ParsedInputResult, parseInput } from '@ensdomains/ensjs/utils'
-
+import { ParsedInputResult, parseInput } from '@app/ensJsOverrides/utils/validation'
 import { Prettify } from '@app/types'
 import { tryBeautify } from '@app/utils/beautify'
 
@@ -14,7 +13,6 @@ export type ValidationResult = Prettify<
     isNonASCII: boolean | undefined
     labelCount: number
     labelDataArray: ParsedInputResult['labelDataArray']
-    is3LD: boolean | undefined
   }
 >
 
@@ -31,11 +29,9 @@ export const validate = (input: string) => {
   const { normalised: name, ...parsedInput } = parseInput(decodedInput)
   const isNonASCII = parsedInput.labelDataArray.some((dataItem) => dataItem.type !== 'ASCII')
   const outputName = name || input
-  const is3LD = name?.split('.').length === 3
 
   return {
     ...parsedInput,
-    is3LD,
     name: outputName,
     beautifiedName: tryBeautify(outputName),
     isNonASCII,
@@ -54,6 +50,7 @@ const defaultData = Object.freeze({
   is2LD: undefined,
   is3LD: undefined,
   isETH: undefined,
+  isLineaDotETH: undefined,
   labelDataArray: [],
 })
 

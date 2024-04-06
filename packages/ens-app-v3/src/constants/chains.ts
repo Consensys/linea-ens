@@ -1,5 +1,5 @@
 import { Chain, holesky } from 'viem/chains'
-import { goerli, localhost, mainnet, sepolia } from 'wagmi/chains'
+import { goerli, localhost, mainnet } from 'wagmi/chains'
 
 import { addEnsContracts } from '@ensdomains/ensjs'
 import { CheckedChainWithEns } from '@ensdomains/ensjs/contracts'
@@ -45,7 +45,7 @@ export const sepoliaWithEns = {
   },
   subgraphs: {
     ens: {
-      url: 'https://api.studio.thegraph.com/query/69290/ens-sepolia/v0.0.8',
+      url: 'https://api.studio.thegraph.com/query/69290/ens-sepolia/version/latest',
     },
   },
 } as unknown as CheckedChainWithEns<Chain>
