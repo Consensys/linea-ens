@@ -48,8 +48,6 @@ contract NameWrapper is
     uint64 private constant GRACE_PERIOD = 90 days;
     bytes32 private constant ETH_NODE =
         0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
-    bytes32 private constant LINEA_ETH_NODE =
-        0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3;
     bytes32 private constant ETH_LABELHASH =
         0x4f5b812789fc606be1b3b16908db13fc7a9adf7ca72641f84d75b47069d3d7f0;
     bytes32 private constant ROOT_NODE =
@@ -58,19 +56,24 @@ contract NameWrapper is
     INameWrapperUpgrade public upgradeContract;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
 
+    bytes32 public immutable baseNode;
+
     constructor(
         ENS _ens,
         IBaseRegistrar _registrar,
-        IMetadataService _metadataService
+        IMetadataService _metadataService,
+        bytes32 _baseNode,
+        bytes memory _baseNodeDnsEncoded
     ) ReverseClaimer(_ens, msg.sender) {
         ens = _ens;
         registrar = _registrar;
         metadataService = _metadataService;
+        baseNode = _baseNode;
 
         /* Burn PARENT_CANNOT_CONTROL and CANNOT_UNWRAP fuses for ROOT_NODE and ETH_NODE and set expiry to max */
 
         _setData(
-            uint256(LINEA_ETH_NODE),
+            uint256(_baseNode),
             address(0),
             uint32(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP),
             MAX_EXPIRY
@@ -89,7 +92,7 @@ contract NameWrapper is
         );
         names[ROOT_NODE] = "\x00";
         names[ETH_NODE] = "\x03eth\x00";
-        names[LINEA_ETH_NODE] = "\x05linea\x03eth\x00";
+        names[_baseNode] = _baseNodeDnsEncoded;
     }
 
     function supportsInterface(
@@ -285,7 +288,7 @@ contract NameWrapper is
      * @param resolver Resolver contract address
      */
 
-    function wrapLineaETH3LD(
+    function wrap(
         string calldata label,
         address wrappedOwner,
         uint16 ownerControlledFuses,
@@ -298,7 +301,7 @@ contract NameWrapper is
             !registrar.isApprovedForAll(registrant, msg.sender)
         ) {
             revert Unauthorised(
-                _makeNode(LINEA_ETH_NODE, bytes32(tokenId)),
+                _makeNode(baseNode, bytes32(tokenId)),
                 msg.sender
             );
         }
@@ -311,13 +314,7 @@ contract NameWrapper is
 
         expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
 
-        _wrapLineaETH3LD(
-            label,
-            wrappedOwner,
-            ownerControlledFuses,
-            expiry,
-            resolver
-        );
+        _wrap(label, wrappedOwner, ownerControlledFuses, expiry, resolver);
     }
 
     /**
@@ -331,7 +328,7 @@ contract NameWrapper is
      * @return registrarExpiry The expiry date of the new name on the .eth registrar, in seconds since the Unix epoch.
      */
 
-    function registerAndWrapLineaETH3LD(
+    function registerAndWrap(
         string calldata label,
         address wrappedOwner,
         uint256 duration,
@@ -340,7 +337,7 @@ contract NameWrapper is
     ) external onlyController returns (uint256 registrarExpiry) {
         uint256 tokenId = uint256(keccak256(bytes(label)));
         registrarExpiry = registrar.register(tokenId, address(this), duration);
-        _wrapLineaETH3LD(
+        _wrap(
             label,
             wrappedOwner,
             ownerControlledFuses,
@@ -361,7 +358,7 @@ contract NameWrapper is
         uint256 tokenId,
         uint256 duration
     ) external onlyController returns (uint256 expires) {
-        bytes32 node = _makeNode(ETH_NODE, bytes32(tokenId));
+        bytes32 node = _makeNode(baseNode, bytes32(tokenId));
 
         uint256 registrarExpiry = registrar.renew(tokenId, duration);
 
@@ -406,7 +403,7 @@ contract NameWrapper is
 
         names[node] = name;
 
-        if (parentNode == ETH_NODE) {
+        if (parentNode == baseNode) {
             revert IncompatibleParent();
         }
 
@@ -433,15 +430,15 @@ contract NameWrapper is
      * @param controller Sets the owner in the registry to this address
      */
 
-    function unwrapLineaETH3LD(
+    function unwrap(
         bytes32 labelhash,
         address registrant,
         address controller
-    ) public onlyTokenOwner(_makeNode(ETH_NODE, labelhash)) {
+    ) public onlyTokenOwner(_makeNode(baseNode, labelhash)) {
         if (registrant == address(this)) {
             revert IncorrectTargetOwner(registrant);
         }
-        _unwrap(_makeNode(LINEA_ETH_NODE, labelhash), controller);
+        _unwrap(_makeNode(baseNode, labelhash), controller);
         registrar.safeTransferFrom(
             address(this),
             registrant,
@@ -462,7 +459,7 @@ contract NameWrapper is
         bytes32 labelhash,
         address controller
     ) public onlyTokenOwner(_makeNode(parentNode, labelhash)) {
-        if (parentNode == ETH_NODE) {
+        if (parentNode == baseNode) {
             revert IncompatibleParent();
         }
         if (controller == address(0x0) || controller == address(this)) {
@@ -864,7 +861,7 @@ contract NameWrapper is
     ) public view returns (bool) {
         bytes32 node = _makeNode(parentNode, labelhash);
         bool wrapped = _isWrapped(node);
-        if (parentNode != ETH_NODE) {
+        if (parentNode != baseNode) {
             return wrapped;
         }
         try registrar.ownerOf(uint256(labelhash)) returns (address owner) {
@@ -904,7 +901,7 @@ contract NameWrapper is
 
         uint64 expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
 
-        _wrapLineaETH3LD(label, owner, ownerControlledFuses, expiry, resolver);
+        _wrap(label, owner, ownerControlledFuses, expiry, resolver);
 
         return IERC721Receiver(to).onERC721Received.selector;
     }
@@ -1092,7 +1089,7 @@ contract NameWrapper is
         return expiry;
     }
 
-    function _wrapLineaETH3LD(
+    function _wrap(
         string memory label,
         address wrappedOwner,
         uint32 fuses,
@@ -1100,9 +1097,9 @@ contract NameWrapper is
         address resolver
     ) private {
         bytes32 labelhash = keccak256(bytes(label));
-        bytes32 node = _makeNode(LINEA_ETH_NODE, labelhash);
+        bytes32 node = _makeNode(baseNode, labelhash);
         // hardcode dns-encoded eth string for gas savings
-        bytes memory name = _addLabel(label, "\x05linea\x03eth\x00");
+        bytes memory name = _addLabel(label, names[baseNode]);
         names[node] = name;
 
         _wrap(

@@ -57,7 +57,7 @@ interface INameWrapper is IERC1155 {
         address resolver
     ) external;
 
-    function registerAndWrapLineaETH3LD(
+    function registerAndWrap(
         string calldata label,
         address wrappedOwner,
         uint256 duration,
@@ -72,7 +72,7 @@ interface INameWrapper is IERC1155 {
 
     function unwrap(bytes32 node, bytes32 label, address owner) external;
 
-    function unwrapLineaETH3LD(
+    function unwrap(
         bytes32 label,
         address newRegistrant,
         address newController

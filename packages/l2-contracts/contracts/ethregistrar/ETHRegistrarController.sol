@@ -44,8 +44,6 @@ contract ETHRegistrarController is
     using Address for address;
 
     uint256 public constant MIN_REGISTRATION_DURATION = 28 days;
-    bytes32 private constant ETH_NODE =
-        0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
     BaseRegistrarImplementation immutable base;
     IPriceOracle public immutable prices;
@@ -59,8 +57,8 @@ contract ETHRegistrarController is
     mapping(address => bool) public hasRegisteredPoh;
 
     PohVerifier public pohVerifier;
-
-    string public constant BASE_DOMAIN = ".linea.eth";
+    bytes32 public immutable baseNode;
+    string public baseDomain;
 
     event NameRegistered(
         string name,
@@ -85,7 +83,9 @@ contract ETHRegistrarController is
         ReverseRegistrar _reverseRegistrar,
         INameWrapper _nameWrapper,
         ENS _ens,
-        PohVerifier _pohVerifier
+        PohVerifier _pohVerifier,
+        bytes32 _baseNode,
+        string memory _baseDomain
     ) ReverseClaimer(_ens, msg.sender) {
         if (_maxCommitmentAge <= _minCommitmentAge) {
             revert MaxCommitmentAgeTooLow();
@@ -102,6 +102,8 @@ contract ETHRegistrarController is
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
         pohVerifier = _pohVerifier;
+        baseNode = _baseNode;
+        baseDomain = _baseDomain;
     }
 
     function rentPrice(
@@ -258,7 +260,7 @@ contract ETHRegistrarController is
             )
         );
 
-        uint256 expires = nameWrapper.registerAndWrapLineaETH3LD(
+        uint256 expires = nameWrapper.registerAndWrap(
             name,
             owner,
             duration,
@@ -267,7 +269,7 @@ contract ETHRegistrarController is
         );
 
         if (data.length > 0) {
-            _setRecords(resolver, name, data);
+            _setRecords(resolver, keccak256(bytes(name)), data);
         }
 
         if (reverseRecord) {
@@ -344,12 +346,10 @@ contract ETHRegistrarController is
 
     function _setRecords(
         address resolverAddress,
-        string memory name,
+        bytes32 label,
         bytes[] calldata data
     ) internal {
-        (, bytes32 nodehash) = NameEncoder.dnsEncodeName(
-            string.concat(name, BASE_DOMAIN)
-        );
+        bytes32 nodehash = keccak256(abi.encodePacked(baseNode, label));
         Resolver resolver = Resolver(resolverAddress);
         resolver.multicallWithNodeCheck(nodehash, data);
     }
@@ -363,7 +363,7 @@ contract ETHRegistrarController is
             msg.sender,
             owner,
             resolver,
-            string.concat(name, BASE_DOMAIN)
+            string.concat(name, baseDomain)
         );
     }
 }

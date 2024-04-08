@@ -22,10 +22,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     owner,
   )
   const metadata = await ethers.getContract('StaticMetadataService', owner)
+  const baseNode =
+    '0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3'
+  const baseNodeDnsEncoded = new TextEncoder().encode('\x05linea\x03eth\x00')
 
   const deployArgs = {
     from: deployer,
-    args: [registry.address, registrar.address, metadata.address],
+    args: [
+      registry.address,
+      registrar.address,
+      metadata.address,
+      baseNode,
+      baseNodeDnsEncoded,
+    ],
     log: true,
   }
 

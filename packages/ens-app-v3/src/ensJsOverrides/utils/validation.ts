@@ -72,7 +72,7 @@ export const parseInput = (input: string): ParsedInputResult => {
   let isLineaDotETH = false
   if (labels.length > 2 && isETH) {
     const sld = labels[labels.length - 2]
-    isLineaDotETH = sld === 'linea'
+    isLineaDotETH = sld === process.env.NEXT_PUBLIC_BASE_DOMAIN
   }
 
   const is2LD = labels.length === 2

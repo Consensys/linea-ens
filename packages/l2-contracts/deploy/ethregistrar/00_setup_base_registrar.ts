@@ -8,6 +8,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments, network } = hre
   const { deployer, owner } = await getNamedAccounts()
 
+  if (!process.env.BASE_DOMAIN) {
+    throw 'BASE_DOMAIN env has to be defined'
+  }
+
   if (!network.tags.use_root) {
     return true
   }
@@ -26,9 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const tx2 = await root
     .connect(await ethers.getSigner(owner))
     .setSubnodeOwner('0x' + keccak256('eth'), owner)
-  console.log(
-    `Setting owner of eth node to registrar on root (tx: ${tx2.hash})...`,
-  )
+  console.log(`Setting owner of eth node to owner on root (tx: ${tx2.hash})...`)
   await tx2.wait()
 
   const ens = await ethers.getContract('ENSRegistry')
@@ -36,13 +38,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     .connect(await ethers.getSigner(owner))
     .setSubnodeOwner(
       ethers.utils.namehash('eth'),
-      '0x' + keccak256('linea'),
+      '0x' + keccak256(process.env.BASE_DOMAIN),
       registrar.address,
     )
   console.log(
-    `Setting owner of linea.eth node to registrar on root (tx: ${tx2.hash})...`,
+    `Setting owner of ${process.env.BASE_DOMAIN}.eth node to registrar on root (tx: ${tx2.hash})...`,
   )
   await tx3.wait()
+
+  const tx4 = await root
+    .connect(await ethers.getSigner(owner))
+    .setSubnodeOwner('0x' + keccak256('eth'), registrar.address)
+  console.log(
+    `Resetting owner of eth node to registrar on root (tx: ${tx4.hash})...`,
+  )
+  await tx4.wait()
 }
 
 func.id = 'setupRegistrar'
