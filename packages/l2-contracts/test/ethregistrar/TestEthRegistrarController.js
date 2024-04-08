@@ -253,12 +253,12 @@ contract('ETHRegistrarController', function () {
   })
 
   it('should allow registration with Proof of Humanity', async function () {
-    const name = 'pohname';
-    const duration = 28 * 24 * 60 * 60; // 28 days in seconds
-    const secret = ethers.utils.formatBytes32String('secret');
-    const human = signers[1].address; 
-    const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)); // Mock signature
-  
+    const name = 'pohname'
+    const duration = 28 * 24 * 60 * 60 // 28 days in seconds
+    const secret = ethers.utils.formatBytes32String('secret')
+    const human = signers[1].address
+    const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)) // Mock signature
+
     // Generate a commitment for the registration
     const commitment = await controllerPoh.makeCommitment(
       name,
@@ -268,19 +268,19 @@ contract('ETHRegistrarController', function () {
       ethers.constants.AddressZero, // resolver address, using zero address for simplicity
       [],
       false,
-      0
-    );
-  
+      0,
+    )
+
     // Commit the registration
-    await controllerPoh.commit(commitment);
-  
+    await controllerPoh.commit(commitment)
+
     // Advance time to satisfy the minCommitmentAge requirement
-    await ethers.provider.send('evm_increaseTime', [600]); // Increase time by 600 seconds
-    await ethers.provider.send('evm_mine'); // Mine the next block
-  
-    // Calculate the required registration cost 
-    const cost = ethers.utils.parseEther('0.1'); 
-  
+    await ethers.provider.send('evm_increaseTime', [600]) // Increase time by 600 seconds
+    await ethers.provider.send('evm_mine') // Mine the next block
+
+    // Calculate the required registration cost
+    const cost = ethers.utils.parseEther('0.1')
+
     // Perform the registration using registerPoh
     const tx = await controllerPoh.registerPoh(
       name,
@@ -293,19 +293,18 @@ contract('ETHRegistrarController', function () {
       0,
       signature,
       human,
-      { value: cost }
-    );
-  
+      { value: cost },
+    )
+
     // Wait for the transaction to be mined
-    await tx.wait();
-  
+    await tx.wait()
+
     // Check for the NameRegistered event to confirm registration
-    await expect(tx)
-      .to.emit(controllerPoh, 'NameRegistered');
-  
+    await expect(tx).to.emit(controllerPoh, 'NameRegistered')
+
     // Verify that the address is marked as having registered using PoH
-    expect(await controllerPoh.redeemed(human)).to.equal(true);
-  });
+    expect(await controllerPoh.redeemed(human)).to.equal(true)
+  })
 
   it('should report registered names as unavailable', async () => {
     const name = 'newname'

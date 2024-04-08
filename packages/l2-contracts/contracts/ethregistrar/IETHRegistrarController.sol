@@ -35,5 +35,17 @@ interface IETHRegistrarController {
         uint16
     ) external payable;
 
+    function registerPoh(
+        string calldata,
+        address,
+        uint256,
+        bytes32,
+        address,
+        bytes[] calldata,
+        bool,
+        uint16,
+        bytes memory
+    ) external;
+
     function renew(string calldata, uint256) external payable;
 }
