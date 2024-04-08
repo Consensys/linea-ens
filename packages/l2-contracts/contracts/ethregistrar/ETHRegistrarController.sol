@@ -68,6 +68,13 @@ contract ETHRegistrarController is
         uint256 premium,
         uint256 expires
     );
+
+    event PohNameRegistered(
+        string name,
+        bytes32 indexed label,
+        address indexed owner,
+        uint256 expires
+    );
     event NameRenewed(
         string name,
         bytes32 indexed label,
@@ -168,18 +175,20 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses,
-        bytes memory signature,
-        address human
-    ) public payable {
+        bytes memory signature
+    ) public {
         // Check if the address has already registered using registerPoh
         require(
-            !hasRegisteredPoh[human],
+            !hasRegisteredPoh[owner],
             "Address has already registered using PoH"
         );
         require(
-            pohVerifier.verify(signature, human),
+            pohVerifier.verify(signature, owner),
             "POH verification failed"
         );
+
+        // Mark this address as having successfully registered
+        hasRegisteredPoh[owner] = true;
 
         _register(
             name,
@@ -191,9 +200,6 @@ contract ETHRegistrarController is
             reverseRecord,
             ownerControlledFuses
         );
-
-        // Mark this address as having successfully registered
-        hasRegisteredPoh[human] = true;
     }
 
     // Function to check if an address has successfully registered using registerPoh
@@ -243,8 +249,6 @@ contract ETHRegistrarController is
         bool reverseRecord,
         uint16 ownerControlledFuses
     ) internal {
-        IPriceOracle.Price memory price = rentPrice(name, duration);
-
         _consumeCommitment(
             name,
             duration,
@@ -276,14 +280,7 @@ contract ETHRegistrarController is
             _setReverseRecord(name, resolver, msg.sender);
         }
 
-        emit NameRegistered(
-            name,
-            keccak256(bytes(name)),
-            owner,
-            price.base,
-            price.premium,
-            expires
-        );
+        emit PohNameRegistered(name, keccak256(bytes(name)), owner, expires);
     }
 
     function renew(

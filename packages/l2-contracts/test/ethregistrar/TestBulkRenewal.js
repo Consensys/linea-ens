@@ -65,7 +65,6 @@ contract('BulkRenewal', function (accounts) {
       EMPTY_ADDRESS,
     )
 
-
     // Deploy PohVerifier contract
     const PohVerifier = await ethers.getContractFactory('PohVerifier')
     const pohVerifier = await PohVerifier.deploy()
