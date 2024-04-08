@@ -54,8 +54,8 @@ importers:
         specifier: ^3.0.0-beta.5
         version: 3.0.0
       '@ensdomains/ens-contracts':
-        specifier: 1.2.0-beta.0
-        version: 1.2.0-beta.0
+        specifier: file:../l2-contracts
+        version: file:packages/l2-contracts
       '@ensdomains/ensjs':
         specifier: 3.5.0-beta.2
         version: 3.5.0-beta.2(encoding@0.1.13)(typescript@5.4.3)(viem@2.9.3)
@@ -2460,15 +2460,6 @@ packages:
 
   /@ensdomains/ens-contracts@1.1.4:
     resolution: {integrity: sha512-kjdcjaznMtE2lwjAVTX2irs8mgNgJCVuB5hnhFhiMaO8dR/tlHQ5UhtZjhSYRhkZd0hLXYrMkXp6thnwpG+ltg==}
-    dependencies:
-      '@ensdomains/buffer': 0.1.1
-      '@ensdomains/solsha1': 0.0.3
-      '@openzeppelin/contracts': 4.9.6
-      dns-packet: 5.6.1
-    dev: false
-
-  /@ensdomains/ens-contracts@1.2.0-beta.0:
-    resolution: {integrity: sha512-mb/1cPtwhShyaP6fWqDix6GfrJwVWlKgCFxzDKmqNGeFQhBOD/ojYGsy96eJ9UlM/7Tsg7w4RAj7xWrOlHtYIA==}
     dependencies:
       '@ensdomains/buffer': 0.1.1
       '@ensdomains/solsha1': 0.0.3
@@ -25715,6 +25706,16 @@ packages:
       immer: 9.0.21
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  file:packages/l2-contracts:
+    resolution: {directory: packages/l2-contracts, type: directory}
+    name: '@ensdomains/ens-contracts'
+    dependencies:
+      '@ensdomains/buffer': 0.1.1
+      '@ensdomains/solsha1': 0.0.3
+      '@openzeppelin/contracts': 4.9.6
+      dns-packet: 5.6.1
     dev: false
 
   github.com/Arachnid/clones-with-immutable-args/23768824cdc037f361f7065538b8f949cae9d3d1:

@@ -10,9 +10,9 @@ dataSources:
     name: ENSRegistry
     network: sepolia
     source:
-      address: "0x82D6247c272Ae0AB7AA2946ee688e74dAB976c67"
+      address: "0x56c306b6d15287870B9484883335B8a929f97729"
       abi: EnsRegistry
-      startBlock: 5618953
+      startBlock: 5647444
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -38,9 +38,9 @@ dataSources:
     name: ENSRegistryOld
     network: sepolia
     source:
-      address: "0x378d88A70a541c8F7deaD036D1a1B5F13Be6743b"
+      address: "0x488CFc0d6bdC8c7355672b8Bd6E2D2FC8103eA43"
       abi: EnsRegistry
-      startBlock: 5618946
+      startBlock: 5647441
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -66,9 +66,9 @@ dataSources:
     name: Resolver
     network: sepolia
     source:
-      address: "0x806d1eb5FAB72B1F6D7CAd2d1C4959145f5cE001"
+      address: "0xca710b440ad4457eE7a8C02355dcA985B78B7627"
       abi: Resolver
-      startBlock: 5619025
+      startBlock: 5647518
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -116,9 +116,9 @@ dataSources:
     name: BaseRegistrar
     network: sepolia
     source:
-      address: "0x7A6D957A8F18e55a03ff6DC11Fd990fc95Df5e1F"
+      address: "0x3680EbF9a484B1250E46324328582AbcB53B6791"
       abi: BaseRegistrar
-      startBlock: 5618958
+      startBlock: 5647446
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -143,9 +143,9 @@ dataSources:
     name: EthRegistrarControllerOld
     network: sepolia
     source:
-      address: "0x7De3DDe6e27dfA9a33c9429cCBE8b977fF3A1b82"
+      address: "0xE286D1428FE403cad33Fb90c4Ac32C7a9157AD8c"
       abi: EthRegistrarControllerOld
-      startBlock: 5619013
+      startBlock: 5647502
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -167,9 +167,9 @@ dataSources:
     name: EthRegistrarController
     network: sepolia
     source:
-      address: "0x88fa401201AAEAC81A41328702CEE34b1dde13db"
+      address: "0x65560259405ab2c6a14Aa753e47933a04C8c1b43"
       abi: EthRegistrarController
-      startBlock: 5619017
+      startBlock: 5647510
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -191,9 +191,9 @@ dataSources:
     name: NameWrapper
     network: sepolia
     source:
-      address: "0x5C8c5e4E8cdd36439197EC1c8a1832CB8186bEA1"
+      address: "0x3b365991034a573d54E6D10e88BfacBF2788A23e"
       abi: NameWrapper
-      startBlock: 5619006
+      startBlock: 5647496
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

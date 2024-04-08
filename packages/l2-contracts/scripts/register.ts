@@ -22,7 +22,7 @@ const registrarController = new ethers.Contract(
 const resolver = new ethers.Contract(resolverAddress, resolverAbi.abi, wallet)
 
 // Domain details
-const domainName = 'longtestname'
+const domainName = 'longname'
 const duration = 365 * 24 * 60 * 60 // 1 year in seconds
 const secret = ethers.utils.formatBytes32String('SECRET')
 
@@ -34,7 +34,9 @@ async function main() {
   // Encode the calls to the resolver contract
   const data = [
     resolver.interface.encodeFunctionData('setAddr(bytes32,address)', [
-      ethers.utils.namehash(domainName + '.linea.eth'),
+      ethers.utils.namehash(
+        domainName + '.' + process.env.BASE_DOMAIN + '.eth',
+      ),
       owner,
     ]),
   ]
@@ -75,7 +77,9 @@ async function main() {
     )
     await txRegister.wait()
 
-    console.log('Domain registered:', domainName + '.linea.eth')
+    console.log(
+      `Domain registered:', ${domainName}.${process.env.BASE_DOMAIN}.eth`,
+    )
   }, (60 + 60) * 1000)
 }
 

@@ -29,6 +29,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const ethOwnedResolver = await ethers.getContract('OwnedResolver', owner)
+  const baseNode = ethers.utils.namehash(process.env.BASE_DOMAIN + '.eth')
+  const baseDomainStr = '.' + process.env.BASE_DOMAIN + '.eth'
 
   // Deploy the PohVerifier contract
   const pohVerifierDeployment = await deploy('PohVerifier', {
@@ -53,6 +55,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       nameWrapper.address,
       registry.address,
       pohVerifierDeployment.address,
+      baseNode,
+      baseDomainStr,
     ],
     log: true,
   }
