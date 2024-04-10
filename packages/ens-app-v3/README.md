@@ -17,7 +17,6 @@ cd packages/ens-app-v3
 cp .env.example .env
 pnpm i
 pnpm denv
-pnpm dev:glocal
 ```
 
 In a second terminal run:
