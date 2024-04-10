@@ -23,7 +23,7 @@
     }
   ],
   "parserOptions": {
-    "project": "packages/ens-app-v3/tsconfig.json"
+    "project": "./tsconfig.json"
   },
   "ignorePatterns": [
     "next.config.js",

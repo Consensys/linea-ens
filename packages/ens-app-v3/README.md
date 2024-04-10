@@ -10,16 +10,43 @@ The all new, all cool version of the ENS manager.
 
 ### Quick start
 
+In a first terminal run:
+
 ```bash
-pnpm install
+cd packages/ens-app-v3
+cp .env.example .env
+pnpm i
 pnpm denv
 pnpm dev:glocal
 ```
 
+In a second terminal run:
+
+```bash
+cd packages/ens-subgraph
+yarn setup
+```
+
+In a second third terminal run:
+
+```bash
+cd packages/ens-app-v3
+pnpm dev:glocal
+```
+
+- Then browse http://localhost:3000/
+- Import one of the hardhat test accounts in your metamask (eg: ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+- Add the local test network to your metamask with this info:
+  - Localhost 8545
+  - http://127.0.0.1:8545
+  - 1337
+  - ETH
+- You can start testing the app
+
 ### Install
 
 ```bash
-pnpm install
+pnpm i
 ```
 
 ### Running Dev Server
@@ -131,10 +158,10 @@ npm i -g yalc
 pnpm publish:local:ensjs
 ```
 
-3. Run pnpm install within this repo:
+3. Run pnpm i within this repo:
 
 ```bash
-pnpm install
+pnpm i
 ```
 
 If updating an existing yalc installation, you can add the `--force` flag.

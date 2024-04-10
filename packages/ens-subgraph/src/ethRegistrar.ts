@@ -5,7 +5,6 @@ import {
   checkValidLabel,
   concat,
   createEventID,
-  LINEA_ETH_NODE,
   uint256ToByteArray,
 } from "./utils";
 
@@ -33,9 +32,11 @@ import {
   Registration,
 } from "./types/schema";
 
+import { BASE_DOMAIN, BASE_NODE } from "./env";
+
 const GRACE_PERIOD_SECONDS = BigInt.fromI32(7776000); // 90 days
 
-var rootNode: ByteArray = ByteArray.fromHexString(LINEA_ETH_NODE);
+var rootNode: ByteArray = ByteArray.fromHexString(BASE_NODE);
 
 export function handleNameRegistered(event: NameRegisteredEvent): void {
   let account = new Account(event.params.owner.toHex());
@@ -56,7 +57,7 @@ export function handleNameRegistered(event: NameRegisteredEvent): void {
   let labelName = ens.nameByHash(label.toHexString());
   if (checkValidLabel(labelName)) {
     domain.labelName = labelName;
-    domain.name = labelName! + ".linea.eth";
+    domain.name = labelName! + `.${BASE_DOMAIN}`;
     registration.labelName = labelName;
   }
   domain.save();
@@ -101,7 +102,7 @@ function setNamePreimage(name: string, label: Bytes, cost: BigInt): void {
   let domain = Domain.load(crypto.keccak256(concat(rootNode, label)).toHex())!;
   if (domain.labelName != name) {
     domain.labelName = name;
-    domain.name = name + ".linea.eth";
+    domain.name = name + `.${BASE_DOMAIN}`;
     domain.save();
   }
 

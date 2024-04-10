@@ -5,9 +5,6 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 const ZERO_HASH =
   '0x0000000000000000000000000000000000000000000000000000000000000000'
 
-const LINEA_ETH_HASH =
-  '0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3'
-
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments, network } = hre
   const { deploy, run } = deployments
