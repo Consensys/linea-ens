@@ -11,7 +11,33 @@ function computeInterfaceId(iface: Interface) {
   )
 }
 
+function encodeDomainToDNSFormat(domain: string): Uint8Array {
+  // Split the domain into its labels (parts between the dots)
+  const labels = domain.split('.')
+
+  // Initialize an array to hold the binary data
+  const binaryData: number[] = []
+
+  // For each label, add its length as a single byte, followed by the ASCII values of its characters
+  labels.forEach((label) => {
+    binaryData.push(label.length) // Length of the label
+    for (let i = 0; i < label.length; i++) {
+      binaryData.push(label.charCodeAt(i)) // ASCII value of each character
+    }
+  })
+
+  // Append 0 to indicate the end of the domain name
+  binaryData.push(0)
+
+  // Convert the binary data array to a Uint8Array
+  return new Uint8Array(binaryData)
+}
+
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  if (!process.env.BASE_DOMAIN) {
+    throw 'BASE_DOMAIN env has to be defined'
+  }
+
   const { getNamedAccounts, deployments, network } = hre
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
@@ -22,9 +48,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     owner,
   )
   const metadata = await ethers.getContract('StaticMetadataService', owner)
-  const baseNode =
-    '0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3'
-  const baseNodeDnsEncoded = new TextEncoder().encode('\x05linea\x03eth\x00')
+  const baseDomain = `${process.env.BASE_DOMAIN}.eth`
+  const baseNode = ethers.utils.namehash(baseDomain)
+  const baseNodeDnsEncoded = encodeDomainToDNSFormat(baseDomain)
 
   const deployArgs = {
     from: deployer,

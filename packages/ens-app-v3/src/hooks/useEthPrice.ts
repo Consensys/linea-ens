@@ -4,7 +4,7 @@ import { sepolia } from 'wagmi/chains'
 
 import { useAddressRecord } from './ensjs/public/useAddressRecord'
 
-const ORACLE_ENS = 'eth-usd.data.eth'
+const ORACLE_ENS = `eth-usd.data.${process.env.NEXT_PUBLIC_BASE_DOMAIN}.eth`
 const ORACLE_SEPOLIA = '0x6602e482072b60Cc8CceFf214102640aa13D44EB' as const
 
 export const useEthPrice = () => {
