@@ -20,7 +20,6 @@ export const localhostWithEns = makeLocalhostChainWithEns<typeof localhost>(
 )
 export const mainnetWithEns = addEnsContracts(mainnet)
 export const goerliWithEns = addEnsContracts(goerli)
-// export const sepoliaWithEns = addEnsContracts(sepolia)
 export const holeskyWithEns = addEnsContracts(holesky)
 
 // TODO : Replace with TheGraph on Linea Sepolia
