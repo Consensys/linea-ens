@@ -111,11 +111,15 @@ const wagmiConfig_ = createConfig({
           [localhost.id]: HttpTransport
         })),
     [mainnet.id]: initialiseTransports('mainnet', [infuraUrl, cloudflareUrl, tenderlyUrl]),
-    [sepolia.id]: initialiseTransports('sepolia', [infuraUrl, cloudflareUrl, tenderlyUrl]),
     [goerli.id]: initialiseTransports('goerli', [infuraUrl, cloudflareUrl, tenderlyUrl]),
     [holesky.id]: initialiseTransports('holesky', [tenderlyUrl]),
     ...({
       [lineaSepolia.id]: initialiseTransports('linea-sepolia', [
+        infuraUrl,
+      ]) as unknown as FallbackTransport,
+    } as const),
+    ...({
+      [sepolia.id]: initialiseTransports('linea-sepolia', [
         infuraUrl,
       ]) as unknown as FallbackTransport,
     } as const),
