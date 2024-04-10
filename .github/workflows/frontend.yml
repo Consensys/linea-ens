@@ -44,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./
-          file: ./packages/ens-app-v3/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: consensys/ens-app-v2:${{ env.DOCKER_TAG }}
           build-args: BUILD_COMMAND="pnpm build"
