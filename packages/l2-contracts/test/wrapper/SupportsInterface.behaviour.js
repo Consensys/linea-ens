@@ -58,7 +58,7 @@ const INTERFACES = {
     'upgradeContract()',
     'wrap(bytes,address,address)',
     'wrapETH2LD(string,address,uint16,address)',
-    'registerAndWrapETH2LD(string,address,uint256,address,uint16)',
+    'registerAndWrap(string,address,uint256,address,uint16)',
     'renew(uint256,uint256)',
     'unwrap(bytes32,bytes32,address)',
     'unwrapETH2LD(bytes32,address,address)',

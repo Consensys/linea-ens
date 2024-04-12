@@ -22,7 +22,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const bulkRenewal = await deploy('StaticBulkRenewal', {
     from: deployer,
-    args: [controller.address, namehash.hash(process.env.BASE_DOMAIN + '.eth')],
+    args: [controller.address],
     log: true,
   })
 

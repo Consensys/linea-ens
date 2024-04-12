@@ -7,7 +7,13 @@ const StablePriceOracle = artifacts.require('./StablePriceOracle')
 const StaticBulkRenewal = artifacts.require('./StaticBulkRenewal')
 const NameWrapper = artifacts.require('./wrapper/NameWrapper.sol')
 const { deploy } = require('../test-utils/contracts')
-const { EMPTY_BYTES32: EMPTY_BYTES } = require('../test-utils/constants')
+const {
+  EMPTY_BYTES32: EMPTY_BYTES,
+  BASE_NODE_BYTES32,
+  BASE_NODE_DNS_ENCODED,
+  BASE_DOMAIN_STR,
+  BASE_DOMAIN_LABEL,
+} = require('../test-utils/constants')
 
 const namehash = require('eth-ens-namehash')
 const sha3 = require('web3-utils').sha3
@@ -51,10 +57,13 @@ contract('StaticBulkRenewal', function (accounts) {
 
     // Create a name wrapper
 
-    nameWrapper = await NameWrapper.new(
+    nameWrapper = await deploy(
+      'NameWrapper',
       ens.address,
       baseRegistrar.address,
       ownerAccount,
+      BASE_NODE_BYTES32,
+      BASE_NODE_DNS_ENCODED,
     )
 
     // Create a public resolver
@@ -85,6 +94,8 @@ contract('StaticBulkRenewal', function (accounts) {
       nameWrapper.address,
       ens.address,
       pohVerifier.address,
+      BASE_NODE_BYTES32,
+      '.' + BASE_DOMAIN_STR,
       { from: ownerAccount },
     )
     await baseRegistrar.addController(controller.address, {
@@ -109,7 +120,16 @@ contract('StaticBulkRenewal', function (accounts) {
       resolver.address,
       0,
     )
+
+    await ens.setSubnodeRecord(
+      ETH_NAMEHASH,
+      BASE_DOMAIN_LABEL,
+      ownerAccount,
+      resolver.address,
+      0,
+    )
     await ens.setOwner(ETH_NAMEHASH, baseRegistrar.address)
+    await ens.setOwner(BASE_NODE_BYTES32, baseRegistrar.address)
 
     // Register some names
     for (const name of ['test1', 'test2', 'test3']) {

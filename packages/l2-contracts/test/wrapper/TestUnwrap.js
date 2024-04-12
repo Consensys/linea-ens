@@ -3,7 +3,14 @@ const { use, expect } = require('chai')
 const { solidity } = require('ethereum-waffle')
 const { labelhash, namehash, encodeName, FUSES } = require('../test-utils/ens')
 const { deploy } = require('../test-utils/contracts')
-const { EMPTY_BYTES32, EMPTY_ADDRESS } = require('../test-utils/constants')
+const {
+  EMPTY_BYTES32,
+  EMPTY_ADDRESS,
+  BASE_DOMAIN_STR,
+  BASE_NODE_BYTES32,
+  BASE_NODE_DNS_ENCODED,
+  BASE_DOMAIN_LABEL,
+} = require('../test-utils/constants')
 
 use(solidity)
 
@@ -35,7 +42,7 @@ describe('TestUnwrap', () => {
     BaseRegistrar = await deploy(
       'BaseRegistrarImplementation',
       EnsRegistry.address,
-      namehash('eth'),
+      namehash(BASE_DOMAIN_STR),
     )
 
     await BaseRegistrar.addController(account)
@@ -63,6 +70,8 @@ describe('TestUnwrap', () => {
       EnsRegistry.address,
       BaseRegistrar.address,
       MetaDataservice.address,
+      BASE_NODE_BYTES32,
+      BASE_NODE_DNS_ENCODED,
     )
 
     TestUnwrap = await deploy(
@@ -72,6 +81,12 @@ describe('TestUnwrap', () => {
     )
 
     // setup .eth
+    await EnsRegistry.setSubnodeOwner(ROOT_NODE, labelhash('eth'), account)
+    await EnsRegistry.setSubnodeOwner(
+      namehash('eth'),
+      BASE_DOMAIN_LABEL,
+      BaseRegistrar.address,
+    )
     await EnsRegistry.setSubnodeOwner(
       ROOT_NODE,
       labelhash('eth'),
@@ -93,10 +108,10 @@ describe('TestUnwrap', () => {
 
   describe('wrapFromUpgrade()', () => {
     describe('.eth', () => {
-      const encodedName = encodeName('wrapped.eth')
+      const encodedName = encodeName('wrapped.' + BASE_DOMAIN_STR)
       const label = 'wrapped'
       const labelHash = labelhash(label)
-      const nameHash = namehash(label + '.eth')
+      const nameHash = namehash(label + '.' + BASE_DOMAIN_STR)
 
       it('allows unwrapping from an approved NameWrapper', async () => {
         await BaseRegistrar.register(labelHash, account, 1 * DAY)
@@ -199,9 +214,9 @@ describe('TestUnwrap', () => {
     describe('other', () => {
       const label = 'to-upgrade'
       const parentLabel = 'wrapped2'
-      const name = label + '.' + parentLabel + '.eth'
+      const name = label + '.' + parentLabel + '.' + BASE_DOMAIN_STR
       const parentLabelHash = labelhash(parentLabel)
-      const parentHash = namehash(parentLabel + '.eth')
+      const parentHash = namehash(parentLabel + '.' + BASE_DOMAIN_STR)
       const nameHash = namehash(name)
       const encodedName = encodeName(name)
       it('allows unwrapping from an approved NameWrapper', async () => {

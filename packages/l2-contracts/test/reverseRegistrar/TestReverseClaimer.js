@@ -3,7 +3,12 @@ const { use, expect } = require('chai')
 const { solidity } = require('ethereum-waffle')
 const { labelhash, namehash } = require('../test-utils/ens')
 const { deploy } = require('../test-utils/contracts')
-const { EMPTY_BYTES32 } = require('../test-utils/constants')
+const {
+  EMPTY_BYTES32,
+  BASE_DOMAIN_STR,
+  BASE_NODE_BYTES32,
+  BASE_NODE_DNS_ENCODED,
+} = require('../test-utils/constants')
 
 use(solidity)
 
@@ -29,7 +34,7 @@ describe('ReverseClaimer', () => {
     BaseRegistrar = await deploy(
       'BaseRegistrarImplementation',
       EnsRegistry.address,
-      namehash('eth'),
+      namehash(BASE_DOMAIN_STR),
     )
 
     await BaseRegistrar.addController(account)
@@ -57,6 +62,8 @@ describe('ReverseClaimer', () => {
       EnsRegistry.address,
       BaseRegistrar.address,
       MetaDataservice.address,
+      BASE_NODE_BYTES32,
+      BASE_NODE_DNS_ENCODED,
     )
   })
 

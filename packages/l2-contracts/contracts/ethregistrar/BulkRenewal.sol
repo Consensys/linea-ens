@@ -11,9 +11,8 @@ import "./IPriceOracle.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 contract BulkRenewal is IBulkRenewal {
-    bytes32 private immutable baseNode;
-
     ENS public immutable ens;
+    bytes32 private immutable baseNode;
 
     constructor(ENS _ens, bytes32 _baseNode) {
         ens = _ens;
