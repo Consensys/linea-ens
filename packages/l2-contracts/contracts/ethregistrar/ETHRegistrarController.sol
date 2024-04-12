@@ -190,7 +190,7 @@ contract ETHRegistrarController is
         // Mark this address as having successfully registered
         hasRegisteredPoh[owner] = true;
 
-        _register(
+        uint256 expires = _register(
             name,
             owner,
             duration,
@@ -200,6 +200,8 @@ contract ETHRegistrarController is
             reverseRecord,
             ownerControlledFuses
         );
+
+        emit PohNameRegistered(name, keccak256(bytes(name)), owner, expires);
     }
 
     // Function to check if an address has successfully registered using registerPoh
@@ -221,7 +223,7 @@ contract ETHRegistrarController is
         if (msg.value < price.base + price.premium) {
             revert InsufficientValue();
         }
-        _register(
+        uint256 expires = _register(
             name,
             owner,
             duration,
@@ -230,6 +232,15 @@ contract ETHRegistrarController is
             data,
             reverseRecord,
             ownerControlledFuses
+        );
+
+        emit NameRegistered(
+            name,
+            keccak256(bytes(name)),
+            owner,
+            price.base,
+            price.premium,
+            expires
         );
 
         if (msg.value > (price.base + price.premium)) {
@@ -248,7 +259,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    ) internal {
+    ) internal returns (uint256) {
         _consumeCommitment(
             name,
             duration,
@@ -280,7 +291,7 @@ contract ETHRegistrarController is
             _setReverseRecord(name, resolver, msg.sender);
         }
 
-        emit PohNameRegistered(name, keccak256(bytes(name)), owner, expires);
+        return expires;
     }
 
     function renew(

@@ -2,6 +2,7 @@ import { Interface } from 'ethers/lib/utils'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import namehash from 'eth-ens-namehash'
 
 const { makeInterfaceId } = require('@openzeppelin/test-helpers')
 
@@ -21,7 +22,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const bulkRenewal = await deploy('StaticBulkRenewal', {
     from: deployer,
-    args: [controller.address],
+    args: [controller.address, namehash.hash(process.env.BASE_DOMAIN + '.eth')],
     log: true,
   })
 
