@@ -18,13 +18,13 @@ COPY . .
 RUN npm install -g pnpm
 RUN rm -rf node_modules
 RUN pnpm config set store-dir ~/.local/share/pnpm/store
-RUN pnpm install --frozen-lockfile
+
 
 WORKDIR /app/packages/ens-app-v3
 
 # Clear Next.js cache
 RUN rm -rf .next
-
+RUN pnpm install
 RUN pnpm run build
 
 EXPOSE 3000

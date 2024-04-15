@@ -27,6 +27,12 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+
+  env: {
+    NEXT_PUBLIC_BASE_DOMAIN: process.env.NEXT_PUBLIC_BASE_DOMAIN || 'linea-test',
+    NEXT_PUBLIC_ALCHEMY_KEY:
+      process.env.NEXT_PUBLIC_ALCHEMY_KEY || 'sSpYuHmhlpuU7RVXq-IIdCdz4IuKF-gM',
+  },
   // change to true once infinite loop is fixed
   swcMinify: false,
   images: {
