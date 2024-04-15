@@ -22,10 +22,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     'BaseRegistrarImplementation',
     owner,
   )
-  const priceOracle = await ethers.getContract(
-    'ExponentialPremiumPriceOracle',
-    owner,
-  )
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const ethOwnedResolver = await ethers.getContract('OwnedResolver', owner)
@@ -38,9 +34,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   })
 
-  // Ensure the deployment was successful before proceeding
-  if (!pohVerifierDeployment.newlyDeployed) {
-    console.error('Failed to deploy PohVerifier')
+  // Deploy the FixedPriceOracle contract
+  const fixedPriceOracleDeployment = await deploy('FixedPriceOracle', {
+    from: owner,
+    log: true,
+  })
+
+  // Ensure the deployments were successful before proceeding
+  if (
+    !pohVerifierDeployment.newlyDeployed ||
+    !fixedPriceOracleDeployment.newlyDeployed
+  ) {
+    console.error('Failed to deploy PohVerifier or FixedPriceOracle')
     return
   }
 
@@ -48,7 +53,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [
       registrar.address,
-      priceOracle.address,
+      fixedPriceOracleDeployment.address, // Pass the FixedPriceOracle address
       60,
       86400,
       reverseRegistrar.address,
@@ -118,7 +123,6 @@ func.tags = ['ethregistrar', 'ETHRegistrarController']
 func.dependencies = [
   'ENSRegistry',
   'BaseRegistrarImplementation',
-  'ExponentialPremiumPriceOracle',
   'ReverseRegistrar',
   'NameWrapper',
   'OwnedResolver',
