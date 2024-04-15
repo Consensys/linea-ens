@@ -288,7 +288,7 @@ contract NameWrapper is
      * @param resolver Resolver contract address
      */
 
-    function wrap(
+    function wrapETH2LD(
         string calldata label,
         address wrappedOwner,
         uint16 ownerControlledFuses,
@@ -430,7 +430,7 @@ contract NameWrapper is
      * @param controller Sets the owner in the registry to this address
      */
 
-    function unwrap(
+    function unwrapETH2LD(
         bytes32 labelhash,
         address registrant,
         address controller
