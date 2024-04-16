@@ -5,3 +5,4 @@ packages:
   - "packages/l1-contracts"
   - "packages/ens-app-v3"
   - "packages/ens-subgraph"
+  - "packages/poh-verifier"
