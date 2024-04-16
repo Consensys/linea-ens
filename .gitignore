@@ -1,2 +1,10 @@
 # IntelliJ
 .idea
+node_modules
+
+# hardhat
+artifacts
+cache
+typechain-types
+
+.env
