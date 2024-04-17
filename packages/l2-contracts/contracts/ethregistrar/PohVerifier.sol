@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ~0.8.17;
 
-// Uncomment this line to use console.log
-import "hardhat/console.sol";
-
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -19,7 +16,6 @@ contract PohVerifier is EIP712, Ownable {
 
     constructor() EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) Ownable() {
         signer = payable(msg.sender);
-        console.log("Contract Deployed 01");
     }
 
     function setSigner(address _signer) public onlyOwner {

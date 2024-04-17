@@ -203,6 +203,7 @@
       "importDnsName": "Import DNS name",
       "commitName": "Start timer",
       "registerName": "Register name",
+      "registerPoh": "Register PoH",
       "approveNameWrapper": "Approve NameWrapper",
       "clearRecords": "Clear records",
       "updateRecords": "Update records",

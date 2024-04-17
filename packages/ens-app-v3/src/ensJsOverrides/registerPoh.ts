@@ -10,7 +10,6 @@ import { sendTransaction } from 'viem/actions'
 import {
   ChainWithEns,
   ClientWithAccount,
-  ethRegistrarControllerRegisterSnippet,
   getChainContractAddress,
 } from '@ensdomains/ensjs/contracts'
 import {
@@ -18,20 +17,16 @@ import {
   SimpleTransactionRequest,
   WriteTransactionParameters,
 } from '@ensdomains/ensjs/dist/types/types'
-import { makeRegistrationTuple, wrappedLabelLengthCheck } from '@ensdomains/ensjs/utils'
+import { wrappedLabelLengthCheck } from '@ensdomains/ensjs/utils'
 
+import { ethRegistrarControllerRegisterPohSnippet } from './contracts/ethRegistrarController'
 import { UnsupportedNameTypeError } from './errors/general'
 import { getNameType } from './utils/getNameType'
-import { RegistrationParameters } from './utils/registerPohHelpers'
+import { makeRegistrationTuple, RegistrationParameters } from './utils/registerPohHelpers'
 
-export type RegisterNameDataParameters = RegistrationParameters & {
-  /** Value of registration */
-  value: bigint
-}
+export type RegisterNameDataParameters = RegistrationParameters & {}
 
-export type RegisterNameDataReturnType = SimpleTransactionRequest & {
-  value: bigint
-}
+export type RegisterNameDataReturnType = SimpleTransactionRequest & {}
 
 export type RegisterNameParameters<
   TChain extends ChainWithEns,
@@ -45,7 +40,7 @@ export type RegisterNameReturnType = Hash
 
 export const makeFunctionData = <TChain extends ChainWithEns, TAccount extends Account | undefined>(
   wallet: ClientWithAccount<Transport, TChain, TAccount>,
-  { value, ...args }: RegisterNameDataParameters,
+  { ...args }: RegisterNameDataParameters,
 ): RegisterNameDataReturnType => {
   const nameType = getNameType(args.name)
   if (nameType !== 'eth-2ld' && nameType !== 'eth-3ld')
@@ -64,11 +59,10 @@ export const makeFunctionData = <TChain extends ChainWithEns, TAccount extends A
       contract: 'ensEthRegistrarController',
     }),
     data: encodeFunctionData({
-      abi: ethRegistrarControllerRegisterSnippet,
-      functionName: 'register',
+      abi: ethRegistrarControllerRegisterPohSnippet,
+      functionName: 'registerPoh',
       args: makeRegistrationTuple(args),
     }),
-    value,
   }
 }
 
@@ -112,7 +106,7 @@ export const makeFunctionData = <TChain extends ChainWithEns, TAccount extends A
  * const hash = await registerName(wallet, { ...params, value })
  * // 0x...
  */
-async function registerName<
+async function registerPoh<
   TChain extends ChainWithEns,
   TAccount extends Account | undefined,
   TChainOverride extends ChainWithEns | undefined = ChainWithEns,
@@ -127,7 +121,7 @@ async function registerName<
     records,
     reverseRecord,
     fuses,
-    value,
+    signature,
     ...txArgs
   }: RegisterNameParameters<TChain, TAccount, TChainOverride>,
 ): Promise<RegisterNameReturnType> {
@@ -140,7 +134,7 @@ async function registerName<
     records,
     reverseRecord,
     fuses,
-    value,
+    signature,
   })
   const writeArgs = {
     ...data,
@@ -149,6 +143,6 @@ async function registerName<
   return sendTransaction(wallet, writeArgs)
 }
 
-registerName.makeFunctionData = makeFunctionData
+registerPoh.makeFunctionData = makeFunctionData
 
-export default registerName
+export default registerPoh

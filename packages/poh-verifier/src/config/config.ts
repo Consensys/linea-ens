@@ -16,6 +16,7 @@ export default (): Config => ({
   name,
   port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
   version: pack.version,
+  chainId: process.env.CHAIN_ID ? parseInt(process.env.CHAIN_ID) : 1337,
 
   cors: {
     enabled: true,

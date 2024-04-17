@@ -16,7 +16,7 @@ const REGISTRATION_REDUCER_DATA_ITEM_VERSION = 2
 const defaultData: RegistrationReducerDataItem = {
   stepIndex: 0,
   queue: ['pricing', 'info', 'transactions', 'complete'],
-  years: 1,
+  years: 3,
   reverseRecord: true,
   records: [],
   clearRecords: false,
@@ -41,7 +41,7 @@ const isBrowser = !!(
 const makeDefaultData = (selected: SelectedItemProperties): RegistrationReducerDataItem => ({
   stepIndex: 0,
   queue: ['pricing', 'info', 'transactions', 'complete'],
-  years: 1,
+  years: 3,
   reverseRecord: true,
   records: [],
   resolverAddress: '0x',
