@@ -273,7 +273,7 @@ contract('ETHRegistrarController', function () {
     const name = 'pohname'
     const duration = 28 * 24 * 60 * 60 // 28 days in seconds
     const secret = ethers.utils.formatBytes32String('secret')
-    const human = signers[0].address
+    const human = signers[1].address
     const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)) // Mock signature
 
     // Generate a commitment for the registration

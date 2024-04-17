@@ -29,9 +29,6 @@ error InsufficientValue();
 error Unauthorised(bytes32 node);
 error MaxCommitmentAgeTooLow();
 error MaxCommitmentAgeTooHigh();
-error PohVerificationFailed(address owner);
-error OwnerAlreadyRegistered(address owner);
-error SenderNotOwner(address owner, address sender);
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -180,20 +177,15 @@ contract ETHRegistrarController is
         uint16 ownerControlledFuses,
         bytes memory signature
     ) public {
-        // The sender of the transaction needs to be the owner
-        if (msg.sender != owner) {
-            revert SenderNotOwner(owner, msg.sender);
-        }
-
-        // An andress can own only one domain using its PoH
-        if (hasRegisteredPoh[owner]) {
-            revert OwnerAlreadyRegistered(owner);
-        }
-
-        // Check that the signature sent is valid, this is the reference for an address to have a valid PoH
-        if (!pohVerifier.verify(signature, owner)) {
-            revert PohVerificationFailed(owner);
-        }
+        // Check if the address has already registered using registerPoh
+        require(
+            !hasRegisteredPoh[owner],
+            "Address has already registered using PoH"
+        );
+        require(
+            pohVerifier.verify(signature, owner),
+            "POH verification failed"
+        );
 
         // Mark this address as having successfully registered
         hasRegisteredPoh[owner] = true;
