@@ -1,18 +1,22 @@
-name: "Build and Publish ENS Frontend"
+name: "Build and Publish PoH Verifier API"
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "packages/poh-verifier/**"
   pull_request:
     branches:
       - main
+    paths:
+      - "packages/poh-verifier/**"
   release:
     types:
       - released
 
 jobs:
-  ens-app-publish:
+  poh-verifier-build-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,12 +45,12 @@ jobs:
 
       - name: Docker Image Build and Publish
         env:
-          NEXT_PUBLIC_BASE_DOMAIN: ${{ secrets.NEXT_PUBLIC_BASE_DOMAIN }}
-          NEXT_PUBLIC_ALCHEMY_KEY: ${{ secrets.NEXT_PUBLIC_ALCHEMY_KEY }}
+          SIGNER_PRIVATE_KEY: ${{ secrets.POH_VERIFIER_PRIVATE_KEY }}
         uses: docker/build-push-action@v4
         with:
-          context: ./
-          file: ./packages/ens-app-v3/Dockerfile
+          build-args: |
+            ENV_FILE=.env.production
+          context: ./packages/poh-verifier
+          file: ./packages/poh-verifier/Dockerfile
           push: true
-          tags: consensys/linea-resolver:${{ env.DOCKER_TAG }}
-          build-args: BUILD_COMMAND="pnpm build"
+          tags: consensys/poh-verifier:${{ env.DOCKER_TAG }}
