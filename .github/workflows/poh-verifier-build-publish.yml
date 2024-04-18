@@ -42,12 +42,11 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Docker Image Build and Publish
-        env:
-          SIGNER_PRIVATE_KEY: ${{ secrets.POH_VERIFIER_PRIVATE_KEY }}
         uses: docker/build-push-action@v4
         with:
           build-args: |
             ENV_FILE=.env.production
+            SIGNER_PRIVATE_KEY=${{ secrets.POH_VERIFIER_PRIVATE_KEY }}
           context: ./packages/poh-verifier
           file: ./packages/poh-verifier/Dockerfile
           push: true

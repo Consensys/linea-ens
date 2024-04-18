@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "packages/ens-app-v3/**"
   pull_request:
     branches:
       - main
+    paths:
+      - "packages/ens-app-v3/**"
   release:
     types:
       - released
