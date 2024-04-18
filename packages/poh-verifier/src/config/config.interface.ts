@@ -27,6 +27,7 @@ export interface Config {
   ens: EnsConfig;
   pohApi: ApiConfig;
   log: LogConfig;
+  chainId: number;
 }
 
 export interface CorsConfig {

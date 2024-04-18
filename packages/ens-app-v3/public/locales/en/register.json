@@ -15,6 +15,13 @@
     "nameTooLong": "The name you want to register is too long. Please choose a shorter name."
   },
   "steps": {
+    "pohCheck": {
+      "pohNotValid": "PoH not valid",
+      "pohAlreadyUsed": "PoH already used",
+      "pohExplainer": "You can get one free linea.eth subdomains if you completed the Linea Proof of Humanity on Verax. linea.eth subdomains cannot be bought",
+      "getPoh": "Get your Linea Proof of humanity",
+      "getPohHereLink": "here"
+    },
     "pricing": {
       "insufficientBalance": "Insufficient Balance",
       "multipleYearsMessage": "Extending for multiple years will save money on network costs by avoiding yearly transactions.",

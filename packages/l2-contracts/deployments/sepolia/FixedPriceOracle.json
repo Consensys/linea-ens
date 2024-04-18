@@ -1,0 +1,95 @@
+{
+  "address": "0xE50b111E9Dd4471A6685203cb8979de9c011D646",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "FIXED_PRICE_USD",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "price",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "base",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "premium",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IPriceOracle.Price",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xc0c7d2d0f2767324b7ea85f5dc9f246eb0423d08ce0a7436889bb176a6be0a04",
+  "receipt": {
+    "to": null,
+    "from": "0x644e1ce71A6AfF1Fc52955214DF978DBB28f7a97",
+    "contractAddress": "0xE50b111E9Dd4471A6685203cb8979de9c011D646",
+    "transactionIndex": 41,
+    "gasUsed": "133593",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xf63c82da48c7f43df918171778fe836a924597440054b2f01b4b4b9807face4f",
+    "transactionHash": "0xc0c7d2d0f2767324b7ea85f5dc9f246eb0423d08ce0a7436889bb176a6be0a04",
+    "logs": [],
+    "blockNumber": 5710977,
+    "cumulativeGasUsed": "6286653",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "e1aa9cbc1adf558d3d1527c682b8ef46",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"FIXED_PRICE_USD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"price\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"base\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"premium\",\"type\":\"uint256\"}],\"internalType\":\"struct IPriceOracle.Price\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/ethregistrar/FixedPriceOracle.sol\":\"FixedPriceOracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1200},\"remappings\":[]},\"sources\":{\"contracts/ethregistrar/FixedPriceOracle.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity ^0.8.17;\\nimport \\\"./IPriceOracle.sol\\\";\\n\\ncontract FixedPriceOracle is IPriceOracle {\\n    uint256 public constant FIXED_PRICE_USD = 1000000 * 10 ** 18; // 1,000,000 USD in Wei\\n\\n    function price(\\n        string calldata,\\n        uint256,\\n        uint256\\n    ) external pure override returns (Price memory) {\\n        return Price(FIXED_PRICE_USD, 0);\\n    }\\n}\\n\",\"keccak256\":\"0x35dbbc2093785bab9c88ff2d42ea4282baa10649be46647a5d49c642469b336f\",\"license\":\"MIT\"},\"contracts/ethregistrar/IPriceOracle.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity >=0.8.17 <0.9.0;\\n\\ninterface IPriceOracle {\\n    struct Price {\\n        uint256 base;\\n        uint256 premium;\\n    }\\n\\n    /**\\n     * @dev Returns the price to register or renew a name.\\n     * @param name The name being registered or renewed.\\n     * @param expires When the name presently expires (0 if this is a new registration).\\n     * @param duration How long the name is being registered or extended for, in seconds.\\n     * @return base premium tuple of base price + premium price\\n     */\\n    function price(\\n        string calldata name,\\n        uint256 expires,\\n        uint256 duration\\n    ) external view returns (Price calldata);\\n}\\n\",\"keccak256\":\"0x1ec537b4c7f9cc40363b39dcc7ade8c29bf94662e6b01d38e681487637bd577e\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610174806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806350e9a7151461003b578063849a41de146100a0575b600080fd5b6100806100493660046100bf565b505060408051808201825260008082526020918201819052825180840190935269d3c21bcecceda100000083529082015292915050565b604080518251815260209283015192810192909252015b60405180910390f35b6100b169d3c21bcecceda100000081565b604051908152602001610097565b600080600080606085870312156100d557600080fd5b843567ffffffffffffffff808211156100ed57600080fd5b818701915087601f83011261010157600080fd5b81358181111561011057600080fd5b88602082850101111561012257600080fd5b602092830199909850918701359660400135955090935050505056fea26469706673582212208b492a0d9cc2d5a2eabe045c4eb8a62dcbf13fdd3f637d18df7736184fbde4ec64736f6c63430008110033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806350e9a7151461003b578063849a41de146100a0575b600080fd5b6100806100493660046100bf565b505060408051808201825260008082526020918201819052825180840190935269d3c21bcecceda100000083529082015292915050565b604080518251815260209283015192810192909252015b60405180910390f35b6100b169d3c21bcecceda100000081565b604051908152602001610097565b600080600080606085870312156100d557600080fd5b843567ffffffffffffffff808211156100ed57600080fd5b818701915087601f83011261010157600080fd5b81358181111561011057600080fd5b88602082850101111561012257600080fd5b602092830199909850918701359660400135955090935050505056fea26469706673582212208b492a0d9cc2d5a2eabe045c4eb8a62dcbf13fdd3f637d18df7736184fbde4ec64736f6c63430008110033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

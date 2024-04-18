@@ -12,4 +12,5 @@ export const configValidator = Joi.object({
   LOG_LEVEL: Joi.string()
     .valid('debug', 'info', 'warn', 'error', 'fatal')
     .default('info'),
+  CHAIN_ID: Joi.number(),
 });

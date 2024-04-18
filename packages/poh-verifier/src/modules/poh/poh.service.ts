@@ -18,6 +18,7 @@ export class PohService {
 
   async signMessage(address: Address): Promise<any> {
     const ens = this.configService.get<EnsConfig>('ens');
+    const chainId = this.configService.get<number>('chainId');
 
     try {
       const pohResponse = await this.apiService.getPoh(address);
@@ -28,7 +29,7 @@ export class PohService {
       const domain = {
         name: 'VerifyPoh',
         version: '1',
-        chainId: 31337,
+        chainId,
         verifyingContract: ens.verifierContractAddress,
       } as const;
 
