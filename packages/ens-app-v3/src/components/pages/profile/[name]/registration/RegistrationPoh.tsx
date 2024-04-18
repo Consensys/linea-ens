@@ -128,7 +128,7 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
   const commitKey = `commit-${keySuffix}`
   const registerKey = `register-${keySuffix}`
 
-  const pohSignature = address ? usePohSignature(address) : undefined
+  const pohSignature = usePohSignature(address)
 
   const { cleanupFlow } = useTransactionFlow()
 
@@ -283,7 +283,6 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
               ),
               info: (
                 <PohInfo
-                  name={normalisedName}
                   registrationData={item}
                   callback={genericCallback}
                   onProfileClick={infoProfileCallback}

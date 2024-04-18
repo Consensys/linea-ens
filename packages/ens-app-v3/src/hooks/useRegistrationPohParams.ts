@@ -47,7 +47,7 @@ const useRegistrationPohParams = ({ name, owner, registrationData, pohSignature 
       reverseRecord: registrationData.reverseRecord,
       signature: pohSignature,
     }),
-    [owner, name, registrationData],
+    [owner, name, registrationData, pohSignature],
   )
 
   return registrationParams

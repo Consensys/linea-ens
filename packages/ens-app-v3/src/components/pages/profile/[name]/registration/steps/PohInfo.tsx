@@ -96,7 +96,6 @@ const infoItemArr = Array.from({ length: 3 }, (_, i) => `steps.info.ethItems.${i
 
 type Props = {
   registrationData: RegistrationReducerDataItem
-  name: string
   callback: (data: { back: boolean }) => void
   onProfileClick: () => void
 }

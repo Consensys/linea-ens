@@ -15,10 +15,8 @@ import { Card } from '@app/components/Card'
 import { ConnectButton } from '@app/components/ConnectButton'
 import { useAccountSafely } from '@app/hooks/account/useAccountSafely'
 import { useContractAddress } from '@app/hooks/chain/useContractAddress'
-import { useEstimateFullRegistration } from '@app/hooks/gasEstimation/useEstimateRegistration'
 import { useEstimateFullRegistrationPoh } from '@app/hooks/gasEstimation/useEstimateRegistrationPoh'
 import { usePohRegistered } from '@app/hooks/usePohRegistered'
-import { usePohSignature } from '@app/hooks/usePohStatus'
 
 import { PaymentMethod, RegistrationReducerDataItem, RegistrationStepData } from '../../types'
 
@@ -154,15 +152,10 @@ const PohCheck = ({
   const resolverAddress = useContractAddress({ contract: 'ensPublicResolver' })
 
   const [years, setYears] = useState(registrationData.years)
-  const [reverseRecord, setReverseRecord] = useState(() =>
+  const [reverseRecord] = useState(() =>
     registrationData.started ? registrationData.reverseRecord : !hasPrimaryName,
   )
-
-  let pohAlreadyRegistered
-  if (address) {
-    const { data: pohAlreadyRegisteredData } = usePohRegistered(address)
-    pohAlreadyRegistered = pohAlreadyRegisteredData
-  }
+  const { data: pohAlreadyRegistered } = usePohRegistered(address)
 
   const fullEstimate = useEstimateFullRegistrationPoh({
     name,
@@ -198,7 +191,7 @@ const PohCheck = ({
       {!pohSignature && (
         <GetPoh>
           {t('steps.pohCheck.getPoh')}{' '}
-          <Link href={'https://poh.linea.build/'} target="_blank">
+          <Link href="https://poh.linea.build/" target="_blank">
             {t('steps.pohCheck.getPohHereLink')}
           </Link>
         </GetPoh>
