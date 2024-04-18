@@ -12,7 +12,7 @@ on:
       - released
 
 jobs:
-  publish:
+  ens-app-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./packages/ens-app-v3/Dockerfile
           push: true
           tags: consensys/linea-resolver:${{ env.DOCKER_TAG }}
           build-args: BUILD_COMMAND="pnpm build"

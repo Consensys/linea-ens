@@ -1,0 +1,16 @@
+name: Build and Publish PoH Verifier API
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "packages/poh-verifier/**"
+
+jobs:
+  l2-contracts-tests:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./packages/poh-verifier
