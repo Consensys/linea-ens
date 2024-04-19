@@ -53,5 +53,5 @@ jobs:
             NEXT_PUBLIC_INFURA_KEY=${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
             NEXT_PUBLIC_BASE_DOMAIN=${{ secrets.NEXT_PUBLIC_BASE_DOMAIN }}
             NEXT_PUBLIC_ALCHEMY_KEY=${{ secrets.NEXT_PUBLIC_ALCHEMY_KEY }}
-            NEXT_PUBLIC_POH_SIGNATURE_API="https://poh-verifier.dev.linea.build"
+            NEXT_PUBLIC_POH_SIGNATURE_API=https://poh-verifier.dev.linea.build
             BUILD_COMMAND="pnpm build"
