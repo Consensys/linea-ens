@@ -1,0 +1,19 @@
+FROM node:18
+
+WORKDIR /app
+
+ARG ENV_FILE
+ARG SIGNER_PRIVATE_KEY
+
+ENV SIGNER_PRIVATE_KEY=$SIGNER_PRIVATE_KEY
+
+COPY . .
+
+COPY $ENV_FILE .env
+
+RUN npm install
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

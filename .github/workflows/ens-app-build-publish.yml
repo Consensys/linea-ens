@@ -1,0 +1,56 @@
+name: "Build and Publish ENS Frontend"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/ens-app-v3/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "packages/ens-app-v3/**"
+  release:
+    types:
+      - released
+
+jobs:
+  ens-app-build-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set Docker Tag
+        id: docker-tag
+        if: ${{ github.event_name != 'release' }}
+        run: echo "DOCKER_TAG=${GITHUB_SHA:0:7}-$(date +%s)-ens-app" | tee $GITHUB_ENV
+
+      - name: Set Docker Tag - Release
+        id: docker-tag-release
+        if: ${{ github.event_name == 'release' }}
+        run: echo "DOCKER_TAG=${GITHUB_SHA:0:7}-$(date +%s)-ens-app-${GITHUB_REF#refs/tags/}" | tee $GITHUB_ENV
+
+      - name: Login to Docker Repository
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_REPO_USER }}
+          password: ${{ secrets.DOCKER_REPO_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker Image Build and Publish
+        env:
+          NEXT_PUBLIC_BASE_DOMAIN: ${{ secrets.NEXT_PUBLIC_BASE_DOMAIN }}
+          NEXT_PUBLIC_ALCHEMY_KEY: ${{ secrets.NEXT_PUBLIC_ALCHEMY_KEY }}
+          NEXT_PUBLIC_POH_SIGNATURE_API: "https://poh-verifier.dev.linea.build"
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+        uses: docker/build-push-action@v4
+        with:
+          context: ./
+          file: ./packages/ens-app-v3/Dockerfile
+          push: true
+          tags: consensys/linea-resolver:${{ env.DOCKER_TAG }}
+          build-args: BUILD_COMMAND="pnpm build"
