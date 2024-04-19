@@ -16,9 +16,8 @@
     "docker:remove-local": "graph remove graphprotocol/ens --node http://ens-app_graph-node_1:8020",
     "build": "graph build",
     "deploy": "graph deploy --network mainnet --product hosted-service ensdomains/ens",
-    "deploy:goerli": "graph deploy --network goerli --product hosted-service ensdomains/ensgoerli",
-    "deploy:sepolia": "graph deploy --network sepolia --studio enssepolia",
-    "deploy:holesky": "graph deploy --network holesky --studio ensholesky",
+    "deploy:sepolia": "graph deploy --network sepolia --studio ens-sepolia",
+    "deploy:holesky": "graph deploy --network holesky --studio ens-sepolia",
     "watch-local": "graph deploy graphprotocol/ens --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
   },
   "devDependencies": {

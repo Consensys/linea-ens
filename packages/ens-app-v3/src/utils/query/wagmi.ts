@@ -119,9 +119,7 @@ const wagmiConfig_ = createConfig({
       ]) as unknown as FallbackTransport,
     } as const),
     ...({
-      [sepolia.id]: initialiseTransports('linea-sepolia', [
-        infuraUrl,
-      ]) as unknown as FallbackTransport,
+      [sepolia.id]: initialiseTransports('sepolia', [infuraUrl]) as unknown as FallbackTransport,
     } as const),
   },
 })
