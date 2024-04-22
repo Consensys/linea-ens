@@ -10,6 +10,7 @@ import 'hardhat-contract-sizer'
 import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
 import '@nomiclabs/hardhat-etherscan'
+import 'hardhat-storage-layout'
 import { HardhatUserConfig } from 'hardhat/config'
 import { promisify } from 'util'
 
@@ -80,16 +81,22 @@ const config: HardhatUserConfig = {
       chainId: 17000,
       accounts: real_accounts,
     },
+    lineaGoerli: {
+      url: `https://linea-goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ['test', 'legacy', 'use_root'],
+      chainId: 59140,
+      accounts: real_accounts,
+    },
+    lineaSepolia: {
+      url: `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      tags: ['test', 'legacy', 'use_root'],
+      chainId: 59141,
+      accounts: real_accounts,
+    },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
       tags: ['legacy', 'use_root'],
       chainId: 1,
-      accounts: real_accounts,
-    },
-    lineaGoerli: {
-      url: `https://linea-goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['use_root'],
-      chainId: 59140,
       accounts: real_accounts,
     },
     lineaMainnet: {
@@ -97,13 +104,6 @@ const config: HardhatUserConfig = {
       tags: ['use_root'],
       chainId: 59144,
       accounts: real_accounts,
-    },
-    lineaSepolia: {
-      url: `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['use_root'],
-      chainId: 59141,
-      accounts: real_accounts,
-      gasPrice: 1000_000_000,
     },
   },
   mocha: {},

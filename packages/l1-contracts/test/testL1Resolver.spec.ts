@@ -17,9 +17,15 @@ import request from "supertest";
 import packet from "dns-packet";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
-const domainName = "linea.eth";
-const node = ethers.namehash(domainName);
-const encodedname = encodeName(domainName);
+const domainName = "linea-test";
+const baseDomain = `${domainName}.eth`;
+const node = ethers.namehash(baseDomain);
+const encodedname = encodeName(baseDomain);
+
+const registrantAddr = "0x4a8e79E5258592f208ddba8A8a0d3ffEB051B10A";
+const subDomain = "testpoh.linea-test.eth";
+const subDomainNode = ethers.namehash(subDomain);
+const encodedSubDomain = encodeName(subDomain);
 
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 const EMPTY_BYTES32 =
@@ -77,7 +83,7 @@ describe("Crosschain Resolver", () => {
     const rollup = await Rollup.deploy();
 
     const gateway = makeL2Gateway(
-      (l1Provider as unknown) as JsonRpcProvider,
+      l1Provider as unknown as JsonRpcProvider,
       l2Provider,
       await rollup.getAddress()
     );
@@ -146,7 +152,11 @@ describe("Crosschain Resolver", () => {
       labelhash("eth"),
       baseRegistrarAddress
     );
-    await baseRegistrar.register(labelhash("linea"), signerAddress, 100000000);
+    await baseRegistrar.register(
+      labelhash(domainName),
+      signerAddress,
+      100000000
+    );
     const publicResolverFactory = await ethers.getContractFactory(
       "PublicResolver",
       signer
@@ -228,7 +238,7 @@ describe("Crosschain Resolver", () => {
 
   it("should allow owner to set target", async () => {
     await target.setTarget(node, signerAddress);
-    const result = await target.getTarget(encodeName(domainName), 0);
+    const result = await target.getTarget(encodeName(baseDomain), 0);
     expect(result[1]).to.equal(signerAddress);
   });
 
@@ -260,11 +270,11 @@ describe("Crosschain Resolver", () => {
     expect(result[1]).to.equal(l2ResolverAddress);
   });
 
-  it.only("should resolve empty ETH Address", async () => {
+  it("should resolve empty ETH Address", async () => {
     await target.setTarget(node, l2ResolverAddress);
     const addr = "0x0000000000000000000000000000000000000000";
     const result = await l2contract["addr(bytes32)"](node);
-    expect(ethers.getAddress(result)).to.equal(addr);
+    expect(result).to.equal(addr);
     await l1Provider.send("evm_mine", []);
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
@@ -278,23 +288,22 @@ describe("Crosschain Resolver", () => {
 
   it("should resolve ETH Address", async () => {
     await target.setTarget(node, l2ResolverAddress);
-    const addr = "0x5A384227B65FA093DEC03Ec34e111Db80A040615";
-    await l2contract.clearRecords(node);
-    await l2contract["setAddr(bytes32,address)"](node, addr);
-    const result = await l2contract["addr(bytes32)"](node);
-    expect(ethers.getAddress(result)).to.equal(addr);
+    const result = await l2contract["addr(bytes32)"](subDomainNode);
+    expect(ethers.getAddress(result)).to.equal(registrantAddr);
     await l1Provider.send("evm_mine", []);
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
-    const calldata = i.encodeFunctionData("addr", [node]);
-    const result2 = await target.resolve(encodedname, calldata, {
+    const calldata = i.encodeFunctionData("addr", [subDomainNode]);
+    const result2 = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
     const decoded = i.decodeFunctionResult("addr", result2);
-    expect(decoded[0]).to.equal(addr);
+    expect(ethers.getAddress(decoded[0])).to.equal(
+      ethers.getAddress(registrantAddr)
+    );
   });
 
-  it("should resolve ETH Address for subname", async () => {
+  it.only("should resolve ETH Address for subname", async () => {
     await target.setTarget(node, l2ResolverAddress);
     const addr = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
     await l2contract.clearRecords(node);
@@ -326,8 +335,8 @@ describe("Crosschain Resolver", () => {
     const i = new ethers.Interface([
       "function addr(bytes32,uint256) returns(bytes)",
     ]);
-    const calldata = i.encodeFunctionData("addr", [node, coinType]);
-    const result2 = await target.resolve(encodedname, calldata, {
+    const calldata = i.encodeFunctionData("addr", [subDomainNode, coinType]);
+    const result2 = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
     const decoded = i.decodeFunctionResult("addr", result2);
@@ -337,7 +346,7 @@ describe("Crosschain Resolver", () => {
   it("should resolve text record", async () => {
     await target.setTarget(node, l2ResolverAddress);
     const key = "name";
-    const value = "nick.eth";
+    const value = "test.eth";
     await l2contract.clearRecords(node);
     await l2contract.setText(node, key, value);
     await l1Provider.send("evm_mine", []);

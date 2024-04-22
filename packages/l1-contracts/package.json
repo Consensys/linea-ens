@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/testL1Resolver.spec.ts --timeout 10000 --exit",
+    "test": "cd ../gateway && npm run build && cd ../l1-contracts && mocha test/testL1Resolver.spec.ts --timeout 10000 --exit",
     "compile": "hardhat compile",
     "clean": "rm -fr artifacts cache node_modules typechain-types"
   },

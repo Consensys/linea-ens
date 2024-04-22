@@ -239,6 +239,7 @@ library LineaProofHelper {
             if (!isDynamic) {
                 if (!storageProofs[proofIdx].initialized) {
                     values[i] = abi.encode(0);
+                    proofIdx++;
                 } else {
                     verifyStorageProof(
                         account,
