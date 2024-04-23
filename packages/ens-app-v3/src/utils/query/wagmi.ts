@@ -82,10 +82,7 @@ const localStorageWithInvertMiddleware = (): Storage | undefined => {
 
 const chains = [
   ...(isLocalProvider ? ([localhostWithEns] as const) : ([] as const)),
-  mainnetWithEns,
-  goerliWithEns,
   sepoliaWithEns,
-  holeskyWithEns,
   lineaSepoliaWithEns,
 ] as const
 
@@ -110,17 +107,9 @@ const wagmiConfig_ = createConfig({
           // this is a hack to make the types happy, dont remove pls
           [localhost.id]: HttpTransport
         })),
-    [mainnet.id]: initialiseTransports('mainnet', [infuraUrl, cloudflareUrl, tenderlyUrl]),
-    [goerli.id]: initialiseTransports('goerli', [infuraUrl, cloudflareUrl, tenderlyUrl]),
-    [holesky.id]: initialiseTransports('holesky', [tenderlyUrl]),
-    ...({
-      [lineaSepolia.id]: initialiseTransports('linea-sepolia', [
-        infuraUrl,
-      ]) as unknown as FallbackTransport,
-    } as const),
-    ...({
-      [sepolia.id]: initialiseTransports('sepolia', [infuraUrl]) as unknown as FallbackTransport,
-    } as const),
+
+    [lineaSepolia.id]: initialiseTransports('linea-sepolia', [infuraUrl]),
+    [sepolia.id]: initialiseTransports('sepolia', [infuraUrl]),
   },
 })
 

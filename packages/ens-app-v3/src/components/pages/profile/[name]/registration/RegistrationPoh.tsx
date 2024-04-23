@@ -102,7 +102,7 @@ const MoonPayIFrame = styled.iframe(
   `,
 )
 
-const Registration = ({ nameDetails, isLoading }: Props) => {
+const RegistrationPoh = ({ nameDetails, isLoading }: Props) => {
   const { t } = useTranslation('register')
 
   const router = useRouterWithHistory()
@@ -338,4 +338,4 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
   )
 }
 
-export default Registration
+export default RegistrationPoh

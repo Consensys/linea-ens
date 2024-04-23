@@ -34,7 +34,7 @@ export const lineaSepoliaWithEns = {
       url: 'https://api.studio.thegraph.com/query/49574/enssepolia/version/latest',
     },
   },
-} as unknown as CheckedChainWithEns<Chain>
+} as Chain
 
 export const sepoliaWithEns = {
   ...sepoliaCustom,
@@ -47,25 +47,24 @@ export const sepoliaWithEns = {
       url: 'https://api.studio.thegraph.com/query/69290/ens-sepolia/version/latest',
     },
   },
-} as unknown as CheckedChainWithEns<Chain>
+} as Chain
 
-export const chainsWithEns = [
-  mainnetWithEns,
-  goerliWithEns,
-  sepoliaWithEns,
-  holeskyWithEns,
-  localhostWithEns,
-  lineaSepoliaWithEns,
-] as const
+// export const chainsWithEns = [
+//   mainnetWithEns,
+//   goerliWithEns,
+//   sepoliaWithEns,
+//   holeskyWithEns,
+//   localhostWithEns,
+//   lineaSepoliaWithEns,
+// ] as const
+
+export const chainsWithEns = [lineaSepoliaWithEns, sepoliaWithEns, localhostWithEns] as const
 
 export const getSupportedChainById = (chainId: number | undefined) => {
   return chainId ? chainsWithEns.find((c) => c.id === chainId) : undefined
 }
 
 export type SupportedChain =
-  | typeof mainnetWithEns
-  | typeof goerliWithEns
-  | typeof sepoliaWithEns
-  | typeof holeskyWithEns
   | typeof localhostWithEns
   | typeof lineaSepoliaWithEns
+  | typeof sepoliaWithEns

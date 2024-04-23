@@ -1,6 +1,7 @@
 // Import types and APIs from graph-ts
 import { BigInt, ByteArray, ethereum, log } from "@graphprotocol/graph-ts";
 import { Account, Domain } from "./types/schema";
+import { BASE_LABEL, BASE_LABEL_HASH } from "./env";
 
 export function createEventID(event: ethereum.Event): string {
   return event.block.number
@@ -96,4 +97,11 @@ export function checkValidLabel(name: string | null): boolean {
   }
 
   return true;
+}
+
+export function nameByHashLocal(hash: string): string | null {
+  if (hash == BASE_LABEL_HASH) {
+    return BASE_LABEL;
+  }
+  return null;
 }

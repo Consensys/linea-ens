@@ -297,17 +297,6 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
               <Dialog.Heading title={t('steps.profile.title2')} />
               <StyledScrollBox hideDividers={{ bottom: true }}>
                 <ScrollContentContainer>
-                  <AvatarWrapper>
-                    <WrappedAvatarButton
-                      name={name}
-                      control={control}
-                      src={avatarSrc}
-                      onSelectOption={(option) => setView(option)}
-                      onAvatarChange={(avatar) => setAvatar(avatar)}
-                      onAvatarFileChange={(file) => setAvatarFile(file)}
-                      onAvatarSrcChange={(src) => setAvatarSrc(src)}
-                    />
-                  </AvatarWrapper>
                   {profileRecords.map((field, index) =>
                     field.group === 'custom' ? (
                       <CustomProfileRecordInput
