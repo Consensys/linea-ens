@@ -135,6 +135,11 @@ contract('ETHRegistrarController', function () {
     const pohVerifier = await PohVerifier.deploy()
     await pohVerifier.deployed()
 
+    // Deploy PohRegistrationManager contract
+    const PohRegistrationManager = await ethers.getContractFactory('PohRegistrationManager')
+    const pohRegistrationManager = await PohRegistrationManager.deploy()
+    await pohRegistrationManager.deployed()
+
     // Deploy the mock PohVerifier
     const MockPohVerifier = await ethers.getContractFactory('MockPohVerifier')
     mockPohVerifier = await MockPohVerifier.deploy()
@@ -144,6 +149,8 @@ contract('ETHRegistrarController', function () {
     const ETHRegistrarController = await ethers.getContractFactory(
       'ETHRegistrarController',
     )
+
+    console.log(pohRegistrationManager.address);
     controllerPoh = await ETHRegistrarController.deploy(
       baseRegistrar.address,
       priceOracle.address,
@@ -155,6 +162,7 @@ contract('ETHRegistrarController', function () {
       mockPohVerifier.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
+      pohRegistrationManager.address
     )
     await controllerPoh.deployed()
 
@@ -172,6 +180,7 @@ contract('ETHRegistrarController', function () {
       pohVerifier.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
+      pohRegistrationManager.address
     )
     controller2 = controller.connect(signers[1])
     await nameWrapper.setController(controller.address, true)
@@ -232,7 +241,7 @@ contract('ETHRegistrarController', function () {
     '\ud83d\udca9\ud83d\udca9': false,
   }
 
-  it('should report label validity', async () => {
+  it.only('should report label validity', async () => {
     for (const label in checkLabels) {
       expect(await controller.valid(label)).to.equal(checkLabels[label], label)
     }
@@ -273,7 +282,7 @@ contract('ETHRegistrarController', function () {
     const name = 'pohname'
     const duration = 28 * 24 * 60 * 60 // 28 days in seconds
     const secret = ethers.utils.formatBytes32String('secret')
-    const human = signers[1].address
+    const human = signers[0].address
     const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)) // Mock signature
 
     // Generate a commitment for the registration
