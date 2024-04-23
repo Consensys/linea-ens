@@ -226,6 +226,7 @@ export const NameListView = ({ address, selfAddress, setError, setLoading }: Nam
           setSearchInput(s)
           debouncedSetSearch(s)
         }}
+        selectable={false}
       >
         {mode === 'select' && (
           <Button
