@@ -175,11 +175,6 @@ const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
       <Typography>{t('steps.complete.description')}</Typography>
       <ButtonContainer>
         <MobileFullWidth>
-          <Button colorStyle="accentSecondary" onClick={() => callback(false)}>
-            {t('steps.complete.registerAnother')}
-          </Button>
-        </MobileFullWidth>
-        <MobileFullWidth>
           <Button data-testid="view-name" onClick={() => callback(true)}>
             {t('steps.complete.viewName')}
           </Button>

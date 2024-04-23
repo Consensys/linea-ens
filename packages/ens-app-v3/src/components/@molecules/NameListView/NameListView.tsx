@@ -158,7 +158,10 @@ export const NameListView = ({ address, selfAddress, setError, setLoading }: Nam
   const isNameDisabled = useCallback(
     (name: Name) => {
       if (mode !== 'select') return false
-      return name.parentName !== 'eth'
+      return (
+        name.parentName !== 'eth' &&
+        name.parentName !== `${process.env.NEXT_PUBLIC_BASE_DOMAIN}.eth`
+      )
     },
     [mode],
   )

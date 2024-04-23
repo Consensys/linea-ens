@@ -184,6 +184,7 @@ const PohCheck = ({
           const newYears = parseInt(e.target.value)
           if (!Number.isNaN(newYears)) setYears(newYears)
         }}
+        disabled
         highlighted
       />
       <PohExplainer>{t('steps.pohCheck.pohExplainer')}</PohExplainer>
