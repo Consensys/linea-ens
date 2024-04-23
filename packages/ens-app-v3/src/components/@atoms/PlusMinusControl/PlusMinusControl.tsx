@@ -55,8 +55,8 @@ const Button = styled.button(
   `,
 )
 
-const LabelContainer = styled.div(
-  ({ theme }) => css`
+const LabelContainer = styled.div<{ disabled?: boolean }>(
+  ({ theme, disabled }) => css`
     position: relative;
     flex: 1;
     height: ${theme.space['11']};
@@ -66,7 +66,7 @@ const LabelContainer = styled.div(
     overflow: hidden;
 
     :hover {
-      background-color: ${theme.colors.accentSurface};
+      background-color: ${disabled ? 'initial' : theme.colors.accentSurface};
     }
 
     :focus-within label {
@@ -220,15 +220,18 @@ export const PlusMinusControl = forwardRef(
 
     return (
       <Container $highlighted={highlighted}>
-        <Button
-          type="button"
-          onClick={incrementHandler(-1)}
-          data-testid="plus-minus-control-minus"
-          disabled={focused || minusDisabled}
-        >
-          <MinusIcon />
-        </Button>
-        <LabelContainer>
+        {!props.disabled && (
+          <Button
+            type="button"
+            onClick={incrementHandler(-1)}
+            data-testid="plus-minus-control-minus"
+            disabled={focused || minusDisabled}
+          >
+            <MinusIcon />
+          </Button>
+        )}
+
+        <LabelContainer disabled={props.disabled}>
           <LabelInput
             data-testid="plus-minus-control-input"
             $highlighted={highlighted}
@@ -254,14 +257,16 @@ export const PlusMinusControl = forwardRef(
           />
           <Label $highlighted={highlighted}>{t(`unit.${unit}`, { count: value })}</Label>
         </LabelContainer>
-        <Button
-          type="button"
-          onClick={incrementHandler(1)}
-          data-testid="plus-minus-control-plus"
-          disabled={focused || plusDisabled}
-        >
-          <PlusIcon />
-        </Button>
+        {!props.disabled && (
+          <Button
+            type="button"
+            onClick={incrementHandler(1)}
+            data-testid="plus-minus-control-plus"
+            disabled={focused || plusDisabled}
+          >
+            <PlusIcon />
+          </Button>
+        )}
       </Container>
     )
   },

@@ -3,7 +3,7 @@ import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import { resolve } from 'path'
 
-import { utils } from 'ethers'
+import { ethers, utils } from 'ethers'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import YAML from 'yaml'
@@ -67,9 +67,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const subgraphEnvPath = resolve(__dirname, '../../ens-subgraph/src/env.ts')
 
   const baseDomain = `${process.env.BASE_DOMAIN}.eth`
+  const labelHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(process.env.BASE_DOMAIN))
   const envSrc =
     `export const BASE_DOMAIN = "${baseDomain}";\n` +
-    `export const BASE_NODE = "${utils.namehash(baseDomain)}";`
+    `export const BASE_NODE = "${utils.namehash(baseDomain)}";\n` +
+    `export const BASE_LABEL = "${process.env.BASE_DOMAIN}";\n` +
+    `export const BASE_LABEL_HASH = "${labelHash}";\n`
 
   await writeFile(subgraphEnvPath, envSrc)
 

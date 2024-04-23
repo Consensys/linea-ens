@@ -158,9 +158,6 @@ importers:
       react-use-error-boundary:
         specifier: ^3.0.0
         version: 3.0.0(react@18.2.0)
-      react-use-intercom:
-        specifier: ^5.1.4
-        version: 5.1.4(react-dom@18.2.0)(react@18.2.0)
       styled-components:
         specifier: ^5.3.5
         version: 5.3.6(react-dom@18.2.0)(react-is@17.0.2)(react@18.2.0)
@@ -16042,16 +16039,6 @@ packages:
       react: '>= 16.8'
     dependencies:
       react: 18.2.0
-    dev: false
-
-  /react-use-intercom@5.1.4(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-37dMuCg3H5KgMqpUMiZiu7Ni1LcRAkO8T7F1Zg4Xc+hL89j8OYFHzWWBy29EFgRsTdvCEJ2X8J5wAXerU9uuqw==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-use@17.4.0(react-dom@18.2.0)(react@18.2.0):

@@ -86,7 +86,7 @@ export const ShortExpiry = ({
   const years = Math.floor(difference / 365)
   const transPrefix = makeTransPrefix(inverse, !!hasGracePeriod)
 
-  let text = t(`${transPrefix}InYears`, { count: years })
+  let text = t(`${transPrefix}InMonths`, { count: months })
   let color: 'grey' | 'red' | 'orange' = 'grey'
 
   if (difference === 0) {

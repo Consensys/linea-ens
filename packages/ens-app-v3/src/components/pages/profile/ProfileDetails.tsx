@@ -13,7 +13,7 @@ import { useOwners } from '@app/hooks/useOwners'
 import { useProfileActions } from '@app/hooks/useProfileActions'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
 import { contentHashToString } from '@app/utils/contenthash'
-import { checkETH2LDFromName, formatExpiry } from '@app/utils/utils'
+import { checkETH2LDFromName, checkETH3LDFromName, formatExpiry } from '@app/utils/utils'
 
 import {
   AddressProfileButton,
@@ -166,8 +166,8 @@ const ActionWrapper = styled.div<{
 ])
 
 type Action = NonNullable<ReturnType<typeof useProfileActions>['profileActions']>[number]
-const getAction = (action: Action, is2LDEth: boolean) => {
-  if (action.skip2LDEth && is2LDEth) return null
+const getAction = (action: Action, is2LDEth: boolean, is3LDEth = false) => {
+  if (action.skip2LDEth && (is2LDEth || is3LDEth)) return null
   if (action.tooltipContent) {
     return (
       <DisabledButtonWithTooltip
@@ -328,6 +328,7 @@ export const ProfileDetails = ({
   const mappedOwners = ownershipInfoCalc(name, pccExpired, owners, gracePeriodEndDate, expiryDate)
 
   const is2LDEth = checkETH2LDFromName(name)
+  const is3LDEth = checkETH3LDFromName(name)
 
   const actionWarnings = actions
     ?.filter((action) => !!action.warning)
@@ -391,7 +392,7 @@ export const ProfileDetails = ({
                 leading={!!action.red}
                 fullMobileWidth={action.fullMobileWidth}
               >
-                {getAction(action, is2LDEth)}
+                {getAction(action, is2LDEth, is3LDEth)}
               </ActionWrapper>
             ))}
           </Actions>

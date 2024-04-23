@@ -66,6 +66,13 @@ export const checkETH2LDFromName = (name: string): name is Eth2ldName => {
   return true
 }
 
+export const checkETH3LDFromName = (name: string): name is Eth2ldName => {
+  const labels = name.split('.')
+  if (labels.length !== 3) return false
+  if (labels[2] !== 'eth') return false
+  return true
+}
+
 export const checkDNS2LDFromName = (name: string) => {
   const labels = name.split('.')
   if (labels.length !== 2) return false
