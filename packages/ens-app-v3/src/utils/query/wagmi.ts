@@ -1,15 +1,8 @@
 import { FallbackTransport, HttpTransport } from 'viem'
 import { createConfig, createStorage, fallback, http } from 'wagmi'
-import { goerli, holesky, localhost, mainnet, sepolia } from 'wagmi/chains'
+import { localhost, sepolia } from 'wagmi/chains'
 
-import {
-  goerliWithEns,
-  holeskyWithEns,
-  lineaSepoliaWithEns,
-  localhostWithEns,
-  mainnetWithEns,
-  sepoliaWithEns,
-} from '@app/constants/chains'
+import { lineaSepoliaWithEns, localhostWithEns, sepoliaWithEns } from '@app/constants/chains'
 import { lineaSepolia } from '@app/constants/lineaSepolia'
 
 import { WC_PROJECT_ID } from '../constants'

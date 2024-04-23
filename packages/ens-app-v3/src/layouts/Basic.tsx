@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useErrorBoundary, withErrorBoundary } from 'react-use-error-boundary'
 import styled, { css } from 'styled-components'
-import { lineaSepolia } from 'viem/chains'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 import { mq } from '@ensdomains/thorin'
@@ -10,7 +9,6 @@ import FeedbackSVG from '@app/assets/Feedback.svg'
 import ErrorScreen from '@app/components/@atoms/ErrorScreen'
 import { getSupportedChainById } from '@app/constants/chains'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
-import { IS_DEV_ENVIRONMENT } from '@app/utils/constants'
 
 import { Navigation } from './Navigation'
 

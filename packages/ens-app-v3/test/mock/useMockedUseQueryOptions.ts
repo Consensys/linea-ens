@@ -14,7 +14,7 @@ const mockUseConfig = mockFunction(useConfig)
  * @dev This function assumes `wagmi` is already mocked.
  */
 export const useMockedUseQueryOptions = ({
-  chainId = 1,
+  chainId = 59141,
   address = '0x1234',
   client = {},
 }: {
