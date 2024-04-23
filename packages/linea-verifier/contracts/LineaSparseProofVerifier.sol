@@ -10,7 +10,7 @@ interface IRollup {
     ) external view returns (bytes32);
 }
 
-abstract contract LineaVerifier is IEVMVerifier {
+abstract contract LineaSparseProofVerifier is IEVMVerifier {
     string[] public _gatewayURLs;
     address public _rollup;
 
