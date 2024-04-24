@@ -136,7 +136,9 @@ contract('ETHRegistrarController', function () {
     await pohVerifier.deployed()
 
     // Deploy PohRegistrationManager contract
-    const PohRegistrationManager = await ethers.getContractFactory('PohRegistrationManager')
+    const PohRegistrationManager = await ethers.getContractFactory(
+      'PohRegistrationManager',
+    )
     const pohRegistrationManager = await PohRegistrationManager.deploy()
     await pohRegistrationManager.deployed()
 
@@ -150,7 +152,7 @@ contract('ETHRegistrarController', function () {
       'ETHRegistrarController',
     )
 
-    console.log(pohRegistrationManager.address);
+    console.log(pohRegistrationManager.address)
     controllerPoh = await ETHRegistrarController.deploy(
       baseRegistrar.address,
       priceOracle.address,
@@ -160,9 +162,9 @@ contract('ETHRegistrarController', function () {
       nameWrapper.address,
       ens.address,
       mockPohVerifier.address,
+      pohRegistrationManager.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
-      pohRegistrationManager.address
     )
     await controllerPoh.deployed()
 
@@ -178,9 +180,9 @@ contract('ETHRegistrarController', function () {
       nameWrapper.address,
       ens.address,
       pohVerifier.address,
+      pohRegistrationManager.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
-      pohRegistrationManager.address
     )
     controller2 = controller.connect(signers[1])
     await nameWrapper.setController(controller.address, true)
@@ -241,7 +243,7 @@ contract('ETHRegistrarController', function () {
     '\ud83d\udca9\ud83d\udca9': false,
   }
 
-  it.only('should report label validity', async () => {
+  it('should report label validity', async () => {
     for (const label in checkLabels) {
       expect(await controller.valid(label)).to.equal(checkLabels[label], label)
     }

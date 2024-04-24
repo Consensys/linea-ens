@@ -34,6 +34,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   })
 
+  // Deploy the PohRegistrationManager contract
+  const pohRegistrationManagerDeployment = await deploy(
+    'PohRegistrationManager',
+    {
+      from: owner,
+      log: true,
+    },
+  )
+
   // Deploy the FixedPriceOracle contract
   const fixedPriceOracleDeployment = await deploy('FixedPriceOracle', {
     from: owner,
@@ -43,9 +52,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // Ensure the deployments were successful before proceeding
   if (
     !pohVerifierDeployment.newlyDeployed ||
-    !fixedPriceOracleDeployment.newlyDeployed
+    !fixedPriceOracleDeployment.newlyDeployed ||
+    !pohRegistrationManagerDeployment.newlyDeployed
   ) {
-    console.error('Failed to deploy PohVerifier or FixedPriceOracle')
+    console.error(
+      'Failed to deploy PohVerifier or FixedPriceOracle or PohRegistrationManager',
+    )
     return
   }
 
@@ -60,6 +72,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       nameWrapper.address,
       registry.address,
       pohVerifierDeployment.address,
+      pohRegistrationManagerDeployment.address,
       baseNode,
       baseDomainStr,
     ],
