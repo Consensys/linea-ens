@@ -58,8 +58,6 @@ contract ETHRegistrarController is
     INameWrapper public immutable nameWrapper;
 
     mapping(bytes32 => uint256) public commitments;
-    // Mapping to keep track of addresses that have successfully registered using registerPoh
-    mapping(address => bool) public hasRegisteredPoh;
 
     PohVerifier public pohVerifier;
     PohRegistrationManager public pohRegistrationManager;
@@ -198,7 +196,7 @@ contract ETHRegistrarController is
         }
 
         // An andress can own only one domain using its PoH
-        if (hasRegisteredPoh[owner]) {
+        if (redeemed(owner)) {
             revert OwnerAlreadyRegistered(owner);
         }
 
