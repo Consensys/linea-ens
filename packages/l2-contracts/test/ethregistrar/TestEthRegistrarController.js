@@ -152,7 +152,6 @@ contract('ETHRegistrarController', function () {
       'ETHRegistrarController',
     )
 
-    console.log(pohRegistrationManager.address)
     controllerPoh = await ETHRegistrarController.deploy(
       baseRegistrar.address,
       priceOracle.address,
