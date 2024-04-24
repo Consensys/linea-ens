@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.4.11;
+pragma solidity 0.8.17;
 
 contract DummyOldResolver {
     function test() public returns (bool) {

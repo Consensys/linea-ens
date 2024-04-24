@@ -11,6 +11,7 @@ import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
 import '@nomiclabs/hardhat-etherscan'
 import 'hardhat-storage-layout'
+import 'solidity-coverage'
 import { HardhatUserConfig } from 'hardhat/config'
 import { promisify } from 'util'
 
