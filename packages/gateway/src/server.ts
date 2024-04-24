@@ -7,7 +7,6 @@ import "dotenv/config";
 
 const program = new Command()
   .option("-p, --port <port>", "PORT", "8080")
-  .option("-r --l2_resolver_address <address>", "L2_RESOLVER_ADDRESS", "")
   .option(
     "-l1p --l1_provider_url <url1>",
     "L1_PROVIDER_URL",
@@ -44,7 +43,7 @@ gateway.add(server);
 const app = server.makeApp("/");
 
 (async () => {
-  app.listen(port, function() {
+  app.listen(port, function () {
     console.log(`Listening on ${port}`);
   });
 })();

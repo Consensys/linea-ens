@@ -63,7 +63,7 @@ describe("L1Verifier", () => {
     const rollup = await Rollup.deploy();
 
     const gateway = makeL2Gateway(
-      (l1Provider as unknown) as JsonRpcProvider,
+      l1Provider as unknown as JsonRpcProvider,
       l2Provider,
       await rollup.getAddress()
     );
@@ -100,8 +100,8 @@ describe("L1Verifier", () => {
     );
     const sparseMerkleProof = await SparseMerkleProof.deploy();
 
-    const TestLineaVerifier = await ethers.getContractFactory(
-      "TestLineaVerifier",
+    const LineaSparseProofVerifier = await ethers.getContractFactory(
+      "LineaSparseProofVerifier",
       {
         libraries: {
           SparseMerkleProof: await sparseMerkleProof.getAddress(),
@@ -110,14 +110,14 @@ describe("L1Verifier", () => {
       }
     );
 
-    const testLineaVerifier = await TestLineaVerifier.deploy(
+    const lineaSparseProofVerifier = await LineaSparseProofVerifier.deploy(
       ["test:"],
       await rollup.getAddress()
     );
 
     const TestL1 = await ethers.getContractFactory("TestL1", signer);
     target = await TestL1.deploy(
-      await testLineaVerifier.getAddress(),
+      await lineaSparseProofVerifier.getAddress(),
       l2TestContract
     );
     // Mine an empty block so we have something to prove against

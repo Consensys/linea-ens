@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/testL1Resolver.spec.ts --timeout 10000 --exit",
+    "test": "cd ../gateway && npm run build && cd ../l1-contracts && mocha test/testL1Resolver.spec.ts --timeout 10000 --exit",
     "compile": "hardhat compile",
     "clean": "rm -fr artifacts cache node_modules typechain-types"
   },
@@ -35,9 +35,8 @@
     "hardhat": "^2.22.1",
     "hardhat-gas-reporter": "^1.0.8",
     "linea-resolver-gateway": "^1.0.0",
-    "linea-verifier": "^1.0.0",
     "mocha": "^10.3.0",
-    "solidity-coverage": "^0.8.1",
+    "solidity-coverage": "^0.8.12",
     "supertest": "^6.3.3",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",

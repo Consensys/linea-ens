@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-import {EVMFetcher} from "linea-verifier/contracts/EVMFetcher.sol";
-import {EVMFetchTarget} from "linea-verifier/contracts/EVMFetchTarget.sol";
-import {IEVMVerifier} from "linea-verifier/contracts/IEVMVerifier.sol";
+import {EVMFetcher} from "./linea-verifier/EVMFetcher.sol";
+import {EVMFetchTarget} from "./linea-verifier/EVMFetchTarget.sol";
+import {IEVMVerifier} from "./linea-verifier/IEVMVerifier.sol";
 import "@ensdomains/ens-contracts/contracts/registry/ENS.sol";
 import {INameWrapper} from "@ensdomains/ens-contracts/contracts/wrapper/INameWrapper.sol";
 import {BytesUtils} from "@ensdomains/ens-contracts/contracts/dnssec-oracle/BytesUtils.sol";
