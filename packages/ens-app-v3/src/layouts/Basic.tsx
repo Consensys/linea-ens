@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useErrorBoundary, withErrorBoundary } from 'react-use-error-boundary'
-import { useIntercom } from 'react-use-intercom'
 import styled, { css } from 'styled-components'
 import { useAccount, useSwitchChain } from 'wagmi'
 
@@ -10,7 +9,6 @@ import FeedbackSVG from '@app/assets/Feedback.svg'
 import ErrorScreen from '@app/components/@atoms/ErrorScreen'
 import { getSupportedChainById } from '@app/constants/chains'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
-import { IS_DEV_ENVIRONMENT } from '@app/utils/constants'
 
 import { Navigation } from './Navigation'
 
@@ -67,17 +65,10 @@ export const Basic = withErrorBoundary(({ children }: { children: React.ReactNod
 
   const router = useRouterWithHistory()
   const [error] = useErrorBoundary()
-  const { boot } = useIntercom()
-
-  useEffect(() => {
-    // Do not initialise with uid and email without implementing identity verification first
-    if (!IS_DEV_ENVIRONMENT) boot()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   useEffect(() => {
     if (isConnected && !getSupportedChainById(chainId)) {
-      switchChain({ chainId: 1 })
+      switchChain({ chainId: 59141 })
       router.push('/unsupportedNetwork')
     }
   }, [isConnected, chainId, switchChain, router])

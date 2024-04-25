@@ -302,7 +302,7 @@ export const KNOWN_RESOLVER_DATA: KnownResolverData = {
   ],
   '11155111': [
     {
-      address: '0x8FADE66B79cC9f707aB26799354482EB93a5B7dD',
+      address: '0xA4254Ba887ea0813A3F265A7442fAFa68E21a6bb',
       deployer: 'ENS Labs',
       tag: 'latest',
       isNameWrapperAware: true,

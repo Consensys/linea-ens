@@ -1,4 +1,4 @@
-import { defineChain } from 'viem'
+import { Address, defineChain } from 'viem'
 
 export const sepoliaCustom = /* #__PURE__ */ defineChain({
   id: 11_155_111,
@@ -21,10 +21,10 @@ export const sepoliaCustom = /* #__PURE__ */ defineChain({
       address: '0xca11bde05977b3631167028862be2a173976ca11',
       blockCreated: 751532,
     },
-    ensRegistry: { address: '0x56c306b6d15287870B9484883335B8a929f97729' },
+    ensRegistry: { address: '0xCeF1e850d0207B237Ae91e64037072F93C76aE35' },
     ensUniversalResolver: {
-      address: '0x35B37282d7f7005DE1c3F867A6C663d4a530E229',
-      blockCreated: 5_647_522,
+      address: '0x7263bA3b95Ae6177dC39D22f7eF4E277806E8aCF',
+      blockCreated: 5_710_989,
     },
   },
   testnet: true,
@@ -32,33 +32,33 @@ export const sepoliaCustom = /* #__PURE__ */ defineChain({
 
 export const sepoliaCustomEnsAddresses = {
   ensBaseRegistrarImplementation: {
-    address: '0x3680EbF9a484B1250E46324328582AbcB53B6791',
+    address: '0x2372154B01F1071b2f2BB02e93Ab97404f1F7a76' as Address,
   },
   ensBulkRenewal: {
-    address: '0x88Cd4C93b97271AaBA45Bf74a3df5178aB2Ef874',
+    address: '0x05341E05dc959eF86E08a41883F5B478947B790D' as Address,
   },
   ensDnsRegistrar: {
-    address: '0x964429Cee5760eF8E10d52d7061DbD4A70d8B5F4',
+    address: '0x88eeA2489dCc3BeF6439E65a413b68F1a23F1DCf' as Address,
   },
   ensDnssecImpl: {
-    address: '0x541B273dE31cd631544a164C6F1679FD2995FD34',
+    address: '0x45FC85e99c62359d2A778d759FA36dF3D53a31D4' as Address,
   },
   ensEthRegistrarController: {
-    address: '0x65560259405ab2c6a14Aa753e47933a04C8c1b43',
+    address: '0x77D2a098D81580633091529FB93953dE9180c0c0' as Address,
   },
   ensNameWrapper: {
-    address: '0x3b365991034a573d54E6D10e88BfacBF2788A23e',
+    address: '0xB496f723a0180418b0F15e2b1af7d60BBa8Afeb1' as Address,
   },
   ensPublicResolver: {
-    address: '0xca710b440ad4457eE7a8C02355dcA985B78B7627',
+    address: '0xA4254Ba887ea0813A3F265A7442fAFa68E21a6bb' as Address,
   },
   ensRegistry: {
-    address: '0x56c306b6d15287870B9484883335B8a929f97729',
+    address: '0xCeF1e850d0207B237Ae91e64037072F93C76aE35' as Address,
   },
   ensReverseRegistrar: {
-    address: '0x8f71DD4896e0f005dC3dAF7435D75CaB8B0A721b',
+    address: '0xDf307b640a95E6ed82798Eb41A5f388D0eF75C38' as Address,
   },
   ensUniversalResolver: {
-    address: '0x35B37282d7f7005DE1c3F867A6C663d4a530E229',
+    address: '0x7263bA3b95Ae6177dC39D22f7eF4E277806E8aCF' as Address,
   },
 }

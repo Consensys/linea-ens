@@ -1,9 +1,9 @@
-import { Address } from 'viem'
+import { Address, zeroAddress } from 'viem'
 import { useReadContract } from 'wagmi'
 
 import { useContractAddress } from './chain/useContractAddress'
 
-export const usePohRegistered = (address: Address) => {
+export const usePohRegistered = (address: Address | undefined) => {
   const ethRegistrarControllerAddress = useContractAddress({
     contract: 'ensEthRegistrarController',
   })
@@ -19,7 +19,7 @@ export const usePohRegistered = (address: Address) => {
       },
     ],
     address: ethRegistrarControllerAddress,
-    args: [address],
+    args: [address || zeroAddress],
     functionName: 'hasRegisteredPoh',
   })
 }

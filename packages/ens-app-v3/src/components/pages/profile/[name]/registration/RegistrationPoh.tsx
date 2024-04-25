@@ -102,7 +102,7 @@ const MoonPayIFrame = styled.iframe(
   `,
 )
 
-const Registration = ({ nameDetails, isLoading }: Props) => {
+const RegistrationPoh = ({ nameDetails, isLoading }: Props) => {
   const { t } = useTranslation('register')
 
   const router = useRouterWithHistory()
@@ -128,7 +128,7 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
   const commitKey = `commit-${keySuffix}`
   const registerKey = `register-${keySuffix}`
 
-  const pohSignature = address ? usePohSignature(address) : undefined
+  const pohSignature = usePohSignature(address)
 
   const { cleanupFlow } = useTransactionFlow()
 
@@ -283,7 +283,6 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
               ),
               info: (
                 <PohInfo
-                  name={normalisedName}
                   registrationData={item}
                   callback={genericCallback}
                   onProfileClick={infoProfileCallback}
@@ -320,11 +319,6 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
             <Typography fontVariant="bodyBold" color="grey">
               {t('steps.info.moonpayModalHeader')}
             </Typography>
-            {chainId === 5 && (
-              <Typography fontVariant="body" color="grey">
-                {`${t('steps.info.moonpayTestCard')}: 4000 0209 5159 5032, 12/2030, 123`}
-              </Typography>
-            )}
           </MoonPayHeader>
           <MoonPayIFrame
             title="Moonpay Checkout"
@@ -339,4 +333,4 @@ const Registration = ({ nameDetails, isLoading }: Props) => {
   )
 }
 
-export default Registration
+export default RegistrationPoh

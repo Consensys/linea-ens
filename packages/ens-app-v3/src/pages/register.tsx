@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 
-import Registration from '@app/components/pages/profile/[name]/registration/RegistrationPoh'
+import RegistrationPoh from '@app/components/pages/profile/[name]/registration/RegistrationPoh'
 import { useInitial } from '@app/hooks/useInitial'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 import { getSelectedIndex } from '@app/hooks/useRegistrationReducer'
@@ -50,7 +50,7 @@ export default function Page() {
     }
   }
 
-  return <Registration {...{ nameDetails, isLoading }} />
+  return <RegistrationPoh {...{ nameDetails, isLoading }} />
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {

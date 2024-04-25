@@ -32,6 +32,8 @@ const nextConfig = {
     NEXT_PUBLIC_BASE_DOMAIN: process.env.NEXT_PUBLIC_BASE_DOMAIN || 'linea-test',
     NEXT_PUBLIC_ALCHEMY_KEY:
       process.env.NEXT_PUBLIC_ALCHEMY_KEY || 'sSpYuHmhlpuU7RVXq-IIdCdz4IuKF-gM',
+    NEXT_PUBLIC_INFURA_KEY:
+      process.env.NEXT_PUBLIC_INFURA_KEY || 'cfa6ae2501cc4354a74e20432507317c',
   },
   // change to true once infinite loop is fixed
   swcMinify: false,

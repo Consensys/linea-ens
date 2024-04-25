@@ -31,7 +31,6 @@ import type { TransactionDialogPassthrough } from '@app/transaction-flow/types'
 import { getResolverWrapperAwareness } from '@app/utils/utils'
 
 import ResolverWarningOverlay from './ResolverWarningOverlay'
-import { WrappedAvatarButton } from './WrappedAvatarButton'
 
 const Container = styled.form(({ theme }) => [
   css`
@@ -46,13 +45,6 @@ const Container = styled.form(({ theme }) => [
     max-width: ${theme.space['128']};
   `),
 ])
-
-const AvatarWrapper = styled.div(
-  () => css`
-    display: flex;
-    justify-content: center;
-  `,
-)
 
 const StyledScrollBox = styled(ScrollBox)(
   ({ theme }) => css`
@@ -246,8 +238,7 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
     [profile, name, existingRecords, dispatch],
   )
 
-  const [avatarSrc, setAvatarSrc] = useState<string | undefined>()
-  const [avatarFile, setAvatarFile] = useState<File | undefined>()
+  const [avatarFile] = useState<File | undefined>()
 
   useEffect(() => {
     if (
@@ -297,17 +288,6 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
               <Dialog.Heading title={t('steps.profile.title2')} />
               <StyledScrollBox hideDividers={{ bottom: true }}>
                 <ScrollContentContainer>
-                  <AvatarWrapper>
-                    <WrappedAvatarButton
-                      name={name}
-                      control={control}
-                      src={avatarSrc}
-                      onSelectOption={(option) => setView(option)}
-                      onAvatarChange={(avatar) => setAvatar(avatar)}
-                      onAvatarFileChange={(file) => setAvatarFile(file)}
-                      onAvatarSrcChange={(src) => setAvatarSrc(src)}
-                    />
-                  </AvatarWrapper>
                   {profileRecords.map((field, index) =>
                     field.group === 'custom' ? (
                       <CustomProfileRecordInput
@@ -424,9 +404,9 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
               avatarFile={avatarFile}
               handleCancel={() => setView('editor')}
               type="upload"
-              handleSubmit={(type: 'upload' | 'nft', uri: string, display?: string) => {
+              handleSubmit={(uri: string) => {
                 setAvatar(uri)
-                setAvatarSrc(display)
+                // setAvatarSrc(display)
                 setView('editor')
                 trigger()
               }}
@@ -438,9 +418,9 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
               avatarFile={avatarFile}
               handleCancel={() => setView('editor')}
               type="nft"
-              handleSubmit={(type: 'upload' | 'nft', uri: string, display?: string) => {
+              handleSubmit={(uri: string) => {
                 setAvatar(uri)
-                setAvatarSrc(display)
+
                 setView('editor')
                 trigger()
               }}

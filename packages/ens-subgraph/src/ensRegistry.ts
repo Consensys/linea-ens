@@ -7,6 +7,7 @@ import {
   createEventID,
   EMPTY_ADDRESS,
   EMPTY_ADDRESS_BYTEARRAY,
+  nameByHashLocal,
   ROOT_NODE,
 } from "./utils";
 
@@ -109,6 +110,9 @@ function _handleNewOwner(event: NewOwnerEvent, isMigrated: boolean): void {
   if (domain.name == null) {
     // Get label and node names
     let label = ens.nameByHash(event.params.label.toHexString());
+    if (label == null) {
+      label = nameByHashLocal(event.params.label.toHexString());
+    }
     if (checkValidLabel(label)) {
       domain.labelName = label;
     } else {

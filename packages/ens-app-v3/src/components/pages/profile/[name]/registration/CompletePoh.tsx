@@ -97,47 +97,6 @@ const SubtitleWithGradient = styled(Typography)(
   `,
 )
 
-const nameRegisteredSnippet = [
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        name: 'name',
-        type: 'string',
-      },
-      {
-        indexed: true,
-        name: 'label',
-        type: 'bytes32',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        name: 'baseCost',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        name: 'premium',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        name: 'expires',
-        type: 'uint256',
-      },
-    ],
-    name: 'NameRegistered',
-    type: 'event',
-  },
-] as const
-
 const Confetti = dynamic(() =>
   import('react-confetti').then((mod) => mod.default as typeof ConfettiT),
 )
@@ -215,11 +174,6 @@ const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
       </TitleContainer>
       <Typography>{t('steps.complete.description')}</Typography>
       <ButtonContainer>
-        <MobileFullWidth>
-          <Button colorStyle="accentSecondary" onClick={() => callback(false)}>
-            {t('steps.complete.registerAnother')}
-          </Button>
-        </MobileFullWidth>
         <MobileFullWidth>
           <Button data-testid="view-name" onClick={() => callback(true)}>
             {t('steps.complete.viewName')}
