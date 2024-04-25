@@ -281,7 +281,7 @@ contract('ETHRegistrarController', function () {
     )
   })
 
-  it.only('should allow registration with Proof of Humanity', async function () {
+  it('should allow registration with Proof of Humanity', async function () {
     const name = 'pohname'
     const duration = 28 * 24 * 60 * 60 // 28 days in seconds
     const secret = ethers.utils.formatBytes32String('secret')

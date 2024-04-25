@@ -32,11 +32,17 @@ contract PohRegistrationManager is Ownable {
         return hasRegisteredPoh[_address];
     }
 
-
-    function setManager(
-        address _manager,
-        bool isManager
-    ) external onlyOwner {
+    /**
+     * @dev Sets or revokes the manager role for an address.
+     * Allows the contract owner to designate certain addresses as managers,
+     * who are then authorized to mark addresses as having successfully registered using PoH.
+     * This function can also be used to revoke the manager role by setting `isManager` to false.
+     *
+     * @param _manager The address to be set as a manager or to have its manager role revoked.
+     * @param isManager A boolean indicating whether the address should be set as a manager (true)
+     * or have its manager role revoked (false).
+     */
+    function setManager(address _manager, bool isManager) external onlyOwner {
         managers[_manager] = isManager;
     }
 }
