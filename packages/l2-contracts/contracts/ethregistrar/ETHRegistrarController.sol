@@ -18,6 +18,8 @@ import {NameEncoder} from "../utils/NameEncoder.sol";
 
 // Import PohVerifier contract
 import "./PohVerifier.sol";
+// Import PohRegistrationManager contract
+import "./PohRegistrationManager.sol";
 
 error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
@@ -56,10 +58,9 @@ contract ETHRegistrarController is
     INameWrapper public immutable nameWrapper;
 
     mapping(bytes32 => uint256) public commitments;
-    // Mapping to keep track of addresses that have successfully registered using registerPoh
-    mapping(address => bool) public hasRegisteredPoh;
 
     PohVerifier public pohVerifier;
+    PohRegistrationManager public pohRegistrationManager;
     bytes32 public immutable baseNode;
     string public baseDomain;
 
@@ -85,6 +86,13 @@ contract ETHRegistrarController is
         uint256 expires
     );
 
+    event OwnerNameRegistered(
+        string name,
+        bytes32 indexed label,
+        address indexed owner,
+        uint256 expires
+    );
+
     constructor(
         BaseRegistrarImplementation _base,
         IPriceOracle _prices,
@@ -94,6 +102,7 @@ contract ETHRegistrarController is
         INameWrapper _nameWrapper,
         ENS _ens,
         PohVerifier _pohVerifier,
+        PohRegistrationManager _pohRegistrationManager,
         bytes32 _baseNode,
         string memory _baseDomain
     ) ReverseClaimer(_ens, msg.sender) {
@@ -112,6 +121,7 @@ contract ETHRegistrarController is
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
         pohVerifier = _pohVerifier;
+        pohRegistrationManager = _pohRegistrationManager;
         baseNode = _baseNode;
         baseDomain = _baseDomain;
     }
@@ -186,7 +196,7 @@ contract ETHRegistrarController is
         }
 
         // An andress can own only one domain using its PoH
-        if (hasRegisteredPoh[owner]) {
+        if (redeemed(owner)) {
             revert OwnerAlreadyRegistered(owner);
         }
 
@@ -196,7 +206,7 @@ contract ETHRegistrarController is
         }
 
         // Mark this address as having successfully registered
-        hasRegisteredPoh[owner] = true;
+        pohRegistrationManager.markAsRegistered(owner);
 
         uint256 expires = _register(
             name,
@@ -206,7 +216,8 @@ contract ETHRegistrarController is
             resolver,
             data,
             reverseRecord,
-            ownerControlledFuses
+            ownerControlledFuses,
+            false
         );
 
         emit PohNameRegistered(name, keccak256(bytes(name)), owner, expires);
@@ -214,7 +225,7 @@ contract ETHRegistrarController is
 
     // Function to check if an address has successfully registered using registerPoh
     function redeemed(address _address) public view returns (bool) {
-        return hasRegisteredPoh[_address];
+        return pohRegistrationManager.isRegistered(_address);
     }
 
     function register(
@@ -239,7 +250,8 @@ contract ETHRegistrarController is
             resolver,
             data,
             reverseRecord,
-            ownerControlledFuses
+            ownerControlledFuses,
+            false
         );
 
         emit NameRegistered(
@@ -266,22 +278,26 @@ contract ETHRegistrarController is
         address resolver,
         bytes[] calldata data,
         bool reverseRecord,
-        uint16 ownerControlledFuses
+        uint16 ownerControlledFuses,
+        bool bypassCommitment
     ) internal returns (uint256) {
-        _consumeCommitment(
-            name,
-            duration,
-            makeCommitment(
+        // Skip the commitment process if bypassCommitment is true
+        if (!bypassCommitment) {
+            _consumeCommitment(
                 name,
-                owner,
                 duration,
-                secret,
-                resolver,
-                data,
-                reverseRecord,
-                ownerControlledFuses
-            )
-        );
+                makeCommitment(
+                    name,
+                    owner,
+                    duration,
+                    secret,
+                    resolver,
+                    data,
+                    reverseRecord,
+                    ownerControlledFuses
+                )
+            );
+        }
 
         uint256 expires = nameWrapper.registerAndWrap(
             name,
@@ -381,5 +397,39 @@ contract ETHRegistrarController is
             resolver,
             string.concat(name, baseDomain)
         );
+    }
+
+    /**
+     * @dev Allows a specified owner to register a name directly, with an option to bypass the commitment process.
+     * @param name The domain name to be registered.
+     * @param owner The address that will own the registered domain.
+     * @param duration How long the registration is valid.
+     * @param resolver The address of the resolver contract for this domain.
+     * @param data An array of bytes, possibly representing records to be set for the domain.
+     * @param ownerControlledFuses A parameter likely related to permissions or security settings for the domain.
+     * @param reverseRecord A boolean indicating whether a reverse record should be set.
+     */
+    function ownerRegister(
+        string calldata name,
+        address owner,
+        uint256 duration,
+        address resolver,
+        bytes[] calldata data,
+        uint16 ownerControlledFuses,
+        bool reverseRecord
+    ) external onlyOwner {
+        uint256 expires = _register(
+            name,
+            owner,
+            duration,
+            bytes32(0),
+            resolver,
+            data,
+            reverseRecord,
+            ownerControlledFuses,
+            true
+        );
+
+        emit OwnerNameRegistered(name, keccak256(bytes(name)), owner, expires);
     }
 }

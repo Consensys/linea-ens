@@ -9,18 +9,18 @@ contract PohVerifier is EIP712, Ownable {
     string private constant SIGNING_DOMAIN = "VerifyPoh";
     string private constant SIGNATURE_VERSION = "1";
 
-    address payable public signer;
+    address public signer;
 
     event Withdrawal(uint amount, uint when);
     event SignerUpdated(address indexed newSigner);
 
     constructor() EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) Ownable() {
-        signer = payable(msg.sender);
+        signer = msg.sender;
     }
 
     function setSigner(address _signer) public onlyOwner {
         require(_signer != address(0), "Invalid address");
-        signer = payable(_signer);
+        signer = _signer;
         emit SignerUpdated(_signer);
     }
 
@@ -34,5 +34,9 @@ contract PohVerifier is EIP712, Ownable {
 
         address recoveredSigner = ECDSA.recover(digest, signature);
         return recoveredSigner == signer;
+    }
+
+    function getSigner() public view returns (address) {
+        return signer;
     }
 }
