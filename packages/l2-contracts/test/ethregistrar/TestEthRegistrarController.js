@@ -1068,7 +1068,6 @@ contract('ETHRegistrarController', function () {
     const resolverAddress = resolver.address
     const ownerControlledFuses = 0
     const reverseRecord = false
-    const bypassCommitment = true
 
     const tx = await controllerPoh.ownerRegister(
       name,
@@ -1078,7 +1077,6 @@ contract('ETHRegistrarController', function () {
       [], // data
       ownerControlledFuses,
       reverseRecord,
-      bypassCommitment,
       { from: ownerAccount },
     )
 
@@ -1094,7 +1092,6 @@ contract('ETHRegistrarController', function () {
     const resolverAddress = resolver.address
     const ownerControlledFuses = 0
     const reverseRecord = false
-    const bypassCommitment = true
 
     // Attempt to perform the registration using ownerRegister from a non-owner account
     await expect(
@@ -1107,7 +1104,6 @@ contract('ETHRegistrarController', function () {
         [],
         ownerControlledFuses,
         reverseRecord,
-        bypassCommitment,
       ),
     ).to.be.revertedWith('Ownable: caller is not the owner')
   })

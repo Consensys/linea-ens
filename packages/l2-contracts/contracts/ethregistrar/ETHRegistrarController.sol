@@ -408,7 +408,6 @@ contract ETHRegistrarController is
      * @param data An array of bytes, possibly representing records to be set for the domain.
      * @param ownerControlledFuses A parameter likely related to permissions or security settings for the domain.
      * @param reverseRecord A boolean indicating whether a reverse record should be set.
-     * @param bypassCommitment A boolean indicating whether to bypass the commitment process.
      */
     function ownerRegister(
         string calldata name,
@@ -417,8 +416,7 @@ contract ETHRegistrarController is
         address resolver,
         bytes[] calldata data,
         uint16 ownerControlledFuses,
-        bool reverseRecord,
-        bool bypassCommitment
+        bool reverseRecord
     ) external onlyOwner {
         uint256 expires = _register(
             name,
@@ -429,7 +427,7 @@ contract ETHRegistrarController is
             data,
             reverseRecord,
             ownerControlledFuses,
-            bypassCommitment
+            true
         );
 
         emit OwnerNameRegistered(name, keccak256(bytes(name)), owner, expires);
