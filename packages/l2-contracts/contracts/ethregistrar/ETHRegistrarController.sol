@@ -400,38 +400,38 @@ contract ETHRegistrarController is
     }
 
     /**
-     * @dev Allows the owner to register a domain without paying fees or PoH verification.
-     * @param name The name to register.
-     * @param duration The duration in seconds for which the name is registered.
-     * @param resolver The address of the resolver contract.
-     * @param data The data to set on the name.
-     * @param ownerControlledFuses The fuses to set on the name.
+     * @dev Allows a specified owner to register a name directly, with an option to bypass the commitment process.
+     * @param name The domain name to be registered.
+     * @param owner The address that will own the registered domain.
+     * @param duration How long the registration is valid.
+     * @param resolver The address of the resolver contract for this domain.
+     * @param data An array of bytes, possibly representing records to be set for the domain.
+     * @param ownerControlledFuses A parameter likely related to permissions or security settings for the domain.
+     * @param reverseRecord A boolean indicating whether a reverse record should be set.
+     * @param bypassCommitment A boolean indicating whether to bypass the commitment process.
      */
-
     function ownerRegister(
         string calldata name,
+        address owner,
         uint256 duration,
         address resolver,
         bytes[] calldata data,
-        uint16 ownerControlledFuses
+        uint16 ownerControlledFuses,
+        bool reverseRecord,
+        bool bypassCommitment
     ) external onlyOwner {
         uint256 expires = _register(
             name,
-            msg.sender,
+            owner,
             duration,
-            0,
+            bytes32(0),
             resolver,
             data,
-            false,
+            reverseRecord,
             ownerControlledFuses,
-            true
+            bypassCommitment
         );
 
-        emit OwnerNameRegistered(
-            name,
-            keccak256(bytes(name)),
-            msg.sender,
-            expires
-        );
+        emit OwnerNameRegistered(name, keccak256(bytes(name)), owner, expires);
     }
 }

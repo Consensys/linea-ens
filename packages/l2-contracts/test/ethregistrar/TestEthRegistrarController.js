@@ -1061,4 +1061,54 @@ contract('ETHRegistrarController', function () {
       "Transaction reverted: function selector was not recognized and there's no fallback function",
     )
   })
+
+  it('should allow the owner to register a name directly', async function () {
+    const name = 'ownername'
+    const duration = 28 * 24 * 60 * 60
+    const resolverAddress = resolver.address
+    const ownerControlledFuses = 0
+    const reverseRecord = false
+    const bypassCommitment = true
+
+    const tx = await controllerPoh.ownerRegister(
+      name,
+      ownerAccount,
+      duration,
+      resolverAddress,
+      [], // data
+      ownerControlledFuses,
+      reverseRecord,
+      bypassCommitment,
+      { from: ownerAccount },
+    )
+
+    await tx.wait()
+
+    // Check for the OwnerNameRegistered event to confirm registration
+    await expect(tx).to.emit(controllerPoh, 'OwnerNameRegistered')
+  })
+
+  it('should revert if called by a non-owner', async function () {
+    const name = 'nonownername'
+    const duration = 28 * 24 * 60 * 60
+    const resolverAddress = resolver.address
+    const ownerControlledFuses = 0
+    const reverseRecord = false
+    const bypassCommitment = true
+
+    // Attempt to perform the registration using ownerRegister from a non-owner account
+    await expect(
+      controllerPoh.connect(signers[1]).ownerRegister(
+        // Using signers[1] assuming it's a non-owner account
+        name,
+        signers[1].address,
+        duration,
+        resolverAddress,
+        [],
+        ownerControlledFuses,
+        reverseRecord,
+        bypassCommitment,
+      ),
+    ).to.be.revertedWith('Ownable: caller is not the owner')
+  })
 })
