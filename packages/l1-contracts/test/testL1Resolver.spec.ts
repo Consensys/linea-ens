@@ -333,8 +333,7 @@ describe("Crosschain Resolver", () => {
     expect(decoded[0]).to.equal(value);
   });
 
-  // TODO: needs to be fixed
-  it.skip("should test contenthash", async () => {
+  it("should test contenthash", async () => {
     await target.setTarget(node, l2ResolverAddress);
     const contenthash =
       "0xe3010170122029f2d17be6139079dc48696d1f582a8530eb9805b561eda517e22a892c7e3f1f";

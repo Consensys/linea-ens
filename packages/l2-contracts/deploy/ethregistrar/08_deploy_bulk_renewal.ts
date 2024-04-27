@@ -2,7 +2,6 @@ import { Interface } from 'ethers/lib/utils'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
-import namehash from 'eth-ens-namehash'
 
 const { makeInterfaceId } = require('@openzeppelin/test-helpers')
 
@@ -31,13 +30,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const artifact = await deployments.getArtifact('IBulkRenewal')
   const interfaceId = computeInterfaceId(new Interface(artifact.abi))
-  const provider = new ethers.providers.StaticJsonRpcProvider(
-    ethers.provider.connection.url,
-    {
-      ...ethers.provider.network,
-      ensAddress: registry.address,
-    },
-  )
 
   const resolver = await registry.resolver(ethers.utils.namehash('eth'))
   if (resolver === ethers.constants.AddressZero) {
