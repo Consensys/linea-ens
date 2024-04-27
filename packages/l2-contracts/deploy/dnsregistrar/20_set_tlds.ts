@@ -1226,9 +1226,6 @@ const tld_map = {
   sepolia: ['com', 'xyz'],
 }
 
-const ZERO_HASH =
-  '0x0000000000000000000000000000000000000000000000000000000000000000'
-
 function encodeName(name: string) {
   return '0x' + packet.name.encode(name).toString('hex')
 }

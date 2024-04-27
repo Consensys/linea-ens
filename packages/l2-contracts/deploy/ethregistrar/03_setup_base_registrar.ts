@@ -1,11 +1,10 @@
-import namehash from 'eth-ens-namehash'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { keccak256 } from 'js-sha3'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { getNamedAccounts, deployments, network } = hre
+  const { getNamedAccounts, network } = hre
   const { deployer, owner } = await getNamedAccounts()
 
   if (!process.env.BASE_DOMAIN) {
@@ -45,14 +44,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     `Setting owner of ${process.env.BASE_DOMAIN}.eth node to registrar on root (tx: ${tx2.hash})...`,
   )
   await tx3.wait()
-
-  const tx4 = await root
-    .connect(await ethers.getSigner(owner))
-    .setSubnodeOwner('0x' + keccak256('eth'), registrar.address)
-  console.log(
-    `Resetting owner of eth node to registrar on root (tx: ${tx4.hash})...`,
-  )
-  await tx4.wait()
 }
 
 func.id = 'setupRegistrar'
