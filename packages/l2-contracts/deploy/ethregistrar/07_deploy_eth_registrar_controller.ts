@@ -24,11 +24,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
-  const pohVerifierDeployment = await ethers.getContract('PohVerifier', owner)
-  const fixedPriceOracleDeployment = await ethers.getContract(
-    'FixedPriceOracle',
+  const pohVerifier = await ethers.getContract('PohVerifier', owner)
+  const pohRegistrationManager = await ethers.getContract(
+    'PohRegistrationManager',
     owner,
   )
+  const fixedPriceOracle = await ethers.getContract('FixedPriceOracle', owner)
   const baseNode = ethers.utils.namehash(process.env.BASE_DOMAIN + '.eth')
   const baseDomainStr = '.' + process.env.BASE_DOMAIN + '.eth'
 
@@ -36,13 +37,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [
       registrar.address,
-      fixedPriceOracleDeployment.address, // Pass the FixedPriceOracle address
+      fixedPriceOracle.address, // Pass the FixedPriceOracle address
       60,
       86400,
       reverseRegistrar.address,
       nameWrapper.address,
       registry.address,
-      pohVerifierDeployment.address,
+      pohVerifier.address,
+      pohRegistrationManager.address,
       baseNode,
       baseDomainStr,
     ],
@@ -111,6 +113,7 @@ func.dependencies = [
   'OwnedResolver',
   'FixedPriceOracle',
   'PohVerifier',
+  'PohRegistrationManager',
 ]
 
 export default func

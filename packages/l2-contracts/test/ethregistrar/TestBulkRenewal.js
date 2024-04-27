@@ -77,6 +77,13 @@ contract('BulkRenewal', function (accounts) {
     const pohVerifier = await PohVerifier.deploy()
     await pohVerifier.deployed()
 
+    // Deploy PohRegistrationManager contract
+    const PohRegistrationManager = await ethers.getContractFactory(
+      'PohRegistrationManager',
+    )
+    const pohRegistrationManager = await PohRegistrationManager.deploy()
+    await pohRegistrationManager.deployed()
+
     // Set up a dummy price oracle and a controller
     const dummyOracle = await DummyOracle.new(toBN(100000000))
     priceOracle = await StablePriceOracle.new(
@@ -92,6 +99,7 @@ contract('BulkRenewal', function (accounts) {
       nameWrapper.address,
       ens.address,
       pohVerifier.address,
+      pohRegistrationManager.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
       { from: ownerAccount },

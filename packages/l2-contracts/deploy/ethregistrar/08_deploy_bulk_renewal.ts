@@ -30,13 +30,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const artifact = await deployments.getArtifact('IBulkRenewal')
   const interfaceId = computeInterfaceId(new Interface(artifact.abi))
-  const provider = new ethers.providers.StaticJsonRpcProvider(
-    ethers.provider.connection.url,
-    {
-      ...ethers.provider.network,
-      ensAddress: registry.address,
-    },
-  )
 
   const resolver = await registry.resolver(ethers.utils.namehash('eth'))
   if (resolver === ethers.constants.AddressZero) {

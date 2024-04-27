@@ -135,6 +135,13 @@ contract('ETHRegistrarController', function () {
     const pohVerifier = await PohVerifier.deploy()
     await pohVerifier.deployed()
 
+    // Deploy PohRegistrationManager contract
+    const PohRegistrationManager = await ethers.getContractFactory(
+      'PohRegistrationManager',
+    )
+    const pohRegistrationManager = await PohRegistrationManager.deploy()
+    await pohRegistrationManager.deployed()
+
     // Deploy the mock PohVerifier
     const MockPohVerifier = await ethers.getContractFactory('MockPohVerifier')
     mockPohVerifier = await MockPohVerifier.deploy()
@@ -144,6 +151,7 @@ contract('ETHRegistrarController', function () {
     const ETHRegistrarController = await ethers.getContractFactory(
       'ETHRegistrarController',
     )
+
     controllerPoh = await ETHRegistrarController.deploy(
       baseRegistrar.address,
       priceOracle.address,
@@ -153,10 +161,13 @@ contract('ETHRegistrarController', function () {
       nameWrapper.address,
       ens.address,
       mockPohVerifier.address,
+      pohRegistrationManager.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
     )
     await controllerPoh.deployed()
+
+    await pohRegistrationManager.setManager(controllerPoh.address, true)
 
     await nameWrapper.setController(controllerPoh.address, true)
 
@@ -170,6 +181,7 @@ contract('ETHRegistrarController', function () {
       nameWrapper.address,
       ens.address,
       pohVerifier.address,
+      pohRegistrationManager.address,
       BASE_NODE_BYTES32,
       '.' + BASE_DOMAIN_STR,
     )
@@ -1048,5 +1060,51 @@ contract('ETHRegistrarController', function () {
     ).to.be.revertedWith(
       "Transaction reverted: function selector was not recognized and there's no fallback function",
     )
+  })
+
+  it('should allow the owner to register a name directly', async function () {
+    const name = 'ownername'
+    const duration = 28 * 24 * 60 * 60
+    const resolverAddress = resolver.address
+    const ownerControlledFuses = 0
+    const reverseRecord = false
+
+    const tx = await controllerPoh.ownerRegister(
+      name,
+      ownerAccount,
+      duration,
+      resolverAddress,
+      [], // data
+      ownerControlledFuses,
+      reverseRecord,
+      { from: ownerAccount },
+    )
+
+    await tx.wait()
+
+    // Check for the OwnerNameRegistered event to confirm registration
+    await expect(tx).to.emit(controllerPoh, 'OwnerNameRegistered')
+  })
+
+  it('should revert if called by a non-owner', async function () {
+    const name = 'nonownername'
+    const duration = 28 * 24 * 60 * 60
+    const resolverAddress = resolver.address
+    const ownerControlledFuses = 0
+    const reverseRecord = false
+
+    // Attempt to perform the registration using ownerRegister from a non-owner account
+    await expect(
+      controllerPoh.connect(signers[1]).ownerRegister(
+        // Using signers[1] assuming it's a non-owner account
+        name,
+        signers[1].address,
+        duration,
+        resolverAddress,
+        [],
+        ownerControlledFuses,
+        reverseRecord,
+      ),
+    ).to.be.revertedWith('Ownable: caller is not the owner')
   })
 })
