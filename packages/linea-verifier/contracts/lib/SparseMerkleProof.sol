@@ -167,14 +167,49 @@ library SparseMerkleProof {
         bytes32 nextFreeNode = bytes32(_rawProof[0][:32]);
         bytes32 leafHash = Mimc.hash(_rawProof[rawProofLength - 1]);
 
-        for (uint i = 1; i < rawProofLength - 1; ) {
+        for (uint256 i = 1; i < rawProofLength - 2; ) {
             proof[rawProofLength - 2 - i] = Mimc.hash(_rawProof[i]);
             unchecked {
                 ++i;
             }
         }
 
+        // If the neighboring leaf is equal to zero bytes we don't hash it
+        if (_isZeroBytes(_rawProof[rawProofLength - 2])) {
+            proof[0] = bytes32(0);
+        } else {
+            proof[0] = Mimc.hash(_rawProof[rawProofLength - 2]);
+        }
+
         return (nextFreeNode, leafHash, proof);
+    }
+
+    /**
+     * @notice Check if bytes contain only zero byte elements
+     * @param _data Bytes to be checked
+     * @return {bool} true if bytes contain only zero byte elements, false otherwise
+     */
+    function _isZeroBytes(bytes calldata _data) private pure returns (bool) {
+        bool allZero = true;
+        assembly {
+            let dataLength := _data.length
+            let dataStart := _data.offset
+            let dataEnd := add(dataStart, dataLength)
+
+            for {
+                let currentPtr := dataStart
+            } lt(currentPtr, dataEnd) {
+                currentPtr := add(currentPtr, 0x20)
+            } {
+                let dataWord := calldataload(currentPtr)
+
+                if eq(iszero(dataWord), 0) {
+                    allZero := 0
+                    break
+                }
+            }
+        }
+        return allZero;
     }
 
     /**
