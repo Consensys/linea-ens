@@ -16,10 +16,8 @@ import {INameWrapper} from "../wrapper/INameWrapper.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
 import {NameEncoder} from "../utils/NameEncoder.sol";
 
-// Import PohVerifier contract
-import "./PohVerifier.sol";
-// Import PohRegistrationManager contract
-import "./PohRegistrationManager.sol";
+import {PohVerifier} from "./PohVerifier.sol";
+import {PohRegistrationManager} from "./PohRegistrationManager.sol";
 
 error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
@@ -34,6 +32,7 @@ error MaxCommitmentAgeTooHigh();
 error PohVerificationFailed(address owner);
 error OwnerAlreadyRegistered(address owner);
 error SenderNotOwner(address owner, address sender);
+error WrongPohRegistrationDuration(uint256 duration);
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -49,6 +48,7 @@ contract ETHRegistrarController is
     using Address for address;
 
     uint256 public constant MIN_REGISTRATION_DURATION = 28 days;
+    uint256 public constant POH_REGISTRATION_DURATION = 1 days * 365 * 3;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
     BaseRegistrarImplementation immutable base;
     IPriceOracle public immutable prices;
@@ -56,12 +56,12 @@ contract ETHRegistrarController is
     uint256 public immutable maxCommitmentAge;
     ReverseRegistrar public immutable reverseRegistrar;
     INameWrapper public immutable nameWrapper;
+    bytes32 public immutable baseNode;
 
     mapping(bytes32 => uint256) public commitments;
 
     PohVerifier public pohVerifier;
     PohRegistrationManager public pohRegistrationManager;
-    bytes32 public immutable baseNode;
     string public baseDomain;
 
     event NameRegistered(
@@ -193,6 +193,11 @@ contract ETHRegistrarController is
         // The sender of the transaction needs to be the owner
         if (msg.sender != owner) {
             revert SenderNotOwner(owner, msg.sender);
+        }
+
+        // POH registration has to be valid for a duration of 3 years
+        if (duration != POH_REGISTRATION_DURATION) {
+            revert WrongPohRegistrationDuration(duration);
         }
 
         // An andress can own only one domain using its PoH
