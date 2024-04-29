@@ -16,10 +16,8 @@ import {INameWrapper} from "../wrapper/INameWrapper.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
 import {NameEncoder} from "../utils/NameEncoder.sol";
 
-// Import PohVerifier contract
-import "./PohVerifier.sol";
-// Import PohRegistrationManager contract
-import "./PohRegistrationManager.sol";
+import {PohVerifier} from "./PohVerifier.sol";
+import {PohRegistrationManager} from "./PohRegistrationManager.sol";
 
 error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
@@ -59,9 +57,13 @@ contract ETHRegistrarController is
 
     mapping(bytes32 => uint256) public commitments;
 
+    /// @dev PohVerifier contract that is used to verify the POH signature
     PohVerifier public pohVerifier;
+    /// @dev PohRegistrationManager contract to keep track of the addresses that used their POH registration (One by address)
     PohRegistrationManager public pohRegistrationManager;
+    /// @dev node of the base domain configured (eg: namehash(linea.eth))
     bytes32 public immutable baseNode;
+    /// @dev string of the base domain configured (eg: 'linea.eth')
     string public baseDomain;
 
     event NameRegistered(
@@ -93,6 +95,20 @@ contract ETHRegistrarController is
         uint256 expires
     );
 
+    /**
+     * @notice Create registrar for the base domain passed in parameter.
+     * @param _base Base registrar address.
+     * @param _prices Price oracle address.
+     * @param _minCommitmentAge Minimum commitment age.
+     * @param _maxCommitmentAge Maximum commitment age.
+     * @param _reverseRegistrar Reverse registrar address.
+     * @param _nameWrapper Name wrapper address.
+     * @param _ens ENS registry address.
+     * @param _pohVerifier POH Verifier address.
+     * @param _pohRegistrationManager POH registration manager address.
+     * @param _baseNode Base node hash.
+     * @param _baseDomain Base domain string.
+     */
     constructor(
         BaseRegistrarImplementation _base,
         IPriceOracle _prices,
@@ -179,6 +195,18 @@ contract ETHRegistrarController is
         commitments[commitment] = block.timestamp;
     }
 
+    /**
+     * @notice Register a new domain using POH for free, one address that has POH can register only one domain
+     * @param name to register
+     * @param owner of the name
+     * @param duration length of the registration
+     * @param secret hash of the commitment made before the registration
+     * @param resolver address to set for this domain(Default is public resolver address)
+     * @param data the operations to apply to this domain after the registration (eg: setRecords)
+     * @param reverseRecord boolean to activate the reverse record for this domain
+     * @param ownerControlledFuses fuses
+     * @param signature the POH signature crafted by the POH API to verify that the owner address has POH
+     */
     function registerPoh(
         string calldata name,
         address owner,
@@ -205,7 +233,7 @@ contract ETHRegistrarController is
             revert PohVerificationFailed(owner);
         }
 
-        // Mark this address as having successfully registered
+        // Mark this address as having successfully registered and used its POH right
         pohRegistrationManager.markAsRegistered(owner);
 
         uint256 expires = _register(
@@ -223,11 +251,27 @@ contract ETHRegistrarController is
         emit PohNameRegistered(name, keccak256(bytes(name)), owner, expires);
     }
 
-    // Function to check if an address has successfully registered using registerPoh
+    /**
+     * @notice Check if an address has already used its POH or not
+     * @param _address to check
+     */
     function redeemed(address _address) public view returns (bool) {
         return pohRegistrationManager.isRegistered(_address);
     }
 
+    /**
+     * @notice Register a new domain using ENS standard registration
+     * @dev Most of the logic has been moved to the internal _register() to be used by registerPOH as well
+     * @dev Only the price check and event are kept
+     * @param name to register
+     * @param owner of the name
+     * @param duration length of the registration
+     * @param secret hash of the commitment made before the registration
+     * @param resolver address to set for this domain(Default is public resolver address)
+     * @param data the operations to apply to this domain after the registration (eg: setRecords)
+     * @param reverseRecord boolean to activate the reverse record for this domain
+     * @param ownerControlledFuses fuses
+     */
     function register(
         string calldata name,
         address owner,
@@ -237,7 +281,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    ) public payable {
+    ) public payable override {
         IPriceOracle.Price memory price = rentPrice(name, duration);
         if (msg.value < price.base + price.premium) {
             revert InsufficientValue();
@@ -270,6 +314,20 @@ contract ETHRegistrarController is
         }
     }
 
+    /**
+     * @notice Internal register method called by register() and registerPOH
+     * @dev An additional param has been added to bypass the commitment if needed
+     * @dev Contains the registration logic
+     * @param name to register
+     * @param owner of the name
+     * @param duration length of the registration
+     * @param secret hash of the commitment made before the registration
+     * @param resolver address to set for this domain(Default is public resolver address)
+     * @param data the operations to apply to this domain after the registration (eg: setRecords)
+     * @param reverseRecord boolean to activate the reverse record for this domain
+     * @param ownerControlledFuses fuses
+     * @param bypassCommitment boolean to bypass the commitment
+     */
     function _register(
         string calldata name,
         address owner,
@@ -376,6 +434,13 @@ contract ETHRegistrarController is
         }
     }
 
+    /**
+     * @notice Set the records linked to a domain for an owner
+     * @dev Same as original ENS's _setRecords except that it uses the baseNode instead of hardcoded ETH_NODE
+     * @param resolverAddress resolver's address
+     * @param label hash of the domain's label to register
+     * @param data list of records to save
+     */
     function _setRecords(
         address resolverAddress,
         bytes32 label,
@@ -386,6 +451,13 @@ contract ETHRegistrarController is
         resolver.multicallWithNodeCheck(nodehash, data);
     }
 
+    /**
+     * @notice Set the reverse record for the name passed in parameter
+     * @dev Same as original ENS's _setReverseRecord except that it uses the baseNode instead of hardcoded ETH_NODE
+     * @param name string to setup the reverse record for
+     * @param resolver resolver's address
+     * @param owner address to set the reverse record for
+     */
     function _setReverseRecord(
         string memory name,
         address resolver,

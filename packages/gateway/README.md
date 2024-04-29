@@ -30,10 +30,6 @@ Run the following:
 
 ```shell
 pnpm i
-```
-
-```shell
-cd packages/gateway
 pnpm compile
 pnpm test
 ```
