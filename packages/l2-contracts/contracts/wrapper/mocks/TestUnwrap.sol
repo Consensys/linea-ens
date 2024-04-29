@@ -27,7 +27,7 @@ contract TestUnwrap is Ownable {
         approvedWrapper[wrapper] = approved;
     }
 
-    function wrapETH2LD(
+    function wrapAnyLD(
         string calldata label,
         address wrappedOwner,
         uint32 fuses,

@@ -85,7 +85,7 @@ task('seed', 'Creates test subbdomains and wraps them with Namewrapper')
     console.log('EnsRegistry setApprovalForAll successful')
 
     await (
-      await NameWrapper.wrapETH2LD(
+      await NameWrapper.wrapAnyLD(
         name,
         firstAddress,
         CAN_DO_EVERYTHING,

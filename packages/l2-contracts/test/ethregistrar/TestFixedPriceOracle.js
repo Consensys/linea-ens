@@ -11,11 +11,11 @@ describe('FixedPriceOracle', function () {
     await fixedPriceOracle.deployed();
   });
 
-  it('should return the fixed price in USD', async function () {
-    const fixedPriceUSD = await fixedPriceOracle.FIXED_PRICE_USD();
-    const expectedFixedPriceUSD = ethers.utils.parseEther('1000000');
+  it('should return the fixed price in ETH', async function () {
+    const fixedPriceETH = await fixedPriceOracle.FIXED_PRICE_ETH();
+    const expectedFixedPriceETH = ethers.utils.parseEther('1000000');
 
-    expect(fixedPriceUSD).to.equal(expectedFixedPriceUSD);
+    expect(fixedPriceETH).to.equal(expectedFixedPriceETH);
   });
 
   it('should return the fixed price for any input parameters', async function () {

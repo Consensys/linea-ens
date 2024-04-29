@@ -5,25 +5,43 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+/**
+ * @title Contract to check the signature crafted by the POH API.
+ * @author ConsenSys Software Inc.
+ */
 contract PohVerifier is EIP712, Ownable {
     string private constant SIGNING_DOMAIN = "VerifyPoh";
     string private constant SIGNATURE_VERSION = "1";
 
+    /// @dev POH Signature's signer address
     address public signer;
 
-    event Withdrawal(uint amount, uint when);
     event SignerUpdated(address indexed newSigner);
 
+    /**
+     * @notice Contract created with the sender as owner and signer
+     */
     constructor() EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) Ownable() {
         signer = msg.sender;
     }
 
+    /**
+     * @notice Set a new signer
+     * @dev Signer's address has to be the same address as the POH API signer
+     * @param _signer The new signer's address
+     */
     function setSigner(address _signer) public onlyOwner {
         require(_signer != address(0), "Invalid address");
         signer = _signer;
         emit SignerUpdated(_signer);
     }
 
+    /**
+     * @notice Verify the signature sent in parameter
+     * @dev human is supposed to be a POH address, this is what is being signed by the POH API
+     * @param signature The signature to verify
+     * @param human the address for which the signature has been crafted
+     */
     function verify(
         bytes memory signature,
         address human
@@ -36,6 +54,9 @@ contract PohVerifier is EIP712, Ownable {
         return recoveredSigner == signer;
     }
 
+    /**
+     * @notice Returns the signer's address
+     */
     function getSigner() public view returns (address) {
         return signer;
     }

@@ -53,6 +53,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const controller = await deploy('ETHRegistrarController', deployArgs)
   if (!controller.newlyDeployed) return
 
+  await pohRegistrationManager
+    .connect(await ethers.getSigner(owner))
+    .setManager(controller.address, true)
+
+  console.log('Set registrar as a POH registration manager')
+
   if (owner !== deployer) {
     const c = await ethers.getContract('ETHRegistrarController', deployer)
     const tx = await c.transferOwnership(owner)

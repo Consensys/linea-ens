@@ -72,7 +72,7 @@ function shouldRespectConstraints(contracts, getSigners) {
     childExpiry,
   }) {
     await BaseRegistrar.register(labelhash(parentLabel), account, 84600)
-    await NameWrapper.wrapETH2LD(
+    await NameWrapper.wrapAnyLD(
       parentLabel,
       account,
       parentFuses,
@@ -133,7 +133,7 @@ function shouldRespectConstraints(contracts, getSigners) {
   }) {
     await BaseRegistrar.register(labelhash(parentLabel), account, DAY * 2)
     const parentExpiry = await BaseRegistrar.nameExpires(labelhash(parentLabel))
-    await NameWrapper.wrapETH2LD(
+    await NameWrapper.wrapAnyLD(
       parentLabel,
       account,
       parentFuses,
@@ -740,7 +740,7 @@ function shouldRespectConstraints(contracts, getSigners) {
   }) {
     it('Parent cannot unwrap itself', async () => {
       await expect(
-        NameWrapper.unwrapETH2LD(parentLabelHash, account, account),
+        NameWrapper.unwrapAnyLD(parentLabelHash, account, account),
       ).to.be.revertedWith(`OperationProhibited("${parentNode}")`)
     })
 
@@ -904,7 +904,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     beforeEach(async () => {
       await BaseRegistrar.register(labelhash('test1'), account, 84600)
-      await NameWrapper.wrapETH2LD(
+      await NameWrapper.wrapAnyLD(
         'test1',
         account,
         CANNOT_UNWRAP, // Parent's CU is burned
@@ -967,7 +967,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     it('Parent cannot unwrap itself', async () => {
       await expect(
-        NameWrapper.unwrapETH2LD(parentLabelHash, account, account),
+        NameWrapper.unwrapAnyLD(parentLabelHash, account, account),
       ).to.be.revertedWith(`OperationProhibited("${parentNode}")`)
     })
 
