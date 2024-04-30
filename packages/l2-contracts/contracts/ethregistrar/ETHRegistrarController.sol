@@ -32,6 +32,7 @@ error MaxCommitmentAgeTooHigh();
 error PohVerificationFailed(address owner);
 error OwnerAlreadyRegistered(address owner);
 error SenderNotOwner(address owner, address sender);
+error NotInGracePeriod(uint256 current, uint256 expiry);
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -47,7 +48,9 @@ contract ETHRegistrarController is
     using Address for address;
 
     uint256 public constant MIN_REGISTRATION_DURATION = 28 days;
+    uint256 public constant POH_REGISTRATION_DURATION = 1 days * 365 * 3;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
+    uint256 public constant GRACE_PERIOD = 90 days;
     BaseRegistrarImplementation immutable base;
     IPriceOracle public immutable prices;
     uint256 public immutable minCommitmentAge;
@@ -94,6 +97,8 @@ contract ETHRegistrarController is
         address indexed owner,
         uint256 expires
     );
+
+    event NameRenewedPoh(string name, bytes32 indexed label, uint256 expires);
 
     /**
      * @notice Create registrar for the base domain passed in parameter.
@@ -393,6 +398,41 @@ contract ETHRegistrarController is
         }
 
         emit NameRenewed(name, labelhash, msg.value, expires);
+    }
+
+    /**
+     * @notice Same as renew method except that it uses the user's POH to renew for free
+     * @dev Can only renew after the GRACE_PERIOD has started
+     * @param name to renew
+     * @param signature POH of the owner to renew
+     */
+    function renewPoh(string calldata name, bytes memory signature) external {
+        bytes32 labelhash = keccak256(bytes(name));
+        bytes32 nodehash = keccak256(abi.encodePacked(baseNode, labelhash));
+
+        (address currentOwner, , ) = nameWrapper.getData(uint256(nodehash));
+
+        // The sender of the transaction needs to be the current owner of the name
+        if (msg.sender != currentOwner) {
+            revert SenderNotOwner(currentOwner, msg.sender);
+        }
+
+        // Check that the signature sent is valid, this is the reference for an address to have a valid PoH
+        if (!pohVerifier.verify(signature, currentOwner)) {
+            revert PohVerificationFailed(currentOwner);
+        }
+
+        uint256 tokenId = uint256(labelhash);
+        uint256 currentExpiry = base.nameExpires(tokenId);
+
+        // Renewal using POH can only occurs within the GRACE_PERIOD
+        if (block.timestamp < (currentExpiry - GRACE_PERIOD)) {
+            revert NotInGracePeriod(block.timestamp, currentExpiry);
+        }
+
+        uint256 expires = nameWrapper.renew(tokenId, POH_REGISTRATION_DURATION);
+
+        emit NameRenewedPoh(name, labelhash, expires);
     }
 
     function withdraw() public {
