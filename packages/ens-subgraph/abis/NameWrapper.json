@@ -1230,7 +1230,7 @@
         "type": "address"
       }
     ],
-    "name": "unwrapETH2LD",
+    "name": "unwrapAnyLD",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1364,7 +1364,7 @@
         "type": "address"
       }
     ],
-    "name": "wrapETH2LD",
+    "name": "unwrapAnyLD",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

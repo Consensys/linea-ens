@@ -119,7 +119,7 @@ describe('TestUnwrap', () => {
 
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
 
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapAnyLD(
           label,
           account,
           CAN_DO_EVERYTHING,
@@ -151,7 +151,7 @@ describe('TestUnwrap', () => {
 
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
 
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapAnyLD(
           label,
           account,
           CAN_DO_EVERYTHING,
@@ -180,7 +180,7 @@ describe('TestUnwrap', () => {
 
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
 
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapAnyLD(
           label,
           account,
           CAN_DO_EVERYTHING,
@@ -223,7 +223,7 @@ describe('TestUnwrap', () => {
         await EnsRegistry.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.register(parentLabelHash, account, 1 * DAY)
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapAnyLD(
           parentLabel,
           account,
           CANNOT_UNWRAP,
@@ -251,7 +251,7 @@ describe('TestUnwrap', () => {
         await EnsRegistry.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.register(parentLabelHash, account, 1 * DAY)
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapAnyLD(
           parentLabel,
           account,
           CANNOT_UNWRAP,
@@ -278,7 +278,7 @@ describe('TestUnwrap', () => {
         await EnsRegistry.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.register(parentLabelHash, account, 1 * DAY)
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapAnyLD(
           parentLabel,
           account,
           CANNOT_UNWRAP,

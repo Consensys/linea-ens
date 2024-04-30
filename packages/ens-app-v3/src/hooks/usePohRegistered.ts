@@ -12,7 +12,7 @@ export const usePohRegistered = (address: Address | undefined) => {
     abi: [
       {
         inputs: [{ name: '', type: 'address' }],
-        name: 'hasRegisteredPoh',
+        name: 'redeemed',
         outputs: [{ name: '', type: 'bool' }],
         stateMutability: 'view',
         type: 'function',
@@ -20,6 +20,6 @@ export const usePohRegistered = (address: Address | undefined) => {
     ],
     address: ethRegistrarControllerAddress,
     args: [address || zeroAddress],
-    functionName: 'hasRegisteredPoh',
+    functionName: 'redeemed',
   })
 }

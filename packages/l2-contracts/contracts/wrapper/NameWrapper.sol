@@ -28,6 +28,11 @@ error OperationProhibited(bytes32 node);
 error NameIsNotWrapped();
 error NameIsStillExpired();
 
+/**
+ * @title Contract based on ENS's NameWrapper contract to handle any level
+ * domain registration instead of only 2 levels domain .eth domains.
+ * @author ConsenSys Software Inc.
+ */
 contract NameWrapper is
     Ownable,
     ERC1155Fuse,
@@ -56,6 +61,7 @@ contract NameWrapper is
     INameWrapperUpgrade public upgradeContract;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
 
+    /// @dev Base node handled to register a domain, replaces .eth node
     bytes32 public immutable baseNode;
 
     constructor(
@@ -70,7 +76,7 @@ contract NameWrapper is
         metadataService = _metadataService;
         baseNode = _baseNode;
 
-        /* Burn PARENT_CANNOT_CONTROL and CANNOT_UNWRAP fuses for ROOT_NODE and ETH_NODE and set expiry to max */
+        /* Burn PARENT_CANNOT_CONTROL and CANNOT_UNWRAP fuses for ROOT_NODE, ETH_NODE and baseNode and set expiry to max */
 
         _setData(
             uint256(_baseNode),
@@ -108,7 +114,7 @@ contract NameWrapper is
 
     /**
      * @notice Gets the owner of a name
-     * @param id Label as a string of the .eth domain to wrap
+     * @param id Label as a string of the domain to wrap
      * @return owner The owner of the name
      */
 
@@ -280,15 +286,15 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Wraps a .eth domain, creating a new token and sending the original ERC721 token to this contract
-     * @dev Can be called by the owner of the name on the .eth registrar or an authorised caller on the registrar
-     * @param label Label as a string of the .eth domain to wrap
+     * @notice Wraps a domain based on the baseNode, creating a new token and sending the original ERC721 token to this contract
+     * @dev Can be called by the owner of the name on the registrar or an authorised caller on the registrar
+     * @param label Label as a string of the domain to wrap
      * @param wrappedOwner Owner of the name in this contract
      * @param ownerControlledFuses Initial owner-controlled fuses to set
      * @param resolver Resolver contract address
      */
 
-    function wrapETH2LD(
+    function wrapAnyLD(
         string calldata label,
         address wrappedOwner,
         uint16 ownerControlledFuses,
@@ -318,14 +324,14 @@ contract NameWrapper is
     }
 
     /**
-     * @dev Registers a new .eth second-level domain and wraps it.
+     * @dev Registers a new domain and wraps it.
      *      Only callable by authorised controllers.
-     * @param label The label to register (Eg, 'foo' for 'foo.eth').
+     * @param label The label to register (Eg, 'foo' for 'foo.linea.eth').
      * @param wrappedOwner The owner of the wrapped name.
      * @param duration The duration, in seconds, to register the name for.
      * @param resolver The resolver address to set on the ENS registry (optional).
      * @param ownerControlledFuses Initial owner-controlled fuses to set
-     * @return registrarExpiry The expiry date of the new name on the .eth registrar, in seconds since the Unix epoch.
+     * @return registrarExpiry The expiry date of the new name on the registrar, in seconds since the Unix epoch.
      */
 
     function registerAndWrap(
@@ -347,11 +353,11 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Renews a .eth second-level domain.
+     * @notice Renews a domain.
      * @dev Only callable by authorised controllers.
-     * @param tokenId The hash of the label to register (eg, `keccak256('foo')`, for 'foo.eth').
+     * @param tokenId The hash of the label to register (eg, `keccak256('foo')`, for 'foo.linea.eth').
      * @param duration The number of seconds to renew the name for.
-     * @return expires The expiry date of the name on the .eth registrar, in seconds since the Unix epoch.
+     * @return expires The expiry date of the name on the registrar, in seconds since the Unix epoch.
      */
 
     function renew(
@@ -385,7 +391,7 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Wraps a non .eth domain, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
+     * @notice Wraps a domain not based on baseNode. Could be a DNSSEC name vitalik.xyz or a subdomain
      * @dev Can be called by the owner in the registry or an authorised caller in the registry
      * @param name The name to wrap, in DNS format
      * @param wrappedOwner Owner of the name in this contract
@@ -423,14 +429,14 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Unwraps a .eth domain. e.g. vitalik.eth
+     * @notice Unwraps a domain based on baseNode. e.g. vitalik.linea.eth
      * @dev Can be called by the owner in the wrapper or an authorised caller in the wrapper
-     * @param labelhash Labelhash of the .eth domain
-     * @param registrant Sets the owner in the .eth registrar to this address
+     * @param labelhash Labelhash of the domain
+     * @param registrant Sets the owner in the registrar to this address
      * @param controller Sets the owner in the registry to this address
      */
 
-    function unwrapETH2LD(
+    function unwrapAnyLD(
         bytes32 labelhash,
         address registrant,
         address controller
@@ -447,7 +453,7 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Unwraps a non .eth domain, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
+     * @notice Unwraps a domain not based on baseNode, of any kind. Could be a DNSSEC name vitalik.xyz or a subdomain
      * @dev Can be called by the owner in the wrapper or an authorised caller in the wrapper
      * @param parentNode Parent namehash of the name e.g. vitalik.xyz would be namehash('xyz')
      * @param labelhash Labelhash of the name, e.g. vitalik.xyz would be keccak256('vitalik')

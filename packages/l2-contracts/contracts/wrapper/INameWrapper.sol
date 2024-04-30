@@ -57,7 +57,7 @@ interface INameWrapper is IERC1155 {
         address resolver
     ) external;
 
-    function wrapETH2LD(
+    function wrapAnyLD(
         string calldata label,
         address wrappedOwner,
         uint16 ownerControlledFuses,
@@ -79,7 +79,7 @@ interface INameWrapper is IERC1155 {
 
     function unwrap(bytes32 node, bytes32 label, address owner) external;
 
-    function unwrapETH2LD(
+    function unwrapAnyLD(
         bytes32 label,
         address newRegistrant,
         address newController
