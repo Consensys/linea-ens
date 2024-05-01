@@ -173,7 +173,7 @@ export const ProfileSnippet = ({
   const { t } = useTranslation('common')
 
   const { usePreparedDataInput } = useTransactionFlow()
-  const showExtendNamesInput = usePreparedDataInput('ExtendNames')
+  const showExtendNamePohInput = usePreparedDataInput('ExtendNamePoh')
   const abilities = useAbilities({ name })
 
   const beautifiedName = useBeautifiedName(name)
@@ -193,7 +193,7 @@ export const ProfileSnippet = ({
           prefix={<FastForwardSVG />}
           data-testid="extend-button"
           onClick={() => {
-            showExtendNamesInput(`extend-names-${name}`, {
+            showExtendNamePohInput(`extend-names-${name}`, {
               names: [name],
               isSelf: shouldShowExtendWarning(abilities.data),
             })

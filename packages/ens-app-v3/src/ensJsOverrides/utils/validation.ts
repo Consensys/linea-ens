@@ -91,3 +91,5 @@ export const parseInput = (input: string): ParsedInputResult => {
 }
 
 export const checkIsDotEth = (labels: string[]) => labels.length === 2 && labels[1] === 'eth'
+
+export const checkIs3LDEth = (labels: string[]) => labels.length === 3 && labels[2] === 'eth'
