@@ -4,8 +4,6 @@ Linea resolver contracts made from ENS's evm-verifier[https://github.com/ensdoma
 
 ## Tests
 
-Make sure to use the .env.example as your .env (Simply copy paste it and name it .env)
-
 Run the following:
 
 ```shell
