@@ -42,7 +42,7 @@ jobs:
         run: npm -g install yarn
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Compile contract
         run: pnpm --filter l1-contracts compile
