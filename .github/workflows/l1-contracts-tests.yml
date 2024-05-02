@@ -19,6 +19,7 @@ jobs:
             packages/gateway
             packages/linea-verifier
             pnpm-workspace.yaml
+            pnpm-lock.yaml
           sparse-checkout-cone-mode: false
 
       - name: Setup pnpm
@@ -43,7 +44,7 @@ jobs:
         run: npm -g install yarn
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Compile contract
         run: pnpm --filter l1-contracts compile
