@@ -58,18 +58,12 @@ describe("Crosschain Resolver", () => {
   let signerAddress, l2ResolverAddress, wrapperAddress;
 
   before(async () => {
-    if (!process.env.L2_PROVIDER_URL) {
-      throw "No L2_PROVIDER_URL found in env file";
-    }
-    if (!process.env.L2_RESOLVER_ADDRESS) {
-      throw "No L2_RESOLVER_ADDRESS found in env file";
-    }
-
     // Hack to get a 'real' ethers provider from hardhat. The default `HardhatProvider`
     // doesn't support CCIP-read.
     l1Provider = new ethers.BrowserProvider(ethers.provider._hardhatProvider);
+    // Those test work only with a specific contract deployed on linea sepolia
     l2Provider = new ethers.JsonRpcProvider(
-      process.env.L2_PROVIDER_URL,
+      "https://rpc.sepolia.linea.build/",
       59140,
       {
         staticNetwork: true,
@@ -181,7 +175,7 @@ describe("Crosschain Resolver", () => {
     );
     wrapperAddress = await wrapper.getAddress();
     const impl = await ethers.getContractFactory("PublicResolver", signer);
-    l2ResolverAddress = process.env.L2_RESOLVER_ADDRESS;
+    l2ResolverAddress = "0x28F15B034f9744d43548ac64DCE04ed77BdBd832";
 
     const Mimc = await ethers.getContractFactory("Mimc", signer);
     const mimc = await Mimc.deploy();
