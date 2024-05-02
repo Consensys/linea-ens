@@ -804,6 +804,164 @@ contract('ETHRegistrarController', function () {
     ).to.equal(86400)
   })
 
+  it('should allow token owners to renew a name for free using POH', async () => {
+    const name = 'newname'
+    const duration = 3 * 365 * 24 * 60 * 60 // 3 years
+    const secret = ethers.utils.formatBytes32String('secret')
+    const human = signers[0].address
+    const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)) // Mock signature
+
+    // Generate a commitment for the registration
+    const commitment = await controllerPoh.makeCommitment(
+      name,
+      human,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+    )
+
+    // Commit the registration
+    await controllerPoh.commit(commitment)
+
+    // Advance time to satisfy the minCommitmentAge requirement
+    await ethers.provider.send('evm_increaseTime', [600]) // Increase time by 600 seconds
+    await ethers.provider.send('evm_mine') // Mine the next block
+
+    // Perform the registration using registerPoh
+    const tx = await controllerPoh.registerPoh(
+      name,
+      human,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+      signature,
+    )
+
+    // Wait for the transaction to be mined
+    await tx.wait()
+
+    await ethers.provider.send('evm_increaseTime', [duration])
+    await ethers.provider.send('evm_mine')
+
+    var nodehash = namehash(`newname.${BASE_DOMAIN_STR}`)
+    const [, fuses, fuseExpiry] = await nameWrapper.getData(nodehash)
+
+    var expires = await baseRegistrar.nameExpires(sha3('newname'))
+
+    await controllerPoh.renewPoh('newname', signature)
+    var newExpires = await baseRegistrar.nameExpires(sha3('newname'))
+    const [, newFuses, newFuseExpiry] = await nameWrapper.getData(nodehash)
+    expect(newExpires.toNumber() - expires.toNumber()).to.equal(duration)
+    expect(newFuseExpiry.toNumber() - fuseExpiry.toNumber()).to.equal(duration)
+    expect(newFuses).to.equal(fuses)
+  })
+
+  it('should not allow renewing a domain that does not belong to the user using POH', async () => {
+    const name = 'newname'
+    const duration = 3 * 365 * 24 * 60 * 60 // 3 years
+    const secret = ethers.utils.formatBytes32String('secret')
+    const signer1 = signers[0]
+    const signer2 = signers[1]
+    const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)) // Mock signature
+
+    // Generate a commitment for the registration
+    const commitment = await controllerPoh.connect(signer2).makeCommitment(
+      name,
+      signer2.address,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+    )
+
+    // Commit the registration
+    await controllerPoh.connect(signer2).commit(commitment)
+
+    // Advance time to satisfy the minCommitmentAge requirement
+    await ethers.provider.send('evm_increaseTime', [600]) // Increase time by 600 seconds
+    await ethers.provider.send('evm_mine') // Mine the next block
+
+    // Perform the registration using registerPoh
+    const tx = await controllerPoh.connect(signer2).registerPoh(
+      name,
+      signer2.address,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+      signature,
+    )
+
+    // Wait for the transaction to be mined
+    await tx.wait()
+
+    await ethers.provider.send('evm_increaseTime', [duration])
+    await ethers.provider.send('evm_mine')
+
+    await expect(
+      controllerPoh.renewPoh('newname', signature),
+    ).to.be.revertedWith(
+      `'SenderNotOwner("${signer2.address}", "${signer1.address}")'`,
+    )
+  })
+
+  it('should not allow renewing a domain that does not belong to the user using POH', async () => {
+    const name = 'newname'
+    const duration = 3 * 365 * 24 * 60 * 60 // 3 years
+    const secret = ethers.utils.formatBytes32String('secret')
+    const signer1 = signers[0]
+    const signature = ethers.utils.hexlify(ethers.utils.randomBytes(65)) // Mock signature
+
+    // Generate a commitment for the registration
+    const commitment = await controllerPoh.makeCommitment(
+      name,
+      signer1.address,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+    )
+
+    // Commit the registration
+    await controllerPoh.commit(commitment)
+
+    // Advance time to satisfy the minCommitmentAge requirement
+    await ethers.provider.send('evm_increaseTime', [600]) // Increase time by 600 seconds
+    await ethers.provider.send('evm_mine') // Mine the next block
+
+    // Perform the registration using registerPoh
+    const tx = await controllerPoh.registerPoh(
+      name,
+      signer1.address,
+      duration,
+      secret,
+      ethers.constants.AddressZero, // resolver address, using zero address for simplicity
+      [],
+      false,
+      0,
+      signature,
+    )
+
+    // Wait for the transaction to be mined
+    await tx.wait()
+
+    await expect(
+      controllerPoh.renewPoh('newname', signature),
+    ).to.be.revertedWith(`NotInGracePeriod`)
+  })
+
   it('non wrapped names can renew', async () => {
     const label = 'newname'
     const tokenId = sha3(label)
