@@ -17,6 +17,7 @@ jobs:
           sparse-checkout: |
             packages/l1-contracts
             packages/gateway
+            packages/linea-verifier
             pnpm-workspace.yaml
           sparse-checkout-cone-mode: false
 
