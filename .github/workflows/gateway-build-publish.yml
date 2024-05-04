@@ -52,5 +52,6 @@ jobs:
           build-args: |
             ENV_FILE=.env.production
           file: ./packages/gateway/Dockerfile
+          context: ./
           push: true
           tags: consensys/linea-resolver:${{ env.DOCKER_TAG }}
