@@ -1,10 +1,17 @@
-import { AbiCoder, AddressLike, JsonRpcProvider, Contract } from "ethers";
+import {
+  AbiCoder,
+  AddressLike,
+  JsonRpcProvider,
+  Contract,
+  ethers,
+} from "ethers";
 
 import { EVMProofHelper, IProofService, StateProof } from "./evm-gateway";
 
-import rollupAbi from "./abi/rollup.json";
-
 export type L2ProvableBlock = number;
+
+const currentL2BlockNumberSig =
+  "function currentL2BlockNumber() view returns (uint256)";
 
 /**
  * The proofService class can be used to calculate proofs for a given target and slot on the Optimism Bedrock network.
@@ -21,7 +28,14 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     rollupAddress: string
   ) {
     this.helper = new EVMProofHelper(providerL2);
-    this.rollup = new Contract(rollupAddress, rollupAbi, providerL1);
+    const currentL2BlockNumberIface = new ethers.Interface([
+      currentL2BlockNumberSig,
+    ]);
+    this.rollup = new Contract(
+      rollupAddress,
+      currentL2BlockNumberIface,
+      providerL1
+    );
   }
 
   /**

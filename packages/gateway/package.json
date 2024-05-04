@@ -10,10 +10,8 @@
     "src"
   ],
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "tsdx build",
-    "gcp-build": "tsdx build",
-    "lint": "tsdx lint",
+    "start": "node dist/server.js",
+    "build": "tsc --project tsconfig.json --module commonjs --skipLibCheck true --outDir ./dist",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "clean": "rm -fr node_modules dist",
@@ -55,11 +53,11 @@
     "mocha": "^10.3.0",
     "solidity-coverage": "^0.8.1",
     "supertest": "^6.3.3",
-    "ts-node": "10.9.2",
+    "ts-node": "^10.9.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.6.2",
     "typechain": "^8.2.0",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.5",
     "winston": "^3.9.0"
   },
   "devDependencies": {

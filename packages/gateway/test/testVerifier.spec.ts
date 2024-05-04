@@ -38,25 +38,19 @@ describe("L1Verifier", () => {
   let target: Contract;
 
   before(async () => {
-    if (!process.env.L2_PROVIDER_URL) {
-      throw "No L2_PROVIDER_URL found in env file";
-    }
-    if (!process.env.L2_CONTRACT_TEST_ADDRESS) {
-      throw "No L2_CONTRACT_TEST_ADDRESS found in env file";
-    }
-
     // Hack to get a 'real' ethers provider from hardhat. The default `HardhatProvider`
     // doesn't support CCIP-read.
     // @ts-ignore
     l1Provider = new ethers.BrowserProvider(ethers.provider._hardhatProvider);
     l2Provider = new ethers.JsonRpcProvider(
-      process.env.L2_PROVIDER_URL,
+      "https://rpc.sepolia.linea.build/",
       59140,
       {
         staticNetwork: true,
       }
     );
-    l2TestContract = process.env.L2_CONTRACT_TEST_ADDRESS;
+    // This test only works with the specific test contract deployed on linea sepolia network
+    l2TestContract = "0x09a434561f4b40067F71444d7042fd110013F879";
     signer = await l1Provider.getSigner(0);
 
     const Rollup = await ethers.getContractFactory("RollupMock", signer);
