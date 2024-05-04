@@ -24,8 +24,6 @@ docker run -e L1_PROVIDER_URL=https://goerli.infura.io/v3/<INFURA_KEY> -e L2_PRO
 
 ### Tests
 
-Make sure to use the .env.example as your .env (Simply copy paste it and name it .env)
-
 Run the following:
 
 ```shell
