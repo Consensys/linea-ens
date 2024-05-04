@@ -9,6 +9,7 @@ ENV L1_PROVIDER_URL=http://127.0.0.1:8545
 ENV L2_PROVIDER_URL=https://rpc.sepolia.linea.build/
 ENV L1_ROLLUP_ADDRESS=0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5
 ENV L2_CHAIN_ID=59140
+ENV PORT=3000
 
 COPY packages/gateway ./packages/gateway
 COPY packages/linea-verifier ./packages/linea-verifier
@@ -27,4 +28,4 @@ RUN pnpm build
 
 EXPOSE 3000
 
-RUN pnpm start
+CMD ["pnpm", "start"]
