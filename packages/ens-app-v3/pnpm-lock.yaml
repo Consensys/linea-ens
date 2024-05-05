@@ -22,434 +22,432 @@ patchedDependencies:
     hash: bbuxkxhxbyez4jmqgptuoucij4
     path: patches/react-confetti@6.1.0.patch
 
-importers:
+dependencies:
+  '@ensdomains/address-encoder':
+    specifier: 1.1.1
+    version: 1.1.1
+  '@ensdomains/content-hash':
+    specifier: ^3.0.0-beta.5
+    version: 3.0.0
+  '@ensdomains/ens-contracts':
+    specifier: file:../l2-contracts
+    version: file:../l2-contracts
+  '@ensdomains/ensjs':
+    specifier: 3.5.0-beta.2
+    version: 3.5.0-beta.2(encoding@0.1.13)(typescript@5.3.3)(viem@2.7.13)
+  '@ensdomains/thorin':
+    specifier: 0.6.44
+    version: 0.6.44(react-dom@18.2.0)(react-transition-state@1.1.5)(react@18.2.0)(styled-components@5.3.6)
+  '@metamask/mobile-provider':
+    specifier: ^2.1.0
+    version: 2.1.0
+  '@metamask/post-message-stream':
+    specifier: ^6.1.2
+    version: 6.1.2
+  '@metamask/providers':
+    specifier: ^14.0.2
+    version: 14.0.2
+  '@noble/hashes':
+    specifier: ^1.3.2
+    version: 1.3.3
+  '@rainbow-me/rainbowkit':
+    specifier: 2.0.1
+    version: 2.0.1(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.13)(wagmi@2.5.7)
+  '@sentry/nextjs':
+    specifier: ^7.77.0
+    version: 7.77.0(encoding@0.1.13)(next@13.5.6)(react@18.2.0)(webpack@5.90.3)
+  '@svgr/webpack':
+    specifier: ^8.1.0
+    version: 8.1.0(typescript@5.3.3)
+  '@tanstack/query-persist-client-core':
+    specifier: 5.22.2
+    version: 5.22.2
+  '@tanstack/query-sync-storage-persister':
+    specifier: 5.22.2
+    version: 5.22.2
+  '@tanstack/react-query':
+    specifier: 5.22.2
+    version: 5.22.2(react@18.2.0)
+  '@tanstack/react-query-persist-client':
+    specifier: 5.22.2
+    version: 5.22.2(@tanstack/react-query@5.22.2)(react@18.2.0)
+  '@wagmi/core':
+    specifier: ^2.6.5
+    version: 2.6.5(patch_hash=3wfslilgwgfno5impyfcc33yqu)(@types/react@18.2.21)(immer@9.0.15)(react@18.2.0)(typescript@5.3.3)(viem@2.7.13)
+  '@walletconnect/ethereum-provider':
+    specifier: 2.11.1
+    version: 2.11.1(@types/react@18.2.21)(encoding@0.1.13)(react@18.2.0)
+  '@walletconnect/modal':
+    specifier: 2.6.2
+    version: 2.6.2(@types/react@18.2.21)(react@18.2.0)
+  calendar-link:
+    specifier: ^2.2.0
+    version: 2.2.0
+  dns-packet:
+    specifier: ^5.4.0
+    version: 5.4.0
+  glob:
+    specifier: ^8.0.3
+    version: 8.0.3
+  graphql-request:
+    specifier: 5.1.0
+    version: 5.1.0(encoding@0.1.13)(graphql@16.8.1)
+  i18next:
+    specifier: ^21.9.1
+    version: 21.9.2
+  i18next-browser-languagedetector:
+    specifier: ^6.1.5
+    version: 6.1.5
+  i18next-http-backend:
+    specifier: ^1.4.1
+    version: 1.4.4(encoding@0.1.13)
+  immer:
+    specifier: ^9.0.15
+    version: 9.0.15
+  intl-segmenter-polyfill:
+    specifier: ^0.4.4
+    version: 0.4.4
+  iso-639-1:
+    specifier: ^2.1.15
+    version: 2.1.15
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
+  markdown-to-jsx:
+    specifier: ^7.1.7
+    version: 7.1.7(react@18.2.0)
+  next:
+    specifier: 13.5.6
+    version: 13.5.6(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+  p-memoize:
+    specifier: ^7.1.1
+    version: 7.1.1
+  pino-pretty:
+    specifier: ^10.3.1
+    version: 10.3.1
+  react:
+    specifier: ^18.2.0
+    version: 18.2.0
+  react-confetti:
+    specifier: ^6.1.0
+    version: 6.1.0(patch_hash=bbuxkxhxbyez4jmqgptuoucij4)(react@18.2.0)
+  react-dom:
+    specifier: ^18.2.0
+    version: 18.2.0(react@18.2.0)
+  react-ga:
+    specifier: ^3.3.1
+    version: 3.3.1(prop-types@15.8.1)(react@18.2.0)
+  react-hook-form:
+    specifier: ^7.51.0
+    version: 7.51.0(react@18.2.0)
+  react-i18next:
+    specifier: ^11.18.5
+    version: 11.18.6(i18next@21.9.2)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)
+  react-is:
+    specifier: ^17.0.2
+    version: 17.0.2
+  react-transition-state:
+    specifier: ^1.1.5
+    version: 1.1.5(react-dom@18.2.0)(react@18.2.0)
+  react-use:
+    specifier: ^17.4.0
+    version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
+  react-use-error-boundary:
+    specifier: ^3.0.0
+    version: 3.0.0(react@18.2.0)
+  styled-components:
+    specifier: ^5.3.5
+    version: 5.3.6(react-dom@18.2.0)(react-is@17.0.2)(react@18.2.0)
+  ts-pattern:
+    specifier: ^4.2.2
+    version: 4.2.2
+  use-immer:
+    specifier: ^0.7.0
+    version: 0.7.0(immer@9.0.15)(react@18.2.0)
+  viem:
+    specifier: ^2.7.13
+    version: 2.7.13(typescript@5.3.3)
+  wagmi:
+    specifier: 2.5.7
+    version: 2.5.7(@tanstack/react-query@5.22.2)(@types/react@18.2.21)(encoding@0.1.13)(immer@9.0.15)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.13)
 
-  .:
-    dependencies:
-      '@ensdomains/address-encoder':
-        specifier: 1.1.1
-        version: 1.1.1
-      '@ensdomains/content-hash':
-        specifier: ^3.0.0-beta.5
-        version: 3.0.0
-      '@ensdomains/ens-contracts':
-        specifier: file:../l2-contracts
-        version: file:../l2-contracts
-      '@ensdomains/ensjs':
-        specifier: 3.5.0-beta.2
-        version: 3.5.0-beta.2(encoding@0.1.13)(typescript@5.3.3)(viem@2.7.13)
-      '@ensdomains/thorin':
-        specifier: 0.6.44
-        version: 0.6.44(react-dom@18.2.0)(react-transition-state@1.1.5)(react@18.2.0)(styled-components@5.3.6)
-      '@metamask/mobile-provider':
-        specifier: ^2.1.0
-        version: 2.1.0
-      '@metamask/post-message-stream':
-        specifier: ^6.1.2
-        version: 6.1.2
-      '@metamask/providers':
-        specifier: ^14.0.2
-        version: 14.0.2
-      '@noble/hashes':
-        specifier: ^1.3.2
-        version: 1.3.3
-      '@rainbow-me/rainbowkit':
-        specifier: 2.0.1
-        version: 2.0.1(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.13)(wagmi@2.5.7)
-      '@sentry/nextjs':
-        specifier: ^7.43.0
-        version: 7.43.0(encoding@0.1.13)(next@13.5.6)(react@18.2.0)(webpack@5.90.3)
-      '@svgr/webpack':
-        specifier: ^8.1.0
-        version: 8.1.0(typescript@5.3.3)
-      '@tanstack/query-persist-client-core':
-        specifier: 5.22.2
-        version: 5.22.2
-      '@tanstack/query-sync-storage-persister':
-        specifier: 5.22.2
-        version: 5.22.2
-      '@tanstack/react-query':
-        specifier: 5.22.2
-        version: 5.22.2(react@18.2.0)
-      '@tanstack/react-query-persist-client':
-        specifier: 5.22.2
-        version: 5.22.2(@tanstack/react-query@5.22.2)(react@18.2.0)
-      '@wagmi/core':
-        specifier: ^2.6.5
-        version: 2.6.5(patch_hash=3wfslilgwgfno5impyfcc33yqu)(@types/react@18.2.21)(immer@9.0.15)(react@18.2.0)(typescript@5.3.3)(viem@2.7.13)
-      '@walletconnect/ethereum-provider':
-        specifier: 2.11.1
-        version: 2.11.1(@types/react@18.2.21)(encoding@0.1.13)(react@18.2.0)
-      '@walletconnect/modal':
-        specifier: 2.6.2
-        version: 2.6.2(@types/react@18.2.21)(react@18.2.0)
-      calendar-link:
-        specifier: ^2.2.0
-        version: 2.2.0
-      dns-packet:
-        specifier: ^5.4.0
-        version: 5.4.0
-      glob:
-        specifier: ^8.0.3
-        version: 8.0.3
-      graphql-request:
-        specifier: 5.1.0
-        version: 5.1.0(encoding@0.1.13)(graphql@16.8.1)
-      i18next:
-        specifier: ^21.9.1
-        version: 21.9.2
-      i18next-browser-languagedetector:
-        specifier: ^6.1.5
-        version: 6.1.5
-      i18next-http-backend:
-        specifier: ^1.4.1
-        version: 1.4.4(encoding@0.1.13)
-      immer:
-        specifier: ^9.0.15
-        version: 9.0.15
-      intl-segmenter-polyfill:
-        specifier: ^0.4.4
-        version: 0.4.4
-      iso-639-1:
-        specifier: ^2.1.15
-        version: 2.1.15
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      markdown-to-jsx:
-        specifier: ^7.1.7
-        version: 7.1.7(react@18.2.0)
-      next:
-        specifier: 13.5.6
-        version: 13.5.6(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
-      p-memoize:
-        specifier: ^7.1.1
-        version: 7.1.1
-      pino-pretty:
-        specifier: ^10.3.1
-        version: 10.3.1
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      react-confetti:
-        specifier: ^6.1.0
-        version: 6.1.0(patch_hash=bbuxkxhxbyez4jmqgptuoucij4)(react@18.2.0)
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.2.0)
-      react-ga:
-        specifier: ^3.3.1
-        version: 3.3.1(prop-types@15.8.1)(react@18.2.0)
-      react-hook-form:
-        specifier: ^7.51.0
-        version: 7.51.0(react@18.2.0)
-      react-i18next:
-        specifier: ^11.18.5
-        version: 11.18.6(i18next@21.9.2)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)
-      react-is:
-        specifier: ^17.0.2
-        version: 17.0.2
-      react-transition-state:
-        specifier: ^1.1.5
-        version: 1.1.5(react-dom@18.2.0)(react@18.2.0)
-      react-use:
-        specifier: ^17.4.0
-        version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
-      react-use-error-boundary:
-        specifier: ^3.0.0
-        version: 3.0.0(react@18.2.0)
-      styled-components:
-        specifier: ^5.3.5
-        version: 5.3.6(react-dom@18.2.0)(react-is@17.0.2)(react@18.2.0)
-      ts-pattern:
-        specifier: ^4.2.2
-        version: 4.2.2
-      use-immer:
-        specifier: ^0.7.0
-        version: 0.7.0(immer@9.0.15)(react@18.2.0)
-      viem:
-        specifier: ^2.7.13
-        version: 2.7.13(typescript@5.3.3)
-      wagmi:
-        specifier: 2.5.7
-        version: 2.5.7(@tanstack/react-query@5.22.2)(@types/react@18.2.21)(encoding@0.1.13)(immer@9.0.15)(react-dom@18.2.0)(react-native@0.73.5)(react@18.2.0)(typescript@5.3.3)(viem@2.7.13)
-    devDependencies:
-      '@adraffy/ens-normalize':
-        specifier: ^1.9.4
-        version: 1.10.1
-      '@cloudflare/workers-types':
-        specifier: ^3.14.1
-        version: 3.16.0
-      '@ensdomains/buffer':
-        specifier: ^0.1.1
-        version: 0.1.1
-      '@ensdomains/ens-test-env':
-        specifier: ^0.4.0-beta.0
-        version: 0.4.0-beta.0
-      '@ethersproject/abi':
-        specifier: ^5.4.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.4.0
-        version: 5.7.0
-      '@ianvs/prettier-plugin-sort-imports':
-        specifier: ^4.1.0
-        version: 4.1.1(prettier@3.0.3)
-      '@next/bundle-analyzer':
-        specifier: ^13.4.19
-        version: 13.5.6
-      '@nomiclabs/hardhat-ethers':
-        specifier: npm:hardhat-deploy-ethers@0.3.0-beta.13
-        version: /hardhat-deploy-ethers@0.3.0-beta.13(ethers@5.7.2)(hardhat@2.11.2)
-      '@openzeppelin/contracts':
-        specifier: ^4.7.3
-        version: 4.7.3
-      '@openzeppelin/test-helpers':
-        specifier: ^0.5.16
-        version: 0.5.16(encoding@0.1.13)
-      '@playwright/test':
-        specifier: ^1.36.2
-        version: 1.36.2
-      '@testing-library/jest-dom':
-        specifier: ^6.4.2
-        version: 6.4.2(vitest@1.3.1)
-      '@testing-library/react':
-        specifier: ^14.0.0
-        version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
-      '@testing-library/react-hooks':
-        specifier: ^8.0.1
-        version: 8.0.1(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
-      '@testing-library/user-event':
-        specifier: ^14.5.2
-        version: 14.5.2(@testing-library/dom@9.3.4)
-      '@types/glob':
-        specifier: ^7.2.0
-        version: 7.2.0
-      '@types/lodash':
-        specifier: ^4.14.184
-        version: 4.14.186
-      '@types/node':
-        specifier: ^18.7.13
-        version: 18.8.2
-      '@types/pako':
-        specifier: ^2.0.0
-        version: 2.0.3
-      '@types/prettier':
-        specifier: ^2.7.0
-        version: 2.7.1
-      '@types/puppeteer-core':
-        specifier: ^5.4.0
-        version: 5.4.0
-      '@types/react':
-        specifier: 18.2.21
-        version: 18.2.21
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.2.19
-      '@types/react-is':
-        specifier: ^17.0.3
-        version: 17.0.3
-      '@types/styled-components':
-        specifier: 5.1.23
-        version: 5.1.23
-      '@types/ws':
-        specifier: ^8.5.10
-        version: 8.5.10
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^6.7.4
-        version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.50.0)(typescript@5.3.3)
-      '@typescript-eslint/parser':
-        specifier: ^6.7.4
-        version: 6.21.0(eslint@8.50.0)(typescript@5.3.3)
-      '@vitejs/plugin-react':
-        specifier: ^4.2.1
-        version: 4.2.1(vite@5.1.4)
-      '@vitest/coverage-v8':
-        specifier: ^1.2.2
-        version: 1.3.0(vitest@1.3.1)
-      '@vitest/spy':
-        specifier: ^1.3.0
-        version: 1.3.0
-      canvas:
-        specifier: ^2.9.3
-        version: 2.11.2(encoding@0.1.13)
-      cbor:
-        specifier: ^8.1.0
-        version: 8.1.0
-      concurrently:
-        specifier: ^7.3.0
-        version: 7.4.0
-      dotenv:
-        specifier: ^16.0.1
-        version: 16.0.3
-      encoding:
-        specifier: ^0.1.13
-        version: 0.1.13
-      eslint:
-        specifier: 8.50.0
-        version: 8.50.0
-      eslint-config-airbnb:
-        specifier: ^19.0.4
-        version: 19.0.4(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)(eslint@8.50.0)
-      eslint-config-airbnb-base:
-        specifier: ^15.0.0
-        version: 15.0.0(eslint-plugin-import@2.29.1)(eslint@8.50.0)
-      eslint-config-airbnb-typescript:
-        specifier: ^17.1.0
-        version: 17.1.0(@typescript-eslint/eslint-plugin@6.21.0)(@typescript-eslint/parser@6.21.0)(eslint-plugin-import@2.29.1)(eslint@8.50.0)
-      eslint-config-next:
-        specifier: ^13.4.19
-        version: 13.5.6(eslint@8.50.0)(typescript@5.3.3)
-      eslint-config-prettier:
-        specifier: ^9.0.0
-        version: 9.1.0(eslint@8.50.0)
-      eslint-import-resolver-node:
-        specifier: ^0.3.9
-        version: 0.3.9
-      eslint-plugin-import:
-        specifier: ^2.28.1
-        version: 2.29.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.50.0)
-      eslint-plugin-jsx-a11y:
-        specifier: ^6.7.1
-        version: 6.8.0(eslint@8.50.0)
-      eslint-plugin-prettier:
-        specifier: ^5.0.0
-        version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.50.0)(prettier@3.0.3)
-      eslint-plugin-react:
-        specifier: ^7.33.2
-        version: 7.33.2(eslint@8.50.0)
-      eslint-plugin-react-hooks:
-        specifier: ^4.6.0
-        version: 4.6.0(eslint@8.50.0)
-      eslint-plugin-testing-library:
-        specifier: ^6.0.2
-        version: 6.2.0(eslint@8.50.0)(typescript@5.3.3)
-      eslint-plugin-vitest:
-        specifier: ^0.3.22
-        version: 0.3.22(@typescript-eslint/eslint-plugin@6.21.0)(eslint@8.50.0)(typescript@5.3.3)(vitest@1.3.1)
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
-      ganache:
-        specifier: ^7.4.1
-        version: 7.4.3
-      hardhat:
-        specifier: ^2.10.2
-        version: 2.11.2(ts-node@10.9.1)(typescript@5.3.3)
-      hardhat-dependency-compiler:
-        specifier: ^1.1.3
-        version: 1.1.3(hardhat@2.11.2)
-      hardhat-deploy:
-        specifier: ^0.11.12
-        version: 0.11.16
-      headless-web3-provider:
-        specifier: 0.2.3
-        version: 0.2.3
-      husky:
-        specifier: ^7.0.4
-        version: 7.0.4
-      isows:
-        specifier: ^1.0.3
-        version: 1.0.3(ws@8.16.0)
-      jsdom:
-        specifier: ^24.0.0
-        version: 24.0.0(canvas@2.11.2)
-      lokijs:
-        specifier: ^1.5.12
-        version: 1.5.12
-      msw:
-        specifier: ^1.2.3
-        version: 1.3.2(encoding@0.1.13)(typescript@5.3.3)
-      multiformats:
-        specifier: ^12.0.1
-        version: 12.1.3
-      next-compose-plugins:
-        specifier: ^2.2.1
-        version: 2.2.1
-      next-dev-https:
-        specifier: ^0.1.2
-        version: 0.1.2(patch_hash=q5l3x5627ujg3rak6l6v24c2cq)(next@13.5.6)(react@18.2.0)
-      next-router-mock:
-        specifier: ^0.9.10
-        version: 0.9.12(next@13.5.6)(react@18.2.0)
-      next-transpile-modules:
-        specifier: ^9.1.0
-        version: 9.1.0
-      node-fetch:
-        specifier: 2.6.7
-        version: 2.6.7(encoding@0.1.13)
-      node-fetch-commonjs:
-        specifier: ^3.1.1
-        version: 3.2.4
-      pako:
-        specifier: ^2.1.0
-        version: 2.1.0
-      polyfill-crypto.getrandomvalues:
-        specifier: ^1.0.0
-        version: 1.0.0
-      postcss-scss:
-        specifier: ^4.0.4
-        version: 4.0.5(postcss@8.4.35)
-      prettier:
-        specifier: 3.0.3
-        version: 3.0.3
-      sitemap:
-        specifier: ^7.1.1
-        version: 7.1.1
-      stylelint:
-        specifier: 14.11.0
-        version: 14.11.0
-      stylelint-config-prettier:
-        specifier: ^9.0.5
-        version: 9.0.5(stylelint@14.11.0)
-      stylelint-config-standard-scss:
-        specifier: ^5.0.0
-        version: 5.0.0(postcss@8.4.35)(stylelint@14.11.0)
-      stylelint-config-styled-components:
-        specifier: ^0.1.1
-        version: 0.1.1
-      stylelint-processor-styled-components:
-        specifier: ^1.10.0
-        version: 1.10.0
-      stylelint-webpack-plugin:
-        specifier: ^3.3.0
-        version: 3.3.0(stylelint@14.11.0)(webpack@5.90.3)
-      svgo:
-        specifier: latest
-        version: 3.2.0
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.8.2)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.3.3
-      typescript-styled-plugin:
-        specifier: ^0.18.2
-        version: 0.18.2
-      vite-plugin-magical-svg:
-        specifier: ^1.2.1
-        version: 1.2.1(vite@5.1.4)
-      vitest:
-        specifier: ^1.3.1
-        version: 1.3.1(@types/node@18.8.2)(jsdom@24.0.0)
-      vitest-canvas-mock:
-        specifier: ^0.3.3
-        version: 0.3.3(vitest@1.3.1)
-      wait-on:
-        specifier: ^6.0.1
-        version: 6.0.1
-      wrangler:
-        specifier: ^3.26.0
-        version: 3.28.2(@cloudflare/workers-types@3.16.0)
-      ws:
-        specifier: ^8.16.0
-        version: 8.16.0
-      yalc:
-        specifier: ^1.0.0-pre.53
-        version: 1.0.0-pre.53
-      yaml:
-        specifier: ^2.4.1
-        version: 2.4.1
+devDependencies:
+  '@adraffy/ens-normalize':
+    specifier: ^1.9.4
+    version: 1.10.1
+  '@cloudflare/workers-types':
+    specifier: ^3.14.1
+    version: 3.16.0
+  '@ensdomains/buffer':
+    specifier: ^0.1.1
+    version: 0.1.1
+  '@ensdomains/ens-test-env':
+    specifier: ^0.4.0-beta.0
+    version: 0.4.0-beta.0
+  '@ethersproject/abi':
+    specifier: ^5.4.0
+    version: 5.7.0
+  '@ethersproject/contracts':
+    specifier: ^5.4.0
+    version: 5.7.0
+  '@ianvs/prettier-plugin-sort-imports':
+    specifier: ^4.1.0
+    version: 4.1.1(prettier@3.0.3)
+  '@next/bundle-analyzer':
+    specifier: ^13.4.19
+    version: 13.5.6
+  '@nomiclabs/hardhat-ethers':
+    specifier: npm:hardhat-deploy-ethers@0.3.0-beta.13
+    version: /hardhat-deploy-ethers@0.3.0-beta.13(ethers@5.7.2)(hardhat@2.11.2)
+  '@openzeppelin/contracts':
+    specifier: ^4.7.3
+    version: 4.7.3
+  '@openzeppelin/test-helpers':
+    specifier: ^0.5.16
+    version: 0.5.16(encoding@0.1.13)
+  '@playwright/test':
+    specifier: ^1.36.2
+    version: 1.36.2
+  '@testing-library/jest-dom':
+    specifier: ^6.4.2
+    version: 6.4.2(vitest@1.3.1)
+  '@testing-library/react':
+    specifier: ^14.0.0
+    version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
+  '@testing-library/react-hooks':
+    specifier: ^8.0.1
+    version: 8.0.1(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+  '@testing-library/user-event':
+    specifier: ^14.5.2
+    version: 14.5.2(@testing-library/dom@9.3.4)
+  '@types/glob':
+    specifier: ^7.2.0
+    version: 7.2.0
+  '@types/lodash':
+    specifier: ^4.14.184
+    version: 4.14.186
+  '@types/node':
+    specifier: ^18.7.13
+    version: 18.8.2
+  '@types/pako':
+    specifier: ^2.0.0
+    version: 2.0.3
+  '@types/prettier':
+    specifier: ^2.7.0
+    version: 2.7.1
+  '@types/puppeteer-core':
+    specifier: ^5.4.0
+    version: 5.4.0
+  '@types/react':
+    specifier: 18.2.21
+    version: 18.2.21
+  '@types/react-dom':
+    specifier: ^18.2.7
+    version: 18.2.19
+  '@types/react-is':
+    specifier: ^17.0.3
+    version: 17.0.3
+  '@types/styled-components':
+    specifier: 5.1.23
+    version: 5.1.23
+  '@types/ws':
+    specifier: ^8.5.10
+    version: 8.5.10
+  '@typescript-eslint/eslint-plugin':
+    specifier: ^6.7.4
+    version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.50.0)(typescript@5.3.3)
+  '@typescript-eslint/parser':
+    specifier: ^6.7.4
+    version: 6.21.0(eslint@8.50.0)(typescript@5.3.3)
+  '@vitejs/plugin-react':
+    specifier: ^4.2.1
+    version: 4.2.1(vite@5.1.4)
+  '@vitest/coverage-v8':
+    specifier: ^1.2.2
+    version: 1.3.0(vitest@1.3.1)
+  '@vitest/spy':
+    specifier: ^1.3.0
+    version: 1.3.0
+  canvas:
+    specifier: ^2.9.3
+    version: 2.11.2(encoding@0.1.13)
+  cbor:
+    specifier: ^8.1.0
+    version: 8.1.0
+  concurrently:
+    specifier: ^7.3.0
+    version: 7.4.0
+  dotenv:
+    specifier: ^16.0.1
+    version: 16.0.3
+  encoding:
+    specifier: ^0.1.13
+    version: 0.1.13
+  eslint:
+    specifier: 8.50.0
+    version: 8.50.0
+  eslint-config-airbnb:
+    specifier: ^19.0.4
+    version: 19.0.4(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)(eslint@8.50.0)
+  eslint-config-airbnb-base:
+    specifier: ^15.0.0
+    version: 15.0.0(eslint-plugin-import@2.29.1)(eslint@8.50.0)
+  eslint-config-airbnb-typescript:
+    specifier: ^17.1.0
+    version: 17.1.0(@typescript-eslint/eslint-plugin@6.21.0)(@typescript-eslint/parser@6.21.0)(eslint-plugin-import@2.29.1)(eslint@8.50.0)
+  eslint-config-next:
+    specifier: ^13.4.19
+    version: 13.5.6(eslint@8.50.0)(typescript@5.3.3)
+  eslint-config-prettier:
+    specifier: ^9.0.0
+    version: 9.1.0(eslint@8.50.0)
+  eslint-import-resolver-node:
+    specifier: ^0.3.9
+    version: 0.3.9
+  eslint-plugin-import:
+    specifier: ^2.28.1
+    version: 2.29.1(@typescript-eslint/parser@6.21.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.50.0)
+  eslint-plugin-jsx-a11y:
+    specifier: ^6.7.1
+    version: 6.8.0(eslint@8.50.0)
+  eslint-plugin-prettier:
+    specifier: ^5.0.0
+    version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.50.0)(prettier@3.0.3)
+  eslint-plugin-react:
+    specifier: ^7.33.2
+    version: 7.33.2(eslint@8.50.0)
+  eslint-plugin-react-hooks:
+    specifier: ^4.6.0
+    version: 4.6.0(eslint@8.50.0)
+  eslint-plugin-testing-library:
+    specifier: ^6.0.2
+    version: 6.2.0(eslint@8.50.0)(typescript@5.3.3)
+  eslint-plugin-vitest:
+    specifier: ^0.3.22
+    version: 0.3.22(@typescript-eslint/eslint-plugin@6.21.0)(eslint@8.50.0)(typescript@5.3.3)(vitest@1.3.1)
+  ethers:
+    specifier: ^5.7.2
+    version: 5.7.2
+  ganache:
+    specifier: ^7.4.1
+    version: 7.4.3
+  hardhat:
+    specifier: ^2.10.2
+    version: 2.11.2(ts-node@10.9.1)(typescript@5.3.3)
+  hardhat-dependency-compiler:
+    specifier: ^1.1.3
+    version: 1.1.3(hardhat@2.11.2)
+  hardhat-deploy:
+    specifier: ^0.11.12
+    version: 0.11.16
+  headless-web3-provider:
+    specifier: 0.2.3
+    version: 0.2.3
+  husky:
+    specifier: ^7.0.4
+    version: 7.0.4
+  isows:
+    specifier: ^1.0.3
+    version: 1.0.3(ws@8.16.0)
+  jsdom:
+    specifier: ^24.0.0
+    version: 24.0.0(canvas@2.11.2)
+  lokijs:
+    specifier: ^1.5.12
+    version: 1.5.12
+  msw:
+    specifier: ^1.2.3
+    version: 1.3.2(encoding@0.1.13)(typescript@5.3.3)
+  multiformats:
+    specifier: ^12.0.1
+    version: 12.1.3
+  next-compose-plugins:
+    specifier: ^2.2.1
+    version: 2.2.1
+  next-dev-https:
+    specifier: ^0.1.2
+    version: 0.1.2(patch_hash=q5l3x5627ujg3rak6l6v24c2cq)(next@13.5.6)(react@18.2.0)
+  next-router-mock:
+    specifier: ^0.9.10
+    version: 0.9.12(next@13.5.6)(react@18.2.0)
+  next-transpile-modules:
+    specifier: ^9.1.0
+    version: 9.1.0
+  node-fetch:
+    specifier: 2.6.7
+    version: 2.6.7(encoding@0.1.13)
+  node-fetch-commonjs:
+    specifier: ^3.1.1
+    version: 3.2.4
+  pako:
+    specifier: ^2.1.0
+    version: 2.1.0
+  polyfill-crypto.getrandomvalues:
+    specifier: ^1.0.0
+    version: 1.0.0
+  postcss-scss:
+    specifier: ^4.0.4
+    version: 4.0.5(postcss@8.4.35)
+  prettier:
+    specifier: 3.0.3
+    version: 3.0.3
+  sitemap:
+    specifier: ^7.1.1
+    version: 7.1.1
+  stylelint:
+    specifier: 14.11.0
+    version: 14.11.0
+  stylelint-config-prettier:
+    specifier: ^9.0.5
+    version: 9.0.5(stylelint@14.11.0)
+  stylelint-config-standard-scss:
+    specifier: ^5.0.0
+    version: 5.0.0(postcss@8.4.35)(stylelint@14.11.0)
+  stylelint-config-styled-components:
+    specifier: ^0.1.1
+    version: 0.1.1
+  stylelint-processor-styled-components:
+    specifier: ^1.10.0
+    version: 1.10.0
+  stylelint-webpack-plugin:
+    specifier: ^3.3.0
+    version: 3.3.0(stylelint@14.11.0)(webpack@5.90.3)
+  svgo:
+    specifier: latest
+    version: 3.2.0
+  ts-node:
+    specifier: ^10.9.1
+    version: 10.9.1(@types/node@18.8.2)(typescript@5.3.3)
+  typescript:
+    specifier: ^5.1.6
+    version: 5.3.3
+  typescript-styled-plugin:
+    specifier: ^0.18.2
+    version: 0.18.2
+  vite-plugin-magical-svg:
+    specifier: ^1.2.1
+    version: 1.2.1(vite@5.1.4)
+  vitest:
+    specifier: ^1.3.1
+    version: 1.3.1(@types/node@18.8.2)(jsdom@24.0.0)
+  vitest-canvas-mock:
+    specifier: ^0.3.3
+    version: 0.3.3(vitest@1.3.1)
+  wait-on:
+    specifier: ^6.0.1
+    version: 6.0.1
+  wrangler:
+    specifier: ^3.26.0
+    version: 3.28.2(@cloudflare/workers-types@3.16.0)
+  ws:
+    specifier: ^8.16.0
+    version: 8.16.0
+  yalc:
+    specifier: ^1.0.0-pre.53
+    version: 1.0.0-pre.53
+  yaml:
+    specifier: ^2.4.1
+    version: 2.4.1
 
 packages:
 
@@ -3580,7 +3578,7 @@ packages:
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
-      '@jridgewell/sourcemap-codec': 1.4.14
+      '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
   /@leichtgewicht/ip-codec@2.0.4:
@@ -4978,7 +4976,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@types/estree': 1.0.0
+      '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 2.78.0
@@ -5180,15 +5178,24 @@ packages:
       '@noble/hashes': 1.3.3
       '@scure/base': 1.1.5
 
-  /@sentry/browser@7.43.0:
-    resolution: {integrity: sha512-NlRkBYKb9o5IQdGY8Ktps19Hz9RdSuqS1tlLC7Sjr+MqZqSHmhKq8MWJKciRynxBeMbeGt0smExi9BqpVQdCEg==}
+  /@sentry-internal/tracing@7.77.0:
+    resolution: {integrity: sha512-8HRF1rdqWwtINqGEdx8Iqs9UOP/n8E0vXUu3Nmbqj4p5sQPA7vvCfq+4Y4rTqZFc7sNdFpDsRION5iQEh8zfZw==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/core': 7.43.0
-      '@sentry/replay': 7.43.0
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
-      tslib: 1.14.1
+      '@sentry/core': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
+    dev: false
+
+  /@sentry/browser@7.77.0:
+    resolution: {integrity: sha512-nJ2KDZD90H8jcPx9BysQLiQW+w7k7kISCWeRjrEMJzjtge32dmHA8G4stlUTRIQugy5F+73cOayWShceFP7QJQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.77.0
+      '@sentry/core': 7.77.0
+      '@sentry/replay': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
     dev: false
 
   /@sentry/cli@1.75.0(encoding@0.1.13):
@@ -5219,13 +5226,12 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@sentry/core@7.43.0:
-    resolution: {integrity: sha512-zvMZgEi7ptLBwDnd+xR/u4zdSe5UzS4S3ZhoemdQrn1PxsaVySD/ptyzLoGSZEABqlRxGHnQrZ78MU1hUDvKuQ==}
+  /@sentry/core@7.77.0:
+    resolution: {integrity: sha512-Tj8oTYFZ/ZD+xW8IGIsU6gcFXD/gfE+FUxUaeSosd9KHwBQNOLhZSsYo/tTVf/rnQI/dQnsd4onPZLiL+27aTg==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
-      tslib: 1.14.1
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
     dev: false
 
   /@sentry/hub@5.30.0:
@@ -5237,14 +5243,14 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@sentry/integrations@7.43.0:
-    resolution: {integrity: sha512-rob7/PAUWFTuodCDlRoB0+7vQ7Fc/LlkvprLlB1Qqt34OIgOll4T72zVSaAXWSHZz7nGU8mS2XdYkRSXbDMK4w==}
+  /@sentry/integrations@7.77.0:
+    resolution: {integrity: sha512-P055qXgBHeZNKnnVEs5eZYLdy6P49Zr77A1aWJuNih/EenzMy922GOeGy2mF6XYrn1YJSjEwsNMNsQkcvMTK8Q==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
+      '@sentry/core': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
       localforage: 1.10.0
-      tslib: 1.14.1
     dev: false
 
   /@sentry/minimal@5.30.0:
@@ -5256,11 +5262,11 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@sentry/nextjs@7.43.0(encoding@0.1.13)(next@13.5.6)(react@18.2.0)(webpack@5.90.3):
-    resolution: {integrity: sha512-A0cYiDNuVyxlP+FSyhM0XK0vUaT868jhHgHno6MopnF44cxYBCEBWZrXTeuHALdqBVdl2M3fdx1HX/6kjAzXTQ==}
+  /@sentry/nextjs@7.77.0(encoding@0.1.13)(next@13.5.6)(react@18.2.0)(webpack@5.90.3):
+    resolution: {integrity: sha512-8tYPBt5luFjrng1sAMJqNjM9sq80q0jbt6yariADU9hEr7Zk8YqFaOI2/Q6yn9dZ6XyytIRtLEo54kk2AO94xw==}
     engines: {node: '>=8'}
     peerDependencies:
-      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0
+      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0 || ^14.0
       react: 16.x || 17.x || 18.x
       webpack: '>= 4.0.0'
     peerDependenciesMeta:
@@ -5268,20 +5274,20 @@ packages:
         optional: true
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
-      '@sentry/core': 7.43.0
-      '@sentry/integrations': 7.43.0
-      '@sentry/node': 7.43.0
-      '@sentry/react': 7.43.0(react@18.2.0)
-      '@sentry/tracing': 7.43.0
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
+      '@sentry/core': 7.77.0
+      '@sentry/integrations': 7.77.0
+      '@sentry/node': 7.77.0
+      '@sentry/react': 7.77.0(react@18.2.0)
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
+      '@sentry/vercel-edge': 7.77.0
       '@sentry/webpack-plugin': 1.20.0(encoding@0.1.13)
       chalk: 3.0.0
       next: 13.5.6(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
+      resolve: 1.22.8
       rollup: 2.78.0
       stacktrace-parser: 0.1.10
-      tslib: 1.14.1
       webpack: 5.90.3(esbuild@0.17.19)
     transitivePeerDependencies:
       - encoding
@@ -5305,42 +5311,40 @@ packages:
       - supports-color
     dev: true
 
-  /@sentry/node@7.43.0:
-    resolution: {integrity: sha512-oXaTBq6Bk8Qwsd46hhRU2MLEnjYqWI41nPJmXyAWkDSYQTP7sUe1qM8bCUdsRpPwQh955Vq9qCRfgMbN4lEoAQ==}
+  /@sentry/node@7.77.0:
+    resolution: {integrity: sha512-Ob5tgaJOj0OYMwnocc6G/CDLWC7hXfVvKX/ofkF98+BbN/tQa5poL+OwgFn9BA8ud8xKzyGPxGU6LdZ8Oh3z/g==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/core': 7.43.0
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
-      cookie: 0.4.2
+      '@sentry-internal/tracing': 7.77.0
+      '@sentry/core': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
       https-proxy-agent: 5.0.1
-      lru_map: 0.3.3
-      tslib: 1.14.1
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@sentry/react@7.43.0(react@18.2.0):
-    resolution: {integrity: sha512-HWt0Eh+Y+Z/g+PWgeYWT6+5B+J82gauQ0GydjGeHeeSpoZRPRwWAoRFh+NKM/pe3neVr59VCyn4ghyoE3kODGA==}
+  /@sentry/react@7.77.0(react@18.2.0):
+    resolution: {integrity: sha512-Q+htKzib5em0MdaQZMmPomaswaU3xhcVqmLi2CxqQypSjbYgBPPd+DuhrXKoWYLDDkkbY2uyfe4Lp3yLRWeXYw==}
     engines: {node: '>=8'}
     peerDependencies:
       react: 15.x || 16.x || 17.x || 18.x
     dependencies:
-      '@sentry/browser': 7.43.0
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
+      '@sentry/browser': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
-      tslib: 1.14.1
     dev: false
 
-  /@sentry/replay@7.43.0:
-    resolution: {integrity: sha512-2dGJS6p8uG1JZ7x/A3FyqnILTkXarbvfR+o1lC7z9lu34Wx0ZBeU2in/S2YHNGAE6XvfsePq3ya/s7LaNkk4qQ==}
+  /@sentry/replay@7.77.0:
+    resolution: {integrity: sha512-M9Ik2J5ekl+C1Och3wzLRZVaRGK33BlnBwfwf3qKjgLDwfKW+1YkwDfTHbc2b74RowkJbOVNcp4m8ptlehlSaQ==}
     engines: {node: '>=12'}
     dependencies:
-      '@sentry/core': 7.43.0
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
+      '@sentry-internal/tracing': 7.77.0
+      '@sentry/core': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
     dev: false
 
   /@sentry/tracing@5.30.0:
@@ -5354,23 +5358,13 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@sentry/tracing@7.43.0:
-    resolution: {integrity: sha512-Mld2AyV8xYnRLYbDWvDy8PlGcln3h5JsUx6ScQGOxnFTmCQR50Tldtzq50VDs2fv6xH0+YrL/UIyjxCDc7EXzQ==}
-    engines: {node: '>=8'}
-    dependencies:
-      '@sentry/core': 7.43.0
-      '@sentry/types': 7.43.0
-      '@sentry/utils': 7.43.0
-      tslib: 1.14.1
-    dev: false
-
   /@sentry/types@5.30.0:
     resolution: {integrity: sha512-R8xOqlSTZ+htqrfteCWU5Nk0CDN5ApUTvrlvBuiH1DyP6czDZ4ktbZB0hAgBlVcK0U+qpD3ag3Tqqpa5Q67rPw==}
     engines: {node: '>=6'}
     dev: true
 
-  /@sentry/types@7.43.0:
-    resolution: {integrity: sha512-5XxCWqYWJNoS+P6Ie2ZpUDxLRCt7FTEzmlQkCdjW6MFWOX26hAbF/wEuOTYAFKZXMIXOz0Egofik1e8v1Cg6/A==}
+  /@sentry/types@7.77.0:
+    resolution: {integrity: sha512-nfb00XRJVi0QpDHg+JkqrmEBHsqBnxJu191Ded+Cs1OJ5oPXEW6F59LVcBScGvMqe+WEk1a73eH8XezwfgrTsA==}
     engines: {node: '>=8'}
     dev: false
 
@@ -5382,12 +5376,20 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /@sentry/utils@7.43.0:
-    resolution: {integrity: sha512-f78YfMLcgNU7+suyWFCuQhQlneXXMS+egb0EFZh7iU7kANUPRX5T4b+0C+fwaPm5gA6XfGYskr4ZnzQJLOlSqg==}
+  /@sentry/utils@7.77.0:
+    resolution: {integrity: sha512-NmM2kDOqVchrey3N5WSzdQoCsyDkQkiRxExPaNI2oKQ/jMWHs9yt0tSy7otPBcXs0AP59ihl75Bvm1tDRcsp5g==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/types': 7.43.0
-      tslib: 1.14.1
+      '@sentry/types': 7.77.0
+    dev: false
+
+  /@sentry/vercel-edge@7.77.0:
+    resolution: {integrity: sha512-ffddPCgxVeAccPYuH5sooZeHBqDuJ9OIhIRYKoDi4TvmwAzWo58zzZWhRpkHqHgIQdQvhLVZ5F+FSQVWnYSOkw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.77.0
+      '@sentry/types': 7.77.0
+      '@sentry/utils': 7.77.0
     dev: false
 
   /@sentry/webpack-plugin@1.20.0(encoding@0.1.13):
@@ -6118,10 +6120,6 @@ packages:
     dependencies:
       '@types/estree': 1.0.5
       '@types/json-schema': 7.0.15
-
-  /@types/estree@1.0.0:
-    resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
-    dev: false
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
@@ -8872,6 +8870,7 @@ packages:
   /cookie@0.4.2:
     resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
     engines: {node: '>= 0.6'}
+    dev: true
 
   /cookie@0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
@@ -12558,7 +12557,7 @@ packages:
   /is-reference@1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
     dependencies:
-      '@types/estree': 1.0.0
+      '@types/estree': 1.0.5
     dev: false
 
   /is-regex@1.1.4:
@@ -13532,6 +13531,7 @@ packages:
 
   /lru_map@0.3.3:
     resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
+    dev: true
 
   /lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -13559,7 +13559,7 @@ packages:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.14
+      '@jridgewell/sourcemap-codec': 1.4.15
     dev: false
 
   /magic-string@0.30.7:
