@@ -1,0 +1,52 @@
+name: Run gateway tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "packages/gateway/**"
+
+jobs:
+  gateway-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            packages/gateway
+            packages/linea-verifier
+            pnpm-workspace.yaml
+            pnpm-lock.yaml
+          sparse-checkout-cone-mode: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 8.1.0
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: For act to work (local testing)
+        run: npm -g install yarn
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Compile contract
+        run: pnpm --filter linea-resolver-gateway compile
+
+      - name: Run tests
+        run: pnpm --filter linea-resolver-gateway test
