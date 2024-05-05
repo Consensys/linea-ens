@@ -46,7 +46,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Compile contract
-        run: pnpm --filter gateway compile
+        run: pnpm --filter linea-resolver-gateway compile
 
       - name: Run tests
-        run: pnpm --filter gateway test
+        run: pnpm --filter linea-resolver-gateway test
