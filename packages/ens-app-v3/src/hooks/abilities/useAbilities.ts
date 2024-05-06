@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { checkETH2LDFromName } from '@app/utils/utils'
+import { checkSupported3LDFromName } from '@app/utils/utils'
 
 import { useAccountSafely } from '../account/useAccountSafely'
 import { useContractAddress } from '../chain/useContractAddress'
@@ -126,7 +126,7 @@ export const useAbilities = ({ name, enabled = true }: UseAbilitiesParameters) =
     () => {
       if (!name || !address || isLoading) return DEFAULT_ABILITIES
       return {
-        canExtend: !!name && checkETH2LDFromName(name),
+        canExtend: !!name && checkSupported3LDFromName(name),
         ...getSendAbilities({
           name,
           address,

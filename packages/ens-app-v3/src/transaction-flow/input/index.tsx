@@ -11,6 +11,7 @@ import type { Props as DeleteEmancipatedSubnameWarningProps } from './DeleteEman
 import type { Props as DeleteSubnameNotParentWarningProps } from './DeleteSubnameNotParentWarning/DeleteSubnameNotParentWarning-flow'
 import type { Props as EditResolverProps } from './EditResolver/EditResolver-flow'
 import type { Props as EditRolesProps } from './EditRoles/EditRoles-flow'
+import type { Props as ExtendNamePohProps } from './ExtendNamePoh/ExtendNamePoh-flow'
 import type { Props as ExtendNamesProps } from './ExtendNames/ExtendNames-flow'
 import type { Props as ProfileEditorProps } from './ProfileEditor/ProfileEditor-flow'
 import type { Props as ResetPrimaryNameProps } from './ResetPrimaryName/ResetPrimaryName-flow'
@@ -55,6 +56,7 @@ const DeleteSubnameNotParentWarning = dynamicHelper<DeleteSubnameNotParentWarnin
 const EditResolver = dynamicHelper<EditResolverProps>('EditResolver/EditResolver')
 const EditRoles = dynamicHelper<EditRolesProps>('EditRoles/EditRoles')
 const ExtendNames = dynamicHelper<ExtendNamesProps>('ExtendNames/ExtendNames')
+const ExtendNamePoh = dynamicHelper<ExtendNamePohProps>('ExtendNamePoh/ExtendNamePoh')
 const ProfileEditor = dynamicHelper<ProfileEditorProps>('ProfileEditor/ProfileEditor')
 const ResetPrimaryName = dynamicHelper<ResetPrimaryNameProps>('ResetPrimaryName/ResetPrimaryName')
 const RevokePermissions = dynamicHelper<RevokePermissionsProps>(
@@ -77,6 +79,7 @@ export const DataInputComponents = {
   EditResolver,
   EditRoles,
   ExtendNames,
+  ExtendNamePoh,
   ProfileEditor,
   ResetPrimaryName,
   RevokePermissions,

@@ -6,6 +6,7 @@ import claimDnsName from './claimDnsName'
 import commitName from './commitName'
 import createSubname from './createSubname'
 import deleteSubname from './deleteSubname'
+import extendNamePoh from './extendNamePoh'
 import extendNames from './extendNames'
 import importDnsName from './importDnsName'
 import migrateProfile from './migrateProfile'
@@ -38,6 +39,7 @@ export const transactions = {
   createSubname,
   deleteSubname,
   extendNames,
+  extendNamePoh,
   importDnsName,
   migrateProfile,
   migrateProfileWithReset,

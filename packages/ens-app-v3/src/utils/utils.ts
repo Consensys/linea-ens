@@ -91,6 +91,13 @@ export const checkDNS2LDFromName = (name: string) => {
   return true
 }
 
+export const checkSupported3LDFromName = (name: string): name is Eth2ldName => {
+  const labels = name.split('.')
+  if (labels.length !== 3) return false
+  if (labels[1] !== process.env.NEXT_PUBLIC_BASE_DOMAIN) return false
+  return true
+}
+
 export const checkSubname = (name: string) => name.split('.').length > 2
 
 export const isLabelTooLong = (label: string) => {
