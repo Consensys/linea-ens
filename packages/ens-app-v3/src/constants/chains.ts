@@ -79,11 +79,10 @@ export const sepoliaWithEns = addCustomEnsContracts(
   'https://api.studio.thegraph.com/query/69290/ens-sepolia/version/latest',
 )
 
-// TODO : Replace with TheGraph on Linea Sepolia
 export const lineaSepoliaWithEns = addCustomEnsContracts(
   lineaSepolia,
   lineaSepoliaEnsAddresses,
-  'https://api.studio.thegraph.com/query/49574/enssepolia/version/latest',
+  'https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest',
 )
 
 // export const chainsWithEns = [
