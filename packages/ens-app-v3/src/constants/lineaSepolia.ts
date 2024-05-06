@@ -35,15 +35,15 @@ export const lineaSepolia = defineChain({
   },
   contracts: {
     ensRegistry: {
-      address: '0x0A3aa096eCf8A240e4086d67056cAf2B810701CB',
+      address: '0xE97Af0570d58aDa8cA7C07fba1A4440D1ADF90e5',
     },
     ensUniversalResolver: {
-      address: '0x4167C0E7DE2f265A13E2E6B19f26AC4F8C7b4e5f',
-      blockCreated: 20_724,
+      address: '0xd55E0f08dEd3B2c4c76609DC8959acD9a0822a2e',
+      blockCreated: 587_880,
     },
     multicall3: {
       address: '0xca11bde05977b3631167028862be2a173976ca11',
-      blockCreated: 14_353_601,
+      blockCreated: 227_427,
     },
   },
   testnet: true,
@@ -51,33 +51,33 @@ export const lineaSepolia = defineChain({
 
 export const lineaSepoliaEnsAddresses = {
   ensBaseRegistrarImplementation: {
-    address: '0x62174a3d52fE325e9eEDbADa06190843835Ac229' as Address,
+    address: '0x1f7fA08a66E26d470C631Fea0816079d8ff11835' as Address,
   },
   ensBulkRenewal: {
-    address: '0xb516FdF161fB6ebFB81a4d8731a87c6ae6f14f5E' as Address,
+    address: '0x6Fd7f3d232Ac3ed853b5f7BEB10156A586B882e0' as Address,
   },
   ensDnsRegistrar: {
-    address: '0x4fcc827Ec3Dd237C2F818205676C725684684089' as Address,
+    address: '0x031d41954b0eFbADC1027a61eFC30Af881198dDa' as Address,
   },
   ensDnssecImpl: {
-    address: '0x76625a1b11478Aba4Cd39c15376372DDdbFfBa59' as Address,
+    address: '0x17742516879b525767fCcBA0a8c6C432b6A13217' as Address,
   },
   ensEthRegistrarController: {
-    address: '0x44411C605eb7e009cad03f3847cfbbFCF8895130' as Address,
+    address: '0x2aA3Ffb6eD4e4f8237Ae0Ba060B9765c54EF5C31' as Address,
   },
   ensNameWrapper: {
-    address: '0xf629e307dC59d82AE1C8e30fAa65E9486cFADD96' as Address,
+    address: '0x4912556B28A464C7572E8f14Db81A7c77F2d2957' as Address,
   },
   ensPublicResolver: {
-    address: '0x310D7A96d8179bf4601b22299643Bf39b3fBcbb8' as Address,
+    address: '0xEcC9Ebbc93BE05d014E3A4cf19B45cdC975cc709' as Address,
   },
   ensRegistry: {
-    address: '0x0A3aa096eCf8A240e4086d67056cAf2B810701CB' as Address,
+    address: '0xE97Af0570d58aDa8cA7C07fba1A4440D1ADF90e5' as Address,
   },
   ensReverseRegistrar: {
-    address: '0x2b5E02975bD875ca4ED565E69B19a96d8C0f0E23' as Address,
+    address: '0xea8Af0e31a46D49e69c71AF3efE86F5432386848' as Address,
   },
   ensUniversalResolver: {
-    address: '0x4167C0E7DE2f265A13E2E6B19f26AC4F8C7b4e5f' as Address,
+    address: '0xd55E0f08dEd3B2c4c76609DC8959acD9a0822a2e' as Address,
   },
 }

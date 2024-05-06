@@ -41,7 +41,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       registrar.address,
     )
   console.log(
-    `Setting owner of ${process.env.BASE_DOMAIN}.eth node to registrar on root (tx: ${tx2.hash})...`,
+    `Setting owner of ${process.env.BASE_DOMAIN}.eth node to registrar (tx: ${tx2.hash})...`,
   )
   await tx3.wait()
 }

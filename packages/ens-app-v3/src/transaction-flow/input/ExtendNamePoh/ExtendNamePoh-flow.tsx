@@ -202,25 +202,21 @@ const ExtendNamePoh = ({ data: { names, isSelf }, dispatch, onDismiss }: Props) 
     ? [createTransactionItem('extendNamePoh', { name: names[0], signature: pohSignature })]
     : []
 
-  const {
-    data: { gasEstimate: estimatedGasLimit, gasCost: transactionFee },
-    error: estimateGasLimitError,
-    isLoading: isEstimateGasLoading,
-    gasPrice,
-  } = useEstimateGasWithStateOverride({
-    transactions: pohSignature
-      ? [
-          {
-            name: 'extendNamePoh',
-            data: {
-              name: names[0],
-              signature: pohSignature,
+  const { error: estimateGasLimitError, isLoading: isEstimateGasLoading } =
+    useEstimateGasWithStateOverride({
+      transactions: pohSignature
+        ? [
+            {
+              name: 'extendNamePoh',
+              data: {
+                name: names[0],
+                signature: pohSignature,
+              },
             },
-          },
-        ]
-      : [],
-    enabled: !!pohSignature,
-  })
+          ]
+        : [],
+      enabled: !!pohSignature,
+    })
 
   const { title, alert } = match(view)
     .with('no-ownership-warning', () => ({

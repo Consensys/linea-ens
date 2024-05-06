@@ -44,8 +44,20 @@ export const formatDateTime = (date: Date) => {
 export const formatFullExpiry = (expiryDate?: Date) =>
   expiryDate ? `${formatExpiry(expiryDate)}, ${formatDateTime(expiryDate)}` : ''
 
-export const makeEtherscanLink = (data: string, network?: string, route: string = 'tx') =>
-  `https://${!network || network === 'mainnet' ? '' : `${network}.`}etherscan.io/${route}/${data}`
+export const makeEtherscanLink = (data: string, network?: string, route: string = 'tx') => {
+  console.log({ network })
+  switch (network) {
+    case 'mainnet':
+    case '':
+      return `https://etherscan.io/${route}/${data}`
+    case 'linea sepolia':
+      return `https://sepolia.lineascan.build/${route}/${data}`
+    case 'linea':
+      return `https://lineascan.build/${route}/${data}`
+    default:
+      return `https://${network}.etherscan.io/${route}/${data}`
+  }
+}
 
 export const isBrowser = !!(
   typeof window !== 'undefined' &&

@@ -26,7 +26,7 @@ cd packages/ens-subgraph
 yarn setup
 ```
 
-In a second third terminal run:
+In a third terminal run:
 
 ```bash
 cd packages/ens-app-v3
