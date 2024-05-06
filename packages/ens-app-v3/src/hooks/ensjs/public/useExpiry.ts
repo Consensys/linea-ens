@@ -1,7 +1,6 @@
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query'
 
-import { getExpiry, GetExpiryParameters, GetExpiryReturnType } from '@ensdomains/ensjs/public'
-
+import getExpiry, { GetExpiryParameters, GetExpiryReturnType } from '@app/ensJsOverrides/getExpiry'
 import { useQueryOptions } from '@app/hooks/useQueryOptions'
 import { ConfigWithEns, CreateQueryKey, PartialBy, QueryConfig } from '@app/types'
 import { getIsCachedData } from '@app/utils/getIsCachedData'

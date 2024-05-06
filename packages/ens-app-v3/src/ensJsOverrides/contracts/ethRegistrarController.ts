@@ -69,6 +69,64 @@ export const ethRegistrarControllerErrors = [
     name: 'UnexpiredCommitmentExists',
     type: 'error',
   },
+  {
+    inputs: [
+      {
+        name: 'owner',
+        type: 'address',
+      },
+    ],
+    name: 'PohVerificationFailed',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        name: 'owner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnerAlreadyRegistered',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        name: 'sender',
+        type: 'address',
+      },
+    ],
+    name: 'SenderNotOwner',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        name: 'current',
+        type: 'uint256',
+      },
+      {
+        name: 'expiry',
+        type: 'uint256',
+      },
+    ],
+    name: 'NotInGracePeriod',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        name: 'duration',
+        type: 'uint256',
+      },
+    ],
+    name: 'WrongPohRegistrationDuration',
+    type: 'error',
+  },
 ] as const
 
 export const ethRegistrarControllerRentPriceSnippet = [
@@ -251,6 +309,26 @@ export const ethRegistrarControllerRenewSnippet = [
     name: 'renew',
     outputs: [],
     stateMutability: 'payable',
+    type: 'function',
+  },
+] as const
+
+export const ethRegistrarControllerRenewPohSnippet = [
+  ...ethRegistrarControllerErrors,
+  {
+    inputs: [
+      {
+        name: 'name',
+        type: 'string',
+      },
+      {
+        name: 'signature',
+        type: 'bytes',
+      },
+    ],
+    name: 'renewPoh',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ] as const
