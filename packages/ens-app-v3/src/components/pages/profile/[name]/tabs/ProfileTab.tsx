@@ -69,12 +69,12 @@ const ProfileTab = ({ nameDetails, name }: Props) => {
     () => gracePeriodEndDate && gracePeriodEndDate < new Date(),
     [gracePeriodEndDate],
   )
-  const afterExpiryDate = useMemo(() => expiryDate && expiryDate < new Date(), [gracePeriodEndDate])
-  const userIsOwner = useMemo(() => ownerData && ownerData.owner === address, [ownerData])
+  const afterExpiryDate = useMemo(() => expiryDate && expiryDate < new Date(), [expiryDate])
+  const userIsOwner = useMemo(() => ownerData && ownerData.owner === address, [ownerData, address])
   const snippetButton = useMemo(() => {
     if (isExpired) return 'register'
     if (abilities.data?.canExtend && userIsOwner && afterExpiryDate) return 'extend'
-  }, [isExpired, abilities.data?.canExtend])
+  }, [isExpired, abilities.data?.canExtend, afterExpiryDate, userIsOwner])
 
   const getTextRecord = (key: string) => profile?.texts?.find((x) => x.key === key)
 
