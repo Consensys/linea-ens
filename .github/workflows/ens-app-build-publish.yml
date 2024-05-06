@@ -51,7 +51,7 @@ jobs:
           tags: consensys/linea-resolver:${{ env.DOCKER_TAG }}
           build-args: |
             NEXT_PUBLIC_INFURA_KEY=${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            NEXT_PUBLIC_BASE_DOMAIN=${{ secrets.NEXT_PUBLIC_BASE_DOMAIN }}
             NEXT_PUBLIC_ALCHEMY_KEY=${{ secrets.NEXT_PUBLIC_ALCHEMY_KEY }}
-            NEXT_PUBLIC_POH_SIGNATURE_API=https://poh-verifier.dev.linea.build
+            NEXT_PUBLIC_BASE_DOMAIN=${{ vars.NEXT_PUBLIC_BASE_DOMAIN_TESTNET }}
+            NEXT_PUBLIC_POH_SIGNATURE_API=${{ vars.NEXT_PUBLIC_POH_SIGNATURE_API_TESTNET }}
             BUILD_COMMAND="pnpm build"
