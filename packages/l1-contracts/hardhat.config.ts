@@ -6,6 +6,8 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+const deployer = process.env.DEPLOYER_KEY || "";
+
 const config: HardhatUserConfig = {
   solidity: {
     compilers: [
@@ -20,6 +22,28 @@ const config: HardhatUserConfig = {
         },
       },
     ],
+  },
+  networks: {
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      chainId: 11155111,
+      accounts: [deployer],
+    },
+    mainnet: {
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      chainId: 1,
+      accounts: [deployer],
+    },
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+  },
+  etherscan: {
+    apiKey: {
+      sepolia: process.env.ETHERSCAN_API_KEY ?? "",
+    },
   },
 };
 
