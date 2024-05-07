@@ -10,6 +10,7 @@ import { AppController } from './modules/app/app.controller';
 import { AppService } from './modules/app/app.service';
 import { ApiModule } from './modules/api/api.module';
 import { PohModule } from './modules/poh/poh.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { PohModule } from './modules/poh/poh.module';
     }),
     ApiModule,
     PohModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
