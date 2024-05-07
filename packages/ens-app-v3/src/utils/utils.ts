@@ -45,7 +45,6 @@ export const formatFullExpiry = (expiryDate?: Date) =>
   expiryDate ? `${formatExpiry(expiryDate)}, ${formatDateTime(expiryDate)}` : ''
 
 export const makeEtherscanLink = (data: string, network?: string, route: string = 'tx') => {
-  console.log({ network })
   switch (network) {
     case 'mainnet':
     case '':
