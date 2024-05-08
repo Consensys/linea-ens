@@ -208,7 +208,9 @@ describe("Crosschain Resolver", () => {
     target = await l1ResolverFactory.deploy(
       verifierAddress,
       ensAddress,
-      wrapperAddress
+      wrapperAddress,
+      "https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest",
+      59141
     );
     // Mine an empty block so we have something to prove against
     await l1Provider.send("evm_mine", []);
@@ -226,19 +228,19 @@ describe("Crosschain Resolver", () => {
       await target.setTarget(incorrectnode, l2ResolverAddress);
     } catch (e) {}
 
-    const result = await target.getTarget(incorrectname, 0);
+    const result = await target.getTarget(incorrectname);
     expect(result[1]).to.equal(EMPTY_ADDRESS);
   });
 
   it("should allow owner to set target", async () => {
     await target.setTarget(node, signerAddress);
-    const result = await target.getTarget(encodeName(baseDomain), 0);
+    const result = await target.getTarget(encodeName(baseDomain));
     expect(result[1]).to.equal(signerAddress);
   });
 
   it("subname should get target of its parent", async () => {
     await target.setTarget(node, signerAddress);
-    const result = await target.getTarget(encodedSubDomain, 0);
+    const result = await target.getTarget(encodedSubDomain);
     expect(result[0]).to.equal(subDomainNode);
     expect(result[1]).to.equal(signerAddress);
   });
@@ -257,7 +259,7 @@ describe("Crosschain Resolver", () => {
     const wrappedtnode = ethers.namehash(`${label}.eth`);
     await target.setTarget(wrappedtnode, l2ResolverAddress);
     const encodedname = encodeName(`${label}.eth`);
-    const result = await target.getTarget(encodedname, 0);
+    const result = await target.getTarget(encodedname);
     expect(result[1]).to.equal(l2ResolverAddress);
   });
 

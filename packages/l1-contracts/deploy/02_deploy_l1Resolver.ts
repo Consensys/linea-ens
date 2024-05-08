@@ -18,13 +18,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "0x1944d8f922dbda424d5bb8181be5344d513cd0210312d2dcccd37d54c11a17de";
   let target = PublicResolverLineaSepoliaAddr;
 
-  const args: string[] = [];
+  const args: any[] = [];
   switch (network.name) {
     case "sepolia":
       args.push(
         lineaSparseProofVerifier.address,
         ENSRegistrySepoliaAddr,
-        NameWrapperSepoliaAddr
+        NameWrapperSepoliaAddr,
+        "https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest",
+        59141
       );
       break;
     case "mainnet":
