@@ -208,7 +208,9 @@ describe("Crosschain Resolver", () => {
     target = await l1ResolverFactory.deploy(
       verifierAddress,
       ensAddress,
-      wrapperAddress
+      wrapperAddress,
+      "https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest",
+      59141
     );
     // Mine an empty block so we have something to prove against
     await l1Provider.send("evm_mine", []);
@@ -220,25 +222,24 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should not allow non owner to set target", async () => {
-    const incorrectnode = ethers.namehash("notowned.eth");
     const incorrectname = encodeName("notowned.eth");
     try {
-      await target.setTarget(incorrectnode, l2ResolverAddress);
+      await target.setTarget(incorrectname, l2ResolverAddress);
     } catch (e) {}
 
-    const result = await target.getTarget(incorrectname, 0);
+    const result = await target.getTarget(incorrectname);
     expect(result[1]).to.equal(EMPTY_ADDRESS);
   });
 
   it("should allow owner to set target", async () => {
-    await target.setTarget(node, signerAddress);
-    const result = await target.getTarget(encodeName(baseDomain), 0);
+    await target.setTarget(encodedname, signerAddress);
+    const result = await target.getTarget(encodeName(baseDomain));
     expect(result[1]).to.equal(signerAddress);
   });
 
   it("subname should get target of its parent", async () => {
-    await target.setTarget(node, signerAddress);
-    const result = await target.getTarget(encodedSubDomain, 0);
+    await target.setTarget(encodedname, signerAddress);
+    const result = await target.getTarget(encodedSubDomain);
     expect(result[0]).to.equal(subDomainNode);
     expect(result[1]).to.equal(signerAddress);
   });
@@ -254,15 +255,15 @@ describe("Crosschain Resolver", () => {
       0, // CAN_DO_EVERYTHING
       EMPTY_ADDRESS
     );
-    const wrappedtnode = ethers.namehash(`${label}.eth`);
-    await target.setTarget(wrappedtnode, l2ResolverAddress);
+    const wrappedtname = encodeName(`${label}.eth`);
+    await target.setTarget(wrappedtname, l2ResolverAddress);
     const encodedname = encodeName(`${label}.eth`);
-    const result = await target.getTarget(encodedname, 0);
+    const result = await target.getTarget(encodedname);
     expect(result[1]).to.equal(l2ResolverAddress);
   });
 
   it("should resolve empty ETH Address", async () => {
-    await target.setTarget(node, l2ResolverAddress);
+    await target.setTarget(encodedname, l2ResolverAddress);
     const addr = "0x0000000000000000000000000000000000000000";
     const result = await l2contract["addr(bytes32)"](node);
     expect(result).to.equal(addr);
@@ -278,7 +279,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve ETH Address", async () => {
-    await target.setTarget(node, l2ResolverAddress);
+    await target.setTarget(encodedname, l2ResolverAddress);
     const result = await l2contract["addr(bytes32)"](subDomainNode);
     expect(ethers.getAddress(result)).to.equal(registrantAddr);
     await l1Provider.send("evm_mine", []);
@@ -295,7 +296,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve non ETH Address", async () => {
-    await target.setTarget(node, l2ResolverAddress);
+    await target.setTarget(encodedname, l2ResolverAddress);
     const addr = "0x76a91462e907b15cbf27d5425399ebf6f0fb50ebb88f1888ac";
     const coinType = 0; // BTC
     await l1Provider.send("evm_mine", []);
@@ -311,7 +312,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve text record", async () => {
-    await target.setTarget(node, l2ResolverAddress);
+    await target.setTarget(encodedname, l2ResolverAddress);
     const key = "name";
     const value = "test.eth";
     await l1Provider.send("evm_mine", []);
@@ -328,7 +329,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve contenthash", async () => {
-    await target.setTarget(node, l2ResolverAddress);
+    await target.setTarget(encodedname, l2ResolverAddress);
     const contenthash =
       "0xe3010170122029f2d17be6139079dc48696d1f582a8530eb9805b561eda517e22a892c7e3f1f";
     await l1Provider.send("evm_mine", []);

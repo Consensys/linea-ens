@@ -6,6 +6,9 @@ import { address as PublicResolverLineaSepoliaAddr } from "../../l2-contracts/de
 import { address as ENSRegistryMainnetAddr } from "../../l2-contracts/deployments/mainnet/ENSRegistry.json";
 import { address as NameWrapperMainnetAddr } from "../../l2-contracts/deployments/mainnet/NameWrapper.json";
 import { address as PublicResolverMainnetAddr } from "../../l2-contracts/deployments/mainnet/PublicResolver.json";
+import packet from "dns-packet";
+
+const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments, network, ethers } = hre;
@@ -14,23 +17,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const lineaSparseProofVerifier = await get("LineaSparseProofVerifier");
   // ens namehash of linea-sepolia.eth
-  let node =
-    "0x1944d8f922dbda424d5bb8181be5344d513cd0210312d2dcccd37d54c11a17de";
+  let node = encodeName("linea-sepolia.eth");
   let target = PublicResolverLineaSepoliaAddr;
 
-  const args: string[] = [];
+  const args: any[] = [];
   switch (network.name) {
     case "sepolia":
       args.push(
         lineaSparseProofVerifier.address,
         ENSRegistrySepoliaAddr,
-        NameWrapperSepoliaAddr
+        NameWrapperSepoliaAddr,
+        "https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest",
+        59141
       );
       break;
     case "mainnet":
       // ens namehash of linea.eth
-      node =
-        "0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3";
+      node = encodeName("linea.eth");
       target = PublicResolverMainnetAddr;
       // TODO add when deployed on mainnet
       // args.push(PohVerifierSepoliaAddr,ENSRegistryMainnetAddr, NameWrapperMainnetAddr);
