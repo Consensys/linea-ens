@@ -27,9 +27,9 @@ contract L1Resolver is
 {
     using EVMFetcher for EVMFetcher.EVMFetchRequest;
     using BytesUtils for bytes;
-    IEVMVerifier immutable verifier;
-    ENS immutable ens;
-    INameWrapper immutable nameWrapper;
+    IEVMVerifier public immutable verifier;
+    ENS public immutable ens;
+    INameWrapper public immutable nameWrapper;
     mapping(bytes32 => address) targets;
     uint256 constant COIN_TYPE_ETH = 60;
     uint256 constant RECORD_VERSIONS_SLOT = 0;
@@ -40,7 +40,7 @@ contract L1Resolver is
     string public graphqlUrl;
     uint256 public l2ChainId;
 
-    event TargetSet(bytes32 indexed node, address target);
+    event TargetSet(bytes name, address target);
 
     function isAuthorised(bytes32 node) internal view returns (bool) {
         // TODO: Add support for
@@ -61,11 +61,6 @@ contract L1Resolver is
      * @param contractAddress Contract Address at which the deferred mutation should transact with.
      */
     error StorageHandledByL2(uint256 chainId, address contractAddress);
-
-    modifier authorised(bytes32 node) {
-        require(isAuthorised(node));
-        _;
-    }
 
     /**
      * @param _verifier     The chain verifier address
@@ -99,12 +94,15 @@ contract L1Resolver is
 
     /**
      * Set target address to verify aagainst
-     * @param node The ENS node to query.
+     * @param name The encoded name to query.
      * @param target The L2 resolver address to verify against.
      */
-    function setTarget(bytes32 node, address target) public authorised(node) {
+    function setTarget(bytes calldata name, address target) public {
+        (bytes32 node, ) = getTarget(name);
+        require(isAuthorised(node));
         targets[node] = target;
-        emit TargetSet(node, target);
+        emit TargetSet(name, target);
+        emit MetadataChanged(name, graphqlUrl);
     }
 
     /**
