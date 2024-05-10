@@ -3,6 +3,7 @@ import { EVMGateway } from "./evm-gateway";
 import { ethers } from "ethers";
 import { L2ProofService } from "./L2ProofService";
 import "dotenv/config";
+import cors from "cors";
 
 const l1ProviderUrl = process.env.L1_PROVIDER_URL;
 const l2ProviderUrl = process.env.L2_PROVIDER_URL;
@@ -22,6 +23,13 @@ const gateway = new EVMGateway(
 const server = new Server();
 gateway.add(server);
 const app = server.makeApp("/");
+
+// Enable cors
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 // Add a health check page
 app.get("/health", async (_req, res, _next) => {
