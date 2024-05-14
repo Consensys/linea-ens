@@ -32,6 +32,7 @@
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
     "@ethersproject/abi": "^5.4.7",
+    "@ethersproject/bytes": "^5.7.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
@@ -48,6 +49,7 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.56.0",
     "ethers": "^6.11.1",
+    "express": "^4.19.2",
     "hardhat": "^2.21.0",
     "hardhat-gas-reporter": "^1.0.8",
     "linea-verifier": "^1.0.0",

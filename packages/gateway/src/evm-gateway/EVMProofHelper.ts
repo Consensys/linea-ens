@@ -1,4 +1,4 @@
-import { toBeHex, AddressLike, JsonRpcProvider } from "ethers";
+import { toBeHex, AddressLike, JsonRpcProvider, ethers } from "ethers";
 
 interface ProofStruct {
   key: string;
@@ -64,10 +64,20 @@ export class EVMProofHelper {
       slots.map((slot) => toBeHex(slot, 32)),
       "0x" + blockNo.toString(16),
     ];
-    const proofs: StateProof = await this.providerL2.send(
-      "rollup_getProof",
-      args
+
+    // We have to reinitilize the provider L2 because of an issue when multiple
+    // requests are sent at the same time, the provider becomes not aware of
+    // the rollup_getProof method
+    const providerUrl = await this.providerL2._getConnection().url;
+    const providerChainId = await this.providerL2._network.chainId;
+    const providerL2 = new ethers.JsonRpcProvider(
+      providerUrl,
+      providerChainId,
+      {
+        staticNetwork: true,
+      }
     );
+    const proofs: StateProof = await providerL2.send("rollup_getProof", args);
     return proofs;
   }
 }
