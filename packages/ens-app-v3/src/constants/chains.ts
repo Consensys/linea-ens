@@ -8,7 +8,6 @@ import type { Register } from '@app/local-contracts'
 import { makeLocalhostChainWithEns } from '@app/utils/chains/makeLocalhostChainWithEns'
 
 import { lineaSepolia, lineaSepoliaEnsAddresses } from './lineaSepolia'
-import { sepoliaCustom, sepoliaCustomEnsAddresses } from './sepoliaCustom'
 
 export const deploymentAddresses = JSON.parse(
   process.env.NEXT_PUBLIC_DEPLOYMENT_ADDRESSES || '{}',
@@ -73,37 +72,19 @@ const addCustomEnsContracts = <const TChain extends Chain>(
   } as const
 }
 
-export const sepoliaWithEns = addCustomEnsContracts(
-  sepoliaCustom,
-  sepoliaCustomEnsAddresses,
-  'https://api.studio.thegraph.com/query/69290/ens-sepolia/version/latest',
-)
-
 export const lineaSepoliaWithEns = addCustomEnsContracts(
   lineaSepolia,
   lineaSepoliaEnsAddresses,
   'https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest',
 )
 
-// export const chainsWithEns = [
-//   mainnetWithEns,
-//   goerliWithEns,
-//   sepoliaWithEns,
-//   holeskyWithEns,
-//   localhostWithEns,
-//   lineaSepoliaWithEns,
-// ] as const
-
-export const chainsWithEns = [lineaSepoliaWithEns, sepoliaWithEns, localhostWithEns] as const
+export const chainsWithEns = [lineaSepoliaWithEns, localhostWithEns] as const
 
 export const getSupportedChainById = (chainId: number | undefined) => {
   return chainId ? chainsWithEns.find((c) => c.id === chainId) : undefined
 }
 
-export type SupportedChain =
-  | typeof localhostWithEns
-  | typeof lineaSepoliaWithEns
-  | typeof sepoliaWithEns
+export type SupportedChain = typeof localhostWithEns | typeof lineaSepoliaWithEns
 
 type EnsAddresses = {
   ensRegistry: {

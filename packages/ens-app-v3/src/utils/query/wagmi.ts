@@ -1,8 +1,8 @@
 import { FallbackTransport, HttpTransport } from 'viem'
 import { createConfig, createStorage, fallback, http } from 'wagmi'
-import { localhost, sepolia } from 'wagmi/chains'
+import { localhost } from 'wagmi/chains'
 
-import { lineaSepoliaWithEns, localhostWithEns, sepoliaWithEns } from '@app/constants/chains'
+import { lineaSepoliaWithEns, localhostWithEns } from '@app/constants/chains'
 import { lineaSepolia } from '@app/constants/lineaSepolia'
 
 import { WC_PROJECT_ID } from '../constants'
@@ -75,7 +75,6 @@ const localStorageWithInvertMiddleware = (): Storage | undefined => {
 
 const chains = [
   ...(isLocalProvider ? ([localhostWithEns] as const) : ([] as const)),
-  sepoliaWithEns,
   lineaSepoliaWithEns,
 ] as const
 
@@ -102,7 +101,6 @@ const wagmiConfig_ = createConfig({
         })),
 
     [lineaSepolia.id]: initialiseTransports('linea-sepolia', [infuraUrl]),
-    [sepolia.id]: initialiseTransports('sepolia', [infuraUrl]),
   },
 })
 

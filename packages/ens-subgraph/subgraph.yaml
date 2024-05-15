@@ -8,11 +8,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: ENSRegistry
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: EnsRegistry
-      address: "0xE97Af0570d58aDa8cA7C07fba1A4440D1ADF90e5"
-      startBlock: 587786
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -36,11 +36,11 @@ dataSources:
           handler: handleNewTTL
   - kind: ethereum/contract
     name: ENSRegistryOld
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: EnsRegistry
-      address: "0xF2C66c0999E91A6186052fb4416Fc4aBD9BcBc05"
-      startBlock: 587780
+      address: "0x8464135c8F25Da09e49BC8782676a84730C318bC"
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -64,11 +64,11 @@ dataSources:
           handler: handleNewTTLOldRegistry
   - kind: ethereum/contract
     name: Resolver
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: Resolver
-      address: "0xEcC9Ebbc93BE05d014E3A4cf19B45cdC975cc709"
-      startBlock: 587876
+      address: "0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf"
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -113,11 +113,11 @@ dataSources:
           handler: handleVersionChanged
   - kind: ethereum/contract
     name: BaseRegistrar
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: BaseRegistrar
-      address: "0x1f7fA08a66E26d470C631Fea0816079d8ff11835"
-      startBlock: 587788
+      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -140,11 +140,11 @@ dataSources:
           handler: handleNameTransferred
   - kind: ethereum/contract
     name: EthRegistrarControllerOld
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: EthRegistrarControllerOld
-      address: "0xb5f2276b2912aCE029FAb9FD207E7c7CDC1BC2ED"
-      startBlock: 587858
+      address: "0xf5059a5D33d5853360D16C683c16e67980206f36"
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -162,11 +162,10 @@ dataSources:
           handler: handleNameRenewedByController
   - kind: ethereum/contract
     name: EthRegistrarController
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: EthRegistrarController
-      address: "0x2aA3Ffb6eD4e4f8237Ae0Ba060B9765c54EF5C31"
-      startBlock: 587864
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -185,11 +184,11 @@ dataSources:
           handler: handleNameRenewedByController
   - kind: ethereum/contract
     name: NameWrapper
-    network: linea-sepolia
+    network: mainnet
     source:
       abi: NameWrapper
-      address: "0x4912556B28A464C7572E8f14Db81A7c77F2d2957"
-      startBlock: 587848
+      address: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042"
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
