@@ -21,7 +21,6 @@ import { CustomProfileRecordInput } from './CustomProfileRecordInput'
 import { ProfileRecordInput } from './ProfileRecordInput'
 import { ProfileRecordTextarea } from './ProfileRecordTextarea'
 import { profileEditorFormToProfileRecords } from './profileRecordUtils'
-import { WrappedAvatarButton } from './WrappedAvatarButton'
 
 const StyledCard = styled.form(({ theme }) => [
   css`
@@ -141,9 +140,9 @@ const Profile = ({ name, callback, registrationData, resolverExists }: Props) =>
     hasErrors,
   } = useProfileEditorForm(registrationData.records)
 
-  const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false)
+  const [, setIsAvatarDropdownOpen] = useState(false)
 
-  const [avatarFile, setAvatarFile] = useState<File | undefined>()
+  const [avatarFile] = useState<File | undefined>()
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>()
   useEffect(() => {
     const storage = localStorage.getItem(`avatar-src-${name}`)
