@@ -272,16 +272,6 @@ const Profile = ({ name, callback, registrationData, resolverExists }: Props) =>
         <CenterAlignedTypography fontVariant="headingTwo">
           {t('steps.profile.title')}
         </CenterAlignedTypography>
-        <WrappedAvatarButton
-          control={control}
-          src={avatarSrc}
-          isOpen={isAvatarDropdownOpen}
-          onSelectOption={setModalOption}
-          onAvatarChange={(avatar) => setAvatar(avatar)}
-          onAvatarFileChange={(file) => setAvatarFile(file)}
-          onAvatarSrcChange={(src) => setAvatarSrc(src)}
-          setIsOpen={setIsAvatarDropdownOpen}
-        />
         {records.map((field, index) =>
           field.group === 'custom' ? (
             <CustomProfileRecordInput
