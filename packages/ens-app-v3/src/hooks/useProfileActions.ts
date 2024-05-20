@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { checkIsDecrypted } from '@ensdomains/ensjs/utils'
-
 import { makeIntroItem } from '@app/transaction-flow/intro'
 import { createTransactionItem } from '@app/transaction-flow/transaction'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
@@ -118,27 +116,6 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
   const profileActions = useMemo(() => {
     const actions: Action[] = []
     if (!address || isLoading) return actions
-
-    const transactionFlowItem = getPrimaryNameTransactionFlowItem?.callBack?.(name)
-    if (isAvailablePrimaryName && !!transactionFlowItem) {
-      const key = `setPrimaryName-${name}-${address}`
-      actions.push({
-        label: t('tabs.profile.actions.setAsPrimaryName.label'),
-        tooltipContent: hasGraphError
-          ? t('errors.networkError.blurb', { ns: 'common' })
-          : undefined,
-        tooltipPlacement: 'left',
-        loading: hasGraphErrorLoading,
-        onClick: !checkIsDecrypted(name)
-          ? () =>
-              showUnknownLabelsInput(key, {
-                name,
-                key,
-                transactionFlowItem,
-              })
-          : () => createTransactionFlow(key, transactionFlowItem),
-      })
-    }
 
     if (abilities.canEdit && (abilities.canEditRecords || abilities.canEditResolver)) {
       actions.push({

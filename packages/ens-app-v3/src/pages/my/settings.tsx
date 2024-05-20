@@ -41,9 +41,7 @@ export default function Page() {
       {{
         trailing: (
           <OtherWrapper>
-            <PrimarySection />
             <TransactionSection />
-            {IS_DEV_ENVIRONMENT && <DevSection />}
           </OtherWrapper>
         ),
       }}
