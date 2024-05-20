@@ -1,6 +1,6 @@
 {
-  "title": "Your web3 username",
-  "description": "Your identity across web3, one name for all your crypto addresses, and your decentralised website.",
+  "title": "Linea Name Service",
+  "description": "Linea Name Service is a friendly fork of ENS, showcasing the power of bringing ENS names on L2. Register and manage a subdomain for a fraction of the L1 gas price. Your subname will be fully compatible with ENS and can be used on any dApp or chain that support ENS.",
   "loading": "Loading",
   "unsupportedNetwork": "Unsupported network",
   "notFound": "404 Not Found",
