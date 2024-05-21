@@ -8,8 +8,13 @@ import { ReactElement, ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { createGlobalStyle, keyframes, ThemeProvider } from 'styled-components'
 
-import { ThorinGlobalStyles, lightTheme as thorinLightTheme } from '@ensdomains/thorin'
+import {
+  DefaultTheme,
+  ThorinGlobalStyles,
+  lightTheme as thorinLightTheme,
+} from '@ensdomains/thorin'
 
+import LineaVector from '@app/assets/linea/LineaVector.png'
 import { Notifications } from '@app/components/Notifications'
 import { TestnetWarning } from '@app/components/TestnetWarning'
 import { TransactionStoreProvider } from '@app/hooks/transactions/TransactionStoreContext'
@@ -25,6 +30,8 @@ import i18n from '../i18n'
 
 import '../styles.css'
 
+import Image from 'next/image'
+
 const rainbowKitTheme: Theme = {
   ...lightTheme({
     accentColor: thorinLightTheme.colors.accent,
@@ -32,6 +39,19 @@ const rainbowKitTheme: Theme = {
   }),
   fonts: {
     body: 'Satoshi, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
+  },
+}
+
+const lineaTheme: DefaultTheme = {
+  ...thorinLightTheme,
+  colors: {
+    ...thorinLightTheme.colors,
+    grey: '#C0C0C0',
+    backgroundPrimary: '#1D1D1D',
+    border: '#505050',
+    textPrimary: '#ffffff',
+    textSecondary: '#000000',
+    backgroundSecondary: '#61DFFF',
   },
 }
 
@@ -74,10 +94,7 @@ const GlobalStyle = createGlobalStyle`
       sans-serif;
   }
 
-  body {
-    background: radial-gradient(50% 50% at 50% 50%, rgba(82, 152, 255, 0.062) 0%, rgba(255, 255, 255, 0) 100%), #F7F7F7;
-  }
-
+  
   body, .min-safe {
     min-height: 100vh;
     /* stylelint-disable-next-line value-no-vendor-prefix */
@@ -117,6 +134,25 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
+const BackgroundImage = () => {
+  return (
+    <Image
+      src={LineaVector}
+      style={{
+        objectFit: 'cover',
+        zIndex: -1,
+        background: '#121212',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+      }}
+      alt=""
+    />
+  )
+}
+
 const breakpoints = {
   xs: '(min-width: 360px)',
   sm: '(min-width: 640px)',
@@ -143,8 +179,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <QueryProviders>
         <RainbowKitProvider theme={rainbowKitTheme}>
           <TransactionStoreProvider>
-            <ThemeProvider theme={thorinLightTheme}>
+            <ThemeProvider theme={lineaTheme}>
               <BreakpointProvider queries={breakpoints}>
+                <BackgroundImage />
                 <GlobalStyle />
                 <ThorinGlobalStyles />
                 <SyncProvider>

@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Key, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import type { Address } from 'viem'
 import { useDisconnect, useEnsAvatar } from 'wagmi'
 
@@ -107,6 +107,7 @@ const calculateTestId = (isTabBar: boolean | undefined, inHeader: boolean | unde
 }
 
 export const ConnectButton = ({ isTabBar, large, inHeader }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('common')
   const breakpoints = useBreakpoint()
   const { openConnectModal } = useConnectModal()
@@ -119,6 +120,10 @@ export const ConnectButton = ({ isTabBar, large, inHeader }: Props) => {
         size={breakpoints.sm || large ? 'medium' : 'small'}
         width={inHeader ? '45' : undefined}
         shape="rounded"
+        style={{
+          backgroundColor: theme.colors.backgroundSecondary,
+          color: theme.colors.textSecondary,
+        }}
       >
         {t('wallet.connect')}
       </Button>

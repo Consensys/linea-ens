@@ -17,14 +17,13 @@ const GradientTitle = styled.h1(
     font-size: ${theme.fontSizes.headingTwo};
     text-align: center;
     font-weight: 800;
-    background-image: ${theme.colors.gradients.accent};
     background-repeat: no-repeat;
     background-size: 110%;
     /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
     margin: 0;
+    color: ${theme.colors.textAccent};
 
     ${mq.sm.min(css`
       font-size: ${theme.fontSizes.headingOne};
