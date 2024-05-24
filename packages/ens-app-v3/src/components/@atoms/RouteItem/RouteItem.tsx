@@ -24,7 +24,7 @@ const LinkWrapper = styled.a<{
     gap: ${theme.space['1.5']};
     cursor: pointer;
 
-    color: ${theme.colors.greyPrimary};
+    color: ${theme.colors.textPrimary};
     transition: all 0.15s ease-in-out;
 
     ${!$asText

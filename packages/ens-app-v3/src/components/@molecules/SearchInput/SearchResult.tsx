@@ -9,8 +9,9 @@ import styled, { css } from 'styled-components'
 import { Address } from 'viem'
 import { useEnsAvatar } from 'wagmi'
 
-import { Avatar, Spinner, Tag, Typography } from '@ensdomains/thorin'
+import { Avatar, Spinner, Tag } from '@ensdomains/thorin'
 
+import { Typography } from '@app/components/styled/Typography'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { useBasicName } from '@app/hooks/useBasicName'
 import { useBeautifiedName } from '@app/hooks/useBeautifiedName'
@@ -118,12 +119,13 @@ const AddressAndName = styled.div(
 )
 
 const StyledTag = styled(Tag)(
-  () => css`
+  ({ theme }) => css`
     width: max-content;
     justify-self: flex-end;
     overflow-wrap: normal;
     word-break: keep-all;
     white-space: nowrap;
+    background-color: ${theme.colors.textPrimary};
   `,
 )
 

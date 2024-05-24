@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Dialog, Helper, Typography } from '@ensdomains/thorin'
 
@@ -25,6 +25,7 @@ type Props = {
 }
 
 export const MainView = ({ manager, showWarning, onCancel, onConfirm }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   return (
     <Container>
@@ -36,7 +37,13 @@ export const MainView = ({ manager, showWarning, onCancel, onConfirm }: Props) =
       {showWarning && <Helper type="warning">{t('input.syncManager.warning')}</Helper>}
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onCancel}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onCancel}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

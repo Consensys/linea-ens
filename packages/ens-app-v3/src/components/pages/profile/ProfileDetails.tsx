@@ -2,10 +2,12 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
 import { DecodedContentHash } from '@ensdomains/ensjs/utils'
-import { Button, Helper, mq, Typography } from '@ensdomains/thorin'
+import { Helper, mq } from '@ensdomains/thorin'
 
 import { CacheableComponent } from '@app/components/@atoms/CacheableComponent'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import coinsWithIcons from '@app/constants/coinsWithIcons.json'
 import { supportedGeneralRecordKeys } from '@app/constants/supportedGeneralRecordKeys'
 import { supportedSocialRecordKeys } from '@app/constants/supportedSocialRecordKeys'
@@ -42,7 +44,7 @@ const Stack = styled.div(
 
 const SectionTitle = styled(Typography)(({ theme }) => [
   css`
-    color: ${theme.colors.greyPrimary};
+    color: ${theme.colors.textPrimary};
     margin-left: ${theme.space['2']};
   `,
 ])

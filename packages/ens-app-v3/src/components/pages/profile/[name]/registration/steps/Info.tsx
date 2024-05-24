@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Heading, mq, Typography } from '@ensdomains/thorin'
 
@@ -104,6 +104,7 @@ type Props = {
 }
 
 const Info = ({ registrationData, name, callback, onProfileClick }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('register')
 
   const estimate = useEstimateFullRegistration({
@@ -133,7 +134,13 @@ const Info = ({ registrationData, name, callback, onProfileClick }: Props) => {
       )}
       <ButtonContainer>
         <MobileFullWidth>
-          <Button colorStyle="accentSecondary" onClick={() => callback({ back: true })}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={() => callback({ back: true })}
+          >
             {t('action.back', { ns: 'common' })}
           </Button>
         </MobileFullWidth>

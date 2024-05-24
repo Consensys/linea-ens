@@ -2,7 +2,7 @@
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 import { ReactNode, useCallback, useState } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
-import styled, { css, DefaultTheme, keyframes } from 'styled-components'
+import styled, { css, DefaultTheme, keyframes, useTheme } from 'styled-components'
 import { useAccount, useClient } from 'wagmi'
 
 import {
@@ -267,6 +267,7 @@ export const AvatarNFT = ({
   handleCancel: () => void
   handleSubmit: (type: 'nft', uri: string, display: string) => void
 }) => {
+  const theme = useTheme()
   const chain = useChainName()
   const { t } = useTranslation('transactionFlow')
 
@@ -353,7 +354,13 @@ export const AvatarNFT = ({
         </SelectedNFTContainer>
         <Dialog.Footer
           leading={
-            <Button colorStyle="accentSecondary" onClick={() => setSelectedNFT(null)}>
+            <Button
+              style={{
+                backgroundColor: theme.colors.backgroundSecondary,
+                color: theme.colors.textSecondary,
+              }}
+              onClick={() => setSelectedNFT(null)}
+            >
               {t('action.back', { ns: 'common' })}
             </Button>
           }
@@ -427,7 +434,13 @@ export const AvatarNFT = ({
       {innerContent}
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={handleCancel}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={handleCancel}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

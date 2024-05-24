@@ -55,3 +55,34 @@
   font-display: swap;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'AtypDisplay';
+  src: url('./Atyp/AtypDisplay-Bold.ttf') format('truetype'),
+    url('./Atyp/AtypDisplay-Bold.woff2') format('woff2'),
+    url('./Atyp/AtypDisplay-Bold.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AtypDisplay';
+  src: url('./Atyp/AtypRegularVariable.ttf') format('truetype'),
+    url('./Atyp/AtypRegularVariable.woff2') format('woff2'),
+    url('./Atyp/AtypRegularVariable.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'AtypDisplay';
+  src: url('./Atyp/AtypDisplay-Medium.ttf') format('truetype'),
+    url('./Atyp/AtypDisplay-Medium.woff2') format('woff2'),
+    url('./Atyp/AtypDisplay-Medium.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}

@@ -7,12 +7,14 @@ import { decodeEventLog } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { tokenise } from '@ensdomains/ensjs/utils'
-import { Button, mq, Typography } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import { Invoice } from '@app/components/@atoms/Invoice/Invoice'
 import MobileFullWidth from '@app/components/@atoms/MobileFullWidth'
 import NFTTemplate from '@app/components/@molecules/NFTTemplate/NFTTemplate'
 import { Card } from '@app/components/Card'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import useWindowSize from '@app/hooks/useWindowSize'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 
@@ -289,9 +291,7 @@ const Complete = ({ name, beautifiedName, callback, isMoonpayFlow }: Props) => {
       {InvoiceFilled}
       <ButtonContainer>
         <MobileFullWidth>
-          <Button colorStyle="accentSecondary" onClick={() => callback(false)}>
-            {t('steps.complete.registerAnother')}
-          </Button>
+          <Button onClick={() => callback(false)}>{t('steps.complete.registerAnother')}</Button>
         </MobileFullWidth>
         <MobileFullWidth>
           <Button data-testid="view-name" onClick={() => callback(true)}>

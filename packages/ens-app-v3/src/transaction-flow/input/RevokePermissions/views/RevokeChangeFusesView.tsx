@@ -1,7 +1,9 @@
 import { UseFormRegister } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { CheckboxRow, Dialog } from '@ensdomains/thorin'
+import { CheckboxRow } from '@ensdomains/thorin'
+
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 
 import { CenterAlignedTypography } from '../components/CenterAlignedTypography'
 import type { FormData } from '../RevokePermissions-flow'

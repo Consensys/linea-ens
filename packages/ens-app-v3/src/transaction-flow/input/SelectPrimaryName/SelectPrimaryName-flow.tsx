@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address, labelhash } from 'viem'
 import { useClient } from 'wagmi'
 
@@ -150,6 +150,7 @@ const ErrorContainer = styled.div(
 )
 
 const SelectPrimaryName = ({ data: { address }, dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const formRef = useRef<HTMLFormElement>(null)
   const queryClient = useQueryClient()
@@ -385,7 +386,13 @@ const SelectPrimaryName = ({ data: { address }, dispatch, onDismiss }: Props) =>
       </ContentContainer>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDismiss}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

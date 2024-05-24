@@ -1,7 +1,7 @@
 /* eslint-disable no-multi-assign */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Dialog, mq, Slider } from '@ensdomains/thorin'
 
@@ -101,10 +101,18 @@ const SliderContainer = styled.div(
 )
 
 export const AvCancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
+  const theme = useTheme()
   const { t } = useTranslation('common')
 
   return (
-    <Button data-testid="avatar-cancel-button" colorStyle="accentSecondary" onClick={handleCancel}>
+    <Button
+      data-testid="avatar-cancel-button"
+      style={{
+        backgroundColor: theme.colors.backgroundSecondary,
+        color: theme.colors.textSecondary,
+      }}
+      onClick={handleCancel}
+    >
       {t('action.back')}
     </Button>
   )

@@ -4,12 +4,13 @@ import { match, P } from 'ts-pattern'
 import { labelhash, namehash } from 'viem'
 
 import { GetOwnerReturnType, GetWrapperDataReturnType } from '@ensdomains/ensjs/public'
-import { mq, Tag, Typography } from '@ensdomains/thorin'
+import { mq, Tag } from '@ensdomains/thorin'
 
 import { CacheableComponent } from '@app/components/@atoms/CacheableComponent'
 import { NFTWithPlaceholder } from '@app/components/NFTWithPlaceholder'
 import { Outlink } from '@app/components/Outlink'
 import RecordItem from '@app/components/RecordItem'
+import { Typography } from '@app/components/styled/Typography'
 import { useChainName } from '@app/hooks/chain/useChainName'
 import { useContractAddress } from '@app/hooks/chain/useContractAddress'
 import { NameWrapperState } from '@app/hooks/fuses/useFusesStates'
@@ -147,7 +148,7 @@ const Token = ({ name, isWrapped, canBeWrapped, ownerData, wrapperData, profile 
             data-testid="etherscan-nft-link"
             href={makeEtherscanLink(`${contractAddress}/${tokenId}`, networkName, 'nft')}
           >
-            {t('etherscan', { ns: 'common' })}
+            {t('lineascan', { ns: 'common' })}
           </Outlink>
         ) : (
           <Tag colorStyle="greySecondary">{t('tabs.more.token.noToken')}</Tag>

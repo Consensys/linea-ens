@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
 import { tokenise } from '@ensdomains/ensjs/utils'
-import { Button, mq, Typography } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import MobileFullWidth from '@app/components/@atoms/MobileFullWidth'
 import NFTTemplate from '@app/components/@molecules/NFTTemplate/NFTTemplate'
 import { Card } from '@app/components/Card'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import useWindowSize from '@app/hooks/useWindowSize'
 
 const StyledCard = styled(Card)(

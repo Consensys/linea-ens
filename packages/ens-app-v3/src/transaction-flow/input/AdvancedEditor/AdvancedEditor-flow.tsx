@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
 import { RecordOptions } from '@ensdomains/ensjs/utils'
-import { Button, mq } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import AddRecord from '@app/components/@molecules/AdvancedEditor/AddRecord'
 import AdvancedEditorContent from '@app/components/@molecules/AdvancedEditor/AdvancedEditorTabContent'
 import AdvancedEditorTabs from '@app/components/@molecules/AdvancedEditor/AdvancedEditorTabs'
+import { Button } from '@app/components/styled/Button'
 import useAdvancedEditor from '@app/hooks/useAdvancedEditor'
 import { useProfile } from '@app/hooks/useProfile'
 import { createTransactionItem, TransactionItem } from '@app/transaction-flow/transaction'
@@ -48,6 +49,7 @@ const NameContainer = styled.div(({ theme }) => [
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    color: ${theme.colors.textPrimary};
   `,
   mq.sm.min(css`
     text-align: left;
@@ -139,9 +141,7 @@ const AdvancedEditor = ({ data, transactions = [], dispatch, onDismiss }: Props)
         <AdvancedEditorContent {...advancedEditorForm} />
         <AddRecord control={control} AddButtonProps={AddButtonProps} />
         <FooterContainer>
-          <Button colorStyle="accentSecondary" onClick={handleCancel}>
-            {t('action.cancel', { ns: 'common' })}
-          </Button>
+          <Button onClick={handleCancel}>{t('action.cancel', { ns: 'common' })}</Button>
           <Button disabled={hasErrors || !hasChanges} type="submit">
             {t('action.save', { ns: 'common' })}
           </Button>

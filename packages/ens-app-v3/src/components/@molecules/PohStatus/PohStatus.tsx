@@ -1,17 +1,14 @@
+import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
-
-import CheckCircle from '@app/assets/CheckCircle.svg'
-import MinusCircle from '@app/assets/MinusCircle.svg'
 
 const Container = styled.div(
   ({ theme }) => css`
-    width: 100%;
-    padding: ${theme.space['1']};
+    padding: ${theme.space['6']} ${theme.space['12']};
     border: 1px solid ${theme.colors.border};
-    border-radius: ${theme.radii.full};
     display: flex;
     justify-content: center;
     gap: ${theme.space['4']};
+    background-color: ${theme.colors.greySurface};
   `,
 )
 
@@ -33,75 +30,59 @@ const StatusLabel = styled.label(
     text-overflow: ellipsis;
     overflow: hidden;
     font-style: normal;
-    font-weight: ${theme.fontWeights.bold};
-    font-size: ${theme.fontSizes.headingTwo};
+    font-size: ${theme.fontSizes.extraLarge};
     line-height: ${theme.space['11']};
     text-align: center;
-    color: ${theme.colors.bluePrimary};
+    color: ${theme.colors.textPrimary};
   `,
 )
 
-const NotValidImg = styled.div(
+const StatusValid = styled.label(
   ({ theme }) => css`
-    height: ${theme.space['11']};
-    width: ${theme.space['11']};
-    border-radius: 50%;
-    background: ${theme.colors.background};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    svg {
-      display: block;
-      transform: scale(1);
-      pointer-events: none;
-      path {
-        fill: ${theme.colors.red};
-      }
-    }
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-style: normal;
+    font-size: ${theme.fontSizes.large};
+    line-height: ${theme.space['11']};
+    text-align: center;
+    color: ${theme.colors.textSecondary};
+    border-radius: ${theme.radii.full};
+    background-color: ${theme.colors.greenActive};
+    padding: ${theme.space['0']} ${theme.space['6']};
   `,
 )
 
-const ValidImg = styled.div(
+const StatusNotValid = styled(StatusValid)(
   ({ theme }) => css`
-    height: ${theme.space['11']};
-    width: ${theme.space['11']};
-    border-radius: 50%;
-    background: ${theme.colors.greenBright};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    svg {
-      display: block;
-      transform: scale(1);
-      pointer-events: none;
-      path {
-        fill: ${theme.colors.greenBright};
-      }
-    }
+    background-color: ${theme.colors.orangeActive};
+    color: ${theme.colors.textPrimary};
   `,
 )
 
 type Props = {
   valid: boolean
+  pohAlreadyRegistered: boolean
 }
 
-export const PohStatus = ({ valid }: Props) => {
+export const PohStatus = ({ valid, pohAlreadyRegistered }: Props) => {
+  const { t } = useTranslation('register')
   return (
     <Container data-testid="poh-status">
       <LabelContainer>
-        <StatusLabel>Linea PoH status:</StatusLabel>
+        <StatusLabel>{t('steps.pohCheck.pohStatus')}</StatusLabel>
       </LabelContainer>
       {valid && (
-        <ValidImg>
-          <CheckCircle />
-        </ValidImg>
+        <>
+          {pohAlreadyRegistered ? (
+            <StatusNotValid>{t('steps.pohCheck.pohAlreadyUsed')}</StatusNotValid>
+          ) : (
+            <StatusValid>{t('steps.pohCheck.pohValid')}</StatusValid>
+          )}
+        </>
       )}
-
-      {!valid && (
-        <NotValidImg>
-          <MinusCircle />
-        </NotValidImg>
-      )}
+      {!valid && <StatusNotValid>{t('steps.pohCheck.pohNotValid')}</StatusNotValid>}
     </Container>
   )
 }

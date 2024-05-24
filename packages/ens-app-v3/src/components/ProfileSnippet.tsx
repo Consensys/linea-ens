@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Button, mq, NametagSVG, Tag, Typography } from '@ensdomains/thorin'
+import { mq, NametagSVG, Tag } from '@ensdomains/thorin'
 
 import FastForwardSVG from '@app/assets/FastForward.svg'
 import { useAbilities } from '@app/hooks/abilities/useAbilities'
@@ -12,6 +12,8 @@ import { shouldShowExtendWarning } from '@app/utils/abilities/shouldShowExtendWa
 
 import { useTransactionFlow } from '../transaction-flow/TransactionFlowProvider'
 import { NameAvatar } from './AvatarWithZorb'
+import { Button } from './styled/Button'
+import { Typography } from './styled/Typography'
 
 const Container = styled.div<{ $banner?: string }>(
   ({ theme, $banner }) => css`
@@ -189,7 +191,6 @@ export const ProfileSnippet = ({
       return (
         <Button
           size="small"
-          colorStyle="accentSecondary"
           prefix={<FastForwardSVG />}
           data-testid="extend-button"
           onClick={() => {
@@ -204,21 +205,13 @@ export const ProfileSnippet = ({
       )
     if (button === 'register')
       return (
-        <Button
-          onClick={() => router.pushWithHistory(`/register/${name}`)}
-          size="small"
-          colorStyle="accentSecondary"
-        >
+        <Button onClick={() => router.pushWithHistory(`/register/${name}`)} size="small">
           {t(`wallet.${button}`)}
         </Button>
       )
     if (button === 'viewProfile')
       return (
-        <Button
-          onClick={() => router.pushWithHistory(`/profile/${name}`)}
-          size="small"
-          colorStyle="accentSecondary"
-        >
+        <Button onClick={() => router.pushWithHistory(`/profile/${name}`)} size="small">
           {t(`wallet.${button}`)}
         </Button>
       )

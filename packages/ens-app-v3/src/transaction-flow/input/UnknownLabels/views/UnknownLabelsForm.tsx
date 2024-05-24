@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { labelhash } from 'viem'
 
 import { decodeLabelhash, isEncodedLabelhash, validateName } from '@ensdomains/ensjs/utils'
@@ -123,6 +123,7 @@ export const UnknownLabelsForm = forwardRef<HTMLFormElement, Props>(
     },
     ref,
   ) => {
+    const theme = useTheme()
     const { t } = useTranslation('transactionFlow')
 
     const { fields: labels } = useFieldArray({
@@ -175,7 +176,13 @@ export const UnknownLabelsForm = forwardRef<HTMLFormElement, Props>(
         </Container>
         <Dialog.Footer
           leading={
-            <Button colorStyle="accentSecondary" onClick={onCancel}>
+            <Button
+              style={{
+                backgroundColor: theme.colors.backgroundSecondary,
+                color: theme.colors.textSecondary,
+              }}
+              onClick={onCancel}
+            >
               {t('action.cancel', { ns: 'common' })}
             </Button>
           }

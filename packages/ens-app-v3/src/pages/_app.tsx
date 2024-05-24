@@ -1,18 +1,15 @@
-import { lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit'
+import { darkTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit'
 
 import '@rainbow-me/rainbowkit/styles.css'
 
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
+import Image from 'next/image'
 import { ReactElement, ReactNode } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { createGlobalStyle, keyframes, ThemeProvider } from 'styled-components'
 
-import {
-  DefaultTheme,
-  ThorinGlobalStyles,
-  lightTheme as thorinLightTheme,
-} from '@ensdomains/thorin'
+import { DefaultTheme, ThorinGlobalStyles, darkTheme as thorinLightTheme } from '@ensdomains/thorin'
 
 import LineaVector from '@app/assets/linea/LineaVector.png'
 import { Notifications } from '@app/components/Notifications'
@@ -30,10 +27,8 @@ import i18n from '../i18n'
 
 import '../styles.css'
 
-import Image from 'next/image'
-
 const rainbowKitTheme: Theme = {
-  ...lightTheme({
+  ...darkTheme({
     accentColor: thorinLightTheme.colors.accent,
     borderRadius: 'medium',
   }),
@@ -52,6 +47,16 @@ const lineaTheme: DefaultTheme = {
     textPrimary: '#ffffff',
     textSecondary: '#000000',
     backgroundSecondary: '#61DFFF',
+    background: '#1D1D1D',
+    orangeActive: '#F2420C',
+    greenActive: '#C1FF14',
+    accentPrimary: '#61DFFF',
+    greySurface: '#2D2D2D',
+    greyPrimary: '#a3a2a2',
+    red: '#F2420C',
+    accent: '#61DFFF',
+    textTertiary: '#C0C0C0',
+    yellowSurface: '#e3e39d',
   },
 }
 

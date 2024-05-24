@@ -52,13 +52,13 @@ const TabButton = styled.button<{ $selected: boolean }>(
     padding: 0;
     margin: 0;
     background: none;
-    color: ${$selected ? theme.colors.accent : theme.colors.greyPrimary};
+    color: ${$selected ? theme.colors.accent : theme.colors.textPrimary};
     font-size: ${theme.fontSizes.extraLarge};
     transition: all 0.15s ease-in-out;
     cursor: pointer;
 
     &:hover {
-      color: ${$selected ? theme.colors.accentBright : theme.colors.text};
+      color: ${$selected ? theme.colors.accent : theme.colors.grey};
     }
   `,
 )
@@ -279,7 +279,7 @@ const ProfileContent = ({ isSelf, isLoading: parentIsLoading, name }: Props) => 
               fontVariant="bodyBold"
               href={makeEtherscanLink(profile.address!, chainName, 'address')}
             >
-              {t('etherscan', { ns: 'common' })}
+              {t('lineascan', { ns: 'common' })}
             </Outlink>
           ) : null,
           trailing: {

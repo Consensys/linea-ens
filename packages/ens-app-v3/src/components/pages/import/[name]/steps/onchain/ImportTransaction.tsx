@@ -1,6 +1,6 @@
 import { Dispatch, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import { CurrencyToggle, Helper, Typography } from '@ensdomains/thorin'
@@ -102,6 +102,7 @@ export const ImportTransaction = ({
   item: DnsImportReducerDataItem
   selected: SelectedItemProperties
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation('dnssec', { keyPrefix: 'steps.transaction' })
   const { t: tc } = useTranslation('common')
 
@@ -244,7 +245,10 @@ export const ImportTransaction = ({
       )}
       <DnsImportActionsContainer>
         <DnsImportActionButton
-          colorStyle="accentSecondary"
+          style={{
+            backgroundColor: theme.colors.backgroundSecondary,
+            color: theme.colors.textSecondary,
+          }}
           onClick={() => dispatch({ name: 'decreaseStep', selected })}
         >
           {tc('action.back')}

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import { Button, mq } from '@ensdomains/thorin'
@@ -50,6 +50,7 @@ type Props = {
 }
 
 export const EditRoleIntroView = ({ role, address, onSelect }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const account = useAccountSafely()
 
@@ -86,7 +87,10 @@ export const EditRoleIntroView = ({ role, address, onSelect }: Props) => {
               <AvatarWithIdentifier address={account.address!} />
               <Button
                 data-testid="edit-roles-set-to-self-button"
-                colorStyle="accentSecondary"
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
                 size="small"
                 onClick={() => {
                   onSelect({ role, address: account.address! })

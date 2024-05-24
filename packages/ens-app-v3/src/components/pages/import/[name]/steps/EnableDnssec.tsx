@@ -70,10 +70,7 @@ export const EnableDnssec = ({
         </>
       )}
       <DnsImportActionsContainer>
-        <DnsImportActionButton
-          colorStyle="accentSecondary"
-          onClick={() => dispatch({ name: 'decreaseStep', selected })}
-        >
+        <DnsImportActionButton onClick={() => dispatch({ name: 'decreaseStep', selected })}>
           {tc('action.back')}
         </DnsImportActionButton>
         <DnsImportActionButton

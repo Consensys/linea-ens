@@ -1,8 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Dialog } from '@ensdomains/thorin'
-
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 import { getSupportLink } from '@app/utils/supportLinks'
 
 import { CenterAlignedTypography } from '../components/CenterAlignedTypography'

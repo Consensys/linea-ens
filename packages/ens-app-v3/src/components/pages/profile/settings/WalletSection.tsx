@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useDisconnect } from 'wagmi'
 
-import { Button } from '@ensdomains/thorin'
+import { Button } from '@app/components/styled/Button'
 
 import { SectionContainer } from './Section'
 

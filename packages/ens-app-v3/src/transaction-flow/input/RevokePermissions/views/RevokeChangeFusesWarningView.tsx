@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next'
 
-import { Dialog } from '@ensdomains/thorin'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 
 import { CenterAlignedTypography } from '../components/CenterAlignedTypography'
 

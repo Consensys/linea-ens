@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components'
 import { Address } from 'viem'
 
 import {
-  Button,
   Card,
   CopySVG,
   Dropdown,
@@ -15,6 +14,7 @@ import {
 } from '@ensdomains/thorin'
 
 import { AvatarWithIdentifier } from '@app/components/@molecules/AvatarWithIdentifier/AvatarWithIdentifier'
+import { Button } from '@app/components/styled/Button'
 import { useChainName } from '@app/hooks/chain/useChainName'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import type { Role } from '@app/hooks/ownership/useRoles/useRoles'
@@ -52,6 +52,12 @@ const RoleTagContainer = styled.div(
     display: flex;
     flex-wrap: wrap;
     gap: ${theme.space[2]};
+  `,
+)
+
+const StyledVerticalDotsSVG = styled(VerticalDotsSVG)(
+  ({ theme }) => css`
+    color: ${theme.colors.textSecondary} !important;
   `,
 )
 
@@ -141,12 +147,8 @@ export const RoleRow = ({ name, address, roles, actions, isWrapped, isEmancipate
         </InnerContainer>
         <div>
           <Dropdown items={items} align="right" keepMenuOnTop width={200}>
-            <Button
-              data-testid={`role-row-button-${address}`}
-              colorStyle="accentSecondary"
-              size="small"
-            >
-              <VerticalDotsSVG />
+            <Button data-testid={`role-row-button-${address}`} size="small">
+              <StyledVerticalDotsSVG />
             </Button>
           </Dropdown>
         </div>

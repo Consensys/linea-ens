@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -18,6 +19,7 @@ type Data = {
 export type Props = { data: Data } & TransactionDialogPassthrough
 
 const TransferProfile = ({ data, dispatch }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const resolverAddress = useContractAddress({ contract: 'ensPublicResolver' })
 
@@ -61,7 +63,10 @@ const TransferProfile = ({ data, dispatch }: Props) => {
   }
   const footerLeading = (
     <Button
-      colorStyle="accentSecondary"
+      style={{
+        backgroundColor: theme.colors.backgroundSecondary,
+        color: theme.colors.textSecondary,
+      }}
       onClick={handleReset}
       data-testid="transfer-profile-leading-btn"
     >

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-import { Typography } from '@ensdomains/thorin'
+import { Typography } from './styled/Typography'
 
 const Wrapper = styled.div<{ $align: 'left' | 'right' }>(
   ({ $align }) => css`

@@ -16,11 +16,18 @@
   },
   "steps": {
     "pohCheck": {
-      "pohNotValid": "PoH not valid",
-      "pohAlreadyUsed": "PoH already used",
-      "pohExplainer": "You can get one free linea.eth subdomains if you completed the Linea Proof of Humanity on Verax. linea.eth subdomains cannot be bought",
-      "getPoh": "Get your Linea Proof of humanity",
-      "getPohHereLink": "here"
+      "pohStatus": "Linea PoH Status:",
+      "pohNotValid": "NOT VALIDATED",
+      "pohValid": "VALID",
+      "pohAlreadyUsed": "ALREADY USED",
+      "pohEligible": "You are eligible for one free linea.eth subdomain! Complete your registration now to claim your subdomain.",
+      "getPohExplainer": "You can get one free linea.eth subdomains if you completed the Linea Proof of Humanity on Verax. linea.eth subdomains cannot be bought",
+      "getPoh": "GET LINEA PROOF OF HUMANITY",
+      "getPohHereLink": "here",
+      "walletNotConnected": "Connect you wallet to proceed in registering you subdomain.",
+      "pohNote": "Please note, you will no longer be able to register other subdomains with this address once you claim this subdomain.",
+      "register": "REGISTER",
+      "pohAlreadyUsedExplainer": "PoH was already used to register a subdomain. It is not possible to register several domains with the same address."
     },
     "pricing": {
       "insufficientBalance": "Insufficient Balance",

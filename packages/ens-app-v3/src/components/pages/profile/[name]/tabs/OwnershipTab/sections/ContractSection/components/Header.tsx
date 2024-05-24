@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Typography } from '@ensdomains/thorin'
-
 import { QuestionTooltip } from '@app/components/@molecules/QuestionTooltip/QuestionTooltip'
+import { Typography } from '@app/components/styled/Typography'
 import { getSupportLink } from '@app/utils/supportLinks'
 
 export const Container = styled.div(

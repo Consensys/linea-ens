@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { useAccount } from 'wagmi'
 
 import { GetSubnamesParameters } from '@ensdomains/ensjs/subgraph'
-import { Button, mq, PlusSVG, Spinner, Typography } from '@ensdomains/thorin'
+import { mq, PlusSVG, Spinner } from '@ensdomains/thorin'
 
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import {
@@ -15,6 +15,8 @@ import {
 import { Card } from '@app/components/Card'
 import { Outlink } from '@app/components/Outlink'
 import { TabWrapper } from '@app/components/pages/profile/TabWrapper'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { useSubnames } from '@app/hooks/ensjs/subgraph/useSubnames'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 import { emptyAddress } from '@app/utils/constants'
@@ -95,6 +97,12 @@ const SpinnerContainer = styled.div<{ $showBorder?: boolean }>(
     justify-content: center;
     height: ${theme.space['15']};
     ${$showBorder && `border-top: 1px solid ${theme.colors.border};`}
+  `,
+)
+
+const StyledPlusSVG = styled(PlusSVG)(
+  ({ theme }) => css`
+    color: ${theme.colors.textSecondary} !important;
   `,
 )
 
@@ -217,7 +225,7 @@ export const SubnamesTab = ({
             <Button
               data-testid="add-subname-action"
               onClick={createSubname}
-              prefix={<PlusPrefix as={PlusSVG} />}
+              prefix={<PlusPrefix as={StyledPlusSVG} />}
             >
               {t('details.tabs.subnames.addSubname.action')}
             </Button>
@@ -230,7 +238,7 @@ export const SubnamesTab = ({
                 buttonText: t('details.tabs.subnames.addSubname.action'),
                 mobileWidth: 200,
                 mobilePlacement: 'top',
-                prefix: <PlusPrefix as={PlusSVG} />,
+                prefix: <PlusPrefix as={StyledPlusSVG} />,
               }}
             />
           )}

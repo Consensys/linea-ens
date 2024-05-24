@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Control, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog, Input, MagnifyingGlassSimpleSVG, mq, ScrollBox } from '@ensdomains/thorin'
+import { Dialog, Input, MagnifyingGlassSimpleSVG, mq, ScrollBox } from '@ensdomains/thorin'
 
 import DismissDialogButton from '@app/components/@atoms/DismissDialogButton/DismissDialogButton'
 import { Spacer } from '@app/components/@atoms/Spacer'
+import { Button } from '@app/components/styled/Button'
+import { DialogHeading } from '@app/components/styled/Dialog'
 import {
   grouped as options,
   ProfileRecord,
@@ -60,15 +62,15 @@ const SideBarItem = styled.button<{
     line-height: ${theme.space[4]};
     padding: ${theme.space[2]} ${theme.space[2]};
     cursor: pointer;
-    color: ${theme.colors.greyPrimary};
+    color: ${theme.colors.grey};
 
     ${$active &&
     css`
-      color: ${theme.colors.accentPrimary};
+      color: ${theme.colors.textPrimary};
     `}
 
     &:hover {
-      color: ${$active ? theme.colors.accentPrimary : theme.colors.text};
+      color: ${theme.colors.accentPrimary};
     }
 
     &:disabled {
@@ -99,7 +101,7 @@ const GroupLabel = styled.div(
     font-weight: ${theme.fontWeights.bold};
     font-size: ${theme.space['3.5']};
     line-height: ${theme.space[5]};
-    color: ${theme.colors.greyPrimary};
+    color: ${theme.colors.textPrimary};
   `,
 )
 const OptionsGrid = styled.div(
@@ -141,6 +143,7 @@ type Props = {
 }
 
 export const AddProfileRecordView = ({ control, onAdd, onClose, showDismiss }: Props) => {
+  const theme = useTheme()
   const { t, i18n } = useTranslation('register')
 
   const currentRecords = useWatch({ control, name: 'records' })
@@ -291,7 +294,7 @@ export const AddProfileRecordView = ({ control, onAdd, onClose, showDismiss }: P
 
   return (
     <Container>
-      <Dialog.Heading title={t('steps.profile.addProfile')} />
+      <DialogHeading>{t('steps.profile.addProfile')}</DialogHeading>
       <Spacer $height="6" />
       <Input
         label=""
@@ -382,7 +385,10 @@ export const AddProfileRecordView = ({ control, onAdd, onClose, showDismiss }: P
               <Button
                 data-testid="add-profile-records-close"
                 onClick={() => onClose()}
-                colorStyle="accentSecondary"
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
               >
                 {t('action.back', { ns: 'common' })}
               </Button>

@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Button, Card, CrossSVG, mq, PersonPlusSVG, Skeleton, Typography } from '@ensdomains/thorin'
+import { Card, CrossSVG, mq, PersonPlusSVG, Skeleton } from '@ensdomains/thorin'
 
 import { AvatarWithLink } from '@app/components/@molecules/AvatarWithLink/AvatarWithLink'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { useAccountSafely } from '@app/hooks/account/useAccountSafely'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { useBasicName } from '@app/hooks/useBasicName'

@@ -1,7 +1,7 @@
 import { Dispatch, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import {
@@ -10,8 +10,10 @@ import {
   ParentFuseKeys,
   ParentFuseReferenceType,
 } from '@ensdomains/ensjs/utils'
-import { Button, Dialog, mq } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 import { createTransactionItem } from '@app/transaction-flow/transaction'
 import type changePermissions from '@app/transaction-flow/transaction/changePermissions'
 import { TransactionDialogPassthrough, TransactionFlowAction } from '@app/transaction-flow/types'
@@ -187,6 +189,7 @@ const Form = styled.form(({ theme }) => [
 ])
 
 const RevokePermissions = ({ data, transactions, onDismiss, dispatch }: Props) => {
+  const theme = useTheme()
   const { name, flowType, owner, parentFuses, childFuses, minExpiry, maxExpiry } = data
   const formRef = useRef<HTMLFormElement>(null)
   const { t } = useTranslation('transactionFlow')
@@ -339,7 +342,13 @@ const RevokePermissions = ({ data, transactions, onDismiss, dispatch }: Props) =
       }
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDecrementIndex}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDecrementIndex}
+          >
             {currentIndex === 0
               ? t('action.cancel', { ns: 'common' })
               : t('action.back', { ns: 'common' })}

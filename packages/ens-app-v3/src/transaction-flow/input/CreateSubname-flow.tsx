@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
 import { validateName } from '@ensdomains/ensjs/utils'
-import { Button, Dialog, Input } from '@ensdomains/thorin'
+import { Input } from '@ensdomains/thorin'
 
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 import useDebouncedCallback from '@app/hooks/useDebouncedCallback'
 
 import { useValidateSubnameLabel } from '../../hooks/useValidateSubnameLabel'
@@ -92,11 +94,7 @@ const CreateSubname = ({ data: { parent, isWrapped }, dispatch, onDismiss }: Pro
         />
       </InnerDialog>
       <Dialog.Footer
-        leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
-            {t('action.cancel', { ns: 'common' })}
-          </Button>
-        }
+        leading={<Button onClick={onDismiss}>{t('action.cancel', { ns: 'common' })}</Button>}
         trailing={
           <Button
             data-testid="create-subname-next"

@@ -5,11 +5,12 @@ import { Address, isAddress } from 'viem'
 import { useChainId } from 'wagmi'
 
 import { getProtocolType } from '@ensdomains/ensjs/utils'
-import { RecordItem, Typography } from '@ensdomains/thorin'
 
 import { DynamicAddressIcon } from '@app/assets/address/DynamicAddressIcon'
 import { dynamicAddressIcons } from '@app/assets/address/dynamicAddressIcons'
 import { DynamicSocialIcon, socialIconTypes } from '@app/assets/social/DynamicSocialIcon'
+import { RecordItem } from '@app/components/@atoms/RecordItem/RecordItem'
+import { Typography } from '@app/components/styled/Typography'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { getDestination } from '@app/routes'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
@@ -66,6 +67,7 @@ export const AddressProfileButton = ({
       value={value}
       size={breakpoints.sm ? 'large' : 'small'}
       inline
+      style={{ color: 'white' }}
     >
       {shortenAddress(
         value,

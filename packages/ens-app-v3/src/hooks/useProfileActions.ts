@@ -5,7 +5,6 @@ import { makeIntroItem } from '@app/transaction-flow/intro'
 import { createTransactionItem } from '@app/transaction-flow/transaction'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 import { GenericTransaction } from '@app/transaction-flow/types'
-import { checkAvailablePrimaryName } from '@app/utils/checkAvailablePrimaryName'
 import { nameParts } from '@app/utils/name'
 import { useHasGraphError } from '@app/utils/SyncProvider/SyncProvider'
 
@@ -50,8 +49,7 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
   const { data: profile, isLoading: isProfileLoading } = useProfile({ name, enabled })
   const { data: ownerData, isLoading: isOwnerLoading } = useOwner({ name, enabled })
   const { data: wrapperData, isLoading: isWrapperDataLoading } = useWrapperData({ name, enabled })
-  const { data: expiryData, isLoading: isExpiryLoading } = useExpiry({ name, enabled })
-  const expiryDate = expiryData?.expiry?.date
+  const { isLoading: isExpiryLoading } = useExpiry({ name, enabled })
 
   const { data: resolverStatus, isLoading: isResolverStatusLoading } = useResolverStatus({
     name,
@@ -61,25 +59,9 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
     enabled: enabled && !!ownerData,
   })
 
-  const { data: primaryData, isLoading: isPrimaryNameLoading } = usePrimaryName({
+  const { isLoading: isPrimaryNameLoading } = usePrimaryName({
     address,
     enabled,
-  })
-
-  const isAvailablePrimaryName = checkAvailablePrimaryName(
-    primaryData?.name,
-    resolverStatus,
-  )({
-    name,
-    relation: {
-      owner: ownerData?.owner === address,
-      registrant: ownerData?.registrant === address,
-      resolvedAddress: profile?.address === address,
-      wrappedOwner: wrapperData?.owner === address,
-    },
-    expiryDate,
-    fuses: wrapperData?.fuses || null,
-    isMigrated: !!profile?.isMigrated,
   })
 
   const isWrapped = !!wrapperData
@@ -94,7 +76,6 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
 
   const { data: hasGraphError, isLoading: hasGraphErrorLoading } = useHasGraphError()
 
-  const showUnknownLabelsInput = usePreparedDataInput('UnknownLabels')
   const showProfileEditorInput = usePreparedDataInput('ProfileEditor')
   const showDeleteEmancipatedSubnameWarningInput = usePreparedDataInput(
     'DeleteEmancipatedSubnameWarning',
@@ -245,9 +226,7 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
   }, [
     address,
     isLoading,
-    getPrimaryNameTransactionFlowItem,
     name,
-    isAvailablePrimaryName,
     abilities.canEdit,
     abilities.canEditRecords,
     abilities.canEditResolver,
@@ -262,7 +241,6 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
     t,
     hasGraphError,
     hasGraphErrorLoading,
-    showUnknownLabelsInput,
     createTransactionFlow,
     showProfileEditorInput,
     showDeleteEmancipatedSubnameWarningInput,

@@ -1,7 +1,7 @@
 import { Query, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { useAccount } from 'wagmi'
 
 import { GetDnsOwnerReturnType } from '@ensdomains/ensjs/dns'
@@ -127,6 +127,7 @@ const OwnerDetailContainer = styled.div(
 )
 
 const Owner = ({ address, label }: OwnerItem) => {
+  const theme = useTheme()
   const { t } = useTranslation('common')
   const primary = usePrimaryName({ address })
 
@@ -151,7 +152,14 @@ const Owner = ({ address, label }: OwnerItem) => {
             )}
           </TextContainer>
         </OwnerDetailContainer>
-        <Tag colorStyle="accentSecondary">{t(label)}</Tag>
+        <Tag
+          style={{
+            backgroundColor: theme.colors.backgroundSecondary,
+            color: theme.colors.textSecondary,
+          }}
+        >
+          {t(label)}
+        </Tag>
       </OwnerContainer>
     </BaseLinkWithHistory>
   )
@@ -204,6 +212,7 @@ const DNSOwnerSection = ({
   canSend: boolean
   isWrapped: boolean
 }) => {
+  const theme = useTheme()
   const { address } = useAccount()
   const { t } = useTranslation('profile')
   const { createTransactionFlow } = useTransactionFlow()
@@ -266,7 +275,14 @@ const DNSOwnerSection = ({
         {t(`tabs.more.ownership.dnsOwnerWarning.${canSend ? 'isManager' : 'isDnsOwner'}`)}
       </Helper>
       <ButtonsContainer>
-        <Button width="auto" colorStyle="accentSecondary" onClick={handleRefresh}>
+        <Button
+          width="auto"
+          style={{
+            backgroundColor: theme.colors.backgroundSecondary,
+            color: theme.colors.textSecondary,
+          }}
+          onClick={handleRefresh}
+        >
           {t('tabs.more.ownership.refreshDNS')}
         </Button>
         {!canSend && (

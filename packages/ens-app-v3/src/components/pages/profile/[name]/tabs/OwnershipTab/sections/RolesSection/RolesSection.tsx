@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Card } from '@ensdomains/thorin'
 
@@ -32,6 +32,7 @@ type Props = {
 }
 
 export const RolesSection = ({ name, roles, details }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('profile')
   const actions = useRoleActions({ name, details, roles })
 
@@ -51,13 +52,16 @@ export const RolesSection = ({ name, roles, details }: Props) => {
         />
       ))}
       <Footer>
-        {actions.data?.map(({ label, type, primary, icon, error, disabled = false, onClick }) => {
+        {actions.data?.map(({ label, type, icon, error, disabled = false, onClick }) => {
           if (type === 'refresh-dns')
             return (
               <div key={type}>
                 <PseudoActionButton
                   data-testid={`role-action-${type}`}
-                  colorStyle={primary ? 'accentPrimary' : 'accentSecondary'}
+                  style={{
+                    backgroundColor: theme.colors.backgroundSecondary,
+                    color: theme.colors.textSecondary,
+                  }}
                   prefix={icon}
                   disabled={disabled}
                   onClick={onClick}
@@ -84,7 +88,10 @@ export const RolesSection = ({ name, roles, details }: Props) => {
             <div key={type}>
               <Button
                 data-testid={`role-action-${type}`}
-                colorStyle={primary ? 'accentPrimary' : 'accentSecondary'}
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
                 prefix={icon}
                 disabled={disabled}
                 onClick={onClick}

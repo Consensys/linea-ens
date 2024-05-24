@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import {
   AeroplaneSVG,
@@ -36,6 +37,7 @@ type Props = {
 }
 
 export const useRoleActions = ({ name, roles, details }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('common')
   const account = useAccountSafely()
   const nameType = useNameType(name)
@@ -72,7 +74,13 @@ export const useRoleActions = ({ name, roles, details }: Props) => {
       showSendDNS
         ? {
             type: 'send-dns',
-            icon: <AeroplaneSVG />,
+            icon: (
+              <AeroplaneSVG
+                style={{
+                  color: theme.colors.textSecondary,
+                }}
+              />
+            ),
             label: t('action.send'),
             error: canSendError,
             onClick: () => showSendNameInput(`send-name-${name}`, { name }),
@@ -81,7 +89,13 @@ export const useRoleActions = ({ name, roles, details }: Props) => {
       canRefreshDNS
         ? {
             type: 'refresh-dns',
-            icon: <CounterClockwiseArrowSVG />,
+            icon: (
+              <CounterClockwiseArrowSVG
+                style={{
+                  color: theme.colors.textSecondary,
+                }}
+              />
+            ),
             label: t('dns.refresh'),
             onClick: () =>
               queryClient.resetQueries({ exact: true, queryKey: ['getDNSOwner', name] }),
@@ -90,7 +104,13 @@ export const useRoleActions = ({ name, roles, details }: Props) => {
       showSyncManager
         ? {
             type: 'sync-manager',
-            icon: <HorizontalOutwardArrowsSVG />,
+            icon: (
+              <HorizontalOutwardArrowsSVG
+                style={{
+                  color: theme.colors.textSecondary,
+                }}
+              />
+            ),
             label: t('transaction.description.syncManager'),
             onClick: () =>
               showSyncManagerInput(`sync-manager-${name}`, {
@@ -101,7 +121,13 @@ export const useRoleActions = ({ name, roles, details }: Props) => {
       showSendEth
         ? {
             type: 'send-name',
-            icon: <AeroplaneSVG />,
+            icon: (
+              <AeroplaneSVG
+                style={{
+                  color: theme.colors.textSecondary,
+                }}
+              />
+            ),
             label: t('action.send'),
             error: canSendError,
             onClick: () => showSendNameInput(`send-name-${name}`, { name }),
@@ -110,7 +136,13 @@ export const useRoleActions = ({ name, roles, details }: Props) => {
       canEditRoles
         ? {
             type: 'edit-roles',
-            icon: <PersonSVG />,
+            icon: (
+              <PersonSVG
+                style={{
+                  color: theme.colors.textSecondary,
+                }}
+              />
+            ),
             label: t('action.editRoles'),
             primary: true,
             onClick: () => showEditRolesInput(`edit-roles-${name}`, { name }),

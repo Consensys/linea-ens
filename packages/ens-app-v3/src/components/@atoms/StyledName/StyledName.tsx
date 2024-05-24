@@ -14,7 +14,7 @@ const Container = styled.div(
 
 const Name = styled.span<{ $disabled?: boolean }>(
   ({ theme, $disabled }) => css`
-    color: ${$disabled ? theme.colors.textTertiary : theme.colors.text};
+    color: ${$disabled ? theme.colors.textTertiary : theme.colors.textPrimary};
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

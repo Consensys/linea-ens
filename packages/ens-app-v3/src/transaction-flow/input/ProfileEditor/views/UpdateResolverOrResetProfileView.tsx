@@ -1,5 +1,6 @@
 /** This is when the current resolver and latest resolver have matching records */
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -21,6 +22,7 @@ export const UpdateResolverOrResetProfileView = ({
   onNext,
   onBack,
 }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   return (
     <>
@@ -43,7 +45,10 @@ export const UpdateResolverOrResetProfileView = ({
       <Dialog.Footer
         leading={
           <Button
-            colorStyle="accentSecondary"
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
             onClick={onBack}
             data-testid="warning-overlay-back-button"
           >

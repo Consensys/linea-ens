@@ -1,9 +1,8 @@
 import { ComponentProps, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Typography } from '@ensdomains/thorin'
-
 import { Card } from '@app/components/Card'
+import { Typography } from '@app/components/styled/Typography'
 import { useInitial } from '@app/hooks/useInitial'
 
 const StyledCard = styled(Card)(

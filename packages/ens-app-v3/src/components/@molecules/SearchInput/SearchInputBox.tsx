@@ -32,6 +32,21 @@ const SearchInputWrapper = styled.div<{ $size: 'medium' | 'extraLarge' }>(
   `,
 )
 
+const StyledInput = styled(Input)(
+  ({ theme }) => css`
+    ::placeholder {
+      color: ${theme.colors.grey} !important;
+    }
+  `,
+)
+
+const StyledMagnifyingGlassSVG = styled(MagnifyingGlassSVG)(
+  ({ theme }) => css`
+    stroke: ${theme.colors.grey} !important;
+    color: ${theme.colors.grey} !important;
+  `,
+)
+
 const StyledInputParent = (size: 'medium' | 'extraLarge') =>
   css(
     ({ theme }) => css`
@@ -98,7 +113,7 @@ export const SearchInputBox = forwardRef(
     const { t } = useTranslation('common')
     return (
       <SearchInputWrapper ref={containerRef} $size={size}>
-        <Input
+        <StyledInput
           size={size}
           label={t('search.label')}
           hideLabel
@@ -110,12 +125,14 @@ export const SearchInputBox = forwardRef(
           autoComplete="off"
           autoCorrect="off"
           parentStyles={StyledInputParent(size)}
-          icon={size === 'medium' ? <MagnifyingGlassIcon as={MagnifyingGlassSVG} /> : undefined}
+          icon={
+            size === 'medium' ? <MagnifyingGlassIcon as={StyledMagnifyingGlassSVG} /> : undefined
+          }
           spellCheck="false"
           data-testid="search-input-box"
           style={{
-            backgroundColor: theme.colors.backgroundPrimary,
-            color: theme.colors.textAccent,
+            backgroundColor: theme.colors.greySurface,
+            color: theme.colors.textPrimary,
           }}
         />
       </SearchInputWrapper>

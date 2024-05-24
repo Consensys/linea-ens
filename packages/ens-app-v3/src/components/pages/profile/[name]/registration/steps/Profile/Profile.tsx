@@ -5,11 +5,12 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { useAccount } from 'wagmi'
 
-import { Button, Dialog, mq, PlusSVG, Typography } from '@ensdomains/thorin'
+import { Dialog, mq, PlusSVG, Typography } from '@ensdomains/thorin'
 
 import { ConfirmationDialogView } from '@app/components/@molecules/ConfirmationDialogView/ConfirmationDialogView'
 import { AvatarClickType } from '@app/components/@molecules/ProfileEditor/Avatar/AvatarButton'
 import { AvatarViewManager } from '@app/components/@molecules/ProfileEditor/Avatar/AvatarViewManager'
+import { Button } from '@app/components/styled/Button'
 import { ProfileRecord } from '@app/constants/profileRecordOptions'
 import { useContractAddress } from '@app/hooks/chain/useContractAddress'
 import { useLocalStorage } from '@app/hooks/useLocalStorage'
@@ -46,8 +47,9 @@ const StyledCard = styled.form(({ theme }) => [
 ])
 
 const CenterAlignedTypography = styled(Typography)(
-  () => css`
+  ({ theme }) => css`
     text-align: center;
+    color: ${theme.colors.textPrimary};
   `,
 )
 
@@ -67,6 +69,12 @@ const ButtonWrapper = styled.div(({ theme }) => [
     width: initial;
   `),
 ])
+
+const StyledPlusSVG = styled(PlusSVG)(
+  ({ theme }) => css`
+    color: ${theme.colors.textSecondary} !important;
+  `,
+)
 
 const SubmitButton = ({
   control,
@@ -320,7 +328,7 @@ const Profile = ({ name, callback, registrationData, resolverExists }: Props) =>
             size="medium"
             onClick={handleShowAddRecordModal}
             data-testid="show-add-profile-records-modal-button"
-            prefix={<PlusSVG />}
+            prefix={<StyledPlusSVG />}
           >
             {t('steps.profile.addMore')}
           </Button>
@@ -332,7 +340,6 @@ const Profile = ({ name, callback, registrationData, resolverExists }: Props) =>
               id="profile-back-button"
               ref={backRef}
               type="submit"
-              colorStyle="accentSecondary"
               disabled={hasErrors}
               data-testid="profile-back-button"
             >

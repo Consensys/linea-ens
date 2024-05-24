@@ -3,20 +3,13 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { useAccount } from 'wagmi'
 
-import {
-  AlertSVG,
-  Button,
-  CountdownCircle,
-  Dialog,
-  Heading,
-  mq,
-  Spinner,
-  Typography,
-} from '@ensdomains/thorin'
+import { AlertSVG, CountdownCircle, Dialog, Heading, mq, Spinner } from '@ensdomains/thorin'
 
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
 import MobileFullWidth from '@app/components/@atoms/MobileFullWidth'
 import { Card } from '@app/components/Card'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import useRegistrationParams from '@app/hooks/useRegistrationParams'
 import { createTransactionItem } from '@app/transaction-flow/transaction'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
@@ -118,13 +111,13 @@ const FailedButton = ({ onClick, label }: { onClick: () => void; label: string }
   </MobileFullWidth>
 )
 
-const ProgressButton = ({ onClick, label }: { onClick: () => void; label: string }) => (
-  <MobileFullWidth>
-    <Button colorStyle="accentSecondary" onClick={onClick}>
-      {label}
-    </Button>
-  </MobileFullWidth>
-)
+const ProgressButton = ({ onClick, label }: { onClick: () => void; label: string }) => {
+  return (
+    <MobileFullWidth>
+      <Button onClick={onClick}>{label}</Button>
+    </MobileFullWidth>
+  )
+}
 
 type Props = {
   name: string
@@ -206,7 +199,7 @@ const Transactions = ({ registrationData, name, callback, onStart }: Props) => {
   const NormalBackButton = useMemo(
     () => (
       <MobileFullWidth>
-        <Button onClick={() => callback({ back: true })} colorStyle="accentSecondary">
+        <Button onClick={() => callback({ back: true })}>
           {t('action.back', { ns: 'common' })}
         </Button>
       </MobileFullWidth>
@@ -227,9 +220,7 @@ const Transactions = ({ registrationData, name, callback, onStart }: Props) => {
 
   let BackButton: ReactNode = (
     <MobileFullWidth>
-      <Button onClick={() => callback({ back: true })} colorStyle="accentSecondary">
-        {t('action.back', { ns: 'common' })}
-      </Button>
+      <Button onClick={() => callback({ back: true })}>{t('action.back', { ns: 'common' })}</Button>
     </MobileFullWidth>
   )
 

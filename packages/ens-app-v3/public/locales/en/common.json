@@ -5,6 +5,7 @@
   "unsupportedNetwork": "Unsupported network",
   "notFound": "404 Not Found",
   "etherscan": "Etherscan",
+  "lineascan": "Lineascan",
   "action": {
     "cancel": "Cancel",
     "change": "Change",

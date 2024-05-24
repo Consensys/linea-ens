@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -15,6 +15,7 @@ const StyledInnerDialog = styled(InnerDialog)(
 type Props = { onClear: () => void } & Omit<ComponentProps<typeof Dialog>, 'children' | 'variant'>
 
 export const ClearTransactionsDialog = ({ open, onDismiss, onClose, onClear }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('settings')
   return (
     <Dialog open={open} variant="blank" onDismiss={onDismiss} onClose={onClose}>
@@ -24,7 +25,13 @@ export const ClearTransactionsDialog = ({ open, onDismiss, onClose, onClear }: P
       </StyledInnerDialog>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDismiss}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { match, P } from 'ts-pattern'
 import { Address } from 'viem'
 
@@ -62,6 +62,7 @@ type Props = {
 }
 
 export const SearchView = ({ name, senderRole, onCancel, onSelect }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const { register, watch, setValue } = useFormContext<SendNameForm>()
   const query = watch('query')
@@ -120,7 +121,13 @@ export const SearchView = ({ name, senderRole, onCancel, onSelect }: Props) => {
         <FooterWrapper>
           <Dialog.Footer
             trailing={
-              <Button colorStyle="accentSecondary" onClick={onCancel}>
+              <Button
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
+                onClick={onCancel}
+              >
                 {t('action.cancel', { ns: 'common' })}
               </Button>
             }

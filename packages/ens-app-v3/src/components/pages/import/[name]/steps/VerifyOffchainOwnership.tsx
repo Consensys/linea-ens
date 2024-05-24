@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Dispatch, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { CheckCircleSVG, Helper } from '@ensdomains/thorin'
 
@@ -71,6 +71,7 @@ export const VerifyOffchainOwnership = ({
   dispatch: Dispatch<DnsImportReducerAction>
   selected: SelectedItemProperties
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation('dnssec', { keyPrefix: 'steps.verifyOwnership' })
   const { t: tc } = useTranslation('common')
 
@@ -157,7 +158,10 @@ export const VerifyOffchainOwnership = ({
       })()}
       <DnsImportActionsContainer>
         <DnsImportActionButton
-          colorStyle="accentSecondary"
+          style={{
+            backgroundColor: theme.colors.backgroundSecondary,
+            color: theme.colors.textSecondary,
+          }}
           onClick={() => dispatch({ name: 'decreaseStep', selected })}
         >
           {tc('action.back')}

@@ -1,5 +1,4 @@
-import { RecordItem as ThorinRecordItem } from '@ensdomains/thorin'
-
+import { RecordItem as ThorinRecordItem } from '@app/components/@atoms/RecordItem/RecordItem'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
 
 const RecordItem = ({
