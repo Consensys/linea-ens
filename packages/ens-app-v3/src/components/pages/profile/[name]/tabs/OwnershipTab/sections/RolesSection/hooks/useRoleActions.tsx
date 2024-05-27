@@ -163,6 +163,7 @@ export const useRoleActions = ({ name, roles, details }: Props) => {
     showSendNameInput,
     showEditRolesInput,
     showSyncManagerInput,
+    theme.colors.textSecondary,
   ])
 
   return {

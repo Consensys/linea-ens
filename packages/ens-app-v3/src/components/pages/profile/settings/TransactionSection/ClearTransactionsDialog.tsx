@@ -2,9 +2,9 @@ import { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog } from '@ensdomains/thorin'
-
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 
 const StyledInnerDialog = styled(InnerDialog)(
   () => css`

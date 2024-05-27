@@ -7,7 +7,9 @@ import {
   ChildFuseReferenceType,
   ParentFuseReferenceType,
 } from '@ensdomains/ensjs/utils'
-import { CheckboxRow, Dialog } from '@ensdomains/thorin'
+
+import { CheckboxRow } from '@app/components/@molecules/CheckBoxRow/CheckBoxRow'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 
 import type { FormData } from '../RevokePermissions-flow'
 

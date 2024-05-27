@@ -1,9 +1,8 @@
 import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
-import { Typography } from '@ensdomains/thorin'
-
 import { AvatarWithZorb } from '@app/components/AvatarWithZorb'
+import { Typography } from '@app/components/styled/Typography'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { QuerySpace } from '@app/types'
 import { shortenAddress } from '@app/utils/utils'

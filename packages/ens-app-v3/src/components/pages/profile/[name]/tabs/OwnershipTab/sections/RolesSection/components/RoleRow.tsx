@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCopyToClipboard } from 'react-use'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import {
@@ -9,6 +9,7 @@ import {
   CopySVG,
   Dropdown,
   OutlinkSVG,
+  PersonSVG,
   UpRightArrowSVG,
   VerticalDotsSVG,
 } from '@ensdomains/thorin'
@@ -71,6 +72,7 @@ type Props = {
 }
 
 export const RoleRow = ({ name, address, roles, actions, isWrapped, isEmancipated }: Props) => {
+  const theme = useTheme()
   const router = useRouterWithHistory()
   const { t } = useTranslation('common')
 
@@ -85,13 +87,22 @@ export const RoleRow = ({ name, address, roles, actions, isWrapped, isEmancipate
     const hasToken = is2ldEth || isWrapped
     if (!hasToken) return null
     return {
-      label: t('transaction.viewEtherscan', { ns: 'common' }),
+      label: t('transaction.viewLineascan', { ns: 'common' }),
       onClick: () => window.open(makeEtherscanLink(address!, networkName, 'address'), '_blank'),
       icon: <OutlinkSVG />,
     }
   }, [primary.data?.name, isWrapped, t, address, networkName])
 
   const editRolesAction = actions?.find(({ type, disabled }) => type === 'edit-roles' && !disabled)
+  if (editRolesAction?.icon) {
+    editRolesAction.icon = (
+      <PersonSVG
+        style={{
+          color: theme.colors.textPrimary,
+        }}
+      />
+    )
+  }
 
   const syncManagerAction = roles.includes('manager')
     ? actions?.find(({ type, disabled }) => type === 'sync-manager' && !disabled)

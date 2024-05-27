@@ -24,7 +24,7 @@ const Container = styled(Card)(
 )
 
 const Row = styled.div(
-  ({}) => css`
+  () => css`
     display: flex;
     flex-direction: row;
     align-items: center;

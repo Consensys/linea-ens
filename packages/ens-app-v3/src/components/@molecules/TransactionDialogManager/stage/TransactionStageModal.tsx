@@ -5,12 +5,13 @@ import styled, { css } from 'styled-components'
 import { BaseError } from 'viem'
 import { useClient, useConnectorClient, useSendTransaction } from 'wagmi'
 
-import { CrossCircleSVG, Dialog, Helper, Spinner } from '@ensdomains/thorin'
+import { CrossCircleSVG, Helper, Spinner } from '@ensdomains/thorin'
 
 import AeroplaneSVG from '@app/assets/Aeroplane.svg'
 import CircleTickSVG from '@app/assets/CircleTick.svg'
 import WalletSVG from '@app/assets/Wallet.svg'
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 import { Outlink } from '@app/components/Outlink'
 import { Button } from '@app/components/styled/Button'
 import { DialogHeading } from '@app/components/styled/Dialog'
@@ -497,7 +498,7 @@ export const TransactionStageModal = ({
         {HelperContent}
         {transaction.hash && (
           <Outlink href={makeEtherscanLink(transaction.hash!, chainName)}>
-            {t('transaction.viewEtherscan')}
+            {t('transaction.viewLineascan')}
           </Outlink>
         )}
         {lowerError && <Helper type="error">{lowerError}</Helper>}

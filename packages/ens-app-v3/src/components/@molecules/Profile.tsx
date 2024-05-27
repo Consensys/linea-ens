@@ -5,7 +5,7 @@ import { Dropdown } from '@ensdomains/thorin'
 import { DropdownItem } from '@ensdomains/thorin/dist/types/components/molecules/Dropdown/Dropdown'
 import { Colors, Tokens } from '@ensdomains/thorin/dist/types/tokens'
 
-import { getTestId, shortenAddress } from '@app/utils/utils'
+import { shortenAddress } from '@app/utils/utils'
 
 import { Avatar, Props as AvatarProps } from '../@atoms/Avatar'
 import { Typography } from '../styled/Typography'
@@ -50,10 +50,10 @@ const Container = styled.div<ContainerProps>(
     flex-direction: row;
     justify-content: flex-start;
     gap: ${theme.space['2']};
-    border-radius: ${theme.radii['full']};
+    border-radius: ${theme.radii.full};
     transition-duration: ${theme.transitionDuration['150']};
     transition-property: color, border-color, background-color, transform, filter;
-    transition-timing-function: ${theme.transitionTimingFunction['inOut']};
+    transition-timing-function: ${theme.transitionTimingFunction.inOut};
     position: relative;
     z-index: 10;
     padding: ${theme.space['1']};
@@ -114,7 +114,7 @@ const ProfileInnerContainer = styled.div<{
 }>(
   ({ theme, $size }) => css`
     display: ${$size === 'small' ? 'none' : 'block'};
-    min-width: ${theme.space['none']};
+    min-width: ${theme.space.none};
   `,
 )
 
@@ -197,7 +197,6 @@ export const Profile = ({
     <Container
       {...{
         ...props,
-        'data-testid': getTestId(props, 'profile'),
       }}
       $open={isOpen}
       $size={size}

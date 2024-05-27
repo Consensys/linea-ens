@@ -1,4 +1,3 @@
-//@ts-ignore
 import * as React from 'react'
 import { ReactNode } from 'react'
 import styled, { css } from 'styled-components'
@@ -49,6 +48,61 @@ type AsButtonProps = {
 
 export type Props = BaseProps & NativeElementProps & (AsAnchorProps | AsButtonProps)
 
+const Label = styled(Typography)<{ $inline: boolean }>(
+  ({ $inline }) => css`
+    flex: 1;
+    text-align: left;
+    word-break: break-all;
+
+    ${$inline &&
+    css`
+      word-break: initial;
+    `}
+  `,
+)
+
+const PrefixLabel = styled(Typography)<{
+  $inline: boolean
+}>(
+  () => css`
+    text-align: left;
+    width: 100%;
+  `,
+)
+
+const PrefixLabelsContainer = styled.div<{ $inline: boolean }>(
+  ({ theme, $inline }) => css`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    overflow: hidden;
+
+    ${$inline &&
+    css`
+      flex-direction: row;
+      gap: ${theme.space[2]};
+      align-items: center;
+    `}
+  `,
+)
+
+const PrefixContainer = styled.div<{ $size: Size; $inline: boolean }>(
+  ({ theme, $inline, $size }) => css`
+    display: flex;
+    gap: ${theme.space[2]};
+    align-items: flex-start;
+    width: ${$size === 'large' ? theme.space['30'] : theme.space['22.5']};
+    flex: 0 0 ${$size === 'large' ? theme.space['30'] : theme.space['22.5']};
+
+    ${$inline &&
+    css`
+      width: fit-content;
+      flex: initial;
+    `}
+  `,
+)
+
 const Container = styled.button<{
   $inline: boolean
 }>(
@@ -87,48 +141,6 @@ const Container = styled.button<{
   `,
 )
 
-const PrefixContainer = styled.div<{ $size: Size; $inline: boolean }>(
-  ({ theme, $inline, $size }) => css`
-    display: flex;
-    gap: ${theme.space[2]};
-    align-items: flex-start;
-    width: ${$size === 'large' ? theme.space['30'] : theme.space['22.5']};
-    flex: 0 0 ${$size === 'large' ? theme.space['30'] : theme.space['22.5']};
-
-    ${$inline &&
-    css`
-      width: fit-content;
-      flex: initial;
-    `}
-  `,
-)
-
-const PrefixLabelsContainer = styled.div<{ $inline: boolean }>(
-  ({ theme, $inline }) => css`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    overflow: hidden;
-
-    ${$inline &&
-    css`
-      flex-direction: row;
-      gap: ${theme.space[2]};
-      align-items: center;
-    `}
-  `,
-)
-
-const PrefixLabel = styled(Typography)<{
-  $inline: boolean
-}>(
-  () => css`
-    text-align: left;
-    width: 100%;
-  `,
-)
-
 const PrefixIcon = styled.div(
   ({ theme }) => css`
     svg {
@@ -136,19 +148,6 @@ const PrefixIcon = styled.div(
       width: ${theme.space['5']};
       height: ${theme.space['5']};
     }
-  `,
-)
-
-const Label = styled(Typography)<{ $inline: boolean }>(
-  ({ $inline, theme }) => css`
-    flex: 1;
-    text-align: left;
-    word-break: break-all;
-
-    ${$inline &&
-    css`
-      word-break: initial;
-    `}
   `,
 )
 
@@ -228,14 +227,17 @@ export const RecordItem = React.forwardRef<HTMLAnchorElement | HTMLButtonElement
       ) : (
         keySublabel
       )
-    const PostfixProps = postfixIcon
-      ? { as: postfixIcon }
-      : link
-      ? { $rotate: true, as: UpArrowSVG }
-      : copied
-      ? { as: CheckSVG }
-      : { as: CopySVG }
 
+    let PostfixProps
+    if (postfixIcon) {
+      PostfixProps = { as: postfixIcon }
+    } else if (link) {
+      PostfixProps = { $rotate: true, as: UpArrowSVG }
+    } else if (copied) {
+      PostfixProps = { as: CheckSVG }
+    } else {
+      PostfixProps = { as: CopySVG }
+    }
     return (
       <Container
         $inline={inline}

@@ -93,7 +93,7 @@ const ValueTypography = styled(Typography)(
 
 const AddressSubtitle = styled(Typography)(
   ({ theme }) => css`
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.grey};
     font-weight: ${theme.fontWeights.bold};
   `,
 )

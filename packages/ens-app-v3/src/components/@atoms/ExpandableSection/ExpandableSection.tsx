@@ -2,7 +2,9 @@ import { PropsWithChildren, useRef, useState } from 'react'
 import { TransitionState, useTransition } from 'react-transition-state'
 import styled, { css } from 'styled-components'
 
-import { DownChevronSVG, Typography } from '@ensdomains/thorin'
+import { DownChevronSVG } from '@ensdomains/thorin'
+
+import { Typography } from '@app/components/styled/Typography'
 
 const Container = styled.div(
   ({ theme }) => css`

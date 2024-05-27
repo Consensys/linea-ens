@@ -18,8 +18,8 @@ const IconCloseContainer = styled.button(
     justify-content: center;
     cursor: pointer;
     transition-property: all;
-    transition-duration: ${theme.transitionDuration['150']};
-    transition-timing-function: ${theme.transitionTimingFunction['inOut']};
+    transition-duration: ${theme.transitionDuration[150]};
+    transition-timing-function: ${theme.transitionTimingFunction.inOut};
     border-radius: ${theme.radii.full};
     background-color: transparent;
 
@@ -195,12 +195,6 @@ type TitleProps = {
   subtitle?: string | React.ReactNode
 } & WithAlert
 
-type StepProps = {
-  currentStep?: number
-  stepCount?: number
-  stepStatus?: StepType
-}
-
 type BaseProps = {
   variant?: 'closable' | 'actionable' | 'blank'
   children: React.ReactNode
@@ -218,8 +212,10 @@ type ActionableProps = {
   trailing?: React.ReactNode
   leading?: React.ReactNode
   center?: boolean
-} & TitleProps &
-  StepProps
+  currentStep?: number
+  stepCount?: number
+  stepStatus?: StepType
+} & TitleProps
 
 type BlankProps = {
   variant: 'blank'
@@ -229,7 +225,7 @@ type Props = BaseProps & (ClosableProps | ActionableProps | BlankProps)
 
 type ModalProps = React.ComponentProps<typeof Modal>
 
-const Heading = ({ title, subtitle, alert }: TitleProps & StepProps & WithAlert) => {
+const Heading = ({ title, subtitle, alert }: TitleProps & WithAlert) => {
   return (
     <TitleContainer>
       {alert && <Icon alert={alert} />}
@@ -249,7 +245,10 @@ const Footer = ({
 }: {
   leading?: React.ReactNode
   trailing: React.ReactNode
-} & StepProps) => {
+  currentStep?: number
+  stepCount?: number
+  stepStatus?: StepType
+}) => {
   const calcStepType = React.useCallback(
     (step: number) => {
       if (step === currentStep) {
@@ -302,7 +301,12 @@ const ModalWithTitle = ({
   stepCount,
   stepStatus,
   ...props
-}: Omit<ModalProps, 'title'> & TitleProps & StepProps & WithAlert) => {
+}: Omit<ModalProps, 'title'> &
+  TitleProps & {
+    currentStep?: number
+    stepCount?: number
+    stepStatus?: StepType
+  } & WithAlert) => {
   return (
     <Modal {...{ ...props, open, onDismiss }}>
       <StyledCard>
@@ -365,7 +369,9 @@ export const Dialog = ({
         {onCloseOrDismiss && <CloseButton onClick={onCloseOrDismiss} />}
       </ModalWithTitle>
     )
-  } else if (variant === 'closable') {
+  }
+
+  if (variant === 'closable') {
     const { alert, title, subtitle, ...closableProps } = props as ClosableProps
     const onCloseOrDismiss = onClose || onDismiss
     return (

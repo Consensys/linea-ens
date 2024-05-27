@@ -5,12 +5,12 @@ type NativeImgAttributes = React.ImgHTMLAttributes<HTMLImageElement>
 
 type Shape = 'circle' | 'square'
 
-interface Container {
+interface ContainerType {
   $shape: Shape
   $noBorder?: boolean
 }
 
-const Container = styled.div<Container>(
+const Container = styled.div<ContainerType>(
   ({ theme, $shape, $noBorder }) => css`
     ${() => {
       switch ($shape) {

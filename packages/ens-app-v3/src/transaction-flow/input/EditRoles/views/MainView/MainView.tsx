@@ -2,7 +2,10 @@ import { useFieldArray, useFormContext, useFormState } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog, mq, ScrollBox } from '@ensdomains/thorin'
+import { mq, ScrollBox } from '@ensdomains/thorin'
+
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 
 import { EditRolesFooter } from '../../components/EditRolesFooter'
 import type { EditRolesForm } from '../../EditRoles-flow'

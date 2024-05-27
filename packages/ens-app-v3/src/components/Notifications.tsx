@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Toast } from '@ensdomains/thorin'
-
 import { useChainName } from '@app/hooks/chain/useChainName'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
@@ -11,6 +9,7 @@ import { UpdateCallback, useCallbackOnTransaction } from '@app/utils/SyncProvide
 import { makeEtherscanLink } from '@app/utils/utils'
 
 import { trackEvent } from '../utils/analytics'
+import { Toast } from './@organisms/Toast/Toast'
 import { Button } from './styled/Button'
 
 type Notification = {
@@ -69,7 +68,7 @@ export const Notifications = () => {
         children: resumable ? (
           <ButtonContainer>
             <a target="_blank" href={makeEtherscanLink(hash, chainName)} rel="noreferrer">
-              <Button size="small">{t('transaction.viewEtherscan')}</Button>
+              <Button size="small">{t('transaction.viewLineascan')}</Button>
             </a>
             <Button
               size="small"
@@ -81,7 +80,7 @@ export const Notifications = () => {
           </ButtonContainer>
         ) : (
           <a target="_blank" href={makeEtherscanLink(hash, chainName)} rel="noreferrer">
-            <Button size="small">{t('transaction.viewEtherscan')}</Button>
+            <Button size="small">{t('transaction.viewLineascan')}</Button>
           </a>
         ),
       }

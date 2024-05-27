@@ -2,9 +2,12 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog, Field, ScrollBox } from '@ensdomains/thorin'
+import { ScrollBox } from '@ensdomains/thorin'
 
 import { AvatarWithIdentifier } from '@app/components/@molecules/AvatarWithIdentifier/AvatarWithIdentifier'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Field } from '@app/components/pages/profile/[name]/registration/steps/Profile/Field'
+import { Button } from '@app/components/styled/Button'
 import { useExpiry } from '@app/hooks/ensjs/public/useExpiry'
 import TransactionLoader from '@app/transaction-flow/TransactionLoader'
 

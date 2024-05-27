@@ -46,7 +46,7 @@ const RecentTransactionsMessage = styled(Typography)(
   ({ theme }) => css`
     display: flex;
     justify-content: center;
-    color: ${theme.colors.textTertiary};
+    color: ${theme.colors.textSecondary};
     padding: ${theme.space['4']};
   `,
 )

@@ -10,6 +10,8 @@ export type Props = {
   label: string
   subLabel?: string
   color?: Hue
+  name?: string
+  disabled?: boolean
 } & React.InputHTMLAttributes<HTMLInputElement>
 
 const Container = styled.div<{

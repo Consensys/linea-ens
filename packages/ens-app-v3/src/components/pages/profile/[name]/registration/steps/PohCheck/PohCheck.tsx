@@ -202,12 +202,18 @@ const PohCheck = ({
           {pohAlreadyRegistered ? (
             <>
               <PohExplainer>{t('steps.pohCheck.pohAlreadyUsedExplainer')}</PohExplainer>
-              <PohStatus valid={true} pohAlreadyRegistered={true} />
+              <PohStatus
+                valid={pohSignature !== undefined}
+                pohAlreadyRegistered={pohAlreadyRegistered || false}
+              />
             </>
           ) : (
             <>
               <PohExplainer>{t('steps.pohCheck.pohEligible')}</PohExplainer>
-              <PohStatus valid={true} pohAlreadyRegistered={false} />
+              <PohStatus
+                valid={pohSignature !== undefined}
+                pohAlreadyRegistered={pohAlreadyRegistered || false}
+              />
               <PohExplainer>{t('steps.pohCheck.pohNote')}</PohExplainer>
             </>
           )}

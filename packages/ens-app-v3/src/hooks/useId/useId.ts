@@ -5,9 +5,10 @@ import { useServerHandoffComplete } from './useServerHandoffComplete'
 
 const idPrefix = 'thorin'
 
-let id = 0
+let currentId = 0
 function generateId() {
-  return ++id
+  currentId += 1
+  return currentId
 }
 
 export const useId = () => {
@@ -18,5 +19,5 @@ export const useId = () => {
     if (id === null) setId(generateId())
   }, [id])
 
-  return id != null ? `${idPrefix}` + id : undefined
+  return id != null ? `${idPrefix}${id}` : undefined
 }

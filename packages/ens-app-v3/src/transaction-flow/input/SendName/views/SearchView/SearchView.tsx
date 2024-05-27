@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css, useTheme } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { match, P } from 'ts-pattern'
 import { Address } from 'viem'
 
-import { Button, Dialog, Input, MagnifyingGlassSimpleSVG, mq } from '@ensdomains/thorin'
+import { Input, MagnifyingGlassSimpleSVG, mq } from '@ensdomains/thorin'
 
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 import { useSimpleSearch } from '@app/transaction-flow/input/EditRoles/hooks/useSimpleSearch'
 
 import type { SendNameForm } from '../../SendName-flow'
@@ -62,7 +64,6 @@ type Props = {
 }
 
 export const SearchView = ({ name, senderRole, onCancel, onSelect }: Props) => {
-  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const { register, watch, setValue } = useFormContext<SendNameForm>()
   const query = watch('query')
@@ -120,17 +121,7 @@ export const SearchView = ({ name, senderRole, onCancel, onSelect }: Props) => {
         </SubviewContainer>
         <FooterWrapper>
           <Dialog.Footer
-            trailing={
-              <Button
-                style={{
-                  backgroundColor: theme.colors.backgroundSecondary,
-                  color: theme.colors.textSecondary,
-                }}
-                onClick={onCancel}
-              >
-                {t('action.cancel', { ns: 'common' })}
-              </Button>
-            }
+            trailing={<Button onClick={onCancel}>{t('action.cancel', { ns: 'common' })}</Button>}
           />
         </FooterWrapper>
       </Content>
