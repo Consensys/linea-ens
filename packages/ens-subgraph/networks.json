@@ -118,32 +118,32 @@
   },
   "linea-sepolia": {
     "ENSRegistry": {
-      "address": "0xE97Af0570d58aDa8cA7C07fba1A4440D1ADF90e5",
-      "startBlock": 587786
+      "address": "0x778412cf5F9f1492EACC5794D8b75141FF4655d3",
+      "startBlock": 1196201
     },
     "ENSRegistryOld": {
-      "address": "0xF2C66c0999E91A6186052fb4416Fc4aBD9BcBc05",
-      "startBlock": 587780
+      "address": "0x074fB73F74379b988742Ce121fce7CC5aA37B7A9",
+      "startBlock": 1196197
     },
     "Resolver": {
-      "address": "0xEcC9Ebbc93BE05d014E3A4cf19B45cdC975cc709",
-      "startBlock": 587876
+      "address": "0x5bDA6a6B90452e8a399B412E70915B61Dd50c82B",
+      "startBlock": 1196295
     },
     "BaseRegistrar": {
-      "address": "0x1f7fA08a66E26d470C631Fea0816079d8ff11835",
-      "startBlock": 587788
+      "address": "0x0Dc86D89d9ac503a97162aF33B7B31D574e4c4af",
+      "startBlock": 1196204
     },
     "EthRegistrarControllerOld": {
-      "address": "0xb5f2276b2912aCE029FAb9FD207E7c7CDC1BC2ED",
-      "startBlock": 587858
+      "address": "0xfC8d7CC567bb96Cd27Bb9DD5C6a264019a0bd0A4",
+      "startBlock": 1196275
     },
     "EthRegistrarController": {
-      "address": "0x2aA3Ffb6eD4e4f8237Ae0Ba060B9765c54EF5C31",
-      "startBlock": 587864
+      "address": "0x45FC85e99c62359d2A778d759FA36dF3D53a31D4",
+      "startBlock": 1196283
     },
     "NameWrapper": {
-      "address": "0x4912556B28A464C7572E8f14Db81A7c77F2d2957",
-      "startBlock": 587848
+      "address": "0xE0Ceb5D0C15E6d4369696A2cb1e2133904299270",
+      "startBlock": 1196267
     }
   }
 }

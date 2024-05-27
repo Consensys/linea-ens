@@ -75,7 +75,7 @@ const addCustomEnsContracts = <const TChain extends Chain>(
 export const lineaSepoliaWithEns = addCustomEnsContracts(
   lineaSepolia,
   lineaSepoliaEnsAddresses,
-  'https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest',
+  'https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/v0.0.4',
 )
 
 export const chainsWithEns = [lineaSepoliaWithEns, localhostWithEns] as const

@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 const Container = styled.div(
   ({ theme }) => css`
     background-color: ${theme.colors.yellowSurface};
-    color: ${theme.colors.textPrimary};
+    color: ${theme.colors.textSecondary};
     font-size: ${theme.fontSizes.small};
     padding: ${theme.space['2']} ${theme.space['4']};
     text-align: center;
