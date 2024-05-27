@@ -1,5 +1,5 @@
 {
-  "address": "0x3504e0147B59cEac29099965d76637A38E23e28B",
+  "address": "0xc7e374eA75892ABE4771b3C8557F36D08e43c79A",
   "abi": [
     {
       "inputs": [
@@ -31,25 +31,25 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xf6ebf2e54a394008cdb25f7911b17a8c46344f6c88008807109e6488c86a0125",
+  "transactionHash": "0x60e9cee13ca8a760c8dc2214ff1d0980337bf9163dd7009473dda1e9fbf96a37",
   "receipt": {
     "to": null,
-    "from": "0x4a8e79E5258592f208ddba8A8a0d3ffEB051B10A",
-    "contractAddress": "0x3504e0147B59cEac29099965d76637A38E23e28B",
-    "transactionIndex": 0,
+    "from": "0x11F340638Ddc6D2D2d065f19B190F6E9D949B767",
+    "contractAddress": "0xc7e374eA75892ABE4771b3C8557F36D08e43c79A",
+    "transactionIndex": 5,
     "gasUsed": "134191",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x0c6b6523b094b2d7047de121d6fe11c856eb6f81f602c7529986107dbb54b321",
-    "transactionHash": "0xf6ebf2e54a394008cdb25f7911b17a8c46344f6c88008807109e6488c86a0125",
+    "blockHash": "0xa5007076a28f6898656023f6a39fc47a64de06a4c4a6440d6cb8776f6dd7f7e8",
+    "transactionHash": "0x60e9cee13ca8a760c8dc2214ff1d0980337bf9163dd7009473dda1e9fbf96a37",
     "logs": [],
-    "blockNumber": 587796,
-    "cumulativeGasUsed": "134191",
+    "blockNumber": 1196211,
+    "cumulativeGasUsed": "324196",
     "status": 1,
     "byzantium": true
   },
   "args": [],
   "numDeployments": 1,
-  "solcInputHash": "838072046ab132016210093ff77782a9",
+  "solcInputHash": "9e312ca37aa8e6213da83c8731f0403e",
   "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"verify\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Implements a dummy DNSSEC (signing) algorithm that approves all      signatures, for testing.\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/dnssec-oracle/algorithms/DummyAlgorithm.sol\":\"DummyAlgorithm\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1200},\"remappings\":[]},\"sources\":{\"contracts/dnssec-oracle/algorithms/Algorithm.sol\":{\"content\":\"pragma solidity ^0.8.4;\\n\\n/**\\n * @dev An interface for contracts implementing a DNSSEC (signing) algorithm.\\n */\\ninterface Algorithm {\\n    /**\\n     * @dev Verifies a signature.\\n     * @param key The public key to verify with.\\n     * @param data The signed data to verify.\\n     * @param signature The signature to verify.\\n     * @return True iff the signature is valid.\\n     */\\n    function verify(\\n        bytes calldata key,\\n        bytes calldata data,\\n        bytes calldata signature\\n    ) external view virtual returns (bool);\\n}\\n\",\"keccak256\":\"0xaf6825f9852c69f8e36540821d067b4550dd2263497af9d645309b6a0c457ba6\"},\"contracts/dnssec-oracle/algorithms/DummyAlgorithm.sol\":{\"content\":\"pragma solidity ^0.8.4;\\n\\nimport \\\"./Algorithm.sol\\\";\\n\\n/**\\n * @dev Implements a dummy DNSSEC (signing) algorithm that approves all\\n *      signatures, for testing.\\n */\\ncontract DummyAlgorithm is Algorithm {\\n    function verify(\\n        bytes calldata,\\n        bytes calldata,\\n        bytes calldata\\n    ) external view override returns (bool) {\\n        return true;\\n    }\\n}\\n\",\"keccak256\":\"0x0df474d4178b1659d2869aefe90ee6680b966d9432c5b28ef388134ea6d67b58\"}},\"version\":1}",
   "bytecode": "0x608060405234801561001057600080fd5b50610177806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063de8f50a114610030575b600080fd5b61004a61003e3660046100a7565b60019695505050505050565b604051901515815260200160405180910390f35b60008083601f84011261007057600080fd5b50813567ffffffffffffffff81111561008857600080fd5b6020830191508360208285010111156100a057600080fd5b9250929050565b600080600080600080606087890312156100c057600080fd5b863567ffffffffffffffff808211156100d857600080fd5b6100e48a838b0161005e565b909850965060208901359150808211156100fd57600080fd5b6101098a838b0161005e565b9096509450604089013591508082111561012257600080fd5b5061012f89828a0161005e565b979a969950949750929593949250505056fea26469706673582212201d6169f54d5644e6220fe6e528677b0fc01f94f6ab546738c10ff226848cce1b64736f6c63430008110033",
   "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063de8f50a114610030575b600080fd5b61004a61003e3660046100a7565b60019695505050505050565b604051901515815260200160405180910390f35b60008083601f84011261007057600080fd5b50813567ffffffffffffffff81111561008857600080fd5b6020830191508360208285010111156100a057600080fd5b9250929050565b600080600080600080606087890312156100c057600080fd5b863567ffffffffffffffff808211156100d857600080fd5b6100e48a838b0161005e565b909850965060208901359150808211156100fd57600080fd5b6101098a838b0161005e565b9096509450604089013591508082111561012257600080fd5b5061012f89828a0161005e565b979a969950949750929593949250505056fea26469706673582212201d6169f54d5644e6220fe6e528677b0fc01f94f6ab546738c10ff226848cce1b64736f6c63430008110033",

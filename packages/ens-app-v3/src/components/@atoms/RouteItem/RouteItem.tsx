@@ -48,10 +48,6 @@ const LinkWrapper = styled.a<{
             color: ${$isActive ? theme.colors.accentBright : theme.colors.textPrimary};
           }
         `}
-    ${$isActive &&
-    css`
-      color: ${theme.colors.accent};
-    `}
     &::after {
       height: ${theme.space['2']};
       width: ${theme.space['2']};

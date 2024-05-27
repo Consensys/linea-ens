@@ -74,7 +74,7 @@ const SearchItem = styled.div<{
 
 const NoInputYetTypography = styled(Typography)(
   ({ theme }) => css`
-    color: ${theme.colors.textTertiary};
+    color: ${theme.colors.textPrimary};
   `,
 )
 
