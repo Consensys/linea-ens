@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import type { Address } from 'viem'
 
 import { Button, Dialog } from '@ensdomains/thorin'
@@ -25,6 +25,7 @@ const StyledInnerDialog = styled(InnerDialog)(
 )
 
 const ResetPrimaryName = ({ data: { address }, dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
 
   const handleSubmit = async () => {
@@ -48,7 +49,13 @@ const ResetPrimaryName = ({ data: { address }, dispatch, onDismiss }: Props) => 
       <StyledInnerDialog>{t('input.resetPrimaryName.description')}</StyledInnerDialog>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDismiss}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

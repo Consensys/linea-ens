@@ -3,8 +3,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import type { Address } from 'viem'
 
-import { CheckboxRow, Dialog, Typography } from '@ensdomains/thorin'
+import { CheckboxRow } from '@ensdomains/thorin'
 
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Typography } from '@app/components/styled/Typography'
 import { usePrimaryNameOrAddress } from '@app/hooks/reverseRecord/usePrimaryNameOrAddress'
 
 import type { FormData } from '../RevokePermissions-flow'

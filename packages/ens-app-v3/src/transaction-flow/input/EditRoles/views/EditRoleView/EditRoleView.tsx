@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { match, P } from 'ts-pattern'
 
-import { Button, Dialog, Input, MagnifyingGlassSimpleSVG, mq } from '@ensdomains/thorin'
+import { Input, MagnifyingGlassSimpleSVG, mq } from '@ensdomains/thorin'
 
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 import { SearchViewErrorView } from '@app/transaction-flow/input/SendName/views/SearchView/views/SearchViewErrorView'
 import { SearchViewLoadingView } from '@app/transaction-flow/input/SendName/views/SearchView/views/SearchViewLoadingView'
 import { SearchViewNoResultsView } from '@app/transaction-flow/input/SendName/views/SearchView/views/SearchViewNoResultsView'
@@ -47,13 +49,17 @@ type Props = {
 }
 
 export const EditRoleView = ({ index, onBack }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
 
   const [query, setQuery] = useState('')
   const search = useSimpleSearch()
 
   const { control } = useFormContext<EditRolesForm>()
-  const { fields: roles, update } = useFieldArray<EditRolesForm>({ control, name: 'roles' })
+  const { fields: roles, update } = useFieldArray<EditRolesForm>({
+    control,
+    name: 'roles',
+  })
   const currentRole = roles[index]
 
   return (
@@ -116,7 +122,13 @@ export const EditRoleView = ({ index, onBack }: Props) => {
         </SubviewContainer>
         <EditRolesFooter
           trailing={
-            <Button colorStyle="accentSecondary" onClick={onBack}>
+            <Button
+              style={{
+                backgroundColor: theme.colors.backgroundSecondary,
+                color: theme.colors.textSecondary,
+              }}
+              onClick={onBack}
+            >
               {t('action.cancel', { ns: 'common' })}
             </Button>
           }

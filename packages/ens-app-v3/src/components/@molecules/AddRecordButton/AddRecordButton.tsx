@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next'
 import useTransition, { TransitionState } from 'react-transition-state'
 import styled, { css } from 'styled-components'
 
-import { Button, Input, MagnifyingGlassSimpleSVG, PlusSVG, Typography } from '@ensdomains/thorin'
+import { Input, MagnifyingGlassSimpleSVG, PlusSVG } from '@ensdomains/thorin'
 
 import UnsupportedSVG from '@app/assets/Unsupported.svg'
+import { Button } from '@app/components/styled/Button'
 import { formSafeKey } from '@app/utils/editor'
 
 const Container = styled.div<{ $state: TransitionState }>(
@@ -198,7 +199,7 @@ const OptionBody = styled.div(
     text-overflow: ellipsis;
     text-align: center;
     width: 100%;
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.textPrimary};
   `,
 )
 
@@ -242,14 +243,6 @@ const NoOptionsContainer = styled.div<{ $inline: boolean }>(
     color: ${theme.colors.textTertiary};
     font-style: italic;
     margin-bottom: ${theme.space['0.75']};
-  `,
-)
-
-const SVGWrapper = styled.div(
-  ({ theme }) => css`
-    svg {
-      color: ${theme.colors.greyPrimary};
-    }
   `,
 )
 
@@ -429,17 +422,13 @@ export const AddRecordButton = ({
       </ControlsContainer>
       <ButtonContainer $state={state}>
         <Button
-          prefix={
-            <SVGWrapper>
-              <PlusSVG />
-            </SVGWrapper>
-          }
+          prefix={<PlusSVG />}
           colorStyle="transparent"
           onClick={handleButtonClick}
           size="medium"
           data-testid="add-record-button-button"
         >
-          <Typography color="greyPrimary">{addRecord}</Typography>
+          {addRecord}
         </Button>
       </ButtonContainer>
     </Container>

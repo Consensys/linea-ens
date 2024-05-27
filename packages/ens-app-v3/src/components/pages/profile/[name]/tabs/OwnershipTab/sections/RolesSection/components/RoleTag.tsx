@@ -2,8 +2,9 @@ import { TOptions } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { OutlinkSVG, QuestionCircleSVG, Tooltip, Typography } from '@ensdomains/thorin'
+import { OutlinkSVG, QuestionCircleSVG, Tooltip } from '@ensdomains/thorin'
 
+import { Typography } from '@app/components/styled/Typography'
 import { Role } from '@app/hooks/ownership/useRoles/useRoles'
 import { parentName } from '@app/utils/name'
 import { getSupportLink } from '@app/utils/supportLinks'

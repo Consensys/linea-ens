@@ -1,9 +1,8 @@
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
-import { Typography } from '@ensdomains/thorin'
-
 import { AvatarWithZorb } from '@app/components/AvatarWithZorb'
+import { Typography } from '@app/components/styled/Typography'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { QuerySpace } from '@app/types'
 import { shortenAddress } from '@app/utils/utils'
@@ -29,9 +28,10 @@ const TextContainer = styled.div(
 )
 
 const AddressTitleContainer = styled.div(
-  () => css`
+  ({ theme }) => css`
     word-break: break-all;
     text-align: left;
+    gap: ${theme.colors.grey};
   `,
 )
 
@@ -50,6 +50,7 @@ export const AvatarWithIdentifier = ({
   size = '10',
   shortenAddressAsTitle = true,
 }: Props) => {
+  const theme = useTheme()
   const primary = usePrimaryName({
     address,
     enabled: !name,
@@ -68,12 +69,25 @@ export const AvatarWithIdentifier = ({
         {isTitleFullAddress ? (
           <AddressTitleContainer data-testid="avatar-label-title">{_title}</AddressTitleContainer>
         ) : (
-          <Typography fontVariant="bodyBold" ellipsis data-testid="avatar-label-title">
+          <Typography
+            fontVariant="bodyBold"
+            ellipsis
+            data-testid="avatar-label-title"
+            style={{
+              color: theme.colors.textPrimary,
+            }}
+          >
             {_title}
           </Typography>
         )}
         {_subtitle && (
-          <Typography fontVariant="extraSmall" color="grey" data-testid="avatar-label-subtitle">
+          <Typography
+            fontVariant="extraSmall"
+            style={{
+              color: theme.colors.grey,
+            }}
+            data-testid="avatar-label-subtitle"
+          >
             {_subtitle}
           </Typography>
         )}

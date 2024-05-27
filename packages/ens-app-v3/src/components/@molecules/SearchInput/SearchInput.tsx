@@ -18,8 +18,9 @@ import {
   GetPriceReturnType,
   GetWrapperDataReturnType,
 } from '@ensdomains/ensjs/public'
-import { BackdropSurface, mq, Portal, Typography } from '@ensdomains/thorin'
+import { BackdropSurface, mq, Portal } from '@ensdomains/thorin'
 
+import { Typography } from '@app/components/styled/Typography'
 import { useLocalStorage } from '@app/hooks/useLocalStorage'
 import { createQueryKey } from '@app/hooks/useQueryOptions'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
@@ -54,7 +55,7 @@ const SearchResultsContainer = styled.div<{
     height: min-content;
     top: calc(100% + ${theme.space['3']});
 
-    background-color: #f7f7f7;
+    background-color: ${theme.colors.greyPrimary};
     box-shadow: 0 2px 12px ${theme.colors.border};
     border-radius: ${theme.radii.extraLarge};
     border: ${theme.borderWidths.px} ${theme.borderStyles.solid} ${theme.colors.border};

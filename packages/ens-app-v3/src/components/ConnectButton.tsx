@@ -5,16 +5,7 @@ import styled, { css } from 'styled-components'
 import type { Address } from 'viem'
 import { useDisconnect, useEnsAvatar } from 'wagmi'
 
-import {
-  Button,
-  CheckSVG,
-  CogSVG,
-  CopySVG,
-  ExitSVG,
-  mq,
-  PersonSVG,
-  Profile,
-} from '@ensdomains/thorin'
+import { CheckSVG, CogSVG, CopySVG, ExitSVG, mq, PersonSVG } from '@ensdomains/thorin'
 import { DropdownItem } from '@ensdomains/thorin/dist/types/components/molecules/Dropdown/Dropdown'
 
 import { useAccountSafely } from '@app/hooks/account/useAccountSafely'
@@ -28,6 +19,8 @@ import { ensAvatarConfig } from '@app/utils/query/ipfsGateway'
 import { shortenAddress } from '@app/utils/utils'
 
 import BaseLink from './@atoms/BaseLink'
+import { Profile } from './@molecules/Profile'
+import { Button } from './styled/Button'
 
 const StyledButtonWrapper = styled.div<{ $isTabBar?: boolean; $large?: boolean }>(
   ({ theme, $isTabBar, $large }) => [
@@ -58,9 +51,6 @@ const StyledButtonWrapper = styled.div<{ $isTabBar?: boolean; $large?: boolean }
           ${$large &&
           css`
             width: 100%;
-            & button {
-              border-radius: ${theme.radii.large};
-            }
           `}
         `,
   ],
@@ -161,14 +151,14 @@ const HeaderProfile = ({ address }: { address: Address }) => {
                     </BaseLink>
                   ),
                   as: 'a' as 'a',
-                  color: 'text',
+                  color: 'textPrimary',
                   icon: <PersonSVG />,
                 },
               ]
             : []),
           {
             label: t('navigation.settings'),
-            color: 'text',
+            color: 'textPrimary',
             wrapper: (children: ReactNode, key: Key) => (
               <BaseLink href="/my/settings" key={key}>
                 {children}
@@ -181,7 +171,7 @@ const HeaderProfile = ({ address }: { address: Address }) => {
           <SectionDivider key="divider" />,
           {
             label: shortenAddress(address),
-            color: 'text',
+            color: 'textPrimary',
             onClick: () => copy(address),
             icon: copied ? <CheckSVG /> : <CopySVG />,
           },

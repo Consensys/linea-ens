@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { match, P } from 'ts-pattern'
 
-import { Button, mq, Typography } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import RecordItem from '@app/components/RecordItem'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { useResolver } from '@app/hooks/ensjs/public/useResolver'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
@@ -91,6 +93,7 @@ const Resolver = ({
   isCachedData: boolean
   canEditResolverError?: string
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation('profile')
 
   const { md } = useBreakpoint()
@@ -136,7 +139,10 @@ const Resolver = ({
           <>
             {canEditResolver ? (
               <Button
-                colorStyle="accentSecondary"
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
                 size="small"
                 type="button"
                 width={md ? 'max' : 'full'}

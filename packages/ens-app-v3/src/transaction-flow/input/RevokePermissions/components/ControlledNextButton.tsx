@@ -2,8 +2,7 @@ import { ComponentProps, useMemo } from 'react'
 import { Control, useFormState, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@ensdomains/thorin'
-
+import { Button } from '@app/components/styled/Button'
 import { AnyFuseKey } from '@app/types'
 
 import type { FormData, View } from '../RevokePermissions-flow'

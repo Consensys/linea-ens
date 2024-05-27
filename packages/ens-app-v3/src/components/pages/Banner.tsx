@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, mq, Typography } from '@ensdomains/thorin'
 
@@ -12,6 +12,7 @@ const Container = styled(Card)(
     justify-content: space-between;
     gap: ${theme.space['2']};
     padding: ${theme.space['4']};
+    background-color: ${theme.colors.backgroundPrimary};
     ${mq.sm.max(css`
       width: 100%;
       flex-direction: column;
@@ -23,7 +24,7 @@ const Container = styled(Card)(
 )
 
 const Row = styled.div(
-  ({}) => css`
+  () => css`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -36,12 +37,17 @@ const Row = styled.div(
 )
 
 export const Banner = () => {
+  const theme = useTheme()
   return (
     <Container>
       <Row>
         <LineaLogo />
         <div>
-          <Typography color="textPrimary" fontVariant="largeBold" weight="bold">
+          <Typography
+            fontVariant="largeBold"
+            weight="bold"
+            style={{ color: theme.colors.textPrimary }}
+          >
             Learn more on our Mirror post
           </Typography>
         </div>
@@ -50,7 +56,10 @@ export const Banner = () => {
       <Button
         as="a"
         width="max"
-        colorStyle="blueSecondary"
+        style={{
+          backgroundColor: theme.colors.backgroundSecondary,
+          color: theme.colors.textSecondary,
+        }}
         href="https://aboutus.godaddy.net/newsroom/company-news/news-details/2024/GoDaddy-and-Ethereum-Name-Service-Bridge-the-Gap-Between-Domain-Names-and-Crypto-Wallets/default.aspx?utm_source=Social&utm_medium=Twitter&utm_campaign=GoDaddy-and-Ethereum-Name-Service-Bridge-the-Gap-Between-Domain-Names-and-Crypto-Wallets/default.aspx"
         target="_blank"
       >

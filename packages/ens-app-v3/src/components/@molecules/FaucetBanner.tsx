@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { formatEther } from 'viem'
 
 import {
@@ -52,6 +52,7 @@ const msToDays = (ms: number) => Math.floor(ms / 1000 / 60 / 60 / 24)
 const chainEthTicker = (chainName: string) => `${chainName.slice(0, 2)}ETH`
 
 const FaucetBanner = () => {
+  const theme = useTheme()
   const chainName = useChainName()
   const { isReady } = useRouter()
   const { address } = useAccountSafely()
@@ -117,7 +118,13 @@ const FaucetBanner = () => {
           </InnerDialog>
           <Dialog.Footer
             leading={
-              <Button colorStyle="accentSecondary" onClick={closeDialog}>
+              <Button
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
+                onClick={closeDialog}
+              >
                 {t('action.close')}
               </Button>
             }

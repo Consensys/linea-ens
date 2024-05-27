@@ -9,7 +9,6 @@ import { Outlink } from '@app/components/Outlink'
 import { ProfileDetails } from '@app/components/pages/profile/ProfileDetails'
 import { ProfileSnippet } from '@app/components/ProfileSnippet'
 import { useAbilities } from '@app/hooks/abilities/useAbilities'
-import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 import { useOwners } from '@app/hooks/useOwners'
 import { useProfileActions } from '@app/hooks/useProfileActions'
@@ -52,8 +51,6 @@ const ProfileTab = ({ nameDetails, name }: Props) => {
 
   const abilities = useAbilities({ name })
 
-  const { data: primaryData } = usePrimaryName({ address })
-
   const owners = useOwners({
     ownerData: ownerData!,
     wrapperData: wrapperData!,
@@ -80,12 +77,7 @@ const ProfileTab = ({ nameDetails, name }: Props) => {
 
   return (
     <DetailsWrapper>
-      <ProfileSnippet
-        name={normalisedName}
-        getTextRecord={getTextRecord}
-        button={snippetButton}
-        isPrimary={name === primaryData?.name}
-      >
+      <ProfileSnippet name={normalisedName} getTextRecord={getTextRecord} button={snippetButton}>
         {nameDetails.isNonASCII && (
           <Helper type="warning" alignment="horizontal">
             <Trans

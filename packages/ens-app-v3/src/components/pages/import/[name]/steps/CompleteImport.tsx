@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import type ConfettiT from 'react-confetti'
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, mq, Typography } from '@ensdomains/thorin'
 
@@ -96,6 +96,7 @@ export const CompleteImport = ({
   selected: SelectedItemProperties
   item: DnsImportReducerDataItem
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation('dnssec', { keyPrefix: 'steps.complete' })
 
   const router = useRouterWithHistory()
@@ -154,7 +155,13 @@ export const CompleteImport = ({
       <Typography>{t(addKeyPrefix('description'))}</Typography>
       <ButtonContainer>
         <MobileFullWidth>
-          <Button colorStyle="accentSecondary" onClick={goHome}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={goHome}
+          >
             {t('action.claimAnother')}
           </Button>
         </MobileFullWidth>

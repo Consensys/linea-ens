@@ -1,10 +1,13 @@
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog, Field, ScrollBox } from '@ensdomains/thorin'
+import { ScrollBox } from '@ensdomains/thorin'
 
 import { AvatarWithIdentifier } from '@app/components/@molecules/AvatarWithIdentifier/AvatarWithIdentifier'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Field } from '@app/components/pages/profile/[name]/registration/steps/Profile/Field'
+import { Button } from '@app/components/styled/Button'
 import { useExpiry } from '@app/hooks/ensjs/public/useExpiry'
 import TransactionLoader from '@app/transaction-flow/TransactionLoader'
 
@@ -45,6 +48,7 @@ type Props = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const SummaryView = ({ name, canResetProfile, onNext, onBack }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const { control, register } = useFormContext<SendNameForm>()
   const recipient = useWatch({ control, name: 'recipient' })
@@ -97,7 +101,13 @@ export const SummaryView = ({ name, canResetProfile, onNext, onBack }: Props) =>
       </StyledScrollBox>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onBack}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onBack}
+          >
             {t('action.back', { ns: 'common' })}
           </Button>
         }

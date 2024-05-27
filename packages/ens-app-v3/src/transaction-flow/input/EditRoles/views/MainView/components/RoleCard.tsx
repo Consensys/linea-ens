@@ -2,9 +2,10 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { Address } from 'viem'
 
-import { RightArrowSVG, Typography } from '@ensdomains/thorin'
+import { RightArrowSVG } from '@ensdomains/thorin'
 
 import { AvatarWithIdentifier } from '@app/components/@molecules/AvatarWithIdentifier/AvatarWithIdentifier'
+import { Typography } from '@app/components/styled/Typography'
 import type { Role } from '@app/hooks/ownership/useRoles/useRoles'
 import { emptyAddress } from '@app/utils/constants'
 

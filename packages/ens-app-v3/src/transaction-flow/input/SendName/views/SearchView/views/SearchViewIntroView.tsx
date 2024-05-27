@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { MagnifyingGlassSVG, Typography } from '@ensdomains/thorin'
+import { MagnifyingGlassSVG } from '@ensdomains/thorin'
+
+import { Typography } from '@app/components/styled/Typography'
 
 const Container = styled.div(
   () => css`

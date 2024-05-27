@@ -1,8 +1,11 @@
 import { useFieldArray, useFormContext, useFormState } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog, mq, ScrollBox } from '@ensdomains/thorin'
+import { mq, ScrollBox } from '@ensdomains/thorin'
+
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 
 import { EditRolesFooter } from '../../components/EditRolesFooter'
 import type { EditRolesForm } from '../../EditRoles-flow'
@@ -54,6 +57,7 @@ type Props = {
 }
 
 export const MainView = ({ onSelectIndex, onCancel, onSave }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation()
   const { control } = useFormContext<EditRolesForm>()
   const { fields: roles } = useFieldArray<EditRolesForm>({ control, name: 'roles' })
@@ -83,7 +87,13 @@ export const MainView = ({ onSelectIndex, onCancel, onSave }: Props) => {
       </StyledScrollBox>
       <EditRolesFooter
         leading={
-          <Button colorStyle="accentSecondary" onClick={() => onCancel()}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={() => onCancel()}
+          >
             {t('action.cancel')}
           </Button>
         }

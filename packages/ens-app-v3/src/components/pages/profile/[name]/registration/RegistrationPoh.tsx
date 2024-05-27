@@ -240,7 +240,7 @@ const RegistrationPoh = ({ nameDetails, isLoading }: Props) => {
       </Head>
       <Content
         noTitle
-        title={beautifiedName}
+        title=""
         hideHeading={step === 'complete'}
         loading={labelTooLong ? false : isLoading || primary.isLoading || resolverExistsLoading}
         singleColumnContent

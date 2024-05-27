@@ -4,8 +4,9 @@ import styled, { css } from 'styled-components'
 
 import { GetWrapperDataReturnType } from '@ensdomains/ensjs/public'
 import { ChildFuseKeys, ChildFuseReferenceType } from '@ensdomains/ensjs/utils'
-import { Button, Typography } from '@ensdomains/thorin'
 
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import type { useFusesSetDates } from '@app/hooks/fuses/useFusesSetDates'
 import type { useFusesStates } from '@app/hooks/fuses/useFusesStates'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'

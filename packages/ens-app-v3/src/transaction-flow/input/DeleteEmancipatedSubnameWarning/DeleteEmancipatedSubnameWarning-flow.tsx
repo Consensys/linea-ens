@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Dialog, mq } from '@ensdomains/thorin'
 
@@ -28,6 +28,7 @@ export type Props = {
 } & TransactionDialogPassthrough
 
 const DeleteEmancipatedSubnameWarning = ({ data, dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
 
   const { data: wrapperData, isLoading } = useWrapperData({ name: data.name })
@@ -62,7 +63,13 @@ const DeleteEmancipatedSubnameWarning = ({ data, dispatch, onDismiss }: Props) =
       </MessageContainer>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDismiss}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

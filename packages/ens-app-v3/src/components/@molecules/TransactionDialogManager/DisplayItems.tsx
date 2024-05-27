@@ -3,9 +3,8 @@ import { TFunction, useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { Address } from 'viem'
 
-import { Typography } from '@ensdomains/thorin'
-
 import { AvatarWithZorb, NameAvatar } from '@app/components/AvatarWithZorb'
+import { Typography } from '@app/components/styled/Typography'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { useBeautifiedName } from '@app/hooks/useBeautifiedName'
 import { TransactionDisplayItem } from '@app/types'
@@ -51,7 +50,7 @@ const DisplayItemContainer = styled.div<{ $shrink?: boolean; $fade?: boolean }>(
 
 const DisplayItemLabel = styled(Typography)(
   ({ theme }) => css`
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.grey};
     justify-self: flex-start;
   `,
 )
@@ -94,7 +93,7 @@ const ValueTypography = styled(Typography)(
 
 const AddressSubtitle = styled(Typography)(
   ({ theme }) => css`
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.grey};
     font-weight: ${theme.fontWeights.bold};
   `,
 )

@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { ChildFuseKeys, ChildFuseReferenceType } from '@ensdomains/ensjs/utils'
 import { Button, FlameSVG, Helper, mq, Typography } from '@ensdomains/thorin'
@@ -171,6 +171,7 @@ const BurnFusesContent = ({
   canUnsetFuse = false,
   returnObject,
 }: PropsWithReturnArray | PropsWithReturnObject) => {
+  const theme = useTheme()
   const { t } = useTranslation('profile', { keyPrefix: 'tabs.more' })
   const { t: tc } = useTranslation()
   const [_fuseData, setFuseData] = useState<CurrentChildFuses>(childFuseObj)
@@ -240,7 +241,13 @@ const BurnFusesContent = ({
       </BurnButtonsContainer>
       <Spacer $height="6" />
       <ButtonsContainer>
-        <Button colorStyle="accentSecondary" onClick={onDismiss}>
+        <Button
+          style={{
+            backgroundColor: theme.colors.backgroundSecondary,
+            color: theme.colors.textSecondary,
+          }}
+          onClick={onDismiss}
+        >
           {tc('action.cancel')}
         </Button>
         <Button

@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import { Button, Dialog, mq } from '@ensdomains/thorin'
@@ -34,6 +34,7 @@ export type Props = {
 } & TransactionDialogPassthrough
 
 const DeleteSubnameNotParentWarning = ({ data, dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
 
   const {
@@ -88,7 +89,13 @@ const DeleteSubnameNotParentWarning = ({ data, dispatch, onDismiss }: Props) => 
       </MessageContainer>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDismiss}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

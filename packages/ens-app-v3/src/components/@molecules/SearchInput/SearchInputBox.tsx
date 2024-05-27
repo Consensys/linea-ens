@@ -5,19 +5,18 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 import { Dispatch, ForwardedRef, forwardRef, MouseEvent, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { Input, MagnifyingGlassSVG } from '@ensdomains/thorin'
 
 const SearchInputWrapper = styled.div<{ $size: 'medium' | 'extraLarge' }>(
   ({ theme, $size }) => css`
     z-index: 1;
-    box-shadow: ${theme.boxShadows['0.25']};
     border-radius: ${theme.radii['2.5xLarge']};
     border-color: ${theme.colors.border};
     width: 100%;
     & input::placeholder {
-      color: ${theme.colors.greyPrimary};
+      color: ${theme.colors.textAccent};
       font-weight: ${theme.fontWeights.bold};
     }
     ${$size === 'medium' &&
@@ -30,6 +29,21 @@ const SearchInputWrapper = styled.div<{ $size: 'medium' | 'extraLarge' }>(
         font-weight: ${theme.fontWeights.normal};
       }
     `}
+  `,
+)
+
+const StyledInput = styled(Input)(
+  ({ theme }) => css`
+    ::placeholder {
+      color: ${theme.colors.grey} !important;
+    }
+  `,
+)
+
+const StyledMagnifyingGlassSVG = styled(MagnifyingGlassSVG)(
+  ({ theme }) => css`
+    stroke: ${theme.colors.grey} !important;
+    color: ${theme.colors.grey} !important;
   `,
 )
 
@@ -95,10 +109,11 @@ export const SearchInputBox = forwardRef(
     },
     ref,
   ) => {
+    const theme = useTheme()
     const { t } = useTranslation('common')
     return (
       <SearchInputWrapper ref={containerRef} $size={size}>
-        <Input
+        <StyledInput
           size={size}
           label={t('search.label')}
           hideLabel
@@ -110,9 +125,15 @@ export const SearchInputBox = forwardRef(
           autoComplete="off"
           autoCorrect="off"
           parentStyles={StyledInputParent(size)}
-          icon={size === 'medium' ? <MagnifyingGlassIcon as={MagnifyingGlassSVG} /> : undefined}
+          icon={
+            size === 'medium' ? <MagnifyingGlassIcon as={StyledMagnifyingGlassSVG} /> : undefined
+          }
           spellCheck="false"
           data-testid="search-input-box"
+          style={{
+            backgroundColor: theme.colors.greySurface,
+            color: theme.colors.textPrimary,
+          }}
         />
       </SearchInputWrapper>
     )

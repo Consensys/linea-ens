@@ -5,13 +5,17 @@ import styled, { css } from 'styled-components'
 import { BaseError } from 'viem'
 import { useClient, useConnectorClient, useSendTransaction } from 'wagmi'
 
-import { Button, CrossCircleSVG, Dialog, Helper, Spinner, Typography } from '@ensdomains/thorin'
+import { CrossCircleSVG, Helper, Spinner } from '@ensdomains/thorin'
 
 import AeroplaneSVG from '@app/assets/Aeroplane.svg'
 import CircleTickSVG from '@app/assets/CircleTick.svg'
 import WalletSVG from '@app/assets/Wallet.svg'
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 import { Outlink } from '@app/components/Outlink'
+import { Button } from '@app/components/styled/Button'
+import { DialogHeading } from '@app/components/styled/Dialog'
+import { Typography } from '@app/components/styled/Typography'
 import { useChainName } from '@app/hooks/chain/useChainName'
 import { useInvalidateOnBlock } from '@app/hooks/chain/useInvalidateOnBlock'
 import { useAddRecentTransaction } from '@app/hooks/transactions/useAddRecentTransaction'
@@ -373,11 +377,7 @@ export const TransactionStageModal = ({
 
       if (final) {
         return (
-          <Button
-            data-testid="transaction-modal-complete-button"
-            onClick={() => onDismiss()}
-            colorStyle="accentSecondary"
-          >
+          <Button data-testid="transaction-modal-complete-button" onClick={() => onDismiss()}>
             {t('action.done')}
           </Button>
         )
@@ -405,11 +405,7 @@ export const TransactionStageModal = ({
     }
     if (stage === 'sent') {
       return (
-        <Button
-          onClick={() => onDismiss()}
-          data-testid="transaction-modal-sent-button"
-          colorStyle="accentSecondary"
-        >
+        <Button onClick={() => onDismiss()} data-testid="transaction-modal-sent-button">
           {t('action.close')}
         </Button>
       )
@@ -494,7 +490,7 @@ export const TransactionStageModal = ({
 
   return (
     <>
-      <Dialog.Heading title={t(`transaction.dialog.${stage}.title`)} />
+      <DialogHeading>{t(`transaction.dialog.${stage}.title`)}</DialogHeading>
       <InnerDialog data-testid="transaction-modal-inner">
         {MiddleContent}
         {upperError && <Helper type="error">{t(upperError)}</Helper>}
@@ -502,7 +498,7 @@ export const TransactionStageModal = ({
         {HelperContent}
         {transaction.hash && (
           <Outlink href={makeEtherscanLink(transaction.hash!, chainName)}>
-            {t('transaction.viewEtherscan')}
+            {t('transaction.viewLineascan')}
           </Outlink>
         )}
         {lowerError && <Helper type="error">{lowerError}</Helper>}
@@ -515,9 +511,7 @@ export const TransactionStageModal = ({
         leading={
           backToInput &&
           !(stage === 'sent' || stage === 'complete') && (
-            <Button colorStyle="accentSecondary" onClick={handleBackToInput(dispatch)}>
-              {t('action.back')}
-            </Button>
+            <Button onClick={handleBackToInput(dispatch)}>{t('action.back')}</Button>
           )
         }
       />

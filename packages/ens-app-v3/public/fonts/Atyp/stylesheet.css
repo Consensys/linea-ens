@@ -1,0 +1,300 @@
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Regular.eot');
+    src: local('Atyp Display'), local('AtypDisplay-Regular'),
+        url('AtypDisplay-Regular.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Regular.woff2') format('woff2'),
+        url('AtypDisplay-Regular.woff') format('woff'),
+        url('AtypDisplay-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-ThinItalic.eot');
+    src: local('Atyp Display Thin Italic'), local('AtypDisplay-ThinItalic'),
+        url('AtypDisplay-ThinItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-ThinItalic.woff2') format('woff2'),
+        url('AtypDisplay-ThinItalic.woff') format('woff'),
+        url('AtypDisplay-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Semibold.eot');
+    src: local('Atyp Display Semibold'), local('AtypDisplay-Semibold'),
+        url('AtypDisplay-Semibold.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Semibold.woff2') format('woff2'),
+        url('AtypDisplay-Semibold.woff') format('woff'),
+        url('AtypDisplay-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-BoldItalic.eot');
+    src: local('Atyp Display Bold Italic'), local('AtypDisplay-BoldItalic'),
+        url('AtypDisplay-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-BoldItalic.woff2') format('woff2'),
+        url('AtypDisplay-BoldItalic.woff') format('woff'),
+        url('AtypDisplay-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Thin.eot');
+    src: local('Atyp Display Thin'), local('AtypDisplay-Thin'),
+        url('AtypDisplay-Thin.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Thin.woff2') format('woff2'),
+        url('AtypDisplay-Thin.woff') format('woff'),
+        url('AtypDisplay-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-BoldItalic.eot');
+    src: local('Atyp Text Bold Italic'), local('AtypText-BoldItalic'),
+        url('AtypText-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-BoldItalic.woff2') format('woff2'),
+        url('AtypText-BoldItalic.woff') format('woff'),
+        url('AtypText-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Italic.eot');
+    src: local('Atyp Display Italic'), local('AtypDisplay-Italic'),
+        url('AtypDisplay-Italic.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Italic.woff2') format('woff2'),
+        url('AtypDisplay-Italic.woff') format('woff'),
+        url('AtypDisplay-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-SemiboldItalic.eot');
+    src: local('Atyp Display Semibold Italic'), local('AtypDisplay-SemiboldItalic'),
+        url('AtypDisplay-SemiboldItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-SemiboldItalic.woff2') format('woff2'),
+        url('AtypDisplay-SemiboldItalic.woff') format('woff'),
+        url('AtypDisplay-SemiboldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Light.eot');
+    src: local('Atyp Display Light'), local('AtypDisplay-Light'),
+        url('AtypDisplay-Light.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Light.woff2') format('woff2'),
+        url('AtypDisplay-Light.woff') format('woff'),
+        url('AtypDisplay-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Medium.eot');
+    src: local('Atyp Display Medium'), local('AtypDisplay-Medium'),
+        url('AtypDisplay-Medium.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Medium.woff2') format('woff2'),
+        url('AtypDisplay-Medium.woff') format('woff'),
+        url('AtypDisplay-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-LightItalic.eot');
+    src: local('Atyp Display Light Italic'), local('AtypDisplay-LightItalic'),
+        url('AtypDisplay-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-LightItalic.woff2') format('woff2'),
+        url('AtypDisplay-LightItalic.woff') format('woff'),
+        url('AtypDisplay-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Bold.eot');
+    src: local('Atyp Text Bold'), local('AtypText-Bold'),
+        url('AtypText-Bold.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Bold.woff2') format('woff2'),
+        url('AtypText-Bold.woff') format('woff'),
+        url('AtypText-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-Bold.eot');
+    src: local('Atyp Display Bold'), local('AtypDisplay-Bold'),
+        url('AtypDisplay-Bold.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-Bold.woff2') format('woff2'),
+        url('AtypDisplay-Bold.woff') format('woff'),
+        url('AtypDisplay-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Display';
+    src: url('AtypDisplay-MediumItalic.eot');
+    src: local('Atyp Display Medium Italic'), local('AtypDisplay-MediumItalic'),
+        url('AtypDisplay-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypDisplay-MediumItalic.woff2') format('woff2'),
+        url('AtypDisplay-MediumItalic.woff') format('woff'),
+        url('AtypDisplay-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Thin.eot');
+    src: local('Atyp Text Thin'), local('AtypText-Thin'),
+        url('AtypText-Thin.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Thin.woff2') format('woff2'),
+        url('AtypText-Thin.woff') format('woff'),
+        url('AtypText-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Variable';
+    src: url('AtypRegularVariable.eot');
+    src: local('Atyp Variable'), local('AtypRegularVariable'),
+        url('AtypRegularVariable.eot?#iefix') format('embedded-opentype'),
+        url('AtypRegularVariable.woff2') format('woff2'),
+        url('AtypRegularVariable.woff') format('woff'),
+        url('AtypRegularVariable.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Italic.eot');
+    src: local('Atyp Text Italic'), local('AtypText-Italic'),
+        url('AtypText-Italic.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Italic.woff2') format('woff2'),
+        url('AtypText-Italic.woff') format('woff'),
+        url('AtypText-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Semibold.eot');
+    src: local('Atyp Text Semibold'), local('AtypText-Semibold'),
+        url('AtypText-Semibold.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Semibold.woff2') format('woff2'),
+        url('AtypText-Semibold.woff') format('woff'),
+        url('AtypText-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-SemiboldItalic.eot');
+    src: local('Atyp Text Semibold Italic'), local('AtypText-SemiboldItalic'),
+        url('AtypText-SemiboldItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-SemiboldItalic.woff2') format('woff2'),
+        url('AtypText-SemiboldItalic.woff') format('woff'),
+        url('AtypText-SemiboldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Regular.eot');
+    src: local('Atyp Text'), local('AtypText-Regular'),
+        url('AtypText-Regular.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Regular.woff2') format('woff2'),
+        url('AtypText-Regular.woff') format('woff'),
+        url('AtypText-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-MediumItalic.eot');
+    src: local('Atyp Text Medium Italic'), local('AtypText-MediumItalic'),
+        url('AtypText-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-MediumItalic.woff2') format('woff2'),
+        url('AtypText-MediumItalic.woff') format('woff'),
+        url('AtypText-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Medium.eot');
+    src: local('Atyp Text Medium'), local('AtypText-Medium'),
+        url('AtypText-Medium.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Medium.woff2') format('woff2'),
+        url('AtypText-Medium.woff') format('woff'),
+        url('AtypText-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-Light.eot');
+    src: local('Atyp Text Light'), local('AtypText-Light'),
+        url('AtypText-Light.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-Light.woff2') format('woff2'),
+        url('AtypText-Light.woff') format('woff'),
+        url('AtypText-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-LightItalic.eot');
+    src: local('Atyp Text Light Italic'), local('AtypText-LightItalic'),
+        url('AtypText-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-LightItalic.woff2') format('woff2'),
+        url('AtypText-LightItalic.woff') format('woff'),
+        url('AtypText-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Atyp Text';
+    src: url('AtypText-ThinItalic.eot');
+    src: local('Atyp Text Thin Italic'), local('AtypText-ThinItalic'),
+        url('AtypText-ThinItalic.eot?#iefix') format('embedded-opentype'),
+        url('AtypText-ThinItalic.woff2') format('woff2'),
+        url('AtypText-ThinItalic.woff') format('woff'),
+        url('AtypText-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
+}
+

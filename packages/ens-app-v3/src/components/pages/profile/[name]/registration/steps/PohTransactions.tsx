@@ -4,20 +4,14 @@ import styled, { css } from 'styled-components'
 import { Hex } from 'viem'
 import { useAccount } from 'wagmi'
 
-import {
-  AlertSVG,
-  Button,
-  CountdownCircle,
-  Dialog,
-  Heading,
-  mq,
-  Spinner,
-  Typography,
-} from '@ensdomains/thorin'
+import { AlertSVG, CountdownCircle, Dialog, mq, Spinner } from '@ensdomains/thorin'
 
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
 import MobileFullWidth from '@app/components/@atoms/MobileFullWidth'
 import { Card } from '@app/components/Card'
+import { Button } from '@app/components/styled/Button'
+import { Heading } from '@app/components/styled/Heading'
+import { Typography } from '@app/components/styled/Typography'
 import useRegistrationPohParams from '@app/hooks/useRegistrationPohParams'
 import { createTransactionItem } from '@app/transaction-flow/transaction'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
@@ -59,7 +53,8 @@ const StyledCountdown = styled(CountdownCircle)(
       font-weight: ${theme.fontWeights.bold};
       width: ${theme.space['52']};
       height: ${theme.space['52']};
-      color: ${theme.colors.accent};
+      color: ${theme.colors.backgroundSecondary};
+      stroke: ${theme.colors.backgroundSecondary};
       ${disabled &&
       css`
         color: ${theme.colors.grey};
@@ -119,13 +114,13 @@ const FailedButton = ({ onClick, label }: { onClick: () => void; label: string }
   </MobileFullWidth>
 )
 
-const ProgressButton = ({ onClick, label }: { onClick: () => void; label: string }) => (
-  <MobileFullWidth>
-    <Button colorStyle="accentSecondary" onClick={onClick}>
-      {label}
-    </Button>
-  </MobileFullWidth>
-)
+const ProgressButton = ({ onClick, label }: { onClick: () => void; label: string }) => {
+  return (
+    <MobileFullWidth>
+      <Button onClick={onClick}>{label}</Button>
+    </MobileFullWidth>
+  )
+}
 
 type Props = {
   name: string
@@ -209,7 +204,7 @@ const PohTransactions = ({ registrationData, name, callback, onStart, pohSignatu
   const NormalBackButton = useMemo(
     () => (
       <MobileFullWidth>
-        <Button onClick={() => callback({ back: true })} colorStyle="accentSecondary">
+        <Button onClick={() => callback({ back: true })}>
           {t('action.back', { ns: 'common' })}
         </Button>
       </MobileFullWidth>
@@ -230,9 +225,7 @@ const PohTransactions = ({ registrationData, name, callback, onStart, pohSignatu
 
   let BackButton: ReactNode = (
     <MobileFullWidth>
-      <Button onClick={() => callback({ back: true })} colorStyle="accentSecondary">
-        {t('action.back', { ns: 'common' })}
-      </Button>
+      <Button onClick={() => callback({ back: true })}>{t('action.back', { ns: 'common' })}</Button>
     </MobileFullWidth>
   )
 

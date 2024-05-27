@@ -1,10 +1,12 @@
 import { ComponentProps, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Button, Heading, Helper, mq, Typography } from '@ensdomains/thorin'
+import { Heading, Helper, mq } from '@ensdomains/thorin'
 
 import { Card } from '@app/components/Card'
 import { IconCopyAnimated } from '@app/components/IconCopyAnimated'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { useCopied } from '@app/hooks/useCopied'
 
 export const DnsImportCard = styled(Card)(

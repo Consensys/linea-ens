@@ -1,7 +1,7 @@
 import { ComponentProps, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { match, P } from 'ts-pattern'
 import { useChainId } from 'wagmi'
 
@@ -33,6 +33,7 @@ type Props = {
 } & Pick<ComponentProps<typeof Dialog>, 'onDismiss' | 'open'>
 
 export const EarnifiDialog = ({ name, open, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('common')
   const chainId = useChainId()
   const formRef = useRef<HTMLFormElement>(null)
@@ -106,7 +107,13 @@ export const EarnifiDialog = ({ name, open, onDismiss }: Props) => {
             <Spacer $height="3" />
             <Dialog.Footer
               leading={
-                <Button onClick={_onDismiss} colorStyle="accentSecondary">
+                <Button
+                  onClick={_onDismiss}
+                  style={{
+                    backgroundColor: theme.colors.backgroundSecondary,
+                    color: theme.colors.textSecondary,
+                  }}
+                >
                   {t('action.cancel')}
                 </Button>
               }

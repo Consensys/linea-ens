@@ -1,10 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Button, Heading, mq, Typography } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import MobileFullWidth from '@app/components/@atoms/MobileFullWidth'
 import { Card } from '@app/components/Card'
+import { Button } from '@app/components/styled/Button'
+import { Heading } from '@app/components/styled/Heading'
+import { Typography } from '@app/components/styled/Typography'
 
 import { RegistrationReducerDataItem } from '../types'
 
@@ -124,7 +127,7 @@ const PohInfo = ({ registrationData, callback, onProfileClick }: Props) => {
       )}
       <ButtonContainer>
         <MobileFullWidth>
-          <Button colorStyle="accentSecondary" onClick={() => callback({ back: true })}>
+          <Button onClick={() => callback({ back: true })}>
             {t('action.back', { ns: 'common' })}
           </Button>
         </MobileFullWidth>

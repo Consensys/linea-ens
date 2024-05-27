@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { mq, Space, Typography } from '@ensdomains/thorin'
+import { mq, Space } from '@ensdomains/thorin'
 
+import { Typography } from '@app/components/styled/Typography'
 import { QuerySpace } from '@app/types'
 
 const Wrapper = styled.div<{ $size?: QuerySpace; $dirty?: boolean }>(

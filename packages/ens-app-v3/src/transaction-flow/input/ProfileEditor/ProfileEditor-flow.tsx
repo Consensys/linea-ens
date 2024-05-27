@@ -2,14 +2,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Control, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { match } from 'ts-pattern'
 import { useChainId } from 'wagmi'
 
-import { Button, Dialog, mq, PlusSVG, ScrollBox } from '@ensdomains/thorin'
+import { mq, PlusSVG, ScrollBox } from '@ensdomains/thorin'
 
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import { AvatarViewManager } from '@app/components/@molecules/ProfileEditor/Avatar/AvatarViewManager'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
 import { AddProfileRecordView } from '@app/components/pages/profile/[name]/registration/steps/Profile/AddProfileRecordView'
 import { CustomProfileRecordInput } from '@app/components/pages/profile/[name]/registration/steps/Profile/CustomProfileRecordInput'
 import { ProfileRecordInput } from '@app/components/pages/profile/[name]/registration/steps/Profile/ProfileRecordInput'
@@ -19,6 +20,7 @@ import {
   profileEditorFormToProfileRecords,
   profileToProfileRecords,
 } from '@app/components/pages/profile/[name]/registration/steps/Profile/profileRecordUtils'
+import { Button } from '@app/components/styled/Button'
 import { ProfileRecord } from '@app/constants/profileRecordOptions'
 import { useContractAddress } from '@app/hooks/chain/useContractAddress'
 import { useResolverStatus } from '@app/hooks/resolver/useResolverStatus'
@@ -95,6 +97,13 @@ const ButtonWrapper = styled.div(({ theme }) => [
   `),
 ])
 
+const StyledPlusSVG = styled(PlusSVG)(
+  ({ theme }) => css`
+    stroke: ${theme.colors.textSecondary};
+    color: ${theme.colors.textSecondary} !important;
+  `,
+)
+
 type Data = {
   name?: string
   resumable?: boolean
@@ -145,6 +154,7 @@ const SubmitButton = ({
 }
 
 const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('register')
 
   const [view, setView] = useState<'editor' | 'upload' | 'nft' | 'addRecord' | 'warning'>('editor')
@@ -337,7 +347,7 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
                         size="medium"
                         onClick={handleShowAddRecordModal}
                         data-testid="show-add-profile-records-modal-button"
-                        prefix={<PlusSVG />}
+                        prefix={<StyledPlusSVG />}
                       >
                         {t('steps.profile.addMore')}
                       </Button>
@@ -351,7 +361,10 @@ const ProfileEditor = ({ data = {}, transactions = [], dispatch, onDismiss }: Pr
                   <Button
                     id="profile-back-button"
                     type="button"
-                    colorStyle="accentSecondary"
+                    style={{
+                      backgroundColor: theme.colors.backgroundSecondary,
+                      color: theme.colors.textSecondary,
+                    }}
                     data-testid="profile-back-button"
                     onClick={() => {
                       onDismiss?.()

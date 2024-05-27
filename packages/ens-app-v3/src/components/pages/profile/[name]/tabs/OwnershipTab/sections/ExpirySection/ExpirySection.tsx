@@ -3,9 +3,10 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Button, Card, Dropdown, mq } from '@ensdomains/thorin'
+import { Card, Dropdown, mq } from '@ensdomains/thorin'
 
 import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
+import { Button } from '@app/components/styled/Button'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 
 import { EarnifiDialog } from '../../../MoreTab/Miscellaneous/EarnifiDialog'
@@ -179,9 +180,7 @@ export const ExpirySection = ({ name, details }: Props) => {
                           <Button
                             data-testid={`expiry-action-${action.type}`}
                             id="remind-me-button"
-                            style={{ display: 'inline-flex' }}
                             prefix={action.icon}
-                            colorStyle="accentSecondary"
                           >
                             {action.label}
                           </Button>

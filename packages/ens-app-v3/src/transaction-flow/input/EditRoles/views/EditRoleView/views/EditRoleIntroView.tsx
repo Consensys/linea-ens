@@ -2,9 +2,10 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { Address } from 'viem'
 
-import { Button, mq } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import { AvatarWithIdentifier } from '@app/components/@molecules/AvatarWithIdentifier/AvatarWithIdentifier'
+import { Button } from '@app/components/styled/Button'
 import { useAccountSafely } from '@app/hooks/account/useAccountSafely'
 import type { Role } from '@app/hooks/ownership/useRoles/useRoles'
 import { SearchViewIntroView } from '@app/transaction-flow/input/SendName/views/SearchView/views/SearchViewIntroView'
@@ -86,7 +87,6 @@ export const EditRoleIntroView = ({ role, address, onSelect }: Props) => {
               <AvatarWithIdentifier address={account.address!} />
               <Button
                 data-testid="edit-roles-set-to-self-button"
-                colorStyle="accentSecondary"
                 size="small"
                 onClick={() => {
                   onSelect({ role, address: account.address! })

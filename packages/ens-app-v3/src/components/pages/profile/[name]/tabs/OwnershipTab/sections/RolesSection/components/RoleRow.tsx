@@ -1,20 +1,21 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCopyToClipboard } from 'react-use'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import {
-  Button,
   Card,
   CopySVG,
   Dropdown,
   OutlinkSVG,
+  PersonSVG,
   UpRightArrowSVG,
   VerticalDotsSVG,
 } from '@ensdomains/thorin'
 
 import { AvatarWithIdentifier } from '@app/components/@molecules/AvatarWithIdentifier/AvatarWithIdentifier'
+import { Button } from '@app/components/styled/Button'
 import { useChainName } from '@app/hooks/chain/useChainName'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import type { Role } from '@app/hooks/ownership/useRoles/useRoles'
@@ -55,6 +56,12 @@ const RoleTagContainer = styled.div(
   `,
 )
 
+const StyledVerticalDotsSVG = styled(VerticalDotsSVG)(
+  ({ theme }) => css`
+    color: ${theme.colors.textSecondary} !important;
+  `,
+)
+
 type Props = {
   name: string
   address?: Address | null
@@ -65,6 +72,7 @@ type Props = {
 }
 
 export const RoleRow = ({ name, address, roles, actions, isWrapped, isEmancipated }: Props) => {
+  const theme = useTheme()
   const router = useRouterWithHistory()
   const { t } = useTranslation('common')
 
@@ -79,13 +87,22 @@ export const RoleRow = ({ name, address, roles, actions, isWrapped, isEmancipate
     const hasToken = is2ldEth || isWrapped
     if (!hasToken) return null
     return {
-      label: t('transaction.viewEtherscan', { ns: 'common' }),
+      label: t('transaction.viewLineascan', { ns: 'common' }),
       onClick: () => window.open(makeEtherscanLink(address!, networkName, 'address'), '_blank'),
       icon: <OutlinkSVG />,
     }
   }, [primary.data?.name, isWrapped, t, address, networkName])
 
   const editRolesAction = actions?.find(({ type, disabled }) => type === 'edit-roles' && !disabled)
+  if (editRolesAction?.icon) {
+    editRolesAction.icon = (
+      <PersonSVG
+        style={{
+          color: theme.colors.textPrimary,
+        }}
+      />
+    )
+  }
 
   const syncManagerAction = roles.includes('manager')
     ? actions?.find(({ type, disabled }) => type === 'sync-manager' && !disabled)
@@ -141,12 +158,8 @@ export const RoleRow = ({ name, address, roles, actions, isWrapped, isEmancipate
         </InnerContainer>
         <div>
           <Dropdown items={items} align="right" keepMenuOnTop width={200}>
-            <Button
-              data-testid={`role-row-button-${address}`}
-              colorStyle="accentSecondary"
-              size="small"
-            >
-              <VerticalDotsSVG />
+            <Button data-testid={`role-row-button-${address}`} size="small">
+              <StyledVerticalDotsSVG />
             </Button>
           </Dropdown>
         </div>

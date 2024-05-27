@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { useChainId } from 'wagmi'
 
-import { Button, mq, Typography } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import { Outlink } from '@app/components/Outlink'
 import RecordItem from '@app/components/RecordItem'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 import { AddressRecord, Profile, TextRecord } from '@app/types'
 import { abiDisplayValue } from '@app/utils/abi'
@@ -79,7 +81,7 @@ const SectionTitleContainer = styled.div(
 
 const SectionTitle = styled(Typography)(
   ({ theme }) => css`
-    color: ${theme.colors.greyPrimary};
+    color: ${theme.colors.textPrimary};
   `,
 )
 

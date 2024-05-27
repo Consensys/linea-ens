@@ -78,6 +78,7 @@ const OptionLabel = styled.div<{
     line-height: ${theme.space[5]};
 
     text-transform: ${$uppercase ? 'uppercase' : 'capitalize'};
+    color: ${theme.colors.textSecondary};
   `,
 )
 

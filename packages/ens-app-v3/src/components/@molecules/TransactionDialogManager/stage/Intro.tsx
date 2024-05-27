@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -29,6 +30,7 @@ export const IntroStageModal = ({
   onDismiss: () => void
   onSuccess: () => void
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation()
 
   const tLabel =
@@ -38,7 +40,10 @@ export const IntroStageModal = ({
 
   const LeadingButton = (
     <Button
-      colorStyle="accentSecondary"
+      style={{
+        backgroundColor: theme.colors.backgroundSecondary,
+        color: theme.colors.textSecondary,
+      }}
       onClick={() => onDismiss()}
       data-testid="transaction-dialog-intro-leading-btn"
     >

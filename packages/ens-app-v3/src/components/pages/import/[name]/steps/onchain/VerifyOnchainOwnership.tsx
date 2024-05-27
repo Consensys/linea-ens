@@ -151,10 +151,7 @@ export const VerifyOnchainOwnership = ({
         )
       })()}
       <DnsImportActionsContainer>
-        <DnsImportActionButton
-          colorStyle="accentSecondary"
-          onClick={() => dispatch({ name: 'decreaseStep', selected })}
-        >
+        <DnsImportActionButton onClick={() => dispatch({ name: 'decreaseStep', selected })}>
           {tc('action.back')}
         </DnsImportActionButton>
         {isConnected ? (

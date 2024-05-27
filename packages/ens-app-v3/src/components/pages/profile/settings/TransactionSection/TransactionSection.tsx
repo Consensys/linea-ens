@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
-import { Button, mq, Spinner, Typography } from '@ensdomains/thorin'
+import { mq, Spinner } from '@ensdomains/thorin'
 
 import { Card } from '@app/components/Card'
 import { Outlink } from '@app/components/Outlink'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { useChainName } from '@app/hooks/chain/useChainName'
 import { useClearRecentTransactions } from '@app/hooks/transactions/useClearRecentTransactions'
 import { useRecentTransactions } from '@app/hooks/transactions/useRecentTransactions'
@@ -44,7 +46,7 @@ const RecentTransactionsMessage = styled(Typography)(
   ({ theme }) => css`
     display: flex;
     justify-content: center;
-    color: ${theme.colors.textTertiary};
+    color: ${theme.colors.textSecondary};
     padding: ${theme.space['4']};
   `,
 )
@@ -137,6 +139,7 @@ const getTransactionExtraInfo = (action: string, key?: string) => {
 }
 
 export const TransactionSection = () => {
+  const theme = useTheme()
   const { t: tc } = useTranslation()
   const { t } = useTranslation('settings')
 
@@ -189,7 +192,10 @@ export const TransactionSection = () => {
         action={
           <Button
             size="small"
-            colorStyle="accentSecondary"
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
             onClick={() => setShowClearDialog(true)}
             disabled={!canClear}
             data-testid="transaction-clear-button"

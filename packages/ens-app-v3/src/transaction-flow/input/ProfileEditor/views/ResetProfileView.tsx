@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -11,6 +12,7 @@ type Props = {
   onNext: () => void
 }
 export const ResetProfileView = ({ onNext, onBack }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   return (
     <>
@@ -28,7 +30,10 @@ export const ResetProfileView = ({ onNext, onBack }: Props) => {
       <Dialog.Footer
         leading={
           <Button
-            colorStyle="accentSecondary"
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
             onClick={onBack}
             data-testid="warning-overlay-back-button"
           >

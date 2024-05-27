@@ -1,12 +1,14 @@
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
-import { Button, Dialog, mq } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import EditResolverForm from '@app/components/@molecules/EditResolver/EditResolverForm'
 import EditResolverWarnings from '@app/components/@molecules/EditResolver/EditResolverWarnings'
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 import { useIsWrapped } from '@app/hooks/useIsWrapped'
 import { useProfile } from '@app/hooks/useProfile'
 import useResolverEditor from '@app/hooks/useResolverEditor'
@@ -33,6 +35,7 @@ export type Props = {
 } & TransactionDialogPassthrough
 
 export const EditResolver = ({ data, dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
 
   const { name } = data
@@ -75,7 +78,13 @@ export const EditResolver = ({ data, dispatch, onDismiss }: Props) => {
       </EditResolverFormContainer>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onDismiss}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onDismiss}
+          >
             {t('action.cancel', { ns: 'common' })}
           </Button>
         }

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { Address } from 'viem'
 
 import { Button, Dialog, RadioButton, ScrollBox, Typography } from '@ensdomains/thorin'
@@ -64,6 +64,7 @@ export const MigrateProfileSelectorView = ({
   onNext,
   onBack,
 }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   return (
     <>
@@ -143,7 +144,10 @@ export const MigrateProfileSelectorView = ({
       <Dialog.Footer
         leading={
           <Button
-            colorStyle="accentSecondary"
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
             onClick={onBack}
             data-testid="warning-overlay-back-button"
           >

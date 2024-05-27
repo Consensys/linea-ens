@@ -66,7 +66,7 @@ const TabButton = styled.button<{
     font-weight: ${theme.fontWeights.bold};
 
     &:hover {
-      color: ${$selected ? theme.colors.accent : theme.colors.textSecondary};
+      color: ${$selected ? theme.colors.accent : theme.colors.textPrimary};
     }
 
     ${getIndicatorStyle(theme, $selected, $hasError, $isDirty)}

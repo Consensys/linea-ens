@@ -5,8 +5,10 @@ import styled, { css } from 'styled-components'
 import { match, P } from 'ts-pattern'
 import { Address } from 'viem'
 
-import { Button, Dialog, Input, MagnifyingGlassSimpleSVG, mq } from '@ensdomains/thorin'
+import { Input, MagnifyingGlassSimpleSVG, mq } from '@ensdomains/thorin'
 
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
 import { useSimpleSearch } from '@app/transaction-flow/input/EditRoles/hooks/useSimpleSearch'
 
 import type { SendNameForm } from '../../SendName-flow'
@@ -119,11 +121,7 @@ export const SearchView = ({ name, senderRole, onCancel, onSelect }: Props) => {
         </SubviewContainer>
         <FooterWrapper>
           <Dialog.Footer
-            trailing={
-              <Button colorStyle="accentSecondary" onClick={onCancel}>
-                {t('action.cancel', { ns: 'common' })}
-              </Button>
-            }
+            trailing={<Button onClick={onCancel}>{t('action.cancel', { ns: 'common' })}</Button>}
           />
         </FooterWrapper>
       </Content>

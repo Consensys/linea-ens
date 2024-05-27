@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { Button, mq, NametagSVG, Tag, Typography } from '@ensdomains/thorin'
+import { mq } from '@ensdomains/thorin'
 
 import FastForwardSVG from '@app/assets/FastForward.svg'
 import { useAbilities } from '@app/hooks/abilities/useAbilities'
@@ -12,6 +12,8 @@ import { shouldShowExtendWarning } from '@app/utils/abilities/shouldShowExtendWa
 
 import { useTransactionFlow } from '../transaction-flow/TransactionFlowProvider'
 import { NameAvatar } from './AvatarWithZorb'
+import { Button } from './styled/Button'
+import { Typography } from './styled/Typography'
 
 const Container = styled.div<{ $banner?: string }>(
   ({ theme, $banner }) => css`
@@ -122,31 +124,6 @@ const LocationAndUrl = styled.div(
   `,
 )
 
-const TagsContainer = styled.div(
-  ({ theme }) => css`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: ${theme.space['2']};
-  `,
-)
-
-const PrimaryNameTag = styled(Tag)(
-  ({ theme }) => css`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: ${theme.space['1']};
-
-    & > svg {
-      height: ${theme.space['4']};
-      width: ${theme.space['4']};
-    }
-  `,
-)
-
 export const getUserDefinedUrl = (url?: string) => {
   if (!url) return undefined
   if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -159,14 +136,11 @@ export const ProfileSnippet = ({
   name,
   getTextRecord,
   button,
-  // network,
-  isPrimary,
   children,
 }: {
   name: string
   getTextRecord?: (key: string) => { value: string } | undefined
   button?: 'viewProfile' | 'extend' | 'register'
-  isPrimary?: boolean
   children?: React.ReactNode
 }) => {
   const router = useRouterWithHistory()
@@ -189,7 +163,6 @@ export const ProfileSnippet = ({
       return (
         <Button
           size="small"
-          colorStyle="accentSecondary"
           prefix={<FastForwardSVG />}
           data-testid="extend-button"
           onClick={() => {
@@ -204,21 +177,13 @@ export const ProfileSnippet = ({
       )
     if (button === 'register')
       return (
-        <Button
-          onClick={() => router.pushWithHistory(`/register/${name}`)}
-          size="small"
-          colorStyle="accentSecondary"
-        >
+        <Button onClick={() => router.pushWithHistory(`/register/${name}`)} size="small">
           {t(`wallet.${button}`)}
         </Button>
       )
     if (button === 'viewProfile')
       return (
-        <Button
-          onClick={() => router.pushWithHistory(`/profile/${name}`)}
-          size="small"
-          colorStyle="accentSecondary"
-        >
+        <Button onClick={() => router.pushWithHistory(`/profile/${name}`)} size="small">
           {t(`wallet.${button}`)}
         </Button>
       )
@@ -268,14 +233,6 @@ export const ProfileSnippet = ({
           </LocationAndUrl>
         )}
       </TextStack>
-      {isPrimary && (
-        <TagsContainer>
-          <PrimaryNameTag size="medium" colorStyle="greenSecondary">
-            <NametagSVG />
-            {t('name.yourPrimaryName')}
-          </PrimaryNameTag>
-        </TagsContainer>
-      )}
       {children}
     </Container>
   )

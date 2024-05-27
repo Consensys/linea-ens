@@ -1,8 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
-import { Button, Dialog, OutlinkSVG, QuestionSVG, Typography } from '@ensdomains/thorin'
+import { OutlinkSVG, QuestionSVG } from '@ensdomains/thorin'
 
+import { Dialog } from '@app/components/@organisms/Dialog/Dialog'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import { getSupportLink } from '@app/utils/supportLinks'
 
 const CenteredTypography = styled(Typography)(
@@ -52,6 +55,7 @@ type Props = {
 }
 
 export const ConfirmationView = ({ onConfirm, onBack }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   const link = getSupportLink('sendingNames')
   return (
@@ -76,7 +80,13 @@ export const ConfirmationView = ({ onConfirm, onBack }: Props) => {
       )}
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={onBack}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={onBack}
+          >
             {t('action.back', { ns: 'common' })}
           </Button>
         }

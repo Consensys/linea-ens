@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -16,6 +17,7 @@ type Props = {
   onSkip?: () => void
 }
 export const ResolverOutOfDateView = ({ onConfirm, onCancel, onSkip }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   return (
     <>
@@ -42,7 +44,10 @@ export const ResolverOutOfDateView = ({ onConfirm, onCancel, onSkip }: Props) =>
       <Dialog.Footer
         leading={
           <Button
-            colorStyle="accentSecondary"
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
             onClick={onCancel}
             data-testid="warning-overlay-back-button"
           >

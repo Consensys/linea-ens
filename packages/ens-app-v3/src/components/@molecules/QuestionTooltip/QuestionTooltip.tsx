@@ -2,7 +2,9 @@ import { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { OutlinkSVG, QuestionCircleSVG, Tooltip, Typography } from '@ensdomains/thorin'
+import { OutlinkSVG, QuestionCircleSVG, Tooltip } from '@ensdomains/thorin'
+
+import { Typography } from '@app/components/styled/Typography'
 
 const IconWrapper = styled.div(
   ({ theme }) => css`

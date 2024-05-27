@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useTheme } from 'styled-components'
 
 import { Button, Dialog } from '@ensdomains/thorin'
 
@@ -11,6 +12,7 @@ type Props = {
   onCancel?: () => void
 }
 export const MigrateRegistryView = ({ name, onCancel }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
   return (
     <>
@@ -28,7 +30,10 @@ export const MigrateRegistryView = ({ name, onCancel }: Props) => {
       <Dialog.Footer
         leading={
           <Button
-            colorStyle="accentSecondary"
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
             onClick={onCancel}
             data-testid="warning-overlay-back-button"
           >

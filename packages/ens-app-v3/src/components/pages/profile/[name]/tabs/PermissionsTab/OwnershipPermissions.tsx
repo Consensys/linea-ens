@@ -3,9 +3,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
 import { GetWrapperDataReturnType } from '@ensdomains/ensjs/public'
-import { Button, Typography } from '@ensdomains/thorin'
 
 import { StyledLink } from '@app/components/@atoms/StyledLink'
+import { Button } from '@app/components/styled/Button'
+import { Typography } from '@app/components/styled/Typography'
 import type { useFusesSetDates } from '@app/hooks/fuses/useFusesSetDates'
 import type { useFusesStates } from '@app/hooks/fuses/useFusesStates'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'

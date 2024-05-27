@@ -1,6 +1,6 @@
 import { Dispatch, forwardRef, ReactNode, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { useAccount, useChainId } from 'wagmi'
 
 import { GetDnsOwnerReturnType } from '@ensdomains/ensjs/dns'
@@ -96,6 +96,7 @@ const TypeRadioButton = forwardRef<
   HTMLInputElement,
   { type: NonNullable<DnsImportType>; tag: string; description: ReactNode }
 >(({ type, tag, description }, ref) => {
+  const theme = useTheme()
   return (
     <RadioButtonContainer ref={ref}>
       <RadioButton
@@ -105,7 +106,14 @@ const TypeRadioButton = forwardRef<
           <TypeLabelContainer>
             <TypeLabelHeading>
               <Typography fontVariant="bodyBold">{type}</Typography>
-              <Tag colorStyle="accentSecondary">{tag}</Tag>
+              <Tag
+                style={{
+                  backgroundColor: theme.colors.backgroundSecondary,
+                  color: theme.colors.textSecondary,
+                }}
+              >
+                {tag}
+              </Tag>
             </TypeLabelHeading>
             {description}
           </TypeLabelContainer>
@@ -153,6 +161,7 @@ export const SelectImportType = ({
   item: DnsImportReducerDataItem
   selected: SelectedItemProperties
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation('dnssec', { keyPrefix: 'steps.selectType' })
   const { t: tc } = useTranslation('common')
 
@@ -215,7 +224,14 @@ export const SelectImportType = ({
                 <TypeLabelContainer aria-disabled={!tldResolverIsOffchainResolver}>
                   <TypeLabelHeading>
                     <Typography fontVariant="bodyBold">{t('select.offchain.name')}</Typography>
-                    <Tag colorStyle="accentSecondary">{t('select.offchain.tag')}</Tag>
+                    <Tag
+                      style={{
+                        backgroundColor: theme.colors.backgroundSecondary,
+                        color: theme.colors.textSecondary,
+                      }}
+                    >
+                      {t('select.offchain.tag')}
+                    </Tag>
                   </TypeLabelHeading>
                   <Typography fontVariant="small">
                     <Trans

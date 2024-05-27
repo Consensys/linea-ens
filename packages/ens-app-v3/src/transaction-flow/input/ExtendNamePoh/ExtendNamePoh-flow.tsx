@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { match, P } from 'ts-pattern'
 import { useAccount, useEnsAvatar } from 'wagmi'
 
@@ -173,6 +173,7 @@ export type Props = {
 } & TransactionDialogPassthrough
 
 const ExtendNamePoh = ({ data: { names, isSelf }, dispatch, onDismiss }: Props) => {
+  const theme = useTheme()
   const { t } = useTranslation('transactionFlow')
 
   const { address } = useAccount()
@@ -269,7 +270,13 @@ const ExtendNamePoh = ({ data: { names, isSelf }, dispatch, onDismiss }: Props) 
       </ScrollBoxWrapper>
       <Dialog.Footer
         leading={
-          <Button colorStyle="accentSecondary" onClick={decrementView}>
+          <Button
+            style={{
+              backgroundColor: theme.colors.backgroundSecondary,
+              color: theme.colors.textSecondary,
+            }}
+            onClick={decrementView}
+          >
             {t(viewIdx === 0 ? 'action.cancel' : 'action.back', { ns: 'common' })}
           </Button>
         }

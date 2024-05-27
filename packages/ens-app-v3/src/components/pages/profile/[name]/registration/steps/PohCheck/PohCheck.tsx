@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
@@ -6,13 +5,13 @@ import type { Address, Hex } from 'viem'
 import { useBalance } from 'wagmi'
 import { GetBalanceData } from 'wagmi/query'
 
-import { Button, Heading, mq, Typography } from '@ensdomains/thorin'
+import { Heading, mq, Typography } from '@ensdomains/thorin'
 
 import MobileFullWidth from '@app/components/@atoms/MobileFullWidth'
-import { PlusMinusControl } from '@app/components/@atoms/PlusMinusControl/PlusMinusControl'
 import { PohStatus } from '@app/components/@molecules/PohStatus/PohStatus'
 import { Card } from '@app/components/Card'
 import { ConnectButton } from '@app/components/ConnectButton'
+import { Button } from '@app/components/styled/Button'
 import { useAccountSafely } from '@app/hooks/account/useAccountSafely'
 import { useContractAddress } from '@app/hooks/chain/useContractAddress'
 import { useEstimateFullRegistrationPoh } from '@app/hooks/gasEstimation/useEstimateRegistrationPoh'
@@ -27,6 +26,7 @@ const StyledCard = styled(Card)(
     flex-direction: column;
     gap: ${theme.space['4']};
     padding: ${theme.space['4']};
+    background-color: ${theme.colors.backgroundPrimary};
 
     ${mq.sm.min(css`
       padding: ${theme.space['6']} ${theme.space['18']};
@@ -36,9 +36,11 @@ const StyledCard = styled(Card)(
 )
 
 const StyledHeading = styled(Heading)(
-  () => css`
+  ({ theme }) => css`
     width: 100%;
     word-break: break-all;
+    text-align: center;
+    color: ${theme.colors.textPrimary};
 
     @supports (overflow-wrap: anywhere) {
       overflow-wrap: anywhere;
@@ -48,14 +50,10 @@ const StyledHeading = styled(Heading)(
 )
 
 const PohExplainer = styled(Typography)(
-  () => css`
+  ({ theme }) => css`
     grid-area: description;
-  `,
-)
-
-const GetPoh = styled(Typography)(
-  () => css`
-    grid-area: description;
+    color: ${theme.colors.grey};
+    text-align: center;
   `,
 )
 
@@ -87,17 +85,16 @@ export const ActionButton = ({
   }
   if (!pohValid) {
     return (
-      <Button data-testid="next-button" disabled>
-        {t('steps.pohCheck.pohNotValid')}
+      <Button
+        data-testid="next-button"
+        onClick={() => window.open('https://poh.linea.build/', '_blank')}
+      >
+        {t('steps.pohCheck.getPoh')}
       </Button>
     )
   }
   if (pohAlreadyRegistered) {
-    return (
-      <Button data-testid="next-button" disabled>
-        {t('steps.pohCheck.pohAlreadyUsed')}
-      </Button>
-    )
+    return null
   }
   if (typeof balance?.value !== 'bigint' || !totalRequiredBalance) {
     return (
@@ -120,7 +117,7 @@ export const ActionButton = ({
         callback({ reverseRecord, years, paymentMethodChoice: PaymentMethod.ethereum })
       }
     >
-      {t('action.next', { ns: 'common' })}
+      {t('steps.pohCheck.register')}
     </Button>
   )
 }
@@ -151,7 +148,7 @@ const PohCheck = ({
   const { data: balance } = useBalance({ address })
   const resolverAddress = useContractAddress({ contract: 'ensPublicResolver' })
 
-  const [years, setYears] = useState(registrationData.years)
+  const [years] = useState(registrationData.years)
   const [reverseRecord] = useState(() =>
     registrationData.started ? registrationData.reverseRecord : !hasPrimaryName,
   )
@@ -173,29 +170,61 @@ const PohCheck = ({
 
   const totalRequiredBalance = estimatedGasFee || 0n
 
+  if (!address) {
+    return (
+      <StyledCard>
+        <StyledHeading>{t('heading', { name: beautifiedName })}</StyledHeading>
+        <PohExplainer>{t('steps.pohCheck.walletNotConnected')}</PohExplainer>
+        <MobileFullWidth>
+          <ActionButton
+            {...{
+              address,
+              reverseRecord,
+              callback,
+              years,
+              balance,
+              totalRequiredBalance,
+              pohValid: !!pohSignature,
+              pohAlreadyRegistered: pohAlreadyRegistered || false,
+            }}
+          />
+        </MobileFullWidth>
+      </StyledCard>
+    )
+  }
+
   return (
     <StyledCard>
       <StyledHeading>{t('heading', { name: beautifiedName })}</StyledHeading>
-      <PlusMinusControl
-        minValue={3}
-        maxValue={3}
-        value={years}
-        onChange={(e) => {
-          const newYears = parseInt(e.target.value)
-          if (!Number.isNaN(newYears)) setYears(newYears)
-        }}
-        disabled
-        highlighted
-      />
-      <PohExplainer>{t('steps.pohCheck.pohExplainer')}</PohExplainer>
-      <PohStatus valid={!!pohSignature} />
+
+      {pohSignature && (
+        <>
+          {pohAlreadyRegistered ? (
+            <>
+              <PohExplainer>{t('steps.pohCheck.pohAlreadyUsedExplainer')}</PohExplainer>
+              <PohStatus
+                valid={pohSignature !== undefined}
+                pohAlreadyRegistered={pohAlreadyRegistered || false}
+              />
+            </>
+          ) : (
+            <>
+              <PohExplainer>{t('steps.pohCheck.pohEligible')}</PohExplainer>
+              <PohStatus
+                valid={pohSignature !== undefined}
+                pohAlreadyRegistered={pohAlreadyRegistered || false}
+              />
+              <PohExplainer>{t('steps.pohCheck.pohNote')}</PohExplainer>
+            </>
+          )}
+        </>
+      )}
+
       {!pohSignature && (
-        <GetPoh>
-          {t('steps.pohCheck.getPoh')}{' '}
-          <Link href="https://poh.linea.build/" target="_blank">
-            {t('steps.pohCheck.getPohHereLink')}
-          </Link>
-        </GetPoh>
+        <>
+          <PohExplainer>{t('steps.pohCheck.getPohExplainer')}</PohExplainer>
+          <PohStatus valid={false} pohAlreadyRegistered />
+        </>
       )}
 
       <MobileFullWidth>
