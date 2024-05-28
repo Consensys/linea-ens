@@ -32,7 +32,7 @@ error MaxCommitmentAgeTooHigh();
 error PohVerificationFailed(address owner);
 error OwnerAlreadyRegistered(address owner);
 error SenderNotOwner(address owner, address sender);
-error NotInGracePeriod(uint256 current, uint256 expiry);
+error RenewPOHNotStarted(uint256 currentTime, uint256 renewTimeStart);
 error WrongPohRegistrationDuration(uint256 duration);
 
 /**
@@ -408,7 +408,9 @@ contract ETHRegistrarController is
 
     /**
      * @notice Same as renew method except that it uses the user's POH to renew for free
-     * @dev Can only renew after the GRACE_PERIOD has started
+     * @dev Can only renew 3 months before the expiry date
+     * @dev The name stays locked for the user until 3 months after the expiry date, after that, someone else can register
+     * @dev This gives the owner a safe period of 6 months(GRACE_PERIOD * 2) to renew his domain
      * @param name to renew
      * @param signature POH of the owner to renew
      */
@@ -430,10 +432,14 @@ contract ETHRegistrarController is
 
         uint256 tokenId = uint256(labelhash);
         uint256 currentExpiry = base.nameExpires(tokenId);
+        uint256 renewTimeStart = currentExpiry - GRACE_PERIOD;
 
-        // Renewal using POH can only occurs within the GRACE_PERIOD
-        if (block.timestamp < (currentExpiry - GRACE_PERIOD)) {
-            revert NotInGracePeriod(block.timestamp, currentExpiry);
+        // Renewal using POH can start 3 months(GRACE_PERIOD) before the expiry date
+        // The domain stays locked for the owner until 3 month after the expiry date
+        // The owner will still be able to renew after the GRACE_PERIOD is over but someone else can
+        // register that domain if the original owner still has not renewed
+        if (block.timestamp < renewTimeStart) {
+            revert RenewPOHNotStarted(block.timestamp, renewTimeStart);
         }
 
         uint256 expires = nameWrapper.renew(tokenId, POH_REGISTRATION_DURATION);

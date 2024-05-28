@@ -959,7 +959,7 @@ contract('ETHRegistrarController', function () {
 
     await expect(
       controllerPoh.renewPoh('newname', signature),
-    ).to.be.revertedWith(`NotInGracePeriod`)
+    ).to.be.revertedWith(`RenewPOHNotStarted`)
   })
 
   it('non wrapped names can renew', async () => {
