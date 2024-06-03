@@ -38,14 +38,15 @@ const SearchItem = styled.div<{
       border-bottom: 0;
     }
     position: relative;
-    opacity: 0.6;
     ${$clickable &&
     css`
       cursor: pointer;
     `}
+    background-color: ${theme.colors.backgroundPrimary};
+    opacity: 0.6;
     ${$selected &&
     css`
-      background-color: ${theme.colors.background};
+      background-color: ${theme.colors.greyActive};
       opacity: 1;
     `}
     ${$error &&
@@ -118,14 +119,38 @@ const AddressAndName = styled.div(
   `,
 )
 
-const StyledTag = styled(Tag)(
-  ({ theme }) => css`
+const StyledTag = styled(Tag)<{
+  status?: RegistrationStatus
+}>(
+  ({ theme, status }) => css`
     width: max-content;
     justify-self: flex-end;
     overflow-wrap: normal;
     word-break: keep-all;
     white-space: nowrap;
-    background-color: ${theme.colors.textPrimary};
+    background-color: ${theme.colors.greenDim};
+    color: ${theme.colors.greenActive};
+
+    ${status === 'available' &&
+    css`
+      background-color: ${theme.colors.greenDim};
+      color: ${theme.colors.greenActive};
+    `}
+
+    ${status === 'registered' &&
+    css`
+      background-color: ${theme.colors.blueDim};
+      color: ${theme.colors.blueActive};
+    `}
+
+    ${(status === 'unsupportedTLD' ||
+      status === 'gracePeriod' ||
+      status === 'short' ||
+      status === 'invalid') &&
+    css`
+      background-color: ${theme.colors.purpleDim};
+      color: ${theme.colors.purpleActive};
+    `}
   `,
 )
 
@@ -192,19 +217,31 @@ const StatusTag = ({ status }: { status: RegistrationStatus }) => {
     case 'owned':
     case 'imported':
     case 'registered':
-      return <StyledTag>{t(`search.status.${status}`)}</StyledTag>
+      return <StyledTag status={status}>{t(`search.status.${status}`)}</StyledTag>
     case 'gracePeriod':
       return <GracePeriodTag>{t(`search.status.${status}`)}</GracePeriodTag>
     case 'premium':
       return <PremiumTag>{t(`search.status.${status}`)}</PremiumTag>
     case 'available':
-      return <StyledTag colorStyle="greenSecondary">{t(`search.status.${status}`)}</StyledTag>
+      return (
+        <StyledTag status={status} colorStyle="greenSecondary">
+          {t(`search.status.${status}`)}
+        </StyledTag>
+      )
     case 'notOwned':
     case 'notImported':
-      return <StyledTag colorStyle="blueSecondary">{t(`search.status.${status}`)}</StyledTag>
+      return (
+        <StyledTag status={status} colorStyle="blueSecondary">
+          {t(`search.status.${status}`)}
+        </StyledTag>
+      )
     case 'short':
     default:
-      return <StyledTag colorStyle="redSecondary">{t(`search.status.${status}`)}</StyledTag>
+      return (
+        <StyledTag status={status} colorStyle="redSecondary">
+          {t(`search.status.${status}`)}
+        </StyledTag>
+      )
   }
 }
 
