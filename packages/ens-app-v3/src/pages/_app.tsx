@@ -49,7 +49,8 @@ const lineaTheme: DefaultTheme = {
     backgroundSecondary: '#61DFFF',
     background: '#1D1D1D',
     orangeActive: '#F2420C',
-    greenActive: '#C1FF14',
+    greenActive: 'hsl(75.82978723404256, 100%, 53.92156862745098%)',
+    greenDim: 'hsl(75.82978723404256, 20%, 53.92156862745098%)',
     accentPrimary: '#61DFFF',
     greySurface: '#2D2D2D',
     greyPrimary: '#a3a2a2',
@@ -57,6 +58,13 @@ const lineaTheme: DefaultTheme = {
     accent: '#61DFFF',
     textTertiary: '#C0C0C0',
     yellowSurface: '#e3e39d',
+    greyActive: '#2C2C2C',
+    blueActive: 'hsl(192, 100%, 50%)',
+    blueDim: 'hsl(192, 20%, 50%)',
+    purpleActive: 'hsl(310, 100%, 50.588235294117645%)',
+    purpleDim: 'hsl(310, 20%, 50.588235294117645%)',
+    redActive: 'hsl(14.086956521739134, 100%, 49.80392156862745%)',
+    redDim: 'hsl(14.086956521739134, 20%, 49.80392156862745%)',
   },
 }
 
@@ -85,18 +93,8 @@ const GlobalStyle = createGlobalStyle`
   *,
   ::before,
   ::after {
-    font-family: Satoshi,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      "Fira Sans",
-      "Droid Sans",
-      "Helvetica Neue",
-      sans-serif;
+    font-family: AtypDisplay,
+    sans-serif;
   }
 
   

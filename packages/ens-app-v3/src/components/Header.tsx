@@ -11,7 +11,9 @@ import { useInitial } from '@app/hooks/useInitial'
 import { legacyFavouritesRoute, routes } from '@app/routes'
 import { useBreakpoint } from '@app/utils/BreakpointProvider'
 
-import Linea from '../assets/linea/LineaWhite.svg'
+import ENSLogo from '../assets/linea/ENSLogo.svg'
+import LineaLogo from '../assets/linea/LineaLogo.svg'
+import LineLogo from '../assets/linea/LineLogo.svg'
 import BaseLink from './@atoms/BaseLink'
 import { RouteItem } from './@atoms/RouteItem/RouteItem'
 import { SearchInput } from './@molecules/SearchInput/SearchInput'
@@ -45,6 +47,23 @@ const LogoAnchor = styled.a(
 )
 
 const NavContainer = styled.div(
+  ({ theme }) => css`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-gap: ${theme.space['3']};
+    gap: ${theme.space['3']};
+    height: ${theme.space['12']};
+
+    ${mq.lg.min(css`
+      flex-gap: ${theme.space['6']};
+      gap: ${theme.space['6']};
+    `)}
+  `,
+)
+
+const LogosContainer = styled.div(
   ({ theme }) => css`
     display: flex;
     flex-direction: row;
@@ -200,7 +219,11 @@ export const Header = () => {
             </BaseLink>
           )}
         >
-          {router.asPath === '/' ? <Linea height={space['12']} /> : <Linea height={space['12']} />}
+          <LogosContainer>
+            <LineaLogo height={space['11']} />
+            <LineLogo />
+            <ENSLogo />
+          </LogosContainer>
         </ConditionalWrapper>
         {router.asPath !== '/' && breakpoints.sm && (
           <>
