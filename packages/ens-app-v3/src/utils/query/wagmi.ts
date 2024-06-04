@@ -11,8 +11,8 @@ import { getDefaultWallets } from '../getDefaultWallets'
 const isLocalProvider = !!process.env.NEXT_PUBLIC_PROVIDER
 
 const connectors = getDefaultWallets({
-  appName: 'ENS',
-  projectId: WC_PROJECT_ID,
+  appName: 'Linea NS',
+  projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || WC_PROJECT_ID,
 })
 
 const infuraKey = process.env.NEXT_PUBLIC_INFURA_KEY || 'cfa6ae2501cc4354a74e20432507317c'
