@@ -33,6 +33,7 @@ declare module "hardhat/types/runtime" {
 describe("L1Verifier", () => {
   let l1Provider: BrowserProvider;
   let l2Provider: JsonRpcProvider;
+  let l1SepoliaProvider: JsonRpcProvider;
   let l2TestContract: string;
   let signer: Signer;
   let target: Contract;
@@ -49,12 +50,32 @@ describe("L1Verifier", () => {
         staticNetwork: true,
       }
     );
+    // We need this provider to get the latest L2BlockNumber along with the the linea state root hash
+    l1SepoliaProvider = new ethers.JsonRpcProvider(
+      "https://gateway.tenderly.co/public/sepolia",
+      11155111,
+      {
+        staticNetwork: true,
+      }
+    );
     // This test only works with the specific test contract deployed on linea sepolia network
     l2TestContract = "0x09a434561f4b40067F71444d7042fd110013F879";
     signer = await l1Provider.getSigner(0);
 
     const Rollup = await ethers.getContractFactory("RollupMock", signer);
-    const rollup = await Rollup.deploy();
+
+    // We query the latest block number and state root hash on the actual L1 sepolia chain
+    // because otherwise if we hard code a block number and state root hash the test is no longer
+    // working after a while as linea_getProof stops working for older blocks
+    const rollupSepolia = new ethers.Contract(
+      "0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5",
+      Rollup.interface,
+      l1SepoliaProvider
+    );
+    const currentL2BlockNumber = await rollupSepolia.currentL2BlockNumber();
+    const stateRootHash =
+      await rollupSepolia.stateRootHashes(currentL2BlockNumber);
+    const rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
 
     const gateway = makeL2Gateway(
       l1Provider as unknown as JsonRpcProvider,
