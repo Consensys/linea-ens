@@ -7,11 +7,12 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { Address } from 'viem'
-import { useEnsAvatar } from 'wagmi'
+import { useAccount, useEnsAvatar } from 'wagmi'
 
 import { Avatar, Spinner, Tag } from '@ensdomains/thorin'
 
 import { Typography } from '@app/components/styled/Typography'
+import { getBaseDomain } from '@app/constants/chains'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { useBasicName } from '@app/hooks/useBasicName'
 import { useBeautifiedName } from '@app/hooks/useBeautifiedName'
@@ -335,6 +336,7 @@ export const SearchResult = ({
   usingPlaceholder?: boolean
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const { chain } = useAccount()
 
   const handleMouseDown = (e: MouseEvent) => e.preventDefault()
 
@@ -354,10 +356,10 @@ export const SearchResult = ({
 
   const input = useMemo(() => {
     if (type === 'nameWithDotEth') {
-      return `${value!}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}.eth`
+      return `${value!}.${getBaseDomain(chain)}.eth`
     }
     return value
-  }, [type, value])
+  }, [type, value, chain])
 
   const props = useMemo(
     () => ({

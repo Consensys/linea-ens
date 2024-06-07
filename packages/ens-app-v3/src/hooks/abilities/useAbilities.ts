@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAccount } from 'wagmi'
 
+import { getBaseDomain } from '@app/constants/chains'
 import { checkSupported3LDFromName } from '@app/utils/utils'
 
 import { useAccountSafely } from '../account/useAccountSafely'
@@ -88,6 +90,7 @@ type UseAbilitiesParameters = {
 
 export const useAbilities = ({ name, enabled = true }: UseAbilitiesParameters) => {
   const { t } = useTranslation('profile')
+  const { chain } = useAccount()
   const parent = name?.split('.')?.slice(1).join('.')
 
   const { address } = useAccountSafely()
@@ -126,7 +129,7 @@ export const useAbilities = ({ name, enabled = true }: UseAbilitiesParameters) =
     () => {
       if (!name || !address || isLoading) return DEFAULT_ABILITIES
       return {
-        canExtend: !!name && checkSupported3LDFromName(name),
+        canExtend: !!name && checkSupported3LDFromName(name, getBaseDomain(chain)),
         ...getSendAbilities({
           name,
           address,
@@ -166,6 +169,7 @@ export const useAbilities = ({ name, enabled = true }: UseAbilitiesParameters) =
       isLoading,
       resolverAuthorisation.data?.isAuthorised,
       hasSubnamesData.data,
+      chain,
       t,
     ],
   )

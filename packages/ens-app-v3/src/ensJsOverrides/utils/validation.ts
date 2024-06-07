@@ -36,7 +36,7 @@ export type ParsedInputResult = {
   labelDataArray: Label[]
 }
 
-export const parseInput = (input: string): ParsedInputResult => {
+export const parseInput = (input: string, baseDomain: unknown): ParsedInputResult => {
   let nameReference = input
   let isValid = false
 
@@ -72,7 +72,7 @@ export const parseInput = (input: string): ParsedInputResult => {
   let isLineaDotETH = false
   if (labels.length > 2 && isETH) {
     const sld = labels[labels.length - 2]
-    isLineaDotETH = sld === process.env.NEXT_PUBLIC_BASE_DOMAIN
+    isLineaDotETH = sld === baseDomain
   }
 
   const is2LD = labels.length === 2

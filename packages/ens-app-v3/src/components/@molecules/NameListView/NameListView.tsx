@@ -2,6 +2,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import type { Address } from 'viem'
+import { useAccount } from 'wagmi'
 
 import { Name } from '@ensdomains/ensjs/subgraph'
 import { Button, Spinner } from '@ensdomains/thorin'
@@ -16,6 +17,7 @@ import {
   SortType,
 } from '@app/components/@molecules/NameTableHeader/NameTableHeader'
 import { TabWrapper } from '@app/components/pages/profile/TabWrapper'
+import { getBaseDomain } from '@app/constants/chains'
 import { usePrefetchBlockTimestamp } from '@app/hooks/chain/useBlockTimestamp'
 import { useNamesForAddress } from '@app/hooks/ensjs/subgraph/useNamesForAddress'
 import useDebouncedCallback from '@app/hooks/useDebouncedCallback'
@@ -71,6 +73,7 @@ export const NameListView = ({ address, selfAddress, setError, setLoading }: Nam
     setIsMounted(true)
   }, [])
 
+  const { chain } = useAccount()
   const [mode, setMode] = useState<NameTableMode>('view')
   const [selectedNames, setSelectedNames] = useState<Name[]>([])
   const handleClickName = (name: Name) => () => {
@@ -158,12 +161,9 @@ export const NameListView = ({ address, selfAddress, setError, setLoading }: Nam
   const isNameDisabled = useCallback(
     (name: Name) => {
       if (mode !== 'select') return false
-      return (
-        name.parentName !== 'eth' &&
-        name.parentName !== `${process.env.NEXT_PUBLIC_BASE_DOMAIN}.eth`
-      )
+      return name.parentName !== 'eth' && name.parentName !== `${getBaseDomain(chain)}.eth`
     },
-    [mode],
+    [mode, chain],
   )
 
   const isLoading = isNamesLoading || !address

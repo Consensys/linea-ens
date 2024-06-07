@@ -1,6 +1,6 @@
 import { Address } from 'viem'
-import { Chain, holesky } from 'viem/chains'
-import { goerli, localhost, mainnet } from 'wagmi/chains'
+import { Chain } from 'viem/chains'
+import { localhost, mainnet } from 'wagmi/chains'
 
 import { addEnsContracts } from '@ensdomains/ensjs'
 
@@ -17,14 +17,15 @@ export const localhostWithEns = makeLocalhostChainWithEns<typeof localhost>(
   localhost,
   deploymentAddresses,
 )
+// TODO: Replace by linea mainnet after deployment is done
 export const mainnetWithEns = addEnsContracts(mainnet)
-export const goerliWithEns = addEnsContracts(goerli)
-export const holeskyWithEns = addEnsContracts(holesky)
 
 const addCustomEnsContracts = <const TChain extends Chain>(
   chain: TChain,
   addresses: EnsAddresses,
   subgraphUrl: string,
+  baseDomain: string,
+  pohVerifierUrl: string,
 ) => {
   return {
     ...chain,
@@ -69,19 +70,28 @@ const addCustomEnsContracts = <const TChain extends Chain>(
         url: subgraphUrl,
       },
     },
+    custom: { baseDomain, pohVerifierUrl },
   } as const
 }
 
 export const lineaSepoliaWithEns = addCustomEnsContracts(
   lineaSepolia,
   lineaSepoliaEnsAddresses,
-  'https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/v0.0.4',
+  'https://api.studio.thegraph.com/proxy/69290/ens-linea-sepolia/version/latest',
+  'linea-sepolia',
+  'https://linea-poh-api-verifier.sepolia.linea.build',
 )
 
 export const chainsWithEns = [lineaSepoliaWithEns, localhostWithEns] as const
 
 export const getSupportedChainById = (chainId: number | undefined) => {
   return chainId ? chainsWithEns.find((c) => c.id === chainId) : undefined
+}
+
+export const getBaseDomain = (chain?: Chain) => {
+  console.log({ chainId: chain?.id })
+  console.log(chain?.custom?.baseDomain)
+  return chain?.custom?.baseDomain ? chain.custom.baseDomain : 'linea-sepolia'
 }
 
 export type SupportedChain = typeof localhostWithEns | typeof lineaSepoliaWithEns

@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { useAccount } from 'wagmi'
 
+import { getBaseDomain } from '@app/constants/chains'
 import { ParsedInputResult, parseInput } from '@app/ensJsOverrides/utils/validation'
 import { Prettify } from '@app/types'
 import { tryBeautify } from '@app/utils/beautify'
@@ -24,9 +26,9 @@ const tryDecodeURIComponent = (input: string) => {
   }
 }
 
-export const validate = (input: string) => {
+export const validate = (input: string, baseDomain: unknown) => {
   const decodedInput = tryDecodeURIComponent(input)
-  const { normalised: name, ...parsedInput } = parseInput(decodedInput)
+  const { normalised: name, ...parsedInput } = parseInput(decodedInput, baseDomain)
   const isNonASCII = parsedInput.labelDataArray.some((dataItem) => dataItem.type !== 'ASCII')
   const outputName = name || input
 
@@ -59,16 +61,17 @@ type UseValidateParameters = {
   enabled?: boolean
 }
 
-const tryValidate = (input: string) => {
+const tryValidate = (input: string, baseDomain: unknown) => {
   if (!input) return defaultData
   try {
-    return validate(input)
+    return validate(input, baseDomain)
   } catch {
     return defaultData
   }
 }
 
 export const useValidate = ({ input, enabled = true }: UseValidateParameters): ValidationResult => {
+  const { chain } = useAccount()
   const { queryKey } = useQueryOptions({
     params: { input },
     functionName: 'validate',
@@ -78,7 +81,7 @@ export const useValidate = ({ input, enabled = true }: UseValidateParameters): V
 
   const { data, error } = useQuery({
     queryKey,
-    queryFn: ({ queryKey: [params] }) => validate(params.input),
+    queryFn: ({ queryKey: [params] }) => validate(params.input, getBaseDomain(chain)),
     enabled,
     staleTime: Infinity,
     gcTime: Infinity,
@@ -88,5 +91,5 @@ export const useValidate = ({ input, enabled = true }: UseValidateParameters): V
       ) as ValidationResult,
   })
 
-  return data || (error ? defaultData : tryValidate(input))
+  return data || (error ? defaultData : tryValidate(input, getBaseDomain(chain)))
 }
