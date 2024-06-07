@@ -1,4 +1,4 @@
-export const BASE_DOMAIN = "linea-sepolia.eth";
-export const BASE_NODE = "0x1944d8f922dbda424d5bb8181be5344d513cd0210312d2dcccd37d54c11a17de";
-export const BASE_LABEL = "linea-sepolia";
-export const BASE_LABEL_HASH = "0x4ea1bef8a6e5b749c6897df7b1f229f5de728c57078f23f0033b4e638079df38";
+export const BASE_DOMAIN = "linea.eth";
+export const BASE_NODE = "0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3";
+export const BASE_LABEL = "linea";
+export const BASE_LABEL_HASH = "0x2e3dd66a6ec9a366e8b293f3a590467f043a76d049562752176edb48a3062d11";
