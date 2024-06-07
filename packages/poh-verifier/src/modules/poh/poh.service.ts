@@ -49,7 +49,7 @@ export class PohService {
         },
       });
 
-      this.logger.log({ signature });
+      this.logger.log({ address, signature });
       return signature;
     } catch (error) {
       this.logger.error(error);
