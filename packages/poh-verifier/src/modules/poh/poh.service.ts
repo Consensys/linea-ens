@@ -20,8 +20,13 @@ export class PohService {
     const ens = this.configService.get<EnsConfig>('ens');
     const chainId = this.configService.get<number>('chainId');
 
+    this.logger.log('ENS Config:', JSON.stringify(ens, null, 2));
+    this.logger.log('Chain ID:', chainId);
+
     try {
       const pohResponse = await this.apiService.getPoh(address);
+      this.logger.log('POH Response:', JSON.stringify(pohResponse, null, 2));
+
       if (!pohResponse.poh) {
         throw new Error('address not POH');
       }
@@ -38,6 +43,11 @@ export class PohService {
       } as const;
 
       const signerAccount = privateKeyToAccount(ens.signerPrivateKey);
+      this.logger.log(
+        'Signer Account:',
+        JSON.stringify(signerAccount, null, 2),
+      );
+
       const signature = await signerAccount.signTypedData({
         domain,
         types,
@@ -47,6 +57,7 @@ export class PohService {
         },
       });
 
+      this.logger.log('Signature:', signature);
       return signature;
     } catch (error) {
       this.logger.error(error);
