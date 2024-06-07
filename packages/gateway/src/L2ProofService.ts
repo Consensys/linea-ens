@@ -5,8 +5,8 @@ import {
   Contract,
   ethers,
 } from "ethers";
-
 import { EVMProofHelper, IProofService, StateProof } from "./evm-gateway";
+import { logError } from "./utils";
 
 export type L2ProvableBlock = number;
 
@@ -42,10 +42,14 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
    * @dev Returns an object representing a block whose state can be proven on L1.
    */
   async getProvableBlock(): Promise<number> {
-    const lastBlockFinalized = await this.rollup.currentL2BlockNumber();
-    console.log("Last Block Finalized:", lastBlockFinalized);
-    if (!lastBlockFinalized) throw new Error("No block found");
-    return lastBlockFinalized;
+    try {
+      const lastBlockFinalized = await this.rollup.currentL2BlockNumber();
+      if (!lastBlockFinalized) throw new Error("No block found");
+      return lastBlockFinalized;
+    } catch (e) {
+      logError(e);
+      throw e;
+    }
   }
 
   /**
@@ -60,15 +64,12 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     address: AddressLike,
     slot: bigint
   ): Promise<string> {
-    console.log(
-      "Get Storage At - Block:",
-      block,
-      "Address:",
-      address,
-      "Slot:",
-      slot
-    );
-    return this.helper.getStorageAt(block, address, slot);
+    try {
+      return this.helper.getStorageAt(block, address, slot);
+    } catch (e) {
+      logError(e, { block, address, slot });
+      throw e;
+    }
   }
 
   /**
@@ -84,25 +85,21 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     address: AddressLike,
     slots: bigint[]
   ): Promise<string> {
-    console.log(
-      "Get Proofs - Block:",
-      blockNo,
-      "Address:",
-      address,
-      "Slots:",
-      slots
-    );
-    let proof = await this.helper.getProofs(blockNo, address, slots);
-    proof = this.checkStorageInitialized(proof);
-    console.log("Proof JSON:", JSON.stringify(proof, null, 2));
-    return AbiCoder.defaultAbiCoder().encode(
-      [
-        "uint256",
-        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
-        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
-      ],
-      [blockNo, proof.accountProof, proof.storageProofs]
-    );
+    try {
+      let proof = await this.helper.getProofs(blockNo, address, slots);
+      proof = this.checkStorageInitialized(proof);
+      return AbiCoder.defaultAbiCoder().encode(
+        [
+          "uint256",
+          "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+          "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+        ],
+        [blockNo, proof.accountProof, proof.storageProofs]
+      );
+    } catch (e) {
+      logError(e, { blockNo, address, slots });
+      throw e;
+    }
   }
 
   /**
@@ -126,7 +123,6 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
       }
     }
 
-    console.log("Final Proof JSON:", JSON.stringify(proof, null, 2));
     return proof;
   }
 }

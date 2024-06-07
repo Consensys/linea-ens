@@ -8,8 +8,8 @@ import {
   toBigInt,
   zeroPadValue,
 } from "ethers";
-
 import { IProofService, ProvableBlock } from "./IProofService";
+import { logError } from "../utils";
 
 const OP_CONSTANT = 0x00;
 const OP_BACKREF = 0x20;
@@ -46,10 +46,6 @@ function memoize<T>(fn: () => Promise<T>): () => Promise<T> {
     }
     return promise;
   };
-}
-
-function serializeBigInt(value: any) {
-  return typeof value === "bigint" ? value.toString() : value;
 }
 
 export class EVMGateway<T extends ProvableBlock> {
@@ -101,21 +97,12 @@ export class EVMGateway<T extends ProvableBlock> {
       {
         type: "getStorageSlots",
         func: async (args) => {
+          const [addr, commands, constants] = args;
           try {
-            const [addr, commands, constants] = args;
-            console.log(
-              "getStorageSlots Args JSON:",
-              JSON.stringify({ addr, commands, constants }, serializeBigInt, 2)
-            );
             const proofs = await this.createProofs(addr, commands, constants);
-            console.log(
-              "Generated Proofs JSON:",
-              JSON.stringify(proofs, serializeBigInt, 2)
-            );
             return [proofs];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (e) {
-            console.log("Error in getStorageSlots:", e);
+            logError(e, { addr, commands, constants });
             throw e;
           }
         },
@@ -136,10 +123,6 @@ export class EVMGateway<T extends ProvableBlock> {
     constants: string[]
   ): Promise<string> {
     const block = await this.proofService.getProvableBlock();
-    console.log(
-      "Provable Block JSON:",
-      JSON.stringify(block, serializeBigInt, 2)
-    );
     const requests: Promise<StorageElement>[] = [];
     // For each request, spawn a promise to compute the set of slots required
     for (let i = 0; i < commands.length; i++) {
@@ -158,7 +141,6 @@ export class EVMGateway<T extends ProvableBlock> {
     const slots = Array.prototype.concat(
       ...results.map((result) => result.slots)
     );
-    console.log("Slots JSON:", JSON.stringify(slots, serializeBigInt, 2));
     return this.proofService.getProofs(block, address, slots);
   }
 
@@ -169,8 +151,6 @@ export class EVMGateway<T extends ProvableBlock> {
   ): Promise<string> {
     const opcode = operation & 0xe0;
     const operand = operation & 0x1f;
-
-    console.log("Execute Operation - Opcode:", opcode, "Operand:", operand);
 
     switch (opcode) {
       case OP_CONSTANT:
@@ -191,15 +171,6 @@ export class EVMGateway<T extends ProvableBlock> {
     const flags = commandWord[0];
     const isDynamic = (flags & 0x01) != 0;
 
-    console.log(
-      "Compute First Slot - Command:",
-      command,
-      "Flags:",
-      flags,
-      "Is Dynamic:",
-      isDynamic
-    );
-
     let slot = toBigInt(
       await this.executeOperation(commandWord[1], constants, requests)
     );
@@ -215,8 +186,6 @@ export class EVMGateway<T extends ProvableBlock> {
         solidityPackedKeccak256(["bytes", "uint256"], [index, slot])
       );
     }
-
-    console.log("Computed Slot:", slot.toString());
 
     return { slot, isDynamic };
   }
@@ -237,10 +206,6 @@ export class EVMGateway<T extends ProvableBlock> {
       const slotNumbers = Array(Math.ceil(len / 32))
         .fill(BigInt(hashedSlot))
         .map((i, idx) => i + BigInt(idx));
-      console.log(
-        "Dynamic Value Slot Numbers JSON:",
-        JSON.stringify(slotNumbers, serializeBigInt, 2)
-      );
       return {
         slots: Array.prototype.concat([slot], slotNumbers),
         isDynamic: true,
@@ -275,13 +240,6 @@ export class EVMGateway<T extends ProvableBlock> {
       command,
       constants,
       requests
-    );
-
-    console.log(
-      "Value From Path - Slot:",
-      slot.toString(),
-      "Is Dynamic:",
-      isDynamic
     );
 
     if (!isDynamic) {
