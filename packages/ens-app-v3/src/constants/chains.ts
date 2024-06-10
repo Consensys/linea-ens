@@ -89,8 +89,6 @@ export const getSupportedChainById = (chainId: number | undefined) => {
 }
 
 export const getBaseDomain = (chain?: Chain) => {
-  console.log({ chainId: chain?.id })
-  console.log(chain?.custom?.baseDomain)
   return chain?.custom?.baseDomain ? chain.custom.baseDomain : 'linea-sepolia'
 }
 

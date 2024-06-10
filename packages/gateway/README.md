@@ -1,30 +1,23 @@
-# ENS Gateway
+# Linea NS Gateway
 
-## Start for UAT
+Adapted from EVM gateway https://github.com/ensdomains/evmgateway
 
-### With Docker Compose
-
-To start the Gateway, you can use Docker Compose:
+## Start dev env
 
 ```shell
-docker compose up
+cp .env.example .env
+pnpm i
+pnpm build
+pnpm start
 ```
 
-### With Dockerfile
-
-To start the Gateway, you can use build and run the Dockerfile:
+## Build
 
 ```shell
-docker build -t ens-gateway .
-```
-
-```shell
-docker run -e L1_PROVIDER_URL=https://goerli.infura.io/v3/<INFURA_KEY> -e L2_PROVIDER_URL=https://linea-goerli.infura.io/v3/<INFURA_KEY> -e L2_RESOLVER_ADDRESS=<L2_RESOLVER_ADDRESS> ens-gateway
+pnpm build
 ```
 
 ### Tests
-
-Run the following:
 
 ```shell
 pnpm i

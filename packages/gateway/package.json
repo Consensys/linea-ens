@@ -52,7 +52,7 @@
     "express": "^4.19.2",
     "hardhat": "^2.21.0",
     "hardhat-gas-reporter": "^1.0.8",
-    "linea-verifier": "^1.0.0",
+    "linea-verifier": "link:../linea-verifier/",
     "mocha": "^10.3.0",
     "solidity-coverage": "^0.8.1",
     "supertest": "^6.3.3",
