@@ -73,7 +73,6 @@ describe("L1Verifier", () => {
       l1SepoliaProvider
     );
     const currentL2BlockNumber = await rollupSepolia.currentL2BlockNumber();
-    console.log({currentL2BlockNumber});
     const stateRootHash =
       await rollupSepolia.stateRootHashes(currentL2BlockNumber);
     const rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
