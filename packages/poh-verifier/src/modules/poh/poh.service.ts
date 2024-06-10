@@ -17,11 +17,14 @@ export class PohService {
   onModulteInit() {}
 
   async signMessage(address: Address): Promise<any> {
+    this.logger.log({ address });
     const ens = this.configService.get<EnsConfig>('ens');
     const chainId = this.configService.get<number>('chainId');
+    let signature: string | undefined;
 
     try {
       const pohResponse = await this.apiService.getPoh(address);
+
       if (!pohResponse.poh) {
         throw new Error('address not POH');
       }
@@ -38,7 +41,8 @@ export class PohService {
       } as const;
 
       const signerAccount = privateKeyToAccount(ens.signerPrivateKey);
-      const signature = await signerAccount.signTypedData({
+
+      signature = await signerAccount.signTypedData({
         domain,
         types,
         primaryType: 'POH',
@@ -49,7 +53,7 @@ export class PohService {
 
       return signature;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error({ address, signature, error });
       throw error;
     }
   }
