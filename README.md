@@ -6,7 +6,7 @@ Also contain a frontend adapted from ENS's frontend to interact with the deploye
 ## Requirements
 
 - NodeJs v18.x.
-- pnpm version > 8
+- pnpm v9.x
 - yarn for the l2-contracts package only
 
 ## Packages
