@@ -12,12 +12,10 @@ const rollupAddress = process.env.L1_ROLLUP_ADDRESS;
 const port = process.env.PORT || 3000;
 
 try {
-
   const providerL1 = new ethers.JsonRpcProvider(l1ProviderUrl);
   const providerL2 = new ethers.JsonRpcProvider(l2ProviderUrl, l2ChainId, {
     staticNetwork: true,
   });
-
 
   const gateway = new EVMGateway(
     new L2ProofService(providerL1, providerL2, rollupAddress)

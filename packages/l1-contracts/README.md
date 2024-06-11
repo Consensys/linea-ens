@@ -1,6 +1,6 @@
-# L1-contracts: Linea resolver
+# L1-contracts: Linea Verifier
 
-Linea resolver contracts made from ENS's evm-verifier[https://github.com/ensdomains/evmgateway/blob/main/evm-verifier/README.md] specifically for ENS's implementation on Linea.
+Linea verifier contracts adapted from ENS's evm-verifier[https://github.com/ensdomains/evmgateway/blob/main/evm-verifier/README.md] specifically for ENS's implementation on Linea.
 
 ## Tests
 

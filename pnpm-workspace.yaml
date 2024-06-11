@@ -1,7 +1,6 @@
 packages:
-  - "packages/client"
-  - "packages/gateway"
   - "packages/linea-verifier"
+  - "packages/gateway"
   - "packages/l1-contracts"
   - "packages/ens-app-v3"
   - "packages/ens-subgraph"

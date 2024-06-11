@@ -1,14 +1,16 @@
-# ENS App V3
+# Linea NS App
 
-The all new, all cool version of the ENS manager.
-
-## EXTERNAL CONTRIBUTOR NOTICE
-
-**Please note that everything within this repo is currently in alpha. Some contracts are not yet deployed on mainnet which means some functionality may break on the network.**
+Friendly forked from ENS V3 app: https://github.com/ensdomains/ens-app-v3
 
 ## Usage
 
-### Quick start
+### Install
+
+```bash
+pnpm i
+```
+
+### Quick start on localhost
 
 In a first terminal run:
 
@@ -42,13 +44,7 @@ pnpm dev:glocal
   - ETH
 - You can start testing the app
 
-### Install
-
-```bash
-pnpm i
-```
-
-### Running Dev Server
+### Running Dev env
 
 ```bash
 # For mainnet
@@ -64,26 +60,9 @@ pnpm dev:glocal
 pnpm lint
 ```
 
-### Unit Test
+### Tests
 
-```bash
-pnpm test
-pnpm test:watch
-pnpm test:coverage
-```
-
-We recommend installing [this](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest) vscode plugin for a better unit testing experience.
-
-### Test Environment
-
-You must have [Docker](https://docs.docker.com/get-docker/) installed to run the test environment.
-For more information on the environment, see [ens-test-env](https://github.com/ensdomains/ensjs-v3/tree/main/packages/ens-test-env/).
-
-Once installed, you can run:
-
-```bash
-pnpm denv
-```
+Currently the tests written by ENS are not working in this repo because they still need to be adapted for this app.
 
 #### **If you need to deploy a new subgraph**
 
@@ -119,14 +98,6 @@ You can exit out of the test environment using `Ctrl+C`.
 
 Once exited, you can commit the data to your branch. You do not need to run a separate save command.
 
-### E2E Testing
-
-**Note: You don't need to run the test environment command. It is all handled in the e2e script.**
-
-```bash
-pnpm e2e
-```
-
 ### Building and Starting
 
 ```bash
@@ -138,47 +109,8 @@ pnpm build:glocal
 pnpm buildandstart:glocal
 ```
 
-## PR builds
-
-Cloudflare will automatically build and deploy a test site when pushed to a new PR branch.
-
-## External Package Local Development
-
-1. Install yalc globally:
-
-```bash
-npm i -g yalc
-```
-
-2. Run relevant update script within external repo, for example:
-
-```bash
-# Example publish script for ENSjs, be aware this may have changed.
-pnpm publish:local:ensjs
-```
-
-3. Run pnpm i within this repo:
-
-```bash
-pnpm i
-```
-
-If updating an existing yalc installation, you can add the `--force` flag.
-
 ## Architecture
 
 The structure of the `pages` folder is mimicked inside `components`. Components specific to a page can be found in the the `components` folder, in the folder corresponding to that page.
 
 Components that are used in multiple places will be found in the top level of the `components` folder.
-
-## Testing philosophy
-
-Our testing philosophy is user-centric, meaning we want to write out tests so that they resemble the way a user would use our app as much as possible. We've borrowed this from the excellent [testing-library](https://testing-library.com/docs/guiding-principles/).
-
-A user generally clicks, types and swipes, and so most tests should include one of these actions. A user may also load a page in a specific state (by clicking, typing or swiping outside of the app) so sometimes we just want to check a page renders correctly. The vast majority of our tests will be of these kinds.
-
-For deeper parts of the codebase that aren't directly related to a user interaction, such as utility functions, the user is the developer. So simply test the code in the way a developer would use it.
-
-We also primarily test for functionality, making sure the user is able to complete any action that we intend for them to be able to complete. This means we wouldn't write tests to ensure an animation occurs, as that would not stop a user completing an action, and would likely be picked up during the course of development.
-
-Writing out todo tests before implementing a test can help. If I want my form to submit the correct data when I click submit, then I should write `it.todo('should submit the correct data when submit is clicked')` before starting. This will prevent me from testing implementation details as I write out the component.

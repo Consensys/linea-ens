@@ -35,7 +35,7 @@
     "hardhat": "^2.22.1",
     "hardhat-deploy": "^0.11.12",
     "hardhat-gas-reporter": "^1.0.8",
-    "linea-resolver-gateway": "^1.0.0",
+    "linea-resolver-gateway": "link:../gateway/",
     "mocha": "^10.3.0",
     "solidity-coverage": "^0.8.12",
     "supertest": "^6.3.3",
