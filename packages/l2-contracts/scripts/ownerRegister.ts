@@ -18,7 +18,7 @@ interface Domain {
 enum DomainStatuses {
   Failed = 'Failed',
   Success = 'Success',
-  Pending = 'Pending',
+  NotStarted = 'NotStarted',
 }
 
 interface TrackingData {
@@ -211,7 +211,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
           trackingData.set(domain, {
             domain,
             owner,
-            status: DomainStatuses.Pending,
+            status: DomainStatuses.NotStarted,
           })
           newDomainsAdded = true
         }
@@ -224,7 +224,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
 
   async function processDomains(trackingData: Map<string, TrackingData>) {
     for (const [domain, data] of trackingData.entries()) {
-      if (data.status === DomainStatuses.Pending) {
+      if (data.status === DomainStatuses.NotStarted || data.status === DomainStatuses.Failed) {
         console.log(`Processing domain: ${domain}, owner: ${data.owner}`)
         const status = await registerDomain(
           domain,
