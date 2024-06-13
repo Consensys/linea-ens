@@ -30,10 +30,10 @@ import './tasks/seed'
 dotenv.config({ debug: false })
 
 let real_accounts = undefined
-if (process.env.DEPLOYER_KEY) {
+if (process.env.DEPLOYER_PRIVATE_KEY) {
   real_accounts = [
-    process.env.DEPLOYER_KEY,
-    process.env.OWNER_KEY || process.env.DEPLOYER_KEY,
+    process.env.DEPLOYER_PRIVATE_KEY,
+    process.env.OWNER_PRIVATE_KEY || process.env.DEPLOYER_PRIVATE_KEY,
   ]
 }
 

@@ -10,10 +10,10 @@ const resolverAddress = resolverAbi.address // PublicResolver address
 const provider = new ethers.providers.JsonRpcProvider(
   `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
 )
-if (!process.env.OWNER_KEY) {
-  throw new Error('OWNER_KEY environment variable is not set.')
+if (!process.env.OWNER_PRIVATE_KEY) {
+  throw new Error('OWNER_PRIVATE_KEY environment variable is not set.')
 }
-const wallet = new ethers.Wallet(process.env.OWNER_KEY, provider)
+const wallet = new ethers.Wallet(process.env.OWNER_PRIVATE_KEY, provider)
 const registrarController = new ethers.Contract(
   registrarControllerAddress,
   registrarControllerAbi.abi,
