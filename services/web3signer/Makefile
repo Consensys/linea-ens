@@ -11,11 +11,11 @@ default: help
 # Development Commands
 
 .PHONY: dev-docker
-dev-docker: env network ## Builds and starts the service container in development mode.\n Optionally, use Docker Compose options.
+dev-docker: network ## Builds and starts the service container in development mode.\n Optionally, use Docker Compose options.
 	docker compose --profile debug up $(c)
 
 .PHONY: dev-docker-build
-dev-docker-build: env network ## Force builds and starts the service container in development mode.\n Optionally, use Docker Compose options.
+dev-docker-build: network ## Force builds and starts the service container in development mode.\n Optionally, use Docker Compose options.
 	docker compose --profile debug up --build $(c)
 
 .PHONY: dev-docker-down
