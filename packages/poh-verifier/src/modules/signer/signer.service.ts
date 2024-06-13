@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { lastValueFrom } from 'rxjs'
 import { Web3SignerConfig } from 'src/config/config.interface'
-import { Hex, serializeTransaction, Transaction } from 'viem'
+import { Hex, serializeSignature, serializeTransaction, serializeTypedData, Transaction } from 'viem'
 
 @Injectable()
 export class SignerService {
@@ -13,34 +13,8 @@ export class SignerService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
-
-  async signTransaction(transaction: any): Promise<Hex> {
-    const web3signer = this.configService.get<Web3SignerConfig>('web3signer')
-    const url = new URL(
-      `/api/v1/eth1/sign/${web3signer.publicKey}`,
-      web3signer.baseUrl,
-    )
-
-    try {
-      const res = this.httpService.post(url.href, {
-        data: serializeTransaction(transaction),
-      })
-
-      return (await lastValueFrom(res)).data
-    } catch (error) {
-      this.logger.error({
-        message: 'Failed to sign transaction',
-        url,
-        error: error.message,
-        stack: error.stack,
-      })
-      throw error
-    }
-  }
-
   
-
-  async signTypedData(domain: any, types: any, primaryType: string, message: any): Promise<Hex> {
+  async signTypedData(data: string): Promise<Hex> {
     const web3signer = this.configService.get<Web3SignerConfig>('web3signer')
     const url = new URL(
       `/api/v1/eth1/sign/${web3signer.publicKey}`,
@@ -49,14 +23,8 @@ export class SignerService {
 
     try {
       const res = this.httpService.post(url.href, {
-        "data": 5.735816763073855e+30
+        "data": data
       })
-//  const res = this.httpService.post(url.href, {data: JSON.stringify({
-//         domain,
-//         types,
-//         primaryType,
-//         message,
-//       })})
 
       return (await lastValueFrom(res)).data
     } catch (error) {

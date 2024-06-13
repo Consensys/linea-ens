@@ -1,35 +1,23 @@
 SERVICE := ENS WEB3SIGNER
-bold := $(shell tput bold)
-sgr0 := $(shell tput sgr0)
+NETWORK_NAME := ens-resolver
+SHOW_DOCKER_HELP := true
 
-help:
-	@printf "\
-	$(SERVICE)\n\
-	\n\
-	$(bold)SYNOPSIS$(sgr0)\n\
-    make [COMMANDS]\n\
-	\n\
-	$(bold)COMMANDS$(sgr0)\n\
-		$(bold)help$(sgr0)\n\
-		  Shows this help message.\n\n\
-		$(bold)dev-docker$(sgr0)\n\
-		  Builds and starts the service container in development mode.\n\n\
-		$(bold)dev-docker-build$(sgr0)\n\
-		  Force builds and starts the service container in development mode.\n\n\
-		$(bold)dev-docker-down$(sgr0)\n\
-		  Stops and removes the service container.\n\n\
-	"
+include .makefiles/help.mk
+include .makefiles/env.mk
+include .makefiles/network.mk
 
-# Dev
+default: help
+
+# Development Commands
 
 .PHONY: dev-docker
-dev-docker:
-	docker compose --profile debug up $(c)
-	
-.PHONY: dev-docker-build
-dev-docker-build:
+dev-docker: env network ## Builds and starts the service container in development mode.\n Optionally, use Docker Compose options.
 	docker compose --profile debug up $(c)
 
+.PHONY: dev-docker-build
+dev-docker-build: env network ## Force builds and starts the service container in development mode.\n Optionally, use Docker Compose options.
+	docker compose --profile debug up --build $(c)
+
 .PHONY: dev-docker-down
-dev-docker-down:
-	docker compose down -v
+dev-docker-down: ## Stops and removes the service container.
+	docker compose down
