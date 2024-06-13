@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Address, privateKeyToAccount } from 'viem/accounts';
+import { Address } from 'viem/accounts';
 import { utils } from 'ethers'
 
 import type { EnsConfig } from 'src/config/config.interface';
