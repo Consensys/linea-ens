@@ -10,6 +10,24 @@ interface Abi {
   abi: any[]
 }
 
+interface Domain {
+  domain: string
+  owner: string
+}
+
+enum DomainStatuses {
+  Failed = 'Failed',
+  Success = 'Success',
+  Pending = 'Pending',
+}
+
+interface TrackingData {
+  domain: string
+  owner: string
+  status: DomainStatuses
+  error?: unknown
+}
+
 const loadAbi = (path: string): Abi => {
   try {
     return require(path)
@@ -17,6 +35,28 @@ const loadAbi = (path: string): Abi => {
     console.error(`Failed to load ABI from ${path}:`, error)
     process.exit(1)
   }
+}
+
+const PROGRESS_FILE = path.resolve(__dirname, './progress.json')
+
+function createTrackingFile(filePath: string): Map<string, TrackingData> {
+  if (fs.existsSync(filePath)) {
+    const mapAsArray = fs.readFileSync(filePath, 'utf-8')
+    return new Map(JSON.parse(mapAsArray))
+  }
+
+  fs.writeFileSync(
+    filePath,
+    JSON.stringify(Array.from(new Map<string, TrackingData>().entries())),
+  )
+  return new Map<string, TrackingData>()
+}
+
+function updateTrackingFile(trackingData: Map<string, TrackingData>) {
+  fs.writeFileSync(
+    PROGRESS_FILE,
+    JSON.stringify(Array.from(trackingData.entries()), null, 2),
+  )
 }
 
 async function main(hre: HardhatRuntimeEnvironment) {
@@ -129,6 +169,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
       )
       await tx.wait()
       console.log(`Domain ${domainName} registered successfully.`)
+      return DomainStatuses.Success
     } catch (error: any) {
       console.error(`Failed to register domain ${domainName}:`, error)
       if (error?.error?.data) {
@@ -137,6 +178,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
         )
         console.error('Revert reason:', revertReason)
       }
+      return DomainStatuses.Failed
     }
   }
 
@@ -151,9 +193,11 @@ async function main(hre: HardhatRuntimeEnvironment) {
 
   console.log(`RegistrarController owner: ${await registrarController.owner()}`)
 
-  // Parse CSV file
-  const domains: { domain: string; owner: string }[] = []
+  // Load tracking data or start fresh
+  const trackingData = createTrackingFile(PROGRESS_FILE)
 
+  // Parse CSV file if starting fresh or if there are new entries
+  const domains: Domain[] = []
   fs.createReadStream(CSV_FILE_PATH)
     .pipe(parse({ columns: true }))
     .on('data', (row) => {
@@ -161,11 +205,39 @@ async function main(hre: HardhatRuntimeEnvironment) {
     })
     .on('end', async () => {
       console.log('CSV file successfully processed')
+      let newDomainsAdded = false
       for (const { domain, owner } of domains) {
-        console.log(`Processing domain: ${domain}, owner: ${owner}`)
-        await registerDomain(domain, owner, registrarController, resolver)
+        if (!trackingData.has(domain)) {
+          trackingData.set(domain, {
+            domain,
+            owner,
+            status: DomainStatuses.Pending,
+          })
+          newDomainsAdded = true
+        }
       }
+      if (newDomainsAdded) {
+        updateTrackingFile(trackingData)
+      }
+      await processDomains(trackingData)
     })
+
+  async function processDomains(trackingData: Map<string, TrackingData>) {
+    for (const [domain, data] of trackingData.entries()) {
+      if (data.status === DomainStatuses.Pending) {
+        console.log(`Processing domain: ${domain}, owner: ${data.owner}`)
+        const status = await registerDomain(
+          domain,
+          data.owner,
+          registrarController,
+          resolver,
+        )
+        trackingData.set(domain, { ...data, status })
+        updateTrackingFile(trackingData)
+      }
+    }
+    console.log('All domains processed.')
+  }
 }
 
 main(require('hardhat') as HardhatRuntimeEnvironment).catch(console.error)
