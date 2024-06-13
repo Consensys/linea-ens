@@ -77,8 +77,14 @@ async function main(hre: HardhatRuntimeEnvironment) {
     } else {
       const provider = new hre.ethers.providers.JsonRpcProvider(rpcUrl)
       return {
-        deployer: new hre.ethers.Wallet(validateEnv('DEPLOYER_KEY'), provider),
-        owner: new hre.ethers.Wallet(validateEnv('OWNER_KEY'), provider),
+        deployer: new hre.ethers.Wallet(
+          validateEnv('DEPLOYER_PRIVATE_KEY'),
+          provider,
+        ),
+        owner: new hre.ethers.Wallet(
+          validateEnv('OWNER_PRIVATE_KEY'),
+          provider,
+        ),
       }
     }
   }
