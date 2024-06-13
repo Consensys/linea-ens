@@ -1,6 +1,6 @@
 import { Config, Environment, LogLevel } from './config.interface';
 import * as pack from '../../package.json';
-import { Address } from 'viem';
+import { Address, Hex } from 'viem';
 
 const convertToName = (inputString: string): string => {
   return inputString
@@ -30,10 +30,13 @@ export default (): Config => ({
   },
   ens: {
     verifierContractAddress: process.env.VERIFIER_CONTRACT_ADDRESS as Address,
-    signerPrivateKey: process.env.SIGNER_PRIVATE_KEY as Address,
   },
   pohApi: {
     url: process.env.POH_API_URL,
+  },
+  web3signer: {
+    baseUrl: process.env.WEB3SIGNER_BASE_URL,
+    publicKey: process.env.WEB3SIGNER_PUBLIC_KEY as Hex,
   },
   log: {
     level: (process.env.LOG_LEVEL as LogLevel) || LogLevel.INFO,
