@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { lastValueFrom } from 'rxjs'
 import { Web3SignerConfig } from 'src/config/config.interface'
-import { Hex, serializeSignature, serializeTransaction, serializeTypedData, Transaction } from 'viem'
+import { Hex } from 'viem'
 
 @Injectable()
 export class SignerService {
