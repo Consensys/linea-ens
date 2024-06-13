@@ -11,7 +11,7 @@ import { AppService } from './modules/app/app.service';
 import { ApiModule } from './modules/api/api.module';
 import { PohModule } from './modules/poh/poh.module';
 import { HealthModule } from './modules/health/health.module';
-import { SignerModule } from './modules/signer/signer.module'
+import { SignerModule } from './modules/signer/signer.module';
 
 @Module({
   imports: [

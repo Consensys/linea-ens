@@ -5,7 +5,6 @@ import { PohController } from './poh.controller';
 import { PohService } from './poh.service';
 import { ApiModule } from '../api/api.module';
 
-
 @Module({
   imports: [ApiModule, SignerModule],
   providers: [PohService],

@@ -1,4 +1,4 @@
-import { Address, Hex} from 'viem';
+import { Address, Hex } from 'viem';
 
 export enum Environment {
   DEVELOPMENT = 'development',
@@ -52,8 +52,8 @@ export interface ApiConfig {
 }
 
 export interface Web3SignerConfig {
-  baseUrl: string
-  publicKey: Hex
+  baseUrl: string;
+  publicKey: Hex;
 }
 
 export interface LogConfig {
