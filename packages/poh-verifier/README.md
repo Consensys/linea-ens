@@ -1,4 +1,4 @@
-# Linea NS POH
+# Linea ENS POH
 
 API responsible for signing a message aknowledging an address has passed the POH process.
 
