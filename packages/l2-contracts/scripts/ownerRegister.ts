@@ -12,6 +12,24 @@ interface Abi {
   abi: any[]
 }
 
+interface Domain {
+  domain: string
+  owner: string
+}
+
+enum DomainStatuses {
+  Failed = 'Failed',
+  Success = 'Success',
+  NotStarted = 'NotStarted',
+}
+
+interface TrackingData {
+  domain: string
+  owner: string
+  status: DomainStatuses
+  error?: unknown
+}
+
 const loadAbi = (path: string): Abi => {
   try {
     return require(path)
@@ -21,6 +39,28 @@ const loadAbi = (path: string): Abi => {
   }
 }
 
+const PROGRESS_FILE = path.resolve(__dirname, './progress.json')
+
+function createTrackingFile(filePath: string): Map<string, TrackingData> {
+  if (fs.existsSync(filePath)) {
+    const mapAsArray = fs.readFileSync(filePath, 'utf-8')
+    return new Map(JSON.parse(mapAsArray))
+  }
+
+  fs.writeFileSync(
+    filePath,
+    JSON.stringify(Array.from(new Map<string, TrackingData>().entries())),
+  )
+  return new Map<string, TrackingData>()
+}
+
+function updateTrackingFile(trackingData: Map<string, TrackingData>) {
+  fs.writeFileSync(
+    PROGRESS_FILE,
+    JSON.stringify(Array.from(trackingData.entries()), null, 2),
+  )
+}
+
 async function main(hre: HardhatRuntimeEnvironment) {
   const network = hre.network.name
 
@@ -28,7 +68,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
   let resolverAbi: Abi
   let rpcUrl: string
   let web3SignerUrl = `${process.env.WEB3_SIGNER_URL}/api/v1/eth1/sign/${process.env.WEB3_SIGNER_PUBLIC_KEY}`
-  let provider
+  let provider: ethers.providers.JsonRpcProvider
 
   switch (network) {
     case 'lineaSepolia':
@@ -132,14 +172,19 @@ async function main(hre: HardhatRuntimeEnvironment) {
         data: serializedTx,
       })
 
+      if (status !== 200) {
+        throw `Could not get signature from web3Signer: ${status}`
+      }
+
       const serializedSignedTx = hre.ethers.utils.serializeTransaction(
         tx,
         signature,
       )
 
-      const response = await provider.sendTransaction(serializedSignedTx)
+      await provider.sendTransaction(serializedSignedTx)
 
       console.log(`Domain ${domainName} registered successfully.`)
+      return DomainStatuses.Success
     } catch (error: any) {
       console.error(`Failed to register domain ${domainName}:`, error)
       if (error?.error?.data) {
@@ -148,6 +193,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
         )
         console.error('Revert reason:', revertReason)
       }
+      return DomainStatuses.Failed
     }
   }
 
@@ -161,9 +207,11 @@ async function main(hre: HardhatRuntimeEnvironment) {
   const registrarControllerOwner = await registrarController.owner()
   console.log(`RegistrarController owner: ${registrarControllerOwner}`)
 
-  // Parse CSV file
-  const domains: { domain: string; owner: string }[] = []
+  // Load tracking data or start fresh
+  const trackingData = createTrackingFile(PROGRESS_FILE)
 
+  // Parse CSV file if starting fresh or if there are new entries
+  const domains: Domain[] = []
   fs.createReadStream(CSV_FILE_PATH)
     .pipe(parse({ columns: true }))
     .on('data', (row) => {
@@ -171,18 +219,44 @@ async function main(hre: HardhatRuntimeEnvironment) {
     })
     .on('end', async () => {
       console.log('CSV file successfully processed')
+      let newDomainsAdded = false
       for (const { domain, owner } of domains) {
-        console.log(`Processing domain: ${domain}, owner: ${owner}`)
-        await registerDomain(
+        if (!trackingData.has(domain)) {
+          trackingData.set(domain, {
+            domain,
+            owner,
+            status: DomainStatuses.NotStarted,
+          })
+          newDomainsAdded = true
+        }
+      }
+      if (newDomainsAdded) {
+        updateTrackingFile(trackingData)
+      }
+      await processDomains(trackingData)
+    })
+
+  async function processDomains(trackingData: Map<string, TrackingData>) {
+    for (const [domain, data] of trackingData.entries()) {
+      if (
+        data.status === DomainStatuses.NotStarted ||
+        data.status === DomainStatuses.Failed
+      ) {
+        console.log(`Processing domain: ${domain}, owner: ${data.owner}`)
+        const status = await registerDomain(
           domain,
-          owner,
+          data.owner,
           registrarController,
           resolver,
           registrarControllerOwner,
           provider,
         )
+        trackingData.set(domain, { ...data, status })
+        updateTrackingFile(trackingData)
       }
-    })
+    }
+    console.log('All domains processed.')
+  }
 }
 
 main(require('hardhat') as HardhatRuntimeEnvironment).catch(console.error)
