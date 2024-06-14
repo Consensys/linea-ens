@@ -4,6 +4,8 @@ import 'dotenv/config'
 import { Contract } from 'ethers'
 import path from 'path'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import axios from 'axios'
+import ethers from 'ethers'
 
 interface Abi {
   address: string
@@ -25,6 +27,8 @@ async function main(hre: HardhatRuntimeEnvironment) {
   let registrarControllerAbi: Abi
   let resolverAbi: Abi
   let rpcUrl: string
+  let web3SignerUrl = `${process.env.WEB3_SIGNER_URL}/api/v1/eth1/sign/${process.env.WEB3_SIGNER_PUBLIC_KEY}`
+  let provider
 
   switch (network) {
     case 'lineaSepolia':
@@ -50,14 +54,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
       break
   }
 
-  const validateEnv = (key: string): string => {
-    const value = process.env[key]
-    if (!value) {
-      console.error(`Environment variable ${key} is not set.`)
-      process.exit(1)
-    }
-    return value
-  }
+  provider = new hre.ethers.providers.JsonRpcProvider(rpcUrl)
 
   const registrarControllerAddress = registrarControllerAbi.address
   const resolverAddress = resolverAbi.address
@@ -67,33 +64,13 @@ async function main(hre: HardhatRuntimeEnvironment) {
   const OWNER_CONTROLLED_FUSES = 0 // Fuses, 0 for no restrictions
   const REVERSE_RECORD = true
 
-  async function getSigner() {
-    if (network === 'localhost') {
-      const signers = await hre.ethers.getSigners()
-      return {
-        deployer: signers[0], // Account 0
-        owner: signers[1], // Account 1
-      }
-    } else {
-      const provider = new hre.ethers.providers.JsonRpcProvider(rpcUrl)
-      return {
-        deployer: new hre.ethers.Wallet(
-          validateEnv('DEPLOYER_PRIVATE_KEY'),
-          provider,
-        ),
-        owner: new hre.ethers.Wallet(
-          validateEnv('OWNER_PRIVATE_KEY'),
-          provider,
-        ),
-      }
-    }
-  }
-
   async function registerDomain(
     domainName: string,
     ownerAddress: string,
     registrarController: Contract,
     resolver: Contract,
+    contractOwner: string,
+    provider: ethers.providers.JsonRpcProvider,
   ) {
     const fullDomainName = `${domainName}.${process.env.BASE_DOMAIN}.eth`
     const namehash = hre.ethers.utils.namehash(fullDomainName)
@@ -117,13 +94,17 @@ async function main(hre: HardhatRuntimeEnvironment) {
           data,
           OWNER_CONTROLLED_FUSES,
           REVERSE_RECORD,
+          { from: contractOwner },
         )
 
       console.log(
         `Estimated gas limit for ${domainName}: ${estimatedGasLimit.toString()}`,
       )
 
-      const tx = await registrarController.ownerRegister(
+      const gasPrice = await provider.getGasPrice()
+      const nonce = await provider.getTransactionCount(contractOwner)
+
+      const tx = await registrarController.populateTransaction.ownerRegister(
         domainName,
         ownerAddress,
         DURATION,
@@ -131,9 +112,33 @@ async function main(hre: HardhatRuntimeEnvironment) {
         data,
         OWNER_CONTROLLED_FUSES,
         REVERSE_RECORD,
-        { gasLimit: estimatedGasLimit },
+        {
+          gasLimit: estimatedGasLimit,
+          value: 0,
+          type: 2,
+          nonce,
+          from: contractOwner,
+          maxFeePerGas: gasPrice,
+          maxPriorityFeePerGas: gasPrice,
+        },
       )
-      await tx.wait()
+
+      // We can't add it directly to the populateTransaction function
+      tx.chainId = provider.network.chainId
+
+      const serializedTx = hre.ethers.utils.serializeTransaction(tx)
+
+      const { data: signature, status } = await axios.post(web3SignerUrl, {
+        data: serializedTx,
+      })
+
+      const serializedSignedTx = hre.ethers.utils.serializeTransaction(
+        tx,
+        signature,
+      )
+
+      const response = await provider.sendTransaction(serializedSignedTx)
+
       console.log(`Domain ${domainName} registered successfully.`)
     } catch (error: any) {
       console.error(`Failed to register domain ${domainName}:`, error)
@@ -146,16 +151,15 @@ async function main(hre: HardhatRuntimeEnvironment) {
     }
   }
 
-  const { deployer, owner } = await getSigner()
-
   const registrarController = new Contract(
     registrarControllerAddress,
     registrarControllerAbi.abi,
-    owner,
+    provider,
   )
-  const resolver = new Contract(resolverAddress, resolverAbi.abi, deployer)
+  const resolver = new Contract(resolverAddress, resolverAbi.abi, provider)
 
-  console.log(`RegistrarController owner: ${await registrarController.owner()}`)
+  const registrarControllerOwner = await registrarController.owner()
+  console.log(`RegistrarController owner: ${registrarControllerOwner}`)
 
   // Parse CSV file
   const domains: { domain: string; owner: string }[] = []
@@ -169,7 +173,14 @@ async function main(hre: HardhatRuntimeEnvironment) {
       console.log('CSV file successfully processed')
       for (const { domain, owner } of domains) {
         console.log(`Processing domain: ${domain}, owner: ${owner}`)
-        await registerDomain(domain, owner, registrarController, resolver)
+        await registerDomain(
+          domain,
+          owner,
+          registrarController,
+          resolver,
+          registrarControllerOwner,
+          provider,
+        )
       }
     })
 }

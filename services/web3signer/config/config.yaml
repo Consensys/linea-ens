@@ -1,6 +1,6 @@
 # Chain
 # chain-id: 1337
-eth1.chain-id: 11155111
+eth1.chain-id: 59141
 
 # Path
 # data-path: "~/web3signerdata" # Path
