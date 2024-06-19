@@ -103,7 +103,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   }
 
   /**
-   * rollup_getProof returns a different structure when a storage proof is
+   * linea_getProof returns a different structure when a storage proof is
    * unitialized, to handle this case we return unitialized for this particular storage
    * @param proof
    * @returns modifier proof with the
