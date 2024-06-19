@@ -88,7 +88,7 @@ const Page = () => {
           ),
           titleExtra: (
             <Outlink fontVariant="bodyBold" href={makeEtherscanLink(address, chainName, 'address')}>
-              {t('etherscan', { ns: 'common' })}
+              {t('lineascan', { ns: 'common' })}
             </Outlink>
           ),
           trailing: <NameListView address={address} selfAddress={_address} setError={setIsError} />,
