@@ -45,7 +45,7 @@ describe("L1Verifier", () => {
     l1Provider = new ethers.BrowserProvider(ethers.provider._hardhatProvider);
     l2Provider = new ethers.JsonRpcProvider(
       "https://rpc.sepolia.linea.build/",
-      59140,
+      59141,
       {
         staticNetwork: true,
       }
@@ -73,8 +73,9 @@ describe("L1Verifier", () => {
       l1SepoliaProvider
     );
     const currentL2BlockNumber = await rollupSepolia.currentL2BlockNumber();
-    const stateRootHash =
-      await rollupSepolia.stateRootHashes(currentL2BlockNumber);
+    const stateRootHash = await rollupSepolia.stateRootHashes(
+      currentL2BlockNumber
+    );
     const rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
 
     const gateway = makeL2Gateway(
