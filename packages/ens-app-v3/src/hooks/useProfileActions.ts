@@ -1,10 +1,13 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { checkIsDecrypted } from '@ensdomains/ensjs/utils'
+
 import { makeIntroItem } from '@app/transaction-flow/intro'
 import { createTransactionItem } from '@app/transaction-flow/transaction'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
 import { GenericTransaction } from '@app/transaction-flow/types'
+import { checkAvailablePrimaryName } from '@app/utils/checkAvailablePrimaryName'
 import { nameParts } from '@app/utils/name'
 import { useHasGraphError } from '@app/utils/SyncProvider/SyncProvider'
 
@@ -49,7 +52,8 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
   const { data: profile, isLoading: isProfileLoading } = useProfile({ name, enabled })
   const { data: ownerData, isLoading: isOwnerLoading } = useOwner({ name, enabled })
   const { data: wrapperData, isLoading: isWrapperDataLoading } = useWrapperData({ name, enabled })
-  const { isLoading: isExpiryLoading } = useExpiry({ name, enabled })
+  const { data: expiryData, isLoading: isExpiryLoading } = useExpiry({ name, enabled })
+  const expiryDate = expiryData?.expiry?.date
 
   const { data: resolverStatus, isLoading: isResolverStatusLoading } = useResolverStatus({
     name,
@@ -59,9 +63,25 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
     enabled: enabled && !!ownerData,
   })
 
-  const { isLoading: isPrimaryNameLoading } = usePrimaryName({
+  const { data: primaryData, isLoading: isPrimaryNameLoading } = usePrimaryName({
     address,
     enabled,
+  })
+
+  const isAvailablePrimaryName = checkAvailablePrimaryName(
+    primaryData?.name,
+    resolverStatus,
+  )({
+    name,
+    relation: {
+      owner: ownerData?.owner === address,
+      registrant: ownerData?.registrant === address,
+      resolvedAddress: profile?.address === address,
+      wrappedOwner: wrapperData?.owner === address,
+    },
+    expiryDate,
+    fuses: wrapperData?.fuses || null,
+    isMigrated: !!profile?.isMigrated,
   })
 
   const isWrapped = !!wrapperData
@@ -76,6 +96,7 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
 
   const { data: hasGraphError, isLoading: hasGraphErrorLoading } = useHasGraphError()
 
+  const showUnknownLabelsInput = usePreparedDataInput('UnknownLabels')
   const showProfileEditorInput = usePreparedDataInput('ProfileEditor')
   const showDeleteEmancipatedSubnameWarningInput = usePreparedDataInput(
     'DeleteEmancipatedSubnameWarning',
@@ -97,6 +118,27 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
   const profileActions = useMemo(() => {
     const actions: Action[] = []
     if (!address || isLoading) return actions
+
+    const transactionFlowItem = getPrimaryNameTransactionFlowItem?.callBack?.(name)
+    if (isAvailablePrimaryName && !!transactionFlowItem) {
+      const key = `setPrimaryName-${name}-${address}`
+      actions.push({
+        label: t('tabs.profile.actions.setAsPrimaryName.label'),
+        tooltipContent: hasGraphError
+          ? t('errors.networkError.blurb', { ns: 'common' })
+          : undefined,
+        tooltipPlacement: 'left',
+        loading: hasGraphErrorLoading,
+        onClick: !checkIsDecrypted(name)
+          ? () =>
+              showUnknownLabelsInput(key, {
+                name,
+                key,
+                transactionFlowItem,
+              })
+          : () => createTransactionFlow(key, transactionFlowItem),
+      })
+    }
 
     if (abilities.canEdit && (abilities.canEditRecords || abilities.canEditResolver)) {
       actions.push({
@@ -227,6 +269,7 @@ export const useProfileActions = ({ name, enabled: enabled_ = true }: Props) => 
     address,
     isLoading,
     name,
+    isAvailablePrimaryName,
     abilities.canEdit,
     abilities.canEditRecords,
     abilities.canEditResolver,
