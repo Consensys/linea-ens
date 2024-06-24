@@ -20,6 +20,7 @@ contract LineaSparseProofVerifier is IEVMVerifier {
     }
 
     function getStorageValues(
+        address target,
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes memory proof
@@ -41,6 +42,7 @@ contract LineaSparseProofVerifier is IEVMVerifier {
 
         return
             LineaProofHelper.getStorageValues(
+                target,
                 commands,
                 constants,
                 stateRoot,
