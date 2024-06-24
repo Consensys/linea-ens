@@ -8,6 +8,8 @@ interface IRollup {
     function stateRootHashes(
         uint256 l2blockNumber
     ) external view returns (bytes32);
+
+    function currentL2BlockNumber() external view returns (uint256);
 }
 
 contract LineaSparseProofVerifier is IEVMVerifier {
@@ -33,10 +35,16 @@ contract LineaSparseProofVerifier is IEVMVerifier {
                 (uint256, AccountProofStruct, StorageProofStruct[])
             );
 
+        // Check that the L2 block number used is the most recent one
+        require(
+            blockNo == IRollup(_rollup).currentL2BlockNumber(),
+            "LineaSparseProofVerifier: not latest finalized block"
+        );
+
         bytes32 stateRoot = IRollup(_rollup).stateRootHashes(blockNo);
         require(
             stateRoot != bytes32(0),
-            "LineaResolverStub: invalid state root"
+            "LineaSparseProofVerifier: invalid state root"
         );
 
         return
