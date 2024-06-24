@@ -374,6 +374,7 @@ describe("Crosschain Resolver", () => {
 
   it("should revert if the block number returned by the gateway is not the most recent one", async () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     // Put a wrong block number
     await rollup.setCurrentStateRoot(5, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
@@ -392,7 +393,7 @@ describe("Crosschain Resolver", () => {
         "LineaSparseProofVerifier: not latest finalized block"
       );
     }
-    // Put back the right block number
-    await rollup.setCurrentStateRoot(currentBlockNo, stateRoot);
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 });
