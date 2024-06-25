@@ -99,7 +99,10 @@ contract L1Resolver is
      */
     function setTarget(bytes calldata name, address target) public {
         (bytes32 node, ) = getTarget(name);
-        require(isAuthorised(node));
+        require(
+            isAuthorised(node),
+            "Not authorized to set target for this node"
+        );
         targets[node] = target;
         emit TargetSet(name, target);
         emit MetadataChanged(name, graphqlUrl);

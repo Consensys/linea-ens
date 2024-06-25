@@ -246,7 +246,9 @@ describe("Crosschain Resolver", () => {
     const incorrectname = encodeName("notowned.eth");
     try {
       await target.setTarget(incorrectname, l2ResolverAddress);
-    } catch (e) {}
+    } catch (e) {
+      expect(e.reason).equal("Not authorized to set target for this node");
+    }
 
     const result = await target.getTarget(incorrectname);
     expect(result[1]).to.equal(EMPTY_ADDRESS);
