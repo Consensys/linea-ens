@@ -97,7 +97,7 @@ contract L1Resolver is
      * @param name The encoded name to query.
      * @param target The L2 resolver address to verify against.
      */
-    function setTarget(bytes calldata name, address target) public {
+    function setTarget(bytes calldata name, address target) external {
         (bytes32 node, ) = getTarget(name);
         require(isAuthorised(node));
         targets[node] = target;
@@ -205,7 +205,7 @@ contract L1Resolver is
     function addrCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(address(bytes20(values[1])));
     }
 
@@ -228,7 +228,7 @@ contract L1Resolver is
     function addrCoinTypeCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(values[1]);
     }
 
@@ -251,7 +251,7 @@ contract L1Resolver is
     function textCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(string(values[1]));
     }
 
@@ -272,7 +272,7 @@ contract L1Resolver is
     function contenthashCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(values[1]);
     }
 
@@ -282,7 +282,9 @@ contract L1Resolver is
      * @param name The domain name in format (dnsEncoded)
      * @return graphqlUrl The GraphQL URL used by the resolver
      */
-    function metadata(bytes calldata name) public view returns (string memory) {
+    function metadata(
+        bytes calldata name
+    ) external view returns (string memory) {
         return (graphqlUrl);
     }
 

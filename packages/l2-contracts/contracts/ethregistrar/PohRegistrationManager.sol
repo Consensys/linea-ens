@@ -28,7 +28,7 @@ contract PohRegistrationManager is Ownable {
      * @param _address The address to check.
      * @return bool True if the address has registered, false otherwise.
      */
-    function isRegistered(address _address) public view returns (bool) {
+    function isRegistered(address _address) external view returns (bool) {
         return hasRegisteredPoh[_address];
     }
 

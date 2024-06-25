@@ -194,7 +194,7 @@ contract ETHRegistrarController is
             );
     }
 
-    function commit(bytes32 commitment) public override {
+    function commit(bytes32 commitment) external override {
         if (commitments[commitment] + maxCommitmentAge >= block.timestamp) {
             revert UnexpiredCommitmentExists(commitment);
         }
@@ -223,7 +223,7 @@ contract ETHRegistrarController is
         bool reverseRecord,
         uint16 ownerControlledFuses,
         bytes memory signature
-    ) public {
+    ) external {
         // The sender of the transaction needs to be the owner
         if (msg.sender != owner) {
             revert SenderNotOwner(owner, msg.sender);
@@ -292,7 +292,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    ) public payable override {
+    ) external payable override {
         IPriceOracle.Price memory price = rentPrice(name, duration);
         if (msg.value < price.base + price.premium) {
             revert InsufficientValue();
@@ -447,7 +447,7 @@ contract ETHRegistrarController is
         emit NameRenewedPoh(name, labelhash, expires);
     }
 
-    function withdraw() public {
+    function withdraw() external {
         payable(owner()).transfer(address(this).balance);
     }
 
