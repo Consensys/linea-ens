@@ -23,6 +23,7 @@ contract PohVerifier is EIP712, Ownable {
      */
     constructor() EIP712(SIGNING_DOMAIN, SIGNATURE_VERSION) Ownable() {
         signer = msg.sender;
+        emit SignerUpdated(signer);
     }
 
     /**
