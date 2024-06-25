@@ -37,10 +37,11 @@ contract PohVerifier is EIP712, Ownable {
     }
 
     /**
-     * @notice Verify the signature sent in parameter
+     * @notice Check if the provided signature has been signed by signer
      * @dev human is supposed to be a POH address, this is what is being signed by the POH API
-     * @param signature The signature to verify
+     * @param signature The signature to check
      * @param human the address for which the signature has been crafted
+     * @return True if the signature was made by signer, false otherwise
      */
     function verify(
         bytes memory signature,
