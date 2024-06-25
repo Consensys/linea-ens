@@ -93,7 +93,7 @@ contract L1Resolver is
     }
 
     /**
-     * Set target address to verify aagainst
+     * Set target address to verify against
      * @param name The encoded name to query.
      * @param target The L2 resolver address to verify against.
      */
@@ -137,7 +137,7 @@ contract L1Resolver is
     }
 
     /**
-     * @dev Resolve and verify a record stored in l2 target address. It supports subname by fetching target recursively to the nearlest parent.
+     * @dev Resolve and verify a record stored in l2 target address. It supports subname by fetching target recursively to the nearest parent.
      * @param name DNS encoded ENS name to query
      * @param data The actual calldata
      * @return result result of the call
