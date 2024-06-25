@@ -30,6 +30,7 @@ contract L1Resolver is
     IEVMVerifier public immutable verifier;
     ENS public immutable ens;
     INameWrapper public immutable nameWrapper;
+    uint256 public immutable l2ChainId;
     mapping(bytes32 => address) targets;
     uint256 constant COIN_TYPE_ETH = 60;
     uint256 constant RECORD_VERSIONS_SLOT = 0;
@@ -38,7 +39,6 @@ contract L1Resolver is
     uint256 constant VERSIONABLE_HASHES_SLOT = 3;
     uint256 constant VERSIONABLE_TEXTS_SLOT = 10;
     string public graphqlUrl;
-    uint256 public l2ChainId;
 
     event TargetSet(bytes name, address target);
 
