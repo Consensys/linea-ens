@@ -12,6 +12,7 @@ const {
   EMPTY_BYTES32,
   EMPTY_ADDRESS,
   BASE_NODE_BYTES32,
+  BASE_NODE_2_BYTES32,
   BASE_NODE_DNS_ENCODED,
   BASE_DOMAIN_STR,
   BASE_DOMAIN_LABEL,
@@ -26,6 +27,7 @@ const ROOT_NODE = EMPTY_BYTES32
 const DUMMY_ADDRESS = '0x0000000000000000000000000000000000000001'
 const DAY = 86400
 const GRACE_PERIOD = 90 * DAY
+const ETH_NAMEHASH = namehash('eth')
 
 function increaseTime(delay) {
   return ethers.provider.send('evm_increaseTime', [delay])
@@ -223,6 +225,68 @@ describe('Name Wrapper', () => {
     }),
     () => signers,
   )
+
+  it('should revert on wrong constructor arguments', async () => {
+    try {
+      await await deploy(
+        'NameWrapper',
+        EnsRegistry.address,
+        BaseRegistrar.address,
+        MetaDataservice.address,
+        EMPTY_BYTES32,
+        BASE_NODE_DNS_ENCODED,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'BaseNodeAsETHNodeOrROOTNodeNotAllowed()'",
+      )
+    }
+
+    try {
+      await await deploy(
+        'NameWrapper',
+        EnsRegistry.address,
+        BaseRegistrar.address,
+        MetaDataservice.address,
+        ETH_NAMEHASH,
+        BASE_NODE_DNS_ENCODED,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'BaseNodeAsETHNodeOrROOTNodeNotAllowed()'",
+      )
+    }
+
+    try {
+      await await deploy(
+        'NameWrapper',
+        EnsRegistry.address,
+        BaseRegistrar.address,
+        MetaDataservice.address,
+        BASE_NODE_2_BYTES32,
+        BASE_NODE_DNS_ENCODED,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'DifferentBaseNodeBaseNodeDnsEncoded()'",
+      )
+    }
+
+    try {
+      await await deploy(
+        'NameWrapper',
+        EnsRegistry.address,
+        BaseRegistrar.address,
+        MetaDataservice.address,
+        BASE_NODE_BYTES32,
+        '0x',
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'EmptyDataNotAllowed()'",
+      )
+    }
+  })
 
   describe('wrap()', () => {
     it('Wraps a name if you are the owner', async () => {

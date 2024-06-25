@@ -29,4 +29,25 @@ library StringUtils {
         }
         return len;
     }
+
+    /**
+     * @dev Returns the substring of the string passed in argument
+     *
+     * @param str The string to get the substring from
+     * @param startIndex The start of the substring
+     * @param endIndex The end of the substring
+     * @return The substring result
+     */
+    function substring(
+        string memory str,
+        uint startIndex,
+        uint endIndex
+    ) internal pure returns (string memory) {
+        bytes memory strBytes = bytes(str);
+        bytes memory result = new bytes(endIndex - startIndex);
+        for (uint i = startIndex; i < endIndex; i++) {
+            result[i - startIndex] = strBytes[i];
+        }
+        return string(result);
+    }
 }
