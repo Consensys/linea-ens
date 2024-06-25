@@ -146,6 +146,8 @@ contract L1Resolver is
         bytes calldata name,
         bytes calldata data
     ) external view returns (bytes memory result) {
+        require(data.length >= 4, "param data too short");
+
         (, address target) = _getTarget(name, 0);
         bytes4 selector = bytes4(data);
 

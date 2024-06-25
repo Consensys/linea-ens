@@ -365,4 +365,22 @@ describe("Crosschain Resolver", () => {
     const decoded = i.decodeFunctionResult("contenthash", result2);
     expect(decoded[0]).to.equal(contenthash);
   });
+
+  it("should revert if the calldata is too short", async () => {
+    await target.setTarget(encodedname, l2ResolverAddress);
+    const addr = "0x0000000000000000000000000000000000000000";
+    const result = await l2contract["addr(bytes32)"](node);
+    expect(result).to.equal(addr);
+    await l1Provider.send("evm_mine", []);
+
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = "0x";
+    try {
+      await target.resolve(encodedname, calldata, {
+        enableCcipRead: true,
+      });
+    } catch (error) {
+      expect(error.reason).to.equal("param data too short");
+    }
+  });
 });
