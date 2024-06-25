@@ -223,6 +223,10 @@ library LineaProofHelper {
         AccountProofStruct memory accountProof,
         StorageProofStruct[] memory storageProofs
     ) internal pure returns (bytes[] memory values) {
+        require(
+            commands.length <= storageProofs.length,
+            "LineaProofHelper: commands number > storage proofs number"
+        );
         verifyAccountProof(accountProof, stateRoot);
         SparseMerkleProof.Account memory account = SparseMerkleProof.getAccount(
             accountProof.proof.value
