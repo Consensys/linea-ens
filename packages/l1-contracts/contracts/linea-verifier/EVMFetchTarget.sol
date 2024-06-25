@@ -19,7 +19,7 @@ abstract contract EVMFetchTarget {
     function getStorageSlotsCallback(
         bytes calldata response,
         bytes calldata extradata
-    ) external {
+    ) external returns (bytes memory) {
         bytes memory proof = abi.decode(response, (bytes));
         (
             IEVMVerifier verifier,
