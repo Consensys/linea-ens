@@ -26,7 +26,6 @@ error DurationTooShort(uint256 duration);
 error ResolverRequiredWhenDataSupplied();
 error UnexpiredCommitmentExists(bytes32 commitment);
 error InsufficientValue();
-error Unauthorised(bytes32 node);
 error MaxCommitmentAgeTooLow();
 error MaxCommitmentAgeTooHigh();
 error PohVerificationFailed(address owner);

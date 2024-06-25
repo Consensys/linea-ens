@@ -32,7 +32,6 @@ uint8 constant OP_BACKREF = 0x20;
 uint8 constant FLAG_DYNAMIC = 0x01;
 
 library LineaProofHelper {
-    error AccountNotFound(address);
     error UnknownOpcode(uint8);
     error InvalidSlotSize(uint256 size);
 
