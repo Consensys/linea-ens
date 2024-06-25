@@ -365,4 +365,24 @@ describe("Crosschain Resolver", () => {
     const decoded = i.decodeFunctionResult("contenthash", result2);
     expect(decoded[0]).to.equal(contenthash);
   });
+
+  it.only("should revert when the functions's selector is invalid", async () => {
+    await target.setTarget(encodedname, l2ResolverAddress);
+    const addr = "0x0000000000000000000000000000000000000000";
+    const result = await l2contract["addr(bytes32)"](node);
+    expect(result).to.equal(addr);
+    await l1Provider.send("evm_mine", []);
+
+    const i = new ethers.Interface([
+      "function unknown(bytes32) returns(address)",
+    ]);
+    const calldata = i.encodeFunctionData("unknown", [node]);
+    try {
+      await target.resolve(encodedname, calldata, {
+        enableCcipRead: true,
+      });
+    } catch (error) {
+      expect(error.reason).to.equal("invalid selector");
+    }
+  });
 });

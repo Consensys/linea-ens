@@ -171,6 +171,9 @@ contract L1Resolver is
             bytes32 node = abi.decode(data[4:], (bytes32));
             return _contenthash(node, target);
         }
+
+        // None selector has been found it reverts
+        revert("invalid selector");
     }
 
     /**
