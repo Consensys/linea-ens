@@ -15,6 +15,7 @@ const {
   BASE_NODE_DNS_ENCODED,
   BASE_DOMAIN_STR,
   BASE_DOMAIN_LABEL,
+  OVER_MAX_REGISTRATION_DURATION,
 } = require('../test-utils/constants')
 
 const abiCoder = new ethers.utils.AbiCoder()
@@ -6560,6 +6561,31 @@ describe('Name Wrapper', () => {
       )
       // still expired
       expect(expiryAfter).to.be.at.most(block1.timestamp + GRACE_PERIOD)
+    })
+
+    it('should revert when registering with a duration too long', async () => {
+      await expect(
+        NameWrapper.registerAndWrap(
+          label,
+          account,
+          OVER_MAX_REGISTRATION_DURATION,
+          EMPTY_ADDRESS,
+          CAN_DO_EVERYTHING,
+        ),
+      ).to.be.revertedWith(`DurationTooLong(${OVER_MAX_REGISTRATION_DURATION})`)
+    })
+
+    it('should revert when renewing with a duration too long', async () => {
+      await NameWrapper.registerAndWrap(
+        label,
+        account,
+        86400,
+        EMPTY_ADDRESS,
+        CAN_DO_EVERYTHING,
+      )
+      await expect(
+        NameWrapper.renew(labelHash, OVER_MAX_REGISTRATION_DURATION),
+      ).to.be.revertedWith(`DurationTooLong(${OVER_MAX_REGISTRATION_DURATION})`)
     })
   })
 

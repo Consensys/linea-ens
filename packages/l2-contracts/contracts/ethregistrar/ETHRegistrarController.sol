@@ -23,6 +23,7 @@ error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
 error NameNotAvailable(string name);
 error DurationTooShort(uint256 duration);
+error DurationTooLong(uint256 duration);
 error ResolverRequiredWhenDataSupplied();
 error UnexpiredCommitmentExists(bytes32 commitment);
 error InsufficientValue();
@@ -101,6 +102,13 @@ contract ETHRegistrarController is
 
     event NameRenewedPoh(string name, bytes32 indexed label, uint256 expires);
 
+    modifier maxRegistrationDuration(uint256 duration) {
+        if (duration > MAX_EXPIRY) {
+            revert DurationTooLong(duration);
+        }
+        _;
+    }
+
     /**
      * @notice Create registrar for the base domain passed in parameter.
      * @param _base Base registrar address.
@@ -174,7 +182,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    ) public pure override returns (bytes32) {
+    ) public pure override maxRegistrationDuration(duration) returns (bytes32) {
         bytes32 label = keccak256(bytes(name));
         if (data.length > 0 && resolver == address(0)) {
             revert ResolverRequiredWhenDataSupplied();
@@ -390,7 +398,7 @@ contract ETHRegistrarController is
     function renew(
         string calldata name,
         uint256 duration
-    ) external payable override {
+    ) external payable override maxRegistrationDuration(duration) {
         bytes32 labelhash = keccak256(bytes(name));
         uint256 tokenId = uint256(labelhash);
         IPriceOracle.Price memory price = rentPrice(name, duration);
@@ -541,7 +549,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         uint16 ownerControlledFuses,
         bool reverseRecord
-    ) external onlyOwner {
+    ) external onlyOwner maxRegistrationDuration(duration) {
         uint256 expires = _register(
             name,
             owner,

@@ -27,6 +27,7 @@ error CannotUpgrade();
 error OperationProhibited(bytes32 node);
 error NameIsNotWrapped();
 error NameIsStillExpired();
+error DurationTooLong(uint256 duration);
 
 /**
  * @title Contract based on ENS's NameWrapper contract to handle any level
@@ -63,6 +64,13 @@ contract NameWrapper is
 
     /// @dev Base node handled to register a domain, replaces .eth node
     bytes32 public immutable baseNode;
+
+    modifier maxRegistrationDuration(uint256 duration) {
+        if (duration > MAX_EXPIRY) {
+            revert DurationTooLong(duration);
+        }
+        _;
+    }
 
     constructor(
         ENS _ens,
@@ -340,7 +348,12 @@ contract NameWrapper is
         uint256 duration,
         address resolver,
         uint16 ownerControlledFuses
-    ) external onlyController returns (uint256 registrarExpiry) {
+    )
+        external
+        onlyController
+        maxRegistrationDuration(duration)
+        returns (uint256 registrarExpiry)
+    {
         uint256 tokenId = uint256(keccak256(bytes(label)));
         registrarExpiry = registrar.register(tokenId, address(this), duration);
         _wrap(
@@ -363,7 +376,12 @@ contract NameWrapper is
     function renew(
         uint256 tokenId,
         uint256 duration
-    ) external onlyController returns (uint256 expires) {
+    )
+        external
+        onlyController
+        maxRegistrationDuration(duration)
+        returns (uint256 expires)
+    {
         bytes32 node = _makeNode(baseNode, bytes32(tokenId));
 
         uint256 registrarExpiry = registrar.renew(tokenId, duration);
