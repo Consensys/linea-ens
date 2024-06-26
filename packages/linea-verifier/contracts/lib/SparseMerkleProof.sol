@@ -12,7 +12,7 @@ library SparseMerkleProof {
     using Mimc for *;
 
     /**
-     * Struct containing Account data in storage proof format
+     * The Account struct represents the state of the account including the storage root, nonce, balance and codesize
      * @dev This is mapped directly to the output of the storage proof
      */
     struct Account {
@@ -25,7 +25,7 @@ library SparseMerkleProof {
     }
 
     /**
-     * Struct containing Leaf data in storage proof format
+     * The Leaf struct represents an account leaf value in the account trie
      * @dev This is mapped directly to the output of the storage proof
      */
     struct Leaf {
@@ -255,7 +255,7 @@ library SparseMerkleProof {
     }
 
     /**
-     * @notice Computes merkle root from proof and compares to provided root
+     * @notice Computes merkle root from proof and compares it to the provided root
      * @param _proof Sparse merkle tree proof
      * @param _leafHash Leaf hash
      * @param _leafIndex Index of the leaf
