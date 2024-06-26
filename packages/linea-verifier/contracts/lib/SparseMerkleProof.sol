@@ -25,7 +25,7 @@ library SparseMerkleProof {
     }
 
     /**
-     * The Leaf struct represents an account leaf value in the account trie
+     * Represents the leaf structure in both account and storage tries
      * @dev This is mapped directly to the output of the storage proof
      */
     struct Leaf {
