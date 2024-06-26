@@ -24,35 +24,34 @@ pragma solidity 0.8.25;
  */
 library Mimc {
     /**
-    * Thrown when the data is not provided
-    */
+     * Thrown when the data is not provided
+     */
     error DataMissing();
 
     /**
-    * Thrown when the data is not purely in 32 byte chunks
-    */
+     * Thrown when the data is not purely in 32 byte chunks
+     */
     error DataIsNotMod32();
 
     uint256 constant FR_FIELD =
         8444461749428370424248824938781546531375899335154063827935233455917409239041;
-
     /**
-    * @notice Performs a MiMC hash on the data provided
-    * @param _msg The data to be hashed
-    * @dev Only data that has length modulus 32 is hashed, reverts otherwise
-    * @return mimcHash The computed MiMC hash
-    */
+     * @notice Performs a MiMC hash on the data provided
+     * @param _msg The data to be hashed
+     * @dev Only data that has length modulus 32 is hashed, reverts otherwise
+     * @return mimcHash The computed MiMC hash
+     */
     function hash(
         bytes calldata _msg
     ) external pure returns (bytes32 mimcHash) {
         if (_msg.length == 0) {
-        revert DataMissing();
+            revert DataMissing();
         }
 
         if (_msg.length % 0x20 != 0) {
-        revert DataIsNotMod32();
+            revert DataIsNotMod32();
         }
-                
+
         assembly {
             let chunks := div(add(_msg.length, 0x1f), 0x20)
 
