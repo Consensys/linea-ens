@@ -221,6 +221,7 @@ if (process.env.ANALYZE) {
 
 if (process.env.CI && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_IPFS) {
   plugins.push((config) =>
+    // @ts-ignore
     withSentryConfig(config, {
       silent: false,
     }),

@@ -160,6 +160,7 @@ export const UnknownLabelsForm = forwardRef<HTMLFormElement, Props>(
                 suffix={inx === labels.length - 1 ? `.${getValues(`unknownLabels.tld`)}` : '.'}
                 disabled={disabled}
                 defaultValue={value}
+                // @ts-ignore
                 error={getFieldState(`unknownLabels.labels.${inx}.value`).error?.message}
                 spellCheck={false}
                 autoCorrect="off"
