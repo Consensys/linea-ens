@@ -42,7 +42,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Docker Image Build and Publish
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
         uses: docker/build-push-action@v4
         with:
           context: ./
@@ -52,6 +51,5 @@ jobs:
           build-args: |
             NEXT_PUBLIC_INFURA_KEY=${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
             NEXT_PUBLIC_ALCHEMY_KEY=${{ secrets.NEXT_PUBLIC_ALCHEMY_KEY }}
-            NEXT_PUBLIC_BASE_DOMAIN=${{ vars.NEXT_PUBLIC_BASE_DOMAIN_TESTNET }}
-            NEXT_PUBLIC_POH_SIGNATURE_API=${{ vars.NEXT_PUBLIC_POH_SIGNATURE_API_TESTNET }}
+            NEXT_PUBLIC_WC_PROJECT_ID=${{ secrets.NEXT_PUBLIC_WC_PROJECT_ID }}
             BUILD_COMMAND="pnpm build"

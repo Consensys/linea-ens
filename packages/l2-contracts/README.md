@@ -1,58 +1,6 @@
-# ENS
+# # L2-contracts: Linea Name Service contracts
 
-[![Build Status](https://travis-ci.org/ensdomains/ens-contracts.svg?branch=master)](https://travis-ci.org/ensdomains/ens-contracts)
-
-For documentation of the ENS system, see [docs.ens.domains](https://docs.ens.domains/).
-
-## npm package
-
-This repo doubles as an npm package with the compiled JSON contracts
-
-```js
-import {
-  BaseRegistrar,
-  BaseRegistrarImplementation,
-  BulkRenewal,
-  ENS,
-  ENSRegistry,
-  ENSRegistryWithFallback,
-  ETHRegistrarController,
-  FIFSRegistrar,
-  LinearPremiumPriceOracle,
-  PriceOracle,
-  PublicResolver,
-  Resolver,
-  ReverseRegistrar,
-  StablePriceOracle,
-  TestRegistrar,
-} from '@ensdomains/ens-contracts'
-```
-
-## Importing from solidity
-
-```
-// Registry
-import '@ensdomains/ens-contracts/contracts/registry/ENS.sol';
-import '@ensdomains/ens-contracts/contracts/registry/ENSRegistry.sol';
-import '@ensdomains/ens-contracts/contracts/registry/ENSRegistryWithFallback.sol';
-import '@ensdomains/ens-contracts/contracts/registry/ReverseRegistrar.sol';
-import '@ensdomains/ens-contracts/contracts/registry/TestRegistrar.sol';
-// EthRegistrar
-import '@ensdomains/ens-contracts/contracts/ethregistrar/BaseRegistrar.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/BaseRegistrarImplementation.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/BulkRenewal.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/ETHRegistrarController.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/LinearPremiumPriceOracle.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/PriceOracle.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/StablePriceOracle.sol';
-// Resolvers
-import '@ensdomains/ens-contracts/contracts/resolvers/PublicResolver.sol';
-import '@ensdomains/ens-contracts/contracts/resolvers/Resolver.sol';
-```
-
-## Accessing to binary file.
-
-If your environment does not have compiler, you can access to the raw hardhat artifacts files at `node_modules/@ensdomains/ens-contracts/artifacts/contracts/${modName}/${contractName}.sol/${contractName}.json`
+Friendly forked from https://github.com/ensdomains/ens-contracts
 
 ## Contracts
 
@@ -84,12 +32,6 @@ Implementation of the reverse registrar responsible for managing reverse resolut
 
 Implementation of the `.test` registrar facilitates easy testing of ENS on the Ethereum test networks. Currently deployed on Ropsten network, it provides functionality to instantly claim a domain for test purposes, which expires 28 days after it was claimed.
 
-## EthRegistrar
-
-Implements an [ENS](https://ens.domains/) registrar intended for the .eth TLD.
-
-These contracts were audited by ConsenSys Diligence; the audit report is available [here](https://github.com/ConsenSys/ens-audit-report-2019-02).
-
 ### BaseRegistrar
 
 BaseRegistrar is the contract that owns the TLD in the ENS registry. This contract implements a minimal set of functionality:
@@ -108,8 +50,9 @@ EthRegistrarController is the first implementation of a registration controller 
 
 - The owner of the registrar may set a price oracle contract, which determines the cost of registrations and renewals based on the name and the desired registration or renewal duration.
 - The owner of the registrar may withdraw any collected funds to their account.
-- Users can register new names using a commit/reveal process and by paying the appropriate registration fee.
-- Users can renew a name by paying the appropriate fee. Any user may renew a domain, not just the name's owner.
+- The owner of the registrar can register a domain for any address that has not been registered yet for free.
+- Users can register a new name using a commit/reveal process and if they have completed of Proof of humanity process.
+- Users can renew a name 6 month before the expiration date.
 
 The commit/reveal process is used to avoid frontrunning, and operates as follows:
 
@@ -117,6 +60,19 @@ The commit/reveal process is used to avoid frontrunning, and operates as follows
 2.  After a minimum delay period and before the commitment expires, the user calls the register function with the name to register and the secret value from the commitment. If a valid commitment is found and the other preconditions are met, the name is registered.
 
 The minimum delay and expiry for commitments exist to prevent miners or other users from effectively frontrunning registrations.
+
+### PohRegistrationManger
+
+PohRegistrationManger is the contract responsible to keep track of the users that used their POH to register a domain (One registration by address).
+
+- The owner of the PohRegistrationManger can set addresses as managers.
+- The managers of PohRegistrationManager can mark an address as having used its POH, EthRegistrarController is intented to be a manager.
+
+### PohVerifier
+
+PohVerifier is the contract responsible for checking the signature of the private key responsible for aknowledging an address has passed the POH process or not.
+
+- The owner of PohVerifier can set the signer address responsible for aknowledging a POH
 
 ### SimplePriceOracle
 
@@ -150,8 +106,7 @@ This repo runs a husky precommit to prettify all contract files to keep them con
 ### How to setup
 
 ```
-git clone https://github.com/ensdomains/ens-contracts
-cd ens-contracts
+cd ./packages/l2-contracts
 yarn
 ```
 
@@ -166,56 +121,5 @@ yarn test
 Example :
 
 ```
-npx hardhat --network lineaGoerli deploy
+npx hardhat --network lineaSepolia deploy
 ```
-
-### How to publish
-
-```
-yarn pub
-```
-
-### Release flow
-
-1. Create a `feature` branch from `staging` branch
-2. Make code updates
-3. Ensure you are synced up with `staging`
-4. Code should now be in a state where you think it can be deployed to production
-5. Create a "Release Candidate" [release](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) on GitHub. This will be of the form `v1.2.3-RC0`. This tagged commit is now subject to our bug bounty.
-6. Have the tagged commit audited if necessary
-7. If changes are required, make the changes and then once ready for review create another GitHub release with an incremented RC value `v1.2.3-RC0` -> `v.1.2.3-RC1`. Repeat as necessary.
-8. Deploy to testnet. Open a pull request to merge the deploy artifacts into
-   the `feature` branch. Create GitHub release of the form `v1.2.3-testnet` from the commit that has the new deployment artifacts.
-9. Get someone to review and approve the deployment and then merge. You now MUST merge this branch into `staging` branch.
-10. If any further changes are needed, you can either make them on the existing feature branch that is in sync or create a new branch, and follow steps 1 -> 9. Repeat as necessary.
-11. Make a deployment to ethereum mainnet from `staging`. Create a GitHub release of the form `v1.2.3` from the commit that has the new deployment artifacts.
-12. Open a PR to merge into `main`. Have it reviewed and merged.
-
-### Cherry-picked release flow
-
-Certain changes can be released in isolation via cherry-picking, although ideally we would always release from `staging`.
-
-1. Create a new branch from `mainnet`.
-2. Cherry-pick from `staging` into new branch.
-3. Deploy to ethereum mainnet, tag the commit that has deployment artifacts and create a release.
-4. Merge into `mainnet`.
-
-### Emergency release process
-
-1. Branch from `main`, make fixes, deploy to testnet (can skip), deploy to mainnet
-2. Merge changes back into `main` and `staging` immediately after deploy
-3. Create GitHub releases, if you didn't deploy to testnet in step 1, do it now
-
-### Notes
-
-- Deployed code should always match source code in mainnet releases. This may not be the case for `staging`.
-- `staging` branch and `main` branch should start in sync
-- `staging` is intended to be a practice `main`. Only code that is intended to be released to `main` can be merged to `staging`. Consequently:
-  - Feature branches will be long-lived
-  - Feature branches must be kept in sync with `staging`
-  - Audits are conducted on feature branches
-- All code that is on `staging` and `main` should be deployed to testnet and mainnet respectively i.e. these branches should not have any undeployed code
-- It is preferable to not edit the same file on different feature branches.
-- Code on `staging` and `main` will always be a subset of what is deployed, as smart contracts cannot be undeployed.
-- Release candidates, `staging` and `main` branch are subject to our bug bounty
-- Releases follow semantic versioning and releases should contain a description of changes with developers being the intended audience

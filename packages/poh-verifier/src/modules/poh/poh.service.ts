@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Address, privateKeyToAccount } from 'viem/accounts';
+import { Address } from 'viem/accounts';
+import { ethers } from 'ethers';
 
 import type { EnsConfig } from 'src/config/config.interface';
+import { SignerService } from 'src/modules/signer/signer.service';
 import { ApiService } from '../api/api.service';
 
 @Injectable()
@@ -12,16 +14,19 @@ export class PohService {
   constructor(
     private configService: ConfigService,
     private apiService: ApiService,
+    private readonly signerService: SignerService,
   ) {}
 
   onModulteInit() {}
 
-  async signMessage(address: Address): Promise<any> {
+  async signMessage(address: Address): Promise<string> {
+    this.logger.log({ address });
     const ens = this.configService.get<EnsConfig>('ens');
     const chainId = this.configService.get<number>('chainId');
 
     try {
       const pohResponse = await this.apiService.getPoh(address);
+
       if (!pohResponse.poh) {
         throw new Error('address not POH');
       }
@@ -35,21 +40,19 @@ export class PohService {
 
       const types = {
         POH: [{ name: 'to', type: 'address' }],
-      } as const;
+      };
 
-      const signerAccount = privateKeyToAccount(ens.signerPrivateKey);
-      const signature = await signerAccount.signTypedData({
+      const message = {
+        to: address,
+      };
+      const serializedData = ethers.TypedDataEncoder.encode(
         domain,
         types,
-        primaryType: 'POH',
-        message: {
-          to: address,
-        },
-      });
-
-      return signature;
+        message,
+      );
+      return await this.signerService.signTypedData(serializedData);
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error({ address, error });
       throw error;
     }
   }

@@ -29,7 +29,6 @@ const nextConfig = {
   },
 
   env: {
-    NEXT_PUBLIC_BASE_DOMAIN: process.env.NEXT_PUBLIC_BASE_DOMAIN || 'linea-test',
     NEXT_PUBLIC_ALCHEMY_KEY:
       process.env.NEXT_PUBLIC_ALCHEMY_KEY || 'sSpYuHmhlpuU7RVXq-IIdCdz4IuKF-gM',
     NEXT_PUBLIC_INFURA_KEY:
@@ -222,6 +221,7 @@ if (process.env.ANALYZE) {
 
 if (process.env.CI && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_IPFS) {
   plugins.push((config) =>
+    // @ts-ignore
     withSentryConfig(config, {
       silent: false,
     }),

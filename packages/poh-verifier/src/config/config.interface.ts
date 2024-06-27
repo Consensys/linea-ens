@@ -1,4 +1,4 @@
-import { Address } from 'viem';
+import { Address, Hex } from 'viem';
 
 export enum Environment {
   DEVELOPMENT = 'development',
@@ -26,6 +26,7 @@ export interface Config {
   swagger: SwaggerConfig;
   ens: EnsConfig;
   pohApi: ApiConfig;
+  web3signer: Web3SignerConfig;
   log: LogConfig;
   chainId: number;
 }
@@ -44,11 +45,15 @@ export interface SwaggerConfig {
 
 export interface EnsConfig {
   verifierContractAddress: Address;
-  signerPrivateKey: Address;
 }
 
 export interface ApiConfig {
   url: string;
+}
+
+export interface Web3SignerConfig {
+  baseUrl: string;
+  publicKey: Hex;
 }
 
 export interface LogConfig {

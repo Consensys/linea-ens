@@ -21,6 +21,7 @@ import {
 import { BackdropSurface, mq, Portal } from '@ensdomains/thorin'
 
 import { Typography } from '@app/components/styled/Typography'
+import { getBaseDomain } from '@app/constants/chains'
 import { useLocalStorage } from '@app/hooks/useLocalStorage'
 import { createQueryKey } from '@app/hooks/useQueryOptions'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
@@ -197,7 +198,7 @@ export const SearchInput = ({
   const breakpoints = useBreakpoint()
   const queryClient = useQueryClient()
   const chainId = useChainId()
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
 
   const [inputVal, setInputVal] = useState('')
 
@@ -317,7 +318,7 @@ export const SearchInput = ({
     if (selectedItem.type === 'nameWithDotEth') {
       selectedItem = {
         type: 'name',
-        value: `${normalisedOutput}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}.eth`,
+        value: `${normalisedOutput}.${getBaseDomain(chain)}.eth`,
       }
     }
     if (!selectedItem.value) {
@@ -335,7 +336,7 @@ export const SearchInput = ({
         ? `/address/${selectedItem.value}`
         : `/profile/${selectedItem.value}`
     if (selectedItem.type === 'nameWithDotEth' || selectedItem.type === 'name') {
-      const currentValidation = validate(selectedItem.value)
+      const currentValidation = validate(selectedItem.value, getBaseDomain(chain))
       if (currentValidation.is3LD && currentValidation.isLineaDotETH && currentValidation.isShort) {
         return
       }
@@ -401,7 +402,17 @@ export const SearchInput = ({
     setInputVal('')
     searchInputRef.current?.blur()
     router.pushWithHistory(path)
-  }, [normalisedOutput, queryClient, router, searchItems, selected, setHistory, chainId, address])
+  }, [
+    normalisedOutput,
+    queryClient,
+    router,
+    searchItems,
+    selected,
+    setHistory,
+    chainId,
+    address,
+    chain,
+  ])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

@@ -79,7 +79,7 @@ const ProfileTab = ({ nameDetails, name }: Props) => {
     <DetailsWrapper>
       <ProfileSnippet name={normalisedName} getTextRecord={getTextRecord} button={snippetButton}>
         {nameDetails.isNonASCII && (
-          <Helper type="warning" alignment="horizontal">
+          <Helper alignment="horizontal">
             <Trans
               i18nKey="tabs.profile.warnings.homoglyph"
               ns="profile"

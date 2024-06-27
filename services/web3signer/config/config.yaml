@@ -1,0 +1,12 @@
+# Chain
+# chain-id: 1337
+eth1.chain-id: 59141
+
+# Path
+# data-path: "~/web3signerdata" # Path
+
+# HTTP Allowlist
+http-host-allowlist: "*"
+
+# Signing key locations
+key-store-path: "/keyFiles/"

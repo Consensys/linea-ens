@@ -10,3 +10,4 @@ forge-cache
 out
 typings-custom
 .env.local
+progress.json

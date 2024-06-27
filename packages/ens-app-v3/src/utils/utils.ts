@@ -91,10 +91,13 @@ export const checkDNS2LDFromName = (name: string) => {
   return true
 }
 
-export const checkSupported3LDFromName = (name: string): name is Eth2ldName => {
+export const checkSupported3LDFromName = (
+  name: string,
+  baseDomain: unknown,
+): name is Eth2ldName => {
   const labels = name.split('.')
   if (labels.length !== 3) return false
-  if (labels[1] !== process.env.NEXT_PUBLIC_BASE_DOMAIN) return false
+  if (labels[1] !== baseDomain) return false
   return true
 }
 

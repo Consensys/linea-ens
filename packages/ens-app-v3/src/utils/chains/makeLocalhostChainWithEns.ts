@@ -49,5 +49,9 @@ export const makeLocalhostChainWithEns = <T extends Chain>(
         url: 'http://localhost:8000/subgraphs/name/graphprotocol/ens',
       },
     },
+    custom: {
+      baseDomain: 'linea',
+      pohVerifierUrl: 'http://localhost:4000',
+    },
   } as const
 }
