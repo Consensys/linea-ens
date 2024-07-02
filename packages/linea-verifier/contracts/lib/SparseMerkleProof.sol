@@ -46,6 +46,11 @@ library SparseMerkleProof {
     error LengthNotMod32();
 
     /**
+     * Thrown when the leaf index is higher than the tree depth
+     */
+    error MaxTreeLeafIndexExceed();
+
+    /**
      * Thrown when the length of the unformatted proof is not provided exactly as expected (UNFORMATTED_PROOF_LENGTH)
      */
     error WrongProofLength(uint256 expectedLength, uint256 actualLength);
@@ -53,6 +58,7 @@ library SparseMerkleProof {
     uint256 internal constant TREE_DEPTH = 40;
     uint256 internal constant UNFORMATTED_PROOF_LENGTH = 42;
     bytes32 internal constant ZERO_HASH = 0x0;
+    uint256 internal constant MAX_TREE_LEAF_INDEX = 2 ** TREE_DEPTH - 1;
 
     /**
      * @notice Formats input, computes root and returns true if it matches the provided merkle root
@@ -272,6 +278,10 @@ library SparseMerkleProof {
     ) private pure returns (bool) {
         bytes32 computedHash = _leafHash;
         uint256 currentIndex = _leafIndex;
+
+        if (_leafIndex > MAX_TREE_LEAF_INDEX) {
+            revert MaxTreeLeafIndexExceed();
+        }
 
         for (uint256 height; height < TREE_DEPTH; ++height) {
             if ((currentIndex >> height) & 1 == 1)
