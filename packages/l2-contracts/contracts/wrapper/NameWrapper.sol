@@ -28,7 +28,7 @@ error OperationProhibited(bytes32 node);
 error NameIsNotWrapped();
 error NameIsStillExpired();
 error DurationTooLong(uint256 duration);
-error Uint64Overflow(uint256 duration);
+error Uint64Overflow(uint256 number);
 
 /**
  * @title Contract based on ENS's NameWrapper contract to handle any level
