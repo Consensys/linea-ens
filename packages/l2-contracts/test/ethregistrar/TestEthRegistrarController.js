@@ -832,7 +832,6 @@ contract('ETHRegistrarController', function () {
         5,
       )
     } catch (error) {
-      console.log(error)
       expect(error.errorSignature).to.equal(`DurationTooLong(uint256)`)
     }
   })

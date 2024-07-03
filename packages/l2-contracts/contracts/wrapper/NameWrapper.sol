@@ -28,6 +28,7 @@ error OperationProhibited(bytes32 node);
 error NameIsNotWrapped();
 error NameIsStillExpired();
 error DurationTooLong(uint256 duration);
+error Uint64Overflow(uint256 duration);
 
 /**
  * @title Contract based on ENS's NameWrapper contract to handle any level
@@ -326,7 +327,11 @@ contract NameWrapper is
         // transfer the ens record back to the new owner (this contract)
         registrar.reclaim(tokenId, address(this));
 
-        expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
+        uint256 nameExpires = registrar.nameExpires(tokenId);
+
+        _revertIfUint64Overflow(nameExpires);
+
+        expiry = uint64(nameExpires) + GRACE_PERIOD;
 
         _wrap(label, wrappedOwner, ownerControlledFuses, expiry, resolver);
     }
@@ -356,6 +361,10 @@ contract NameWrapper is
     {
         uint256 tokenId = uint256(keccak256(bytes(label)));
         registrarExpiry = registrar.register(tokenId, address(this), duration);
+
+        // To avoid silent overflows
+        _revertIfUint64Overflow(registrarExpiry);
+
         _wrap(
             label,
             wrappedOwner,
@@ -397,6 +406,8 @@ contract NameWrapper is
         } catch {
             return registrarExpiry;
         }
+
+        _revertIfUint64Overflow(registrarExpiry);
 
         // Set expiry in Wrapper
         uint64 expiry = uint64(registrarExpiry) + GRACE_PERIOD;
@@ -923,7 +934,11 @@ contract NameWrapper is
         // transfer the ens record back to the new owner (this contract)
         registrar.reclaim(uint256(labelhash), address(this));
 
-        uint64 expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
+        uint256 nameExpires = registrar.nameExpires(tokenId);
+
+        _revertIfUint64Overflow(nameExpires);
+
+        uint64 expiry = uint64(nameExpires) + GRACE_PERIOD;
 
         _wrap(label, owner, ownerControlledFuses, expiry, resolver);
 
@@ -1206,5 +1221,15 @@ contract NameWrapper is
         return
             fuses & IS_DOT_ETH == IS_DOT_ETH &&
             expiry - GRACE_PERIOD < block.timestamp;
+    }
+
+    /**
+     * @notice Revert to avoid silent overflow when converting from uint256 to uint64
+     * @param _uint256 The variable to check if it can silently overflow
+     */
+    function _revertIfUint64Overflow(uint256 _uint256) internal pure {
+        if (_uint256 > type(uint64).max) {
+            revert Uint64Overflow(_uint256);
+        }
     }
 }
