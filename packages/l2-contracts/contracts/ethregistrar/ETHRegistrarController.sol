@@ -23,7 +23,6 @@ error CommitmentTooNew(bytes32 commitment);
 error CommitmentTooOld(bytes32 commitment);
 error NameNotAvailable(string name);
 error DurationTooShort(uint256 duration);
-error DurationTooLong(uint256 duration);
 error ResolverRequiredWhenDataSupplied();
 error UnexpiredCommitmentExists(bytes32 commitment);
 error InsufficientValue();
