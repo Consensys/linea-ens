@@ -16,7 +16,13 @@ import { ethers } from "hardhat";
 import { EthereumProvider } from "hardhat/types";
 import request from "supertest";
 import packet from "dns-packet";
-import { blockNo, proofTest, extraDataTest, stateRoot, wrongExtraData } from "./testData";
+import {
+  blockNo,
+  proofTest,
+  extraDataTest,
+  stateRoot,
+  wrongExtraData,
+} from "./testData";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
 const domainName = "linea-test";
