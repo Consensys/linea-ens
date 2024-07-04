@@ -255,6 +255,7 @@ library EVMFetcher {
             EVMFetchTarget.getStorageSlotsCallback.selector,
             abi.encode(
                 request.verifier,
+                request.target,
                 request.commands,
                 request.constants,
                 callbackId,

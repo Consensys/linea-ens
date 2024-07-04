@@ -64,6 +64,7 @@ const client = createClient({
 const wagmiConfig = {
   ...createConfig({
     connectors: [
+      // @ts-ignore
       mock({
         accounts: [privateKeyAccount.address],
         features: {},

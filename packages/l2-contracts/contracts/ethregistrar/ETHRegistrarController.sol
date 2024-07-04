@@ -26,7 +26,6 @@ error DurationTooShort(uint256 duration);
 error ResolverRequiredWhenDataSupplied();
 error UnexpiredCommitmentExists(bytes32 commitment);
 error InsufficientValue();
-error Unauthorised(bytes32 node);
 error MaxCommitmentAgeTooLow();
 error MaxCommitmentAgeTooHigh();
 error PohVerificationFailed(address owner);
@@ -34,6 +33,11 @@ error OwnerAlreadyRegistered(address owner);
 error SenderNotOwner(address owner, address sender);
 error RenewPOHNotStarted(uint256 currentTime, uint256 renewTimeStart);
 error WrongPohRegistrationDuration(uint256 duration);
+error ZeroAddressNotAllowed();
+error EmptyDataNotAllowed();
+error EmptyStringNotAllowed();
+error DifferentBaseDomainBaseNode();
+error BaseNodeAsETHNodeOrROOTNodeNotAllowed();
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -53,6 +57,10 @@ contract ETHRegistrarController is
     uint256 public constant POH_REGISTRATION_DURATION = 1 days * 365 * 3;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
     uint256 public constant GRACE_PERIOD = 90 days;
+    bytes32 private constant ETH_NODE =
+        0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+    bytes32 private constant ROOT_NODE =
+        0x0000000000000000000000000000000000000000000000000000000000000000;
     BaseRegistrarImplementation immutable base;
     IPriceOracle public immutable prices;
     uint256 public immutable minCommitmentAge;
@@ -102,6 +110,24 @@ contract ETHRegistrarController is
     event NameRenewedPoh(string name, bytes32 indexed label, uint256 expires);
 
     /**
+     * @dev Ensures the address is not address(0).
+     * @param _addr Address to check.
+     */
+    modifier nonZeroAddress(address _addr) {
+        if (_addr == address(0x0)) revert ZeroAddressNotAllowed();
+        _;
+    }
+
+    /**
+     * @dev Ensures the string is not empty("").
+     * @param  _string to check.
+     */
+    modifier nonEmptyString(string memory _string) {
+        if (bytes(_string).length == 0) revert EmptyStringNotAllowed();
+        _;
+    }
+
+    /**
      * @notice Create registrar for the base domain passed in parameter.
      * @param _base Base registrar address.
      * @param _prices Price oracle address.
@@ -127,13 +153,32 @@ contract ETHRegistrarController is
         PohRegistrationManager _pohRegistrationManager,
         bytes32 _baseNode,
         string memory _baseDomain
-    ) ReverseClaimer(_ens, msg.sender) {
+    )
+        nonZeroAddress(address(_pohVerifier))
+        nonZeroAddress(address(_pohRegistrationManager))
+        nonEmptyString(_baseDomain)
+        ReverseClaimer(_ens, msg.sender)
+    {
         if (_maxCommitmentAge <= _minCommitmentAge) {
             revert MaxCommitmentAgeTooLow();
         }
 
         if (_maxCommitmentAge > block.timestamp) {
             revert MaxCommitmentAgeTooHigh();
+        }
+
+        // Base node can not be ETH_NODE or ROOT_NODE
+        if (_baseNode == ROOT_NODE || _baseNode == ETH_NODE) {
+            revert BaseNodeAsETHNodeOrROOTNodeNotAllowed();
+        }
+
+        // Validate _baseNode and _baseDomain
+        (, bytes32 node) = NameEncoder.dnsEncodeName(
+            _baseDomain.substring(1, _baseDomain.strlen())
+        );
+
+        if (node != _baseNode) {
+            revert DifferentBaseDomainBaseNode();
         }
 
         base = _base;

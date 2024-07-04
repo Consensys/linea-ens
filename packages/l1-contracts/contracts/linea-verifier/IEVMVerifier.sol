@@ -5,6 +5,7 @@ interface IEVMVerifier {
     function gatewayURLs() external view returns (string[] memory);
 
     function getStorageValues(
+        address target,
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes memory proof

@@ -238,6 +238,7 @@ export const getTransactionErrorQueryFn =
     const client = config.getClient({ chainId })
     const failedTransactionData = await getTransaction(client, { hash })
     try {
+      // @ts-ignore
       await call(client, failedTransactionData as CallParameters<ConfigWithEns>)
       // TODO: better errors for this
       return 'transaction.dialog.error.gasLimit'

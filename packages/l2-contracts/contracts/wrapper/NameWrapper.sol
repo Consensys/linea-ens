@@ -1,20 +1,20 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
-import {ERC1155Fuse, IERC165, IERC1155MetadataURI} from "./ERC1155Fuse.sol";
+import {ERC1155Fuse, IERC1155MetadataURI} from "./ERC1155Fuse.sol";
 import {Controllable} from "./Controllable.sol";
-import {INameWrapper, CANNOT_UNWRAP, CANNOT_BURN_FUSES, CANNOT_TRANSFER, CANNOT_SET_RESOLVER, CANNOT_SET_TTL, CANNOT_CREATE_SUBDOMAIN, CANNOT_APPROVE, PARENT_CANNOT_CONTROL, CAN_DO_EVERYTHING, IS_DOT_ETH, CAN_EXTEND_EXPIRY, PARENT_CONTROLLED_FUSES, USER_SETTABLE_FUSES} from "./INameWrapper.sol";
+import {INameWrapper, CANNOT_UNWRAP, CANNOT_BURN_FUSES, CANNOT_TRANSFER, CANNOT_SET_RESOLVER, CANNOT_SET_TTL, CANNOT_CREATE_SUBDOMAIN, CANNOT_APPROVE, PARENT_CANNOT_CONTROL, IS_DOT_ETH, CAN_EXTEND_EXPIRY, PARENT_CONTROLLED_FUSES, USER_SETTABLE_FUSES} from "./INameWrapper.sol";
 import {INameWrapperUpgrade} from "./INameWrapperUpgrade.sol";
 import {IMetadataService} from "./IMetadataService.sol";
 import {ENS} from "../registry/ENS.sol";
-import {IReverseRegistrar} from "../reverseRegistrar/IReverseRegistrar.sol";
 import {ReverseClaimer} from "../reverseRegistrar/ReverseClaimer.sol";
 import {IBaseRegistrar} from "../ethregistrar/IBaseRegistrar.sol";
 import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BytesUtils} from "./BytesUtils.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
+
+import "hardhat/console.sol";
 
 error Unauthorised(bytes32 node, address addr);
 error IncompatibleParent();
@@ -27,6 +27,10 @@ error CannotUpgrade();
 error OperationProhibited(bytes32 node);
 error NameIsNotWrapped();
 error NameIsStillExpired();
+error EmptyDataNotAllowed();
+error EmptyStringNotAllowed();
+error DifferentBaseNodeBaseNodeDnsEncoded();
+error BaseNodeAsETHNodeOrROOTNodeNotAllowed();
 
 /**
  * @title Contract based on ENS's NameWrapper contract to handle any level
@@ -64,13 +68,32 @@ contract NameWrapper is
     /// @dev Base node handled to register a domain, replaces .eth node
     bytes32 public immutable baseNode;
 
+    /**
+     * @dev Ensures the data are not empty(length == 0).
+     * @param  _data to check.
+     */
+    modifier nonEmptyBytes(bytes memory _data) {
+        if (_data.length == 0) revert EmptyDataNotAllowed();
+        _;
+    }
+
     constructor(
         ENS _ens,
         IBaseRegistrar _registrar,
         IMetadataService _metadataService,
         bytes32 _baseNode,
         bytes memory _baseNodeDnsEncoded
-    ) ReverseClaimer(_ens, msg.sender) {
+    ) nonEmptyBytes(_baseNodeDnsEncoded) ReverseClaimer(_ens, msg.sender) {
+        // Base node can not be ETH_NODE or ROOT_NODE
+        if (_baseNode == ROOT_NODE || _baseNode == ETH_NODE) {
+            revert BaseNodeAsETHNodeOrROOTNodeNotAllowed();
+        }
+
+        // Check that _baseNode and _baseNodeDnsEncoded match
+        if (_baseNodeDnsEncoded.namehash(0) != _baseNode) {
+            revert DifferentBaseNodeBaseNodeDnsEncoded();
+        }
+
         ens = _ens;
         registrar = _registrar;
         metadataService = _metadataService;

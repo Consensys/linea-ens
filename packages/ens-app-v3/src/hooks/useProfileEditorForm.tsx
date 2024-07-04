@@ -137,6 +137,7 @@ export const useProfileEditorForm = (existingRecords: ProfileRecord[]) => {
   }
 
   const errorForRecordAtIndex = (index: number, keyOrValue: 'value' | 'key' = 'value') => {
+    // @ts-ignore
     return getFieldState(`records.${index}.${keyOrValue}`, formState)?.error?.message
   }
 

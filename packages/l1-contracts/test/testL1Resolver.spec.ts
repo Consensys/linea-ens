@@ -4,6 +4,7 @@ import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/
 import { HardhatEthersHelpers } from "@nomicfoundation/hardhat-ethers/types";
 import { expect } from "chai";
 import {
+  AbiCoder,
   BrowserProvider,
   Contract,
   JsonRpcProvider,
@@ -15,6 +16,16 @@ import { ethers } from "hardhat";
 import { EthereumProvider } from "hardhat/types";
 import request from "supertest";
 import packet from "dns-packet";
+import {
+  blockNo,
+  commands2Test,
+  commandsTest,
+  constantsTest,
+  proofTest,
+  extraDataTest,
+  stateRoot,
+  wrongExtraData,
+} from "./testData";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
 const domainName = "linea-test";
@@ -30,6 +41,9 @@ const encodedSubDomain = encodeName(subDomain);
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 const EMPTY_BYTES32 =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+const PROOF_ENCODING_PADDING =
+  "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000044e0";
 
 type ethersObj = typeof ethersT &
   Omit<HardhatEthersHelpers, "provider"> & {
@@ -56,6 +70,7 @@ describe("Crosschain Resolver", () => {
   let ens: Contract;
   let wrapper: Contract;
   let baseRegistrar: Contract;
+  let rollup: Contract;
   let signerAddress, l2ResolverAddress, wrapperAddress;
 
   before(async () => {
@@ -94,7 +109,7 @@ describe("Crosschain Resolver", () => {
     const currentL2BlockNumber = await rollupSepolia.currentL2BlockNumber();
     const stateRootHash =
       await rollupSepolia.stateRootHashes(currentL2BlockNumber);
-    const rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
+    rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
 
     const gateway = makeL2Gateway(
       l1Provider as unknown as JsonRpcProvider,
@@ -246,7 +261,9 @@ describe("Crosschain Resolver", () => {
     const incorrectname = encodeName("notowned.eth");
     try {
       await target.setTarget(incorrectname, l2ResolverAddress);
-    } catch (e) {}
+    } catch (e) {
+      expect(e.reason).equal("Not authorized to set target for this node");
+    }
 
     const result = await target.getTarget(incorrectname);
     expect(result[1]).to.equal(EMPTY_ADDRESS);
@@ -364,5 +381,82 @@ describe("Crosschain Resolver", () => {
     });
     const decoded = i.decodeFunctionResult("contenthash", result2);
     expect(decoded[0]).to.equal(contenthash);
+  });
+
+  it("should revert if the number of commands is bigger than the number of storage proofs returned by the gateway", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    // Put a wrong block number
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    try {
+      await verifier.getStorageValues(
+        l2ResolverAddress,
+        commands2Test,
+        constantsTest,
+        proofsEncoded
+      );
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "LineaProofHelper: commands number > storage proofs number"
+      );
+    }
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should revert if the block number returned by the gateway is not the most recent one", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    // Put a wrong block number
+    await rollup.setCurrentStateRoot(5, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+    try {
+      await target.getStorageSlotsCallback(proofsEncoded, extraDataTest);
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "LineaSparseProofVerifier: not latest finalized block"
+      );
+    }
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should revert if the proof's target is not matching the one queried", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    // Set the block number and stateRoot to match the predefined proof in the proof test file
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+    try {
+      await target.getStorageSlotsCallback(proofsEncoded, wrongExtraData);
+    } catch (error) {
+      expect(error.reason).to.equal("LineaProofHelper: wrong target");
+    }
+    // Put back block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 });

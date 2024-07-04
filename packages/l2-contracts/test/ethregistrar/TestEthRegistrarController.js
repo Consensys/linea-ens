@@ -40,6 +40,8 @@ contract('ETHRegistrarController', function () {
   let reverseRegistrar
   let nameWrapper
   let callData
+  let pohVerifier
+  let pohRegistrationManager
 
   const secret =
     '0x0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF'
@@ -132,14 +134,14 @@ contract('ETHRegistrarController', function () {
 
     // Deploy PohVerifier contract
     const PohVerifier = await ethers.getContractFactory('PohVerifier')
-    const pohVerifier = await PohVerifier.deploy()
+    pohVerifier = await PohVerifier.deploy()
     await pohVerifier.deployed()
 
     // Deploy PohRegistrationManager contract
     const PohRegistrationManager = await ethers.getContractFactory(
       'PohRegistrationManager',
     )
-    const pohRegistrationManager = await PohRegistrationManager.deploy()
+    pohRegistrationManager = await PohRegistrationManager.deploy()
     await pohRegistrationManager.deployed()
 
     // Deploy the mock PohVerifier
@@ -243,6 +245,134 @@ contract('ETHRegistrarController', function () {
     // { poop } { poop } (emoji)
     '\ud83d\udca9\ud83d\udca9': false,
   }
+
+  it('should revert on wrong constructor arguments', async () => {
+    try {
+      await deploy(
+        'ETHRegistrarController',
+        baseRegistrar.address,
+        priceOracle.address,
+        600,
+        86400,
+        reverseRegistrar.address,
+        nameWrapper.address,
+        ens.address,
+        pohVerifier.address,
+        pohRegistrationManager.address,
+        BASE_NODE_BYTES32,
+        '.' + 'test',
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'DifferentBaseDomainBaseNode()'",
+      )
+    }
+
+    try {
+      await deploy(
+        'ETHRegistrarController',
+        baseRegistrar.address,
+        priceOracle.address,
+        600,
+        86400,
+        reverseRegistrar.address,
+        nameWrapper.address,
+        ens.address,
+        pohVerifier.address,
+        pohRegistrationManager.address,
+        BASE_NODE_BYTES32,
+        '',
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'EmptyStringNotAllowed()'",
+      )
+    }
+
+    try {
+      await deploy(
+        'ETHRegistrarController',
+        baseRegistrar.address,
+        priceOracle.address,
+        600,
+        86400,
+        reverseRegistrar.address,
+        nameWrapper.address,
+        ens.address,
+        ethers.constants.AddressZero,
+        pohRegistrationManager.address,
+        BASE_NODE_BYTES32,
+        '.' + BASE_DOMAIN_STR,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'ZeroAddressNotAllowed()'",
+      )
+    }
+
+    try {
+      await deploy(
+        'ETHRegistrarController',
+        baseRegistrar.address,
+        priceOracle.address,
+        600,
+        86400,
+        reverseRegistrar.address,
+        nameWrapper.address,
+        ens.address,
+        pohVerifier.address,
+        ethers.constants.AddressZero,
+        BASE_NODE_BYTES32,
+        '.' + BASE_DOMAIN_STR,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'ZeroAddressNotAllowed()'",
+      )
+    }
+
+    try {
+      await deploy(
+        'ETHRegistrarController',
+        baseRegistrar.address,
+        priceOracle.address,
+        600,
+        86400,
+        reverseRegistrar.address,
+        nameWrapper.address,
+        ens.address,
+        pohVerifier.address,
+        pohRegistrationManager.address,
+        EMPTY_BYTES,
+        '.' + BASE_DOMAIN_STR,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'BaseNodeAsETHNodeOrROOTNodeNotAllowed()'",
+      )
+    }
+
+    try {
+      await deploy(
+        'ETHRegistrarController',
+        baseRegistrar.address,
+        priceOracle.address,
+        600,
+        86400,
+        reverseRegistrar.address,
+        nameWrapper.address,
+        ens.address,
+        pohVerifier.address,
+        pohRegistrationManager.address,
+        ETH_NAMEHASH,
+        '.' + BASE_DOMAIN_STR,
+      )
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "VM Exception while processing transaction: reverted with custom error 'BaseNodeAsETHNodeOrROOTNodeNotAllowed()'",
+      )
+    }
+  })
 
   it('should report label validity', async () => {
     for (const label in checkLabels) {

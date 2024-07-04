@@ -10,4 +10,12 @@ contract RollupMock {
         currentL2BlockNumber = _currentL2BlockNumber;
         stateRootHashes[currentL2BlockNumber] = _currentStateRootHash;
     }
+
+    function setCurrentStateRoot(
+        uint256 _currentL2BlockNumber,
+        bytes32 _currentStateRootHash
+    ) external {
+        currentL2BlockNumber = _currentL2BlockNumber;
+        stateRootHashes[currentL2BlockNumber] = _currentStateRootHash;
+    }
 }
