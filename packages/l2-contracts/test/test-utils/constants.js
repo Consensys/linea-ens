@@ -9,6 +9,9 @@ const BASE_DOMAIN_STR = 'linea.eth'
 const BASE_NODE_BYTES32 =
   '0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3'
 
+const BASE_NODE_2_BYTES32 =
+  '0x1944d8f922dbda424d5bb8181be5344d513cd0210312d2dcccd37d54c11a17de'
+
 const BASE_NODE_DNS_ENCODED = new TextEncoder().encode('\x05linea\x03eth\x00')
 
 const BASE_DOMAIN_LABEL = sha3('linea')
@@ -18,6 +21,7 @@ module.exports = {
   EMPTY_BYTES32,
   BASE_DOMAIN_STR,
   BASE_NODE_BYTES32,
+  BASE_NODE_2_BYTES32,
   BASE_NODE_DNS_ENCODED,
   BASE_DOMAIN_LABEL,
 }

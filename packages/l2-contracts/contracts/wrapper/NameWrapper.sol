@@ -16,6 +16,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BytesUtils} from "./BytesUtils.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
 
+import "hardhat/console.sol";
+
 error Unauthorised(bytes32 node, address addr);
 error IncompatibleParent();
 error IncorrectTokenType();
@@ -27,6 +29,10 @@ error CannotUpgrade();
 error OperationProhibited(bytes32 node);
 error NameIsNotWrapped();
 error NameIsStillExpired();
+error EmptyDataNotAllowed();
+error EmptyStringNotAllowed();
+error DifferentBaseNodeBaseNodeDnsEncoded();
+error BaseNodeAsETHNodeOrROOTNodeNotAllowed();
 
 /**
  * @title Contract based on ENS's NameWrapper contract to handle any level
@@ -64,13 +70,32 @@ contract NameWrapper is
     /// @dev Base node handled to register a domain, replaces .eth node
     bytes32 public immutable baseNode;
 
+    /**
+     * @dev Ensures the data are not empty(length == 0).
+     * @param  _data to check.
+     */
+    modifier nonEmptyBytes(bytes memory _data) {
+        if (_data.length == 0) revert EmptyDataNotAllowed();
+        _;
+    }
+
     constructor(
         ENS _ens,
         IBaseRegistrar _registrar,
         IMetadataService _metadataService,
         bytes32 _baseNode,
         bytes memory _baseNodeDnsEncoded
-    ) ReverseClaimer(_ens, msg.sender) {
+    ) nonEmptyBytes(_baseNodeDnsEncoded) ReverseClaimer(_ens, msg.sender) {
+        // Base node can not be ETH_NODE or ROOT_NODE
+        if (_baseNode == ROOT_NODE || _baseNode == ETH_NODE) {
+            revert BaseNodeAsETHNodeOrROOTNodeNotAllowed();
+        }
+
+        // Check that _baseNode and _baseNodeDnsEncoded match
+        if (_baseNodeDnsEncoded.namehash(0) != _baseNode) {
+            revert DifferentBaseNodeBaseNodeDnsEncoded();
+        }
+
         ens = _ens;
         registrar = _registrar;
         metadataService = _metadataService;
