@@ -396,6 +396,7 @@ describe("Crosschain Resolver", () => {
     );
     try {
       await verifier.getStorageValues(
+        l2ResolverAddress,
         commands2Test,
         constantsTest,
         proofsEncoded
@@ -408,7 +409,7 @@ describe("Crosschain Resolver", () => {
     // Put back the right block number and state root
     await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
-  
+
   it("should revert if the block number returned by the gateway is not the most recent one", async () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
