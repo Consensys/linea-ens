@@ -383,13 +383,31 @@ describe("Crosschain Resolver", () => {
     expect(decoded[0]).to.equal(contenthash);
   });
 
+  it("should revert when the functions's selector is invalid", async () => {
+    await target.setTarget(encodedname, l2ResolverAddress);
+    const addr = "0x0000000000000000000000000000000000000000";
+    const result = await l2contract["addr(bytes32)"](node);
+    expect(result).to.equal(addr);
+    await l1Provider.send("evm_mine", []);
+    const i = new ethers.Interface([
+      "function unknown(bytes32) returns(address)",
+    ]);
+    const calldata = i.encodeFunctionData("unknown", [node]);
+    try {
+      await target.resolve(encodedname, calldata, {
+        enableCcipRead: true,
+      });
+    } catch (error) {
+      expect(error.reason).to.equal("invalid selector");
+    }
+  });
+
   it("should revert if the calldata is too short", async () => {
     await target.setTarget(encodedname, l2ResolverAddress);
     const addr = "0x0000000000000000000000000000000000000000";
     const result = await l2contract["addr(bytes32)"](node);
     expect(result).to.equal(addr);
     await l1Provider.send("evm_mine", []);
-
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = "0x";
     try {
@@ -400,7 +418,7 @@ describe("Crosschain Resolver", () => {
       expect(error.reason).to.equal("param data too short");
     }
   });
-  
+
   it("should revert if the number of commands is bigger than the number of storage proofs returned by the gateway", async () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
