@@ -1,6 +1,6 @@
-# L1-contracts: Linea Verifier
+# L1-contracts: Linea crosschain resolver
 
-Linea verifier contracts adapted from ENS's evm-verifier[https://github.com/ensdomains/evmgateway/blob/main/evm-verifier/README.md] specifically for ENS's implementation on Linea.
+Linea NS verifier contracts adapted from ENS's crosschain-resolver[https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver] specifically for ENS's implementation on Linea.
 
 ## Tests
 
@@ -8,6 +8,5 @@ Run the following:
 
 ```shell
 pnpm i
-pnpm compile
 pnpm test
 ```
