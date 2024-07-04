@@ -31,7 +31,7 @@ contract PohVerifier is EIP712, Ownable {
      * @dev Signer's address has to be the same address as the POH API signer
      * @param _signer The new signer's address
      */
-    function setSigner(address _signer) public onlyOwner {
+    function setSigner(address _signer) external onlyOwner {
         require(_signer != address(0), "Invalid address");
         signer = _signer;
         emit SignerUpdated(_signer);
@@ -47,7 +47,7 @@ contract PohVerifier is EIP712, Ownable {
     function verify(
         bytes memory signature,
         address human
-    ) public view virtual returns (bool) {
+    ) external view virtual returns (bool) {
         bytes32 digest = _hashTypedDataV4(
             keccak256(abi.encode(keccak256("POH(address to)"), human))
         );
@@ -59,7 +59,7 @@ contract PohVerifier is EIP712, Ownable {
     /**
      * @notice Returns the signer's address
      */
-    function getSigner() public view returns (address) {
+    function getSigner() external view returns (address) {
         return signer;
     }
 }
