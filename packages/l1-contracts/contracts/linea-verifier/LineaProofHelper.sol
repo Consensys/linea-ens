@@ -83,54 +83,36 @@ library LineaProofHelper {
         if (!storageProofs[proofIdx].initialized) {
             return ("", proofIdx++);
         }
-        bytes32 firstValue = storageProofs[proofIdx].proof.value;
         verifyStorageProof(
             account,
             storageProofs[proofIdx].leafIndex,
             storageProofs[proofIdx].proof.proofRelatedNodes,
-            firstValue,
+            storageProofs[proofIdx].proof.value,
             bytes32(slot)
         );
-        uint256 firstValueUint = uint256(firstValue);
-        proofIdx++;
-        if (firstValueUint & 0x01 == 0x01) {
+        uint256 firstValue = uint256(storageProofs[proofIdx++].proof.value);
+        if (firstValue & 0x01 == 0x01) {
             // Long value: first slot is `length * 2 + 1`, following slots are data.
-            uint256 length = (firstValueUint - 1) / 2;
-            value = "";
             slot = uint256(keccak256(abi.encodePacked(slot)));
-            while (length > 0) {
+            value = new bytes(firstValue >> 1);
+            uint256 off;
+            while (off < value.length) {
                 verifyStorageProof(
                     account,
                     storageProofs[proofIdx].leafIndex,
                     storageProofs[proofIdx].proof.proofRelatedNodes,
                     storageProofs[proofIdx].proof.value,
-                    bytes32(slot)
+                    bytes32(slot++)
                 );
-                slot++;
-
-                if (length < 32) {
-                    value = bytes.concat(
-                        value,
-                        sliceBytes(
-                            abi.encode(storageProofs[proofIdx++].proof.value),
-                            0,
-                            length
-                        )
-                    );
-
-                    length = 0;
-                } else {
-                    value = bytes.concat(
-                        value,
-                        storageProofs[proofIdx++].proof.value
-                    );
-
-                    length -= 32;
+                off += 32;
+                bytes32 temp = storageProofs[proofIdx++].proof.value;
+                assembly {
+                    mstore(add(value, off), temp)
                 }
             }
             return (value, proofIdx);
         } else {
-            uint256 length = (firstValueUint & 0xFF) / 2;
+            uint256 length = (firstValue & 0xFF) >> 1;
             return (sliceBytes(abi.encode(firstValue), 0, length), proofIdx);
         }
     }
