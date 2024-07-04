@@ -18,6 +18,9 @@ import request from "supertest";
 import packet from "dns-packet";
 import {
   blockNo,
+  commands2Test,
+  commandsTest,
+  constantsTest,
   proofTest,
   extraDataTest,
   stateRoot,
@@ -376,6 +379,35 @@ describe("Crosschain Resolver", () => {
     });
     const decoded = i.decodeFunctionResult("contenthash", result2);
     expect(decoded[0]).to.equal(contenthash);
+  });
+
+  it("should revert if the number of commands is bigger than the number of storage proofs returned by the gateway", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    // Put a wrong block number
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    try {
+      await verifier.getStorageValues(
+        l2ResolverAddress,
+        commands2Test,
+        constantsTest,
+        proofsEncoded
+      );
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "LineaProofHelper: commands number > storage proofs number"
+      );
+    }
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 
   it("should revert if the block number returned by the gateway is not the most recent one", async () => {
