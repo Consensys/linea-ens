@@ -75,6 +75,7 @@ const AdvancedEditorContent = ({
                         `advancedEditor.tabs.text.placeholder.default`,
                       ])}
                       showDot
+                      // @ts-ignore
                       error={getFieldState(`text.${key}`, formState).error?.message}
                       validated={getFieldState(`text.${key}`, formState).isDirty}
                       onDelete={() => {
@@ -92,6 +93,7 @@ const AdvancedEditorContent = ({
                         `advancedEditor.tabs.text.placeholder.${convertFormSafeKey(key)}`,
                         `advancedEditor.tabs.text.placeholder.default`,
                       ])}
+                      // @ts-ignore
                       error={getFieldState(`text.${key}`, formState).error?.message}
                       validated={getFieldState(`text.${key}`, formState).isDirty}
                       autoComplete="off"
@@ -121,6 +123,7 @@ const AdvancedEditorContent = ({
                         `advancedEditor.tabs.address.placeholder.${convertFormSafeKey(key)}`,
                         `advancedEditor.tabs.address.placeholder.default`,
                       ])}
+                      // @ts-ignore
                       error={getFieldState(`address.${key}`, formState).error?.message}
                       validated={getFieldState(`address.${key}`, formState).isDirty}
                       onDelete={() => {
@@ -145,6 +148,7 @@ const AdvancedEditorContent = ({
                         `advancedEditor.tabs.address.placeholder.${convertFormSafeKey(key)}`,
                         `advancedEditor.tabs.address.placeholder.default`,
                       ])}
+                      // @ts-ignore
                       error={getFieldState(`address.${key}`, formState).error?.message}
                       validated={getFieldState(`address.${key}`, formState).isDirty}
                       showDot
@@ -179,6 +183,7 @@ const AdvancedEditorContent = ({
                     placeholder={t('advancedEditor.tabs.other.contentHash.placeholder')}
                     showDot
                     validated={getFieldState('other.contentHash', formState).isDirty}
+                    // @ts-ignore
                     error={getFieldState('other.contentHash', formState).error?.message}
                     autoComplete="off"
                     onClear={() => {
@@ -197,6 +202,7 @@ const AdvancedEditorContent = ({
                     placeholder={t('advancedEditor.tabs.other.abi.placeholder')}
                     showDot
                     validated={getFieldState('other.abi.data', formState).isDirty}
+                    // @ts-ignore
                     error={getFieldState('other.abi.data', formState).error?.message}
                     autoComplete="off"
                     onClear={() => {

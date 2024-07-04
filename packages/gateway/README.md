@@ -1,6 +1,6 @@
-# Linea NS Gateway
+# Linea Gateway
 
-Adapted from EVM gateway https://github.com/ensdomains/evmgateway
+Adapted from EVM gateway https://github.com/ensdomains/evmgateway for Linea
 
 ## Start dev env
 
