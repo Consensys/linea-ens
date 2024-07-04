@@ -173,18 +173,13 @@ library LineaProofHelper {
             stateRoot
         );
 
-        require(
-            accountProofVerified,
-            "LineaProofHelper: invalid account proof"
-        );
-
         bytes32 hAccountValue = SparseMerkleProof.hashAccountValue(
             accountProof.proof.value
         );
 
         require(
-            accountLeaf.hValue == hAccountValue,
-            "LineaProofHelper: account value invalid"
+            accountProofVerified && accountLeaf.hValue == hAccountValue,
+            "LineaProofHelper: invalid account proof"
         );
 
         return true;
@@ -203,24 +198,20 @@ library LineaProofHelper {
             account.storageRoot
         );
 
-        require(
-            storageProofVerified,
-            "LineaResolverStub: invalid storage proof"
-        );
-
         SparseMerkleProof.Leaf memory storageLeaf = SparseMerkleProof.getLeaf(
             proof[LAST_LEAF_INDEX]
         );
 
         // Verify the key
         bytes32 hKey = SparseMerkleProof.hashStorageValue(key);
-        require(storageLeaf.hKey == hKey, "LineaResolverStub: key invalid");
 
         // Verify the storage value
         bytes32 hValue = SparseMerkleProof.hashStorageValue(value);
         require(
-            storageLeaf.hValue == hValue,
-            "LineaResolverStub: value invalid"
+            storageProofVerified &&
+                storageLeaf.hKey == hKey &&
+                storageLeaf.hValue == hValue,
+            "LineaProofHelper: invalid storage proof"
         );
     }
 
