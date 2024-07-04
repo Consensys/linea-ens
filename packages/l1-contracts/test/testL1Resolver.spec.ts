@@ -21,9 +21,10 @@ import {
   commands2Test,
   commandsTest,
   constantsTest,
-  extraDataTest,
   proofTest,
+  extraDataTest,
   stateRoot,
+  wrongExtraData,
 } from "./testData";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
@@ -393,7 +394,6 @@ describe("Crosschain Resolver", () => {
       ],
       [blockNo, proofTest.accountProof, proofTest.storageProofs]
     );
-
     try {
       await verifier.getStorageValues(
         commands2Test,
@@ -406,6 +406,54 @@ describe("Crosschain Resolver", () => {
       );
     }
     // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+  
+  it("should revert if the block number returned by the gateway is not the most recent one", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    // Put a wrong block number
+    await rollup.setCurrentStateRoot(5, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+    try {
+      await target.getStorageSlotsCallback(proofsEncoded, extraDataTest);
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "LineaSparseProofVerifier: not latest finalized block"
+      );
+    }
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should revert if the proof's target is not matching the one queried", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    // Set the block number and stateRoot to match the predefined proof in the proof test file
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+    try {
+      await target.getStorageSlotsCallback(proofsEncoded, wrongExtraData);
+    } catch (error) {
+      expect(error.reason).to.equal("LineaProofHelper: wrong target");
+    }
+    // Put back block number and state root
     await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 });

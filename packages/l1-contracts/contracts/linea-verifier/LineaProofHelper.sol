@@ -152,9 +152,22 @@ library LineaProofHelper {
     }
 
     function verifyAccountProof(
+        address target,
         AccountProofStruct memory accountProof,
         bytes32 stateRoot
     ) private pure returns (bool) {
+        // Verify the target contract first against the account proof's last leaf node's hkey
+        bytes32 targetHash = SparseMerkleProof.mimcHash(
+            abi.encodePacked(target)
+        );
+        SparseMerkleProof.Leaf memory accountLeaf = SparseMerkleProof.getLeaf(
+            accountProof.proof.proofRelatedNodes[LAST_LEAF_INDEX]
+        );
+        bytes32 hKey = accountLeaf.hKey;
+
+        require(targetHash == hKey, "LineaProofHelper: wrong target");
+
+        // Verify the account's proof itself
         bool accountProofVerified = SparseMerkleProof.verifyProof(
             accountProof.proof.proofRelatedNodes,
             accountProof.leafIndex,
@@ -163,20 +176,16 @@ library LineaProofHelper {
 
         require(
             accountProofVerified,
-            "LineaResolverStub: invalid account proof"
+            "LineaProofHelper: invalid account proof"
         );
 
         bytes32 hAccountValue = SparseMerkleProof.hashAccountValue(
             accountProof.proof.value
         );
 
-        SparseMerkleProof.Leaf memory accountLeaf = SparseMerkleProof.getLeaf(
-            accountProof.proof.proofRelatedNodes[41]
-        );
-
         require(
             accountLeaf.hValue == hAccountValue,
-            "LineaResolverStub: account value invalid"
+            "LineaProofHelper: account value invalid"
         );
 
         return true;
@@ -217,6 +226,7 @@ library LineaProofHelper {
     }
 
     function getStorageValues(
+        address target,
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes32 stateRoot,
@@ -227,7 +237,7 @@ library LineaProofHelper {
             commands.length <= storageProofs.length,
             "LineaProofHelper: commands number > storage proofs number"
         );
-        verifyAccountProof(accountProof, stateRoot);
+        verifyAccountProof(target, accountProof, stateRoot);
         SparseMerkleProof.Account memory account = SparseMerkleProof.getAccount(
             accountProof.proof.value
         );

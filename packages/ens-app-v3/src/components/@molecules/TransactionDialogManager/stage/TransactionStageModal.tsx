@@ -337,10 +337,12 @@ export const TransactionStageModal = ({
   } = useSendTransaction({
     mutation: {
       onSuccess: transactionSuccessHandler({
+        // @ts-ignore
         client,
         connectorClient: connectorClient!,
         actionName,
         txKey,
+        // @ts-ignore
         request,
         addRecentTransaction,
         dispatch,
@@ -394,6 +396,7 @@ export const TransactionStageModal = ({
     if (stage === 'failed') {
       return (
         <Button
+          // @ts-ignore
           onClick={() => sendTransaction(request!)}
           disabled={!canEnableTransactionRequest || requestLoading || !request}
           colorStyle="redSecondary"
@@ -430,6 +433,7 @@ export const TransactionStageModal = ({
           !!requestError ||
           isTransactionRequestCachedData
         }
+        // @ts-ignore
         onClick={() => sendTransaction(request!)}
         data-testid="transaction-modal-confirm-button"
       >

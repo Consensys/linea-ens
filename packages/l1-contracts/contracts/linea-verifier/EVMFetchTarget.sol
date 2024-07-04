@@ -23,15 +23,17 @@ abstract contract EVMFetchTarget {
         bytes memory proof = abi.decode(response, (bytes));
         (
             IEVMVerifier verifier,
+            address addr,
             bytes32[] memory commands,
             bytes[] memory constants,
             bytes4 callback,
             bytes memory callbackData
         ) = abi.decode(
                 extradata,
-                (IEVMVerifier, bytes32[], bytes[], bytes4, bytes)
+                (IEVMVerifier, address, bytes32[], bytes[], bytes4, bytes)
             );
         bytes[] memory values = verifier.getStorageValues(
+            addr,
             commands,
             constants,
             proof
