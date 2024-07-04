@@ -30,6 +30,7 @@ contract L1Resolver is
     IEVMVerifier public immutable verifier;
     ENS public immutable ens;
     INameWrapper public immutable nameWrapper;
+    uint256 public immutable l2ChainId;
     mapping(bytes32 => address) targets;
     uint256 constant COIN_TYPE_ETH = 60;
     uint256 constant RECORD_VERSIONS_SLOT = 0;
@@ -38,7 +39,6 @@ contract L1Resolver is
     uint256 constant VERSIONABLE_HASHES_SLOT = 3;
     uint256 constant VERSIONABLE_TEXTS_SLOT = 10;
     string public graphqlUrl;
-    uint256 public l2ChainId;
 
     event TargetSet(bytes name, address target);
 
@@ -93,13 +93,16 @@ contract L1Resolver is
     }
 
     /**
-     * Set target address to verify aagainst
+     * Set target address to verify against
      * @param name The encoded name to query.
      * @param target The L2 resolver address to verify against.
      */
-    function setTarget(bytes calldata name, address target) public {
+    function setTarget(bytes calldata name, address target) external {
         (bytes32 node, ) = getTarget(name);
-        require(isAuthorised(node));
+        require(
+            isAuthorised(node),
+            "Not authorized to set target for this node"
+        );
         targets[node] = target;
         emit TargetSet(name, target);
         emit MetadataChanged(name, graphqlUrl);
@@ -137,7 +140,7 @@ contract L1Resolver is
     }
 
     /**
-     * @dev Resolve and verify a record stored in l2 target address. It supports subname by fetching target recursively to the nearlest parent.
+     * @dev Resolve and verify a record stored in l2 target address. It supports subname by fetching target recursively to the nearest parent.
      * @param name DNS encoded ENS name to query
      * @param data The actual calldata
      * @return result result of the call
@@ -146,6 +149,8 @@ contract L1Resolver is
         bytes calldata name,
         bytes calldata data
     ) external view returns (bytes memory result) {
+        require(data.length >= 4, "param data too short");
+
         (, address target) = _getTarget(name, 0);
         bytes4 selector = bytes4(data);
 
@@ -208,7 +213,7 @@ contract L1Resolver is
     function addrCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(address(bytes20(values[1])));
     }
 
@@ -231,7 +236,7 @@ contract L1Resolver is
     function addrCoinTypeCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(values[1]);
     }
 
@@ -254,7 +259,7 @@ contract L1Resolver is
     function textCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(string(values[1]));
     }
 
@@ -275,7 +280,7 @@ contract L1Resolver is
     function contenthashCallback(
         bytes[] memory values,
         bytes memory
-    ) public pure returns (bytes memory) {
+    ) external pure returns (bytes memory) {
         return abi.encode(values[1]);
     }
 
@@ -285,7 +290,9 @@ contract L1Resolver is
      * @param name The domain name in format (dnsEncoded)
      * @return graphqlUrl The GraphQL URL used by the resolver
      */
-    function metadata(bytes calldata name) public view returns (string memory) {
+    function metadata(
+        bytes calldata name
+    ) external view returns (string memory) {
         return (graphqlUrl);
     }
 

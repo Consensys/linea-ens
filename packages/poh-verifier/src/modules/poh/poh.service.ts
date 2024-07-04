@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Address } from 'viem/accounts';
-import { utils } from 'ethers';
+import { ethers } from 'ethers';
 
 import type { EnsConfig } from 'src/config/config.interface';
 import { SignerService } from 'src/modules/signer/signer.service';
@@ -45,7 +45,7 @@ export class PohService {
       const message = {
         to: address,
       };
-      const serializedData = utils._TypedDataEncoder.encode(
+      const serializedData = ethers.TypedDataEncoder.encode(
         domain,
         types,
         message,

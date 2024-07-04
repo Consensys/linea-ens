@@ -32,7 +32,6 @@ uint8 constant OP_BACKREF = 0x20;
 uint8 constant FLAG_DYNAMIC = 0x01;
 
 library LineaProofHelper {
-    error AccountNotFound(address);
     error UnknownOpcode(uint8);
     error InvalidSlotSize(uint256 size);
 
@@ -152,31 +151,35 @@ library LineaProofHelper {
     }
 
     function verifyAccountProof(
+        address target,
         AccountProofStruct memory accountProof,
         bytes32 stateRoot
     ) private pure returns (bool) {
+        // Verify the target contract first against the account proof's last leaf node's hkey
+        bytes32 targetHash = SparseMerkleProof.mimcHash(
+            abi.encodePacked(target)
+        );
+        SparseMerkleProof.Leaf memory accountLeaf = SparseMerkleProof.getLeaf(
+            accountProof.proof.proofRelatedNodes[LAST_LEAF_INDEX]
+        );
+        bytes32 hKey = accountLeaf.hKey;
+
+        require(targetHash == hKey, "LineaProofHelper: wrong target");
+
+        // Verify the account's proof itself
         bool accountProofVerified = SparseMerkleProof.verifyProof(
             accountProof.proof.proofRelatedNodes,
             accountProof.leafIndex,
             stateRoot
         );
 
-        require(
-            accountProofVerified,
-            "LineaResolverStub: invalid account proof"
-        );
-
         bytes32 hAccountValue = SparseMerkleProof.hashAccountValue(
             accountProof.proof.value
         );
 
-        SparseMerkleProof.Leaf memory accountLeaf = SparseMerkleProof.getLeaf(
-            accountProof.proof.proofRelatedNodes[41]
-        );
-
         require(
-            accountLeaf.hValue == hAccountValue,
-            "LineaResolverStub: account value invalid"
+            accountProofVerified && accountLeaf.hValue == hAccountValue,
+            "LineaProofHelper: invalid account proof"
         );
 
         return true;
@@ -195,35 +198,36 @@ library LineaProofHelper {
             account.storageRoot
         );
 
-        require(
-            storageProofVerified,
-            "LineaResolverStub: invalid storage proof"
-        );
-
         SparseMerkleProof.Leaf memory storageLeaf = SparseMerkleProof.getLeaf(
             proof[LAST_LEAF_INDEX]
         );
 
         // Verify the key
         bytes32 hKey = SparseMerkleProof.hashStorageValue(key);
-        require(storageLeaf.hKey == hKey, "LineaResolverStub: key invalid");
 
         // Verify the storage value
         bytes32 hValue = SparseMerkleProof.hashStorageValue(value);
         require(
-            storageLeaf.hValue == hValue,
-            "LineaResolverStub: value invalid"
+            storageProofVerified &&
+                storageLeaf.hKey == hKey &&
+                storageLeaf.hValue == hValue,
+            "LineaProofHelper: invalid storage proof"
         );
     }
 
     function getStorageValues(
+        address target,
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes32 stateRoot,
         AccountProofStruct memory accountProof,
         StorageProofStruct[] memory storageProofs
     ) internal pure returns (bytes[] memory values) {
-        verifyAccountProof(accountProof, stateRoot);
+        require(
+            commands.length <= storageProofs.length,
+            "LineaProofHelper: commands number > storage proofs number"
+        );
+        verifyAccountProof(target, accountProof, stateRoot);
         SparseMerkleProof.Account memory account = SparseMerkleProof.getAccount(
             accountProof.proof.value
         );
