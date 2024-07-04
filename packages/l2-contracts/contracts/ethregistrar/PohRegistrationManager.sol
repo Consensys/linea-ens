@@ -1,12 +1,12 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 /**
  * @title PohRegistrationManager
  * @dev Contract to manage the registration status of addresses using Proof of Humanity (PoH).
  */
-contract PohRegistrationManager is Ownable {
+contract PohRegistrationManager is Ownable2Step {
     mapping(address => bool) public hasRegisteredPoh;
     mapping(address => bool) public managers;
 
