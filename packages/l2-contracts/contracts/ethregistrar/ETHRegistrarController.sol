@@ -102,13 +102,6 @@ contract ETHRegistrarController is
 
     event NameRenewedPoh(string name, bytes32 indexed label, uint256 expires);
 
-    modifier maxRegistrationDuration(uint256 duration) {
-        if (duration > MAX_EXPIRY) {
-            revert DurationTooLong(duration);
-        }
-        _;
-    }
-
     modifier minRegistrationDuration(uint256 duration) {
         if (duration < MIN_REGISTRATION_DURATION) {
             revert DurationTooShort(duration);
@@ -189,14 +182,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    )
-        public
-        pure
-        override
-        maxRegistrationDuration(duration)
-        minRegistrationDuration(duration)
-        returns (bytes32)
-    {
+    ) public pure override minRegistrationDuration(duration) returns (bytes32) {
         bytes32 label = keccak256(bytes(name));
         if (data.length > 0 && resolver == address(0)) {
             revert ResolverRequiredWhenDataSupplied();
@@ -412,7 +398,7 @@ contract ETHRegistrarController is
     function renew(
         string calldata name,
         uint256 duration
-    ) external payable override maxRegistrationDuration(duration) {
+    ) external payable override {
         bytes32 labelhash = keccak256(bytes(name));
         uint256 tokenId = uint256(labelhash);
         IPriceOracle.Price memory price = rentPrice(name, duration);
@@ -487,11 +473,7 @@ contract ETHRegistrarController is
         string memory name,
         uint256 duration,
         bytes32 commitment
-    )
-        internal
-        maxRegistrationDuration(duration)
-        minRegistrationDuration(duration)
-    {
+    ) internal minRegistrationDuration(duration) {
         // Require an old enough commitment.
         if (commitments[commitment] + minCommitmentAge > block.timestamp) {
             revert CommitmentTooNew(commitment);
@@ -563,7 +545,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         uint16 ownerControlledFuses,
         bool reverseRecord
-    ) external onlyOwner maxRegistrationDuration(duration) {
+    ) external onlyOwner {
         uint256 expires = _register(
             name,
             owner,

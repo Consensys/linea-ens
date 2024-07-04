@@ -816,24 +816,7 @@ contract('ETHRegistrarController', function () {
       controller2.renew('newname', OVER_MAX_REGISTRATION_DURATION, {
         value: price,
       }),
-    ).to.be.revertedWith(`DurationTooLong(${OVER_MAX_REGISTRATION_DURATION})`)
-  })
-
-  it('should revert when commiting with a duration too long', async () => {
-    try {
-      await controller2.makeCommitment(
-        'newname',
-        registrantAccount,
-        OVER_MAX_REGISTRATION_DURATION,
-        secret,
-        resolver.address,
-        callData,
-        false,
-        5,
-      )
-    } catch (error) {
-      expect(error.errorSignature).to.equal(`DurationTooLong(uint256)`)
-    }
+    ).to.be.revertedWith(`SafeCast: value doesn't fit in 64 bits`)
   })
 
   it('should allow token owners to renew a name for free using POH', async () => {
@@ -1334,7 +1317,7 @@ contract('ETHRegistrarController', function () {
         reverseRecord,
         { from: ownerAccount },
       ),
-    ).to.be.revertedWith(`DurationTooLong(${OVER_MAX_REGISTRATION_DURATION})`)
+    ).to.be.revertedWith(`SafeCast: value doesn't fit in 64 bits`)
   })
 
   it('should revert if called by a non-owner', async function () {

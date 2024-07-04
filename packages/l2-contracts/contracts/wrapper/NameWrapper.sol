@@ -15,6 +15,7 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BytesUtils} from "./BytesUtils.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
+import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 error Unauthorised(bytes32 node, address addr);
 error IncompatibleParent();
@@ -65,13 +66,6 @@ contract NameWrapper is
 
     /// @dev Base node handled to register a domain, replaces .eth node
     bytes32 public immutable baseNode;
-
-    modifier maxRegistrationDuration(uint256 duration) {
-        if (duration > MAX_EXPIRY) {
-            revert DurationTooLong(duration);
-        }
-        _;
-    }
 
     constructor(
         ENS _ens,
@@ -327,11 +321,9 @@ contract NameWrapper is
         // transfer the ens record back to the new owner (this contract)
         registrar.reclaim(tokenId, address(this));
 
-        uint256 nameExpires = registrar.nameExpires(tokenId);
-
-        _revertIfUint64Overflow(nameExpires);
-
-        expiry = uint64(nameExpires) + GRACE_PERIOD;
+        expiry =
+            SafeCast.toUint64(registrar.nameExpires(tokenId)) +
+            GRACE_PERIOD;
 
         _wrap(label, wrappedOwner, ownerControlledFuses, expiry, resolver);
     }
@@ -353,23 +345,15 @@ contract NameWrapper is
         uint256 duration,
         address resolver,
         uint16 ownerControlledFuses
-    )
-        external
-        onlyController
-        maxRegistrationDuration(duration)
-        returns (uint256 registrarExpiry)
-    {
+    ) external onlyController returns (uint256 registrarExpiry) {
         uint256 tokenId = uint256(keccak256(bytes(label)));
         registrarExpiry = registrar.register(tokenId, address(this), duration);
-
-        // To avoid silent overflows
-        _revertIfUint64Overflow(registrarExpiry);
 
         _wrap(
             label,
             wrappedOwner,
             ownerControlledFuses,
-            uint64(registrarExpiry) + GRACE_PERIOD,
+            SafeCast.toUint64(registrarExpiry) + GRACE_PERIOD,
             resolver
         );
     }
@@ -385,12 +369,7 @@ contract NameWrapper is
     function renew(
         uint256 tokenId,
         uint256 duration
-    )
-        external
-        onlyController
-        maxRegistrationDuration(duration)
-        returns (uint256 expires)
-    {
+    ) external onlyController returns (uint256 expires) {
         bytes32 node = _makeNode(baseNode, bytes32(tokenId));
 
         uint256 registrarExpiry = registrar.renew(tokenId, duration);
@@ -407,10 +386,8 @@ contract NameWrapper is
             return registrarExpiry;
         }
 
-        _revertIfUint64Overflow(registrarExpiry);
-
         // Set expiry in Wrapper
-        uint64 expiry = uint64(registrarExpiry) + GRACE_PERIOD;
+        uint64 expiry = SafeCast.toUint64(registrarExpiry) + GRACE_PERIOD;
 
         // Use super to allow names expired on the wrapper, but not expired on the registrar to renew()
         (address owner, uint32 fuses, ) = super.getData(uint256(node));
@@ -934,11 +911,8 @@ contract NameWrapper is
         // transfer the ens record back to the new owner (this contract)
         registrar.reclaim(uint256(labelhash), address(this));
 
-        uint256 nameExpires = registrar.nameExpires(tokenId);
-
-        _revertIfUint64Overflow(nameExpires);
-
-        uint64 expiry = uint64(nameExpires) + GRACE_PERIOD;
+        uint64 expiry = SafeCast.toUint64(registrar.nameExpires(tokenId)) +
+            GRACE_PERIOD;
 
         _wrap(label, owner, ownerControlledFuses, expiry, resolver);
 
@@ -1221,15 +1195,5 @@ contract NameWrapper is
         return
             fuses & IS_DOT_ETH == IS_DOT_ETH &&
             expiry - GRACE_PERIOD < block.timestamp;
-    }
-
-    /**
-     * @notice Revert to avoid silent overflow when converting from uint256 to uint64
-     * @param _uint256 The variable to check if it can silently overflow
-     */
-    function _revertIfUint64Overflow(uint256 _uint256) internal pure {
-        if (_uint256 > type(uint64).max) {
-            revert Uint64Overflow(_uint256);
-        }
     }
 }

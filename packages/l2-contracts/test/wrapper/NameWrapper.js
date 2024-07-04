@@ -6572,7 +6572,7 @@ describe('Name Wrapper', () => {
           EMPTY_ADDRESS,
           CAN_DO_EVERYTHING,
         ),
-      ).to.be.revertedWith(`DurationTooLong(${OVER_MAX_REGISTRATION_DURATION})`)
+      ).to.be.revertedWith(`SafeCast: value doesn't fit in 64 bits`)
     })
 
     it('should revert when renewing with a duration too long', async () => {
@@ -6585,7 +6585,7 @@ describe('Name Wrapper', () => {
       )
       await expect(
         NameWrapper.renew(labelHash, OVER_MAX_REGISTRATION_DURATION),
-      ).to.be.revertedWith(`DurationTooLong(${OVER_MAX_REGISTRATION_DURATION})`)
+      ).to.be.revertedWith(`SafeCast: value doesn't fit in 64 bits`)
     })
   })
 
