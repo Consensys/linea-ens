@@ -16,6 +16,9 @@ const BASE_NODE_DNS_ENCODED = new TextEncoder().encode('\x05linea\x03eth\x00')
 
 const BASE_DOMAIN_LABEL = sha3('linea')
 
+// Max uint64 + 1
+const OVER_MAX_REGISTRATION_DURATION = '18446744073709551616'
+
 module.exports = {
   EMPTY_ADDRESS,
   EMPTY_BYTES32,
@@ -24,4 +27,5 @@ module.exports = {
   BASE_NODE_2_BYTES32,
   BASE_NODE_DNS_ENCODED,
   BASE_DOMAIN_LABEL,
+  OVER_MAX_REGISTRATION_DURATION,
 }

@@ -109,6 +109,13 @@ contract ETHRegistrarController is
 
     event NameRenewedPoh(string name, bytes32 indexed label, uint256 expires);
 
+    modifier minRegistrationDuration(uint256 duration) {
+        if (duration < MIN_REGISTRATION_DURATION) {
+            revert DurationTooShort(duration);
+        }
+        _;
+    }
+
     /**
      * @dev Ensures the address is not address(0).
      * @param _addr Address to check.
@@ -219,7 +226,7 @@ contract ETHRegistrarController is
         bytes[] calldata data,
         bool reverseRecord,
         uint16 ownerControlledFuses
-    ) public pure override returns (bytes32) {
+    ) public pure override minRegistrationDuration(duration) returns (bytes32) {
         bytes32 label = keccak256(bytes(name));
         if (data.length > 0 && resolver == address(0)) {
             revert ResolverRequiredWhenDataSupplied();
@@ -510,7 +517,7 @@ contract ETHRegistrarController is
         string memory name,
         uint256 duration,
         bytes32 commitment
-    ) internal {
+    ) internal minRegistrationDuration(duration) {
         // Require an old enough commitment.
         if (commitments[commitment] + minCommitmentAge > block.timestamp) {
             revert CommitmentTooNew(commitment);
@@ -525,10 +532,6 @@ contract ETHRegistrarController is
         }
 
         delete (commitments[commitment]);
-
-        if (duration < MIN_REGISTRATION_DURATION) {
-            revert DurationTooShort(duration);
-        }
     }
 
     /**

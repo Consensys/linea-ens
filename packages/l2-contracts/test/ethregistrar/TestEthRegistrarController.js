@@ -20,6 +20,7 @@ const {
   BASE_DOMAIN_STR,
   BASE_NODE_DNS_ENCODED,
   BASE_DOMAIN_LABEL,
+  OVER_MAX_REGISTRATION_DURATION,
 } = require('../test-utils/constants')
 
 const DAY = 24 * 60 * 60
@@ -934,6 +935,20 @@ contract('ETHRegistrarController', function () {
     ).to.equal(86400)
   })
 
+  it('should revert when renewing with a duration too long', async () => {
+    await registerName('newname')
+    // Max uint64 to go over the max limit duration
+    const [price] = await controller.rentPrice(
+      sha3('newname'),
+      OVER_MAX_REGISTRATION_DURATION,
+    )
+    await expect(
+      controller2.renew('newname', OVER_MAX_REGISTRATION_DURATION, {
+        value: price,
+      }),
+    ).to.be.revertedWith(`SafeCast: value doesn't fit in 64 bits`)
+  })
+
   it('should allow token owners to renew a name for free using POH', async () => {
     const name = 'newname'
     const duration = 3 * 365 * 24 * 60 * 60 // 3 years
@@ -1413,6 +1428,26 @@ contract('ETHRegistrarController', function () {
 
     // Check for the OwnerNameRegistered event to confirm registration
     await expect(tx).to.emit(controllerPoh, 'OwnerNameRegistered')
+  })
+
+  it('should revert ownerRegister if duration too long', async function () {
+    const name = 'ownername'
+    const resolverAddress = resolver.address
+    const ownerControlledFuses = 0
+    const reverseRecord = false
+
+    await expect(
+      controllerPoh.ownerRegister(
+        name,
+        ownerAccount,
+        OVER_MAX_REGISTRATION_DURATION,
+        resolverAddress,
+        [], // data
+        ownerControlledFuses,
+        reverseRecord,
+        { from: ownerAccount },
+      ),
+    ).to.be.revertedWith(`SafeCast: value doesn't fit in 64 bits`)
   })
 
   it('should revert if called by a non-owner', async function () {

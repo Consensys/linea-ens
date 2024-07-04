@@ -13,6 +13,7 @@ import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Recei
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BytesUtils} from "./BytesUtils.sol";
 import {ERC20Recoverable} from "../utils/ERC20Recoverable.sol";
+import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 import "hardhat/console.sol";
 
@@ -341,7 +342,9 @@ contract NameWrapper is
         // transfer the ens record back to the new owner (this contract)
         registrar.reclaim(tokenId, address(this));
 
-        expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
+        expiry =
+            SafeCast.toUint64(registrar.nameExpires(tokenId)) +
+            GRACE_PERIOD;
 
         _wrap(label, wrappedOwner, ownerControlledFuses, expiry, resolver);
     }
@@ -366,11 +369,12 @@ contract NameWrapper is
     ) external onlyController returns (uint256 registrarExpiry) {
         uint256 tokenId = uint256(keccak256(bytes(label)));
         registrarExpiry = registrar.register(tokenId, address(this), duration);
+
         _wrap(
             label,
             wrappedOwner,
             ownerControlledFuses,
-            uint64(registrarExpiry) + GRACE_PERIOD,
+            SafeCast.toUint64(registrarExpiry) + GRACE_PERIOD,
             resolver
         );
     }
@@ -404,7 +408,7 @@ contract NameWrapper is
         }
 
         // Set expiry in Wrapper
-        uint64 expiry = uint64(registrarExpiry) + GRACE_PERIOD;
+        uint64 expiry = SafeCast.toUint64(registrarExpiry) + GRACE_PERIOD;
 
         // Use super to allow names expired on the wrapper, but not expired on the registrar to renew()
         (address owner, uint32 fuses, ) = super.getData(uint256(node));
@@ -928,7 +932,8 @@ contract NameWrapper is
         // transfer the ens record back to the new owner (this contract)
         registrar.reclaim(uint256(labelhash), address(this));
 
-        uint64 expiry = uint64(registrar.nameExpires(tokenId)) + GRACE_PERIOD;
+        uint64 expiry = SafeCast.toUint64(registrar.nameExpires(tokenId)) +
+            GRACE_PERIOD;
 
         _wrap(label, owner, ownerControlledFuses, expiry, resolver);
 
