@@ -2,7 +2,7 @@ import { EVMGateway } from "./evm-gateway";
 import { ethers } from "ethers";
 import { L2ProofService } from "./L2ProofService";
 import "dotenv/config";
-import { Server } from "./ccip-server";
+import { Server } from "@chainlink/ccip-read-server";
 import { logError } from "./utils";
 
 const l1ProviderUrl = process.env.L1_PROVIDER_URL;

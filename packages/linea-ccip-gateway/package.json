@@ -4,31 +4,13 @@
   "main": "dist/index.js",
   "author": "Consensys",
   "license": "Apache-2.0",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc --project tsconfig.json --module commonjs --skipLibCheck true --outDir ./dist",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
     "clean": "rm -fr node_modules dist",
-    "test": "mocha test/testVerifier.spec.ts --timeout 10000 --exit",
+    "test": "hardhat compile && mocha test/testVerifier.spec.ts --timeout 10000 --exit",
     "compile": "hardhat compile"
   },
-  "module": "dist/linea-ccip-gateway.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/linea-ccip-gateway.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/linea-ccip-gateway.esm.js",
-      "limit": "10 KB"
-    }
-  ],
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
     "@ethersproject/abi": "^5.4.7",
