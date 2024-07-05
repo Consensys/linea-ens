@@ -1,6 +1,15 @@
 # linea-ens-contracts
 
-Friendly forked from https://github.com/ensdomains/ens-contracts
+ENS contracts deployed on Linea to support "linea.eth" subdomain registration on Linea.  
+Its implementation has started with a fork from official ENS's repo https://github.com/ensdomains/ens-contracts
+
+A few specifities:
+
+- Supports 3 levels domain registration
+- A POH linked to the account registering is needed to be able to register
+- Registration is free using POH
+- One registration by account using POH is allowed
+- Is supported on L1 resolution thanks to [linea-state-verifier](https://github.com/Consensys/linea-resolver/tree/main/packages/linea-state-verifier)
 
 ## Contracts
 
@@ -46,15 +55,13 @@ This separation of concerns provides name owners strong guarantees over continue
 
 ### EthRegistrarController
 
-EthRegistrarController is the first implementation of a registration controller for the new registrar. This contract implements the following functionality:
+EthRegistrarController is taken from the official ENS's [registration controller](https://github.com/ensdomains/ens-contracts/blob/staging/contracts/ethregistrar/ETHRegistrarController.sol) with some changes:
 
-- The owner of the registrar may set a price oracle contract, which determines the cost of registrations and renewals based on the name and the desired registration or renewal duration.
-- The owner of the registrar may withdraw any collected funds to their account.
 - The owner of the registrar can register a domain for any address that has not been registered yet for free.
 - Users can register a new name using a commit/reveal process and if they have completed of Proof of humanity process.
 - Users can renew a name 6 month before the expiration date.
 
-The commit/reveal process is used to avoid frontrunning, and operates as follows:
+It has the same the commit/reveal process is used to avoid frontrunning, and operates as follows:
 
 1.  A user commits to a hash, the preimage of which contains the name to be registered and a secret value.
 2.  After a minimum delay period and before the commitment expires, the user calls the register function with the name to register and the secret value from the commitment. If a valid commitment is found and the other preconditions are met, the name is registered.
@@ -74,13 +81,10 @@ PohVerifier is the contract responsible for checking the signature of the privat
 
 - The owner of PohVerifier can set the signer address responsible for aknowledging a POH
 
-### SimplePriceOracle
+### FixedPriceOracle
 
-SimplePriceOracle is a trivial implementation of the pricing oracle for the EthRegistrarController that always returns a fixed price per domain per year, determined by the contract owner.
-
-### StablePriceOracle
-
-StablePriceOracle is a price oracle implementation that allows the contract owner to specify pricing based on the length of a name, and uses a fiat currency oracle to set a fixed price in fiat per name.
+FixedPriceOracle is a price oracle implementation that always return the same price.
+It is used to make the original register function very expensive making it almost impossible to use and to force users to use the registration with POH.
 
 ## Resolvers
 
@@ -98,10 +102,6 @@ PublicResolver includes the following profiles that implements different EIPs.
 - DNSResolver = Experimental support is available for hosting DNS domains on the Ethereum blockchain via ENS. [The more detail](https://veox-ens.readthedocs.io/en/latest/dns.html) is on the old ENS doc.
 
 ## Developer guide
-
-### Prettier pre-commit hook
-
-This repo runs a husky precommit to prettify all contract files to keep them consistent. Add new folder/files to `prettier format` script in package.json. If you need to add other tasks to the pre-commit script, add them to `.husky/pre-commit`
 
 ### How to setup
 
