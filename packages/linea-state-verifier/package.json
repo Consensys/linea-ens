@@ -1,0 +1,18 @@
+{
+  "name": "linea-state-verifier",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Consensys",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "chai": "^4.2.0",
+    "ethers": "^6.13.1",
+    "hardhat": "^2.17.4"
+  }
+}

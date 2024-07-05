@@ -1,7 +1,7 @@
 packages:
-  - "packages/linea-verifier"
-  - "packages/gateway"
-  - "packages/l1-contracts"
-  - "packages/ens-app-v3"
-  - "packages/ens-subgraph"
-  - "packages/poh-verifier"
+  - "packages/linea-state-verifier"
+  - "packages/linea-ccip-gateway"
+  - "packages/linea-ens-resolver"
+  - "packages/linea-ens-app"
+  - "packages/linea-ens-subgraph"
+  - "packages/poh-signer-api"

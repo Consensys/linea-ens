@@ -1,4 +1,4 @@
-# Linea Name Service
+# Linea ENS
 
 This repository contains smart contracts and a Node.js Gateway server that allow storing ENS names on Linea using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
 Also contain a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the deployed contract, to create and manage domains on Linea.
@@ -67,40 +67,44 @@ contract TestL1 is EVMFetchTarget {
 
 - NodeJs v18.x.
 - pnpm v9.x
-- yarn for the l2-contracts package only
+- yarn for the linea-ens-contracts package only
 
 ## Packages
 
-### l1/l2 contracts
+### linea-ens-resolver
 
-The l1-contracts intented to be deployed on L1 (Ethereum) implements the proposed protocol, with functions to return the gateway address and required prefix for a query, and to verify the response from the gateway.
+The linea-ens-resolver contract that is built on top of [linea-state-verifier](./packages/packages/linea-state-verifier) and verify Linea ENS data (domain names, metadata etc).
 
-The l2-contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve an domain name.
+More documentation available in [linea-ens-resolver/README.md](./packages/linea-ens-resolver/README.md)
 
-More Smart Contracts documentation available in [./packages/l1-contracts/README.md](./packages/l1-contracts/README.md) and [./packages/l2-contracts/README.md](./packages/l2-contracts/README.md)
+### linea-ens-contracts
 
-### gateway
+The linea-ens-contracts contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve an domain name and more data related to ENS.
 
-A node-based gateway server that answers queries for L2 Gateway function calls relating to Linea-based L2 resolvers.
+More documentation available in [linea-ens-contracts/README.md](./packages/linea-ens-contracts/README.md)
 
-### ens-app-v3
+### linea-ccip-gateway
 
-The Linea NS frontend forked from [ens-app-v3](https://github.com/ensdomains/ens-app-v3)
+A node-based gateway server that answers queries from L1 Gateway function calls relating to Linea-based L2 contracts.
 
-### ens-subgraph
+### linea-ens-app
 
-The Linea NS subgrah consumed by the frontend, adapted from [ens-subgraph](https://github.com/ensdomains/ens-subgraph)
+The Linea ENS frontend forked from [ens-app-v3](https://github.com/ensdomains/ens-app-v3)
 
-### linea-verifier
+### linea-ens-subgraph
 
-The linea verifier contracts are responsible for checking the proofs and values returned by the gateway for specific slots values stored on Linea, adapted from [evm-verifier](https://github.com/ensdomains/evmgateway/tree/main/evm-verifier)
+The Linea ENS subgrah consumed by the frontend, adapted from [ens-subgraph](https://github.com/ensdomains/ens-subgraph)
 
-### poh-verifier
+### linea-state-verifier
 
-A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the poh verifier in the l2-contracts.
+The linea state verifier contracts are responsible for checking values using sparse merkle proofs returned by the linea-ccip-gateway for specific slots values stored on Linea, adapted from [evm-verifier](https://github.com/ensdomains/evmgateway/tree/main/evm-verifier)
+
+### poh-signer-api
+
+A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the poh signer api in the linea-ens-contracts.
 
 ## Deployed contracts
 
-Check the deployment folders in [./packages/l1-contracts/deployments](./packages/l1-contracts/deployments) and [./packages/l2-contracts/deployments](./packages/l2-contracts/deployments)
+Check the deployment folders in [./packages/linea-ens-resolver/deployments](./packages/linea-ens-resolver/deployments) and [./packages/linea-ens-contracts/deployments](./packages/linea-ens-contracts/deployments)
 
 For detailed information about each package, please check their own Readme file.
