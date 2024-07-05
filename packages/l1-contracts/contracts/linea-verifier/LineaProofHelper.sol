@@ -138,9 +138,7 @@ library LineaProofHelper {
         bytes32 stateRoot
     ) private pure returns (bool) {
         // Verify the target contract first against the account proof's last leaf node's hkey
-        bytes32 targetHash = SparseMerkleProof.mimcHash(
-            abi.encodePacked(target)
-        );
+        bytes32 targetHash = SparseMerkleProof.mimcHash(abi.encode(target));
         SparseMerkleProof.Leaf memory accountLeaf = SparseMerkleProof.getLeaf(
             accountProof.proof.proofRelatedNodes[LAST_LEAF_INDEX]
         );
