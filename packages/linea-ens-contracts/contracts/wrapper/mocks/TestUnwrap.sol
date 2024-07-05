@@ -8,6 +8,8 @@ import {BytesUtils} from "../BytesUtils.sol";
 contract TestUnwrap is Ownable {
     using BytesUtils for bytes;
 
+    uint256 test = 0;
+
     bytes32 private constant LINEA_ETH_NODE =
         0x527aac89ac1d1de5dd84cff89ec92c69b028ce9ce3fa3d654882474ab4402ec3;
 
