@@ -1,18 +1,16 @@
 {
   "name": "@ensdomains/ens-contracts",
   "version": "1.0.0",
-  "description": "ENS contracts",
+  "description": "Linea ENS contracts",
   "scripts": {
+    "compile": "hardhat compile",
     "test": "hardhat test",
     "test:local": "hardhat --network localhost test",
     "test:deploy": "hardhat --network hardhat deploy",
     "lint": "hardhat check",
     "build": "rm -rf ./build/deploy ./build/hardhat.config.js && hardhat compile && tsc",
     "format": "prettier --write .",
-    "prepublishOnly": "yarn build",
-    "pub": "yarn publish --access public",
-    "prepare": "cd ../../ && husky install",
-    "wikiCheck": "node wikiCheck.js "
+    "prepublishOnly": "yarn build"
   },
   "files": [
     "build",
