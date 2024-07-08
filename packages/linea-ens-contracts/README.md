@@ -9,7 +9,7 @@ A few specifities:
 - A POH linked to the account registering is needed to be able to register
 - Registration is free using POH
 - One registration by account using POH is allowed
-- Is supported on L1 resolution thanks to [linea-state-verifier](https://github.com/Consensys/linea-resolver/tree/main/packages/linea-state-verifier)
+- Is supported on L1 resolution thanks to CCIP
 
 ## Contracts
 

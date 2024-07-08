@@ -1,6 +1,6 @@
 # linea-ens-resolver: Linea ENS crosschain resolver
 
-Linea ENS resolver contracts adapted from ENS's crosschain-resolver[https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver] specifically for ENS's implementation on Linea.
+Linea ENS crosschain resolver contracts adapted from ENS's crosschain-resolver[https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver] specifically for ENS's implementation on Linea.
 
 ## Tests
 

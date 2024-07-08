@@ -76,7 +76,7 @@ pnpm denv --save
 
 2. Deploy the subgraph
 
-After the deploy scripts have run, you can deploy the subgraph. Assuming you are in the [linea-ens-subgraph](https://github.com/Consensys/linea-resolver/tree/main/packages/linea-ens-subgraph) repo, you can use:
+After the deploy scripts have run, you can deploy the subgraph. Assuming you are in the [linea-ens-subgraph](https://github.com/Consensys/linea-enstree/main/packages/linea-ens-subgraph) repo, you can use:
 
 ```bash
 yarn setup

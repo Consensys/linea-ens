@@ -2,7 +2,7 @@ specVersion: 0.0.4
 description: A secure & decentralized way to address resources on and off the
   blockchain using simple, human-readable names. Access domains and transfer
   history.
-repository: https://github.com/Consensys/linea-resolver/tree/main/packages/linea-ens-subgraph
+repository: https://github.com/Consensys/linea-enstree/main/packages/linea-ens-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
