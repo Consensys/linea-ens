@@ -1,23 +1,29 @@
 # Linea ENS
 
 This repository contains smart contracts and a Node.js Gateway server that allow storing ENS names on Linea using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
-Also contain a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the deployed contract, to create and manage domains on Linea.
+They have been adapted from ENS's [EVM gateway](https://github.com/ensdomains/evmgateway) and [ENS crosschain resolver](https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver)
 
-It also implements a proof verifier that allows L1 smart contracts to fetch and verify any state from Linea.
+It also contain a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the deployed contract, to create and manage domains on Linea.
 
-- Anyone can operate their own gateway, but...
-- Only one gateway needs to be operated, regardless of the applications requesting data from it.
-- Gateways do not need to be trusted; their responses are fully verified on L1.
-- Contracts can fetch Linea state using a simple builder interface and callbacks.
-- Contracts can change targets just by swapping out the address of a verifier contract for another.
+Thanks to ccip-read the domains created on Linea can also be resolved on Ethereum.
 
-While this functionality is written primarily with read calls in mind, it also functions for transactions; using a compliant
-library like Ethers, a transaction that includes relevant Linea proofs can be generated and signed.
+## CCIPRead process
 
-## Usage
+![alt text](./media/LineaENSCCIPRead.png?raw=true)
 
-1.  Have your contract extend `EVMFetcher`.
-2.  In a view/pure context, use `EVMFetcher` to fetch the value of slots from another contract (potentially on another chain). Calling `EVMFetcher.fetch()` terminates execution and generates a callback to the same contract on a function you specify.
+This schema describes how a client application can resolve a domain name stored on Linea L2 from Ethereum L1 using CCIP Read.
+
+## Generic Usage
+
+This repository focuses on the ENS use case but the gateway and Verifier contracts are generic, this means that they can be reused for any other use cases
+that need to fetch data stored on Linea from Ethereum in a trustless way.
+
+The same Fetcher, Verifier contracts and gateway can be used without redeploying them.
+
+To implement your own contract you simply need to:
+
+1.  Have your own contract extend `EVMFetcher` (In the Linea ENS case this is the L1Resolver contract).
+2.  In a view/pure context, use `EVMFetcher` to fetch the value of slots from another contract stored on Linea. Calling `EVMFetcher.fetch()` terminates execution and generates a callback to the same contract on a function you specify.
 3.  In the callback function, use the information from the relevant slots as you see fit.
 
 ## Example
@@ -73,13 +79,13 @@ contract TestL1 is EVMFetchTarget {
 
 ### linea-ens-resolver
 
-The linea-ens-resolver contract that is built on top of [linea-state-verifier](./packages/packages/linea-state-verifier) and verify Linea ENS data (domain names, metadata etc).
+The linea-ens-resolver contract intented to be deployed on L1 that is built on top of [linea-state-verifier](./packages/packages/linea-state-verifier) and verifies Linea ENS data (domain names, metadata etc).
 
 More documentation available in [linea-ens-resolver/README.md](./packages/linea-ens-resolver/README.md)
 
 ### linea-ens-contracts
 
-The linea-ens-contracts contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve an domain name and more data related to ENS.
+The linea-ens-contracts contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve a domain name and more data related to ENS.
 
 More documentation available in [linea-ens-contracts/README.md](./packages/linea-ens-contracts/README.md)
 
@@ -89,7 +95,7 @@ A node-based gateway server that answers queries from L1 Gateway function calls 
 
 ### linea-ens-app
 
-The Linea ENS frontend forked from [ens-app-v3](https://github.com/ensdomains/ens-app-v3)
+The Linea ENS frontend adapted from [ens-app-v3](https://github.com/ensdomains/ens-app-v3)
 
 ### linea-ens-subgraph
 
@@ -101,7 +107,7 @@ The linea state verifier contracts are responsible for checking values using spa
 
 ### poh-signer-api
 
-A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the poh signer api in the linea-ens-contracts.
+A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the PohVerifier contract in the linea-ens-contracts.
 
 ## Deployed contracts
 
