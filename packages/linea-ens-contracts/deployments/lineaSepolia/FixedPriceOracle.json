@@ -1,5 +1,5 @@
 {
-  "address": "0xa21805391aBdD8967EE113E4d51092ab554B9bAd",
+  "address": "0xE24C8a06D9d5b4c5856F13e9ebFAc7C8025C5678",
   "abi": [
     {
       "inputs": [],
@@ -56,25 +56,25 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xabad09b77629664fb279ead43f2131f0b4eb61547972d1440fb961ebf61559ff",
+  "transactionHash": "0xc70594906cc775d96292216472b292a7e37ae9a66298a25d5da521585a57f1e1",
   "receipt": {
     "to": null,
     "from": "0x4a8e79E5258592f208ddba8A8a0d3ffEB051B10A",
-    "contractAddress": "0xa21805391aBdD8967EE113E4d51092ab554B9bAd",
+    "contractAddress": "0xE24C8a06D9d5b4c5856F13e9ebFAc7C8025C5678",
     "transactionIndex": 0,
     "gasUsed": "133567",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x859cb00adbbd24ba54bf35fccb18cbcb7543ed8e615b891a9457e53e35eb42bd",
-    "transactionHash": "0xabad09b77629664fb279ead43f2131f0b4eb61547972d1440fb961ebf61559ff",
+    "blockHash": "0x02e0f6764142b5dfcc40304852503db501244367bd0f63e65872c33a085cd96c",
+    "transactionHash": "0xc70594906cc775d96292216472b292a7e37ae9a66298a25d5da521585a57f1e1",
     "logs": [],
-    "blockNumber": 1196249,
+    "blockNumber": 2395171,
     "cumulativeGasUsed": "133567",
     "status": 1,
     "byzantium": true
   },
   "args": [],
   "numDeployments": 1,
-  "solcInputHash": "9e312ca37aa8e6213da83c8731f0403e",
+  "solcInputHash": "ecf9ee221e9a3f6a0d5de2e6d402ddd7",
   "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"FIXED_PRICE_ETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"price\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"base\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"premium\",\"type\":\"uint256\"}],\"internalType\":\"struct IPriceOracle.Price\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"price(string,uint256,uint256)\":{\"details\":\"Kept 3 empty args to match the default price() method definition of the ExponentialPremiumPriceOracle.\"}},\"stateVariables\":{\"FIXED_PRICE_ETH\":{\"details\":\"1,000,000 ETH in Wei\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"price(string,uint256,uint256)\":{\"notice\":\"Returns a fixed amount of ETH as the price.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/ethregistrar/FixedPriceOracle.sol\":\"FixedPriceOracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1200},\"remappings\":[]},\"sources\":{\"contracts/ethregistrar/FixedPriceOracle.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity ^0.8.17;\\nimport \\\"./IPriceOracle.sol\\\";\\n\\ncontract FixedPriceOracle is IPriceOracle {\\n    /// @dev 1,000,000 ETH in Wei\\n    uint256 public constant FIXED_PRICE_ETH = 1000000 * 10 ** 18;\\n\\n    /**\\n     * @notice Returns a fixed amount of ETH as the price.\\n     * @dev Kept 3 empty args to match the default price() method definition of the ExponentialPremiumPriceOracle.\\n     */\\n    function price(\\n        string calldata,\\n        uint256,\\n        uint256\\n    ) external pure override returns (Price memory) {\\n        return Price(FIXED_PRICE_ETH, 0);\\n    }\\n}\\n\",\"keccak256\":\"0xb753b48fbe91efaca2f4bca06c0d7eb89f0ae78205f5ac847adc66f168f07fbf\",\"license\":\"MIT\"},\"contracts/ethregistrar/IPriceOracle.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity >=0.8.17 <0.9.0;\\n\\ninterface IPriceOracle {\\n    struct Price {\\n        uint256 base;\\n        uint256 premium;\\n    }\\n\\n    /**\\n     * @dev Returns the price to register or renew a name.\\n     * @param name The name being registered or renewed.\\n     * @param expires When the name presently expires (0 if this is a new registration).\\n     * @param duration How long the name is being registered or extended for, in seconds.\\n     * @return base premium tuple of base price + premium price\\n     */\\n    function price(\\n        string calldata name,\\n        uint256 expires,\\n        uint256 duration\\n    ) external view returns (Price calldata);\\n}\\n\",\"keccak256\":\"0x1ec537b4c7f9cc40363b39dcc7ade8c29bf94662e6b01d38e681487637bd577e\",\"license\":\"MIT\"}},\"version\":1}",
   "bytecode": "0x608060405234801561001057600080fd5b50610174806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806350e9a7151461003b578063ca2801c3146100a0575b600080fd5b6100806100493660046100bf565b505060408051808201825260008082526020918201819052825180840190935269d3c21bcecceda100000083529082015292915050565b604080518251815260209283015192810192909252015b60405180910390f35b6100b169d3c21bcecceda100000081565b604051908152602001610097565b600080600080606085870312156100d557600080fd5b843567ffffffffffffffff808211156100ed57600080fd5b818701915087601f83011261010157600080fd5b81358181111561011057600080fd5b88602082850101111561012257600080fd5b602092830199909850918701359660400135955090935050505056fea2646970667358221220d47bc36dbda7393049ef6cf0fb5a322da08d611625cbf710b45bb92640197d8864736f6c63430008110033",
   "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806350e9a7151461003b578063ca2801c3146100a0575b600080fd5b6100806100493660046100bf565b505060408051808201825260008082526020918201819052825180840190935269d3c21bcecceda100000083529082015292915050565b604080518251815260209283015192810192909252015b60405180910390f35b6100b169d3c21bcecceda100000081565b604051908152602001610097565b600080600080606085870312156100d557600080fd5b843567ffffffffffffffff808211156100ed57600080fd5b818701915087601f83011261010157600080fd5b81358181111561011057600080fd5b88602082850101111561012257600080fd5b602092830199909850918701359660400135955090935050505056fea2646970667358221220d47bc36dbda7393049ef6cf0fb5a322da08d611625cbf710b45bb92640197d8864736f6c63430008110033",

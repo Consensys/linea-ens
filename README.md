@@ -79,7 +79,7 @@ contract TestL1 is EVMFetchTarget {
 
 ### linea-ens-resolver
 
-The linea-ens-resolver contract intented to be deployed on L1 that is built on top of [linea-state-verifier](./packages/packages/linea-state-verifier) and verifies Linea ENS data (domain names, metadata etc).
+The linea-ens-resolver contract intented to be deployed on L1 that is built on top of [linea-state-verifier](./packages/linea-state-verifier) and verifies Linea ENS data (domain names, metadata etc).
 
 More documentation available in [linea-ens-resolver/README.md](./packages/linea-ens-resolver/README.md)
 
@@ -107,7 +107,8 @@ The linea state verifier contracts are responsible for checking values using spa
 
 ### poh-signer-api
 
-A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the PohVerifier contract in the linea-ens-contracts.
+A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the PohVerifier contract in the linea-ens-contracts.  
+More information about POH in the package's readme.
 
 ## Deployed contracts
 

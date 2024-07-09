@@ -27,7 +27,7 @@ Implementation of the ENS Registry, the central contract used to look up resolve
 
 ### ENSRegistryWithFallback
 
-The new implementation of the ENS Registry after [the 2020 ENS Registry Migration](https://docs.ens.domains/ens-migration-february-2020/technical-description#new-ens-deployment).
+The new implementation of the ENS Registry after the 2020 ENS Registry Migration.
 
 ### FIFSRegistrar
 
