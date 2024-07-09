@@ -56,7 +56,8 @@ jobs:
         with:
           build-args: |
             ENV_FILE=.env.testnet
-            SIGNER_PRIVATE_KEY=${{ secrets.POH_VERIFIER_TESTNET_PRIVATE_KEY }}
+            WEB3SIGNER_BASE_URL=${{ secrets.WEB3SIGNER_BASE_URL_TESTNET }}
+            WEB3SIGNER_PUBLIC_KEY=${{ secrets.WEB3SIGNER_PUBLIC_KEY_TESTNET }}
           context: ./packages/poh-signer-api
           file: ./packages/poh-signer-api/Dockerfile
           push: true
@@ -67,7 +68,8 @@ jobs:
         with:
           build-args: |
             ENV_FILE=.env.mainnet
-            SIGNER_PRIVATE_KEY=${{ secrets.POH_VERIFIER_MAINNET_PRIVATE_KEY }}
+            WEB3SIGNER_BASE_URL=${{ secrets.WEB3SIGNER_BASE_URL_MAINNET }}
+            WEB3SIGNER_PUBLIC_KEY=${{ secrets.WEB3SIGNER_PUBLIC_KEY_MAINNET }}
           context: ./packages/poh-signer-api
           file: ./packages/poh-signer-api/Dockerfile
           push: true
