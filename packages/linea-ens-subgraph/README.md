@@ -85,7 +85,7 @@ Here we have example queries, so that you don't have to type them in yourself ea
 
 # Build
 
-1/ yarn codegen
+1/ yarn codegen  
 2/ graph codegen && graph build
 
 # Authenticate in CLI
