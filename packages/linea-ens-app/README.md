@@ -31,18 +31,40 @@ yarn setup
 In a third terminal run:
 
 ```bash
+cd services/web3signer/
+cp ./keyFiles/examples/signer.yaml ./keyFiles/signer.yaml
+make dev-docker
+```
+
+In a fourth terminal run:
+
+```bash
+cd packages/poh-signer-api
+cp .env.example .env
+cp pnpm i
+make pnpm start
+```
+
+Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in ./packages/linea-ens-app/.env.local
+
+In a fifth terminal run:
+
+```bash
 cd packages/linea-ens-app
 pnpm dev:glocal
 ```
 
+You'll need an account with POH to fully use the local env, if you don't, you can get it [here] (https://poh.linea.build/)
+
 - Then browse http://localhost:3000/
-- Import one of the hardhat test accounts in your metamask (eg: ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+- Import one of the hardhat test accounts in your metamask to have funds (eg: ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
 - Add the local test network to your metamask with this info:
   - Localhost 8545
   - http://127.0.0.1:8545
   - 1337
   - ETH
-- You can start testing the app
+- Transfer some ETH from the test account to your POH account
+- You can start testing the app and register a domain
 
 ### Running Dev env
 

@@ -2,4 +2,4 @@ type: "file-raw"
 keyType: "SECP256K1"
 # WARNING: FOR LOCAL DEV ONLY - DO NOT REUSE THESE KEYS ELSEWHERE
 # Key for aggregation finalization
-privateKey: "JustChangeMe"
+privateKey: "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"

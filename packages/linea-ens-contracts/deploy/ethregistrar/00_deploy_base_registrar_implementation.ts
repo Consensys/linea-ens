@@ -1,3 +1,4 @@
+// @ts-ignore
 import namehash from 'eth-ens-namehash'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
