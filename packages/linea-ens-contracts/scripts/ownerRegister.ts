@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { parse } from 'csv-parse'
 import 'dotenv/config'
-import { Contract } from 'ethers'
+import { constants, Contract } from 'ethers'
 import path from 'path'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import axios from 'axios'
@@ -111,8 +111,10 @@ async function main(hre: HardhatRuntimeEnvironment) {
     resolver: Contract,
     contractOwner: string,
     provider: ethers.providers.JsonRpcProvider,
+    nonce: number,
   ) {
-    const fullDomainName = `${domainName}.${process.env.BASE_DOMAIN}.eth`
+    const domainNameLowerCase = domainName.toLowerCase()
+    const fullDomainName = `${domainNameLowerCase}.${process.env.BASE_DOMAIN}.eth`
     const namehash = hre.ethers.utils.namehash(fullDomainName)
 
     const data = [
@@ -122,12 +124,36 @@ async function main(hre: HardhatRuntimeEnvironment) {
       ]),
     ]
 
-    console.log(`Data for ${domainName}:`, data)
+    console.log(`Data for ${domainNameLowerCase}:`, data)
 
     try {
+      const resolverRead = new Contract(
+        resolver.address,
+        [
+          {
+            inputs: [
+              { internalType: 'bytes32', name: 'node', type: 'bytes32' },
+            ],
+            name: 'addr',
+            outputs: [
+              { internalType: 'address payable', name: '', type: 'address' },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ],
+        provider,
+      )
+      // Does not try to register if the domain is already registered
+      const resolvedAddr = await resolverRead.addr(namehash)
+      if (resolvedAddr !== constants.AddressZero) {
+        console.log(`Domain ${domainNameLowerCase} already registered.`)
+        return DomainStatuses.Success
+      }
+
       const estimatedGasLimit =
         await registrarController.estimateGas.ownerRegister(
-          domainName,
+          domainNameLowerCase,
           ownerAddress,
           DURATION,
           resolver.address,
@@ -138,14 +164,15 @@ async function main(hre: HardhatRuntimeEnvironment) {
         )
 
       console.log(
-        `Estimated gas limit for ${domainName}: ${estimatedGasLimit.toString()}`,
+        `Estimated gas limit for ${domainNameLowerCase}: ${estimatedGasLimit.toString()}`,
       )
 
-      const gasPrice = await provider.getGasPrice()
-      const nonce = await provider.getTransactionCount(contractOwner)
+      let gasPrice = await provider.getGasPrice()
+      // Increase gas price by 20%
+      gasPrice = gasPrice.add(gasPrice.mul(2).div(10))
 
       const tx = await registrarController.populateTransaction.ownerRegister(
-        domainName,
+        domainNameLowerCase,
         ownerAddress,
         DURATION,
         resolver.address,
@@ -183,10 +210,10 @@ async function main(hre: HardhatRuntimeEnvironment) {
 
       await provider.sendTransaction(serializedSignedTx)
 
-      console.log(`Domain ${domainName} registered successfully.`)
+      console.log(`Domain ${domainNameLowerCase} registered successfully.`)
       return DomainStatuses.Success
     } catch (error: any) {
-      console.error(`Failed to register domain ${domainName}:`, error)
+      console.error(`Failed to register domain ${domainNameLowerCase}:`, error)
       if (error?.error?.data) {
         const revertReason = hre.ethers.utils.toUtf8String(
           '0x' + error.error.data.substr(138),
@@ -237,6 +264,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
     })
 
   async function processDomains(trackingData: Map<string, TrackingData>) {
+    let nonce = await provider.getTransactionCount(registrarControllerOwner)
     for (const [domain, data] of trackingData.entries()) {
       if (
         data.status === DomainStatuses.NotStarted ||
@@ -250,7 +278,13 @@ async function main(hre: HardhatRuntimeEnvironment) {
           resolver,
           registrarControllerOwner,
           provider,
+          nonce,
         )
+        if (status === DomainStatuses.Success) {
+          nonce++
+        } else {
+          nonce = await provider.getTransactionCount(registrarControllerOwner)
+        }
         trackingData.set(domain, { ...data, status })
         updateTrackingFile(trackingData)
       }
