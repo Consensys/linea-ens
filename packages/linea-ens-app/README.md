@@ -31,6 +31,13 @@ pnpm i
 pnpm denv
 ```
 
+Once successfully started, you should see `TheGraph` logs:
+
+```bash
+graph-node_1  | Jul 11 10:39:41.725 INFO Done processing trigger, gas_used: 197859281, data_source: ENSRegistry, handler: handleNewResolver, total_ms: 2, transaction: 0x807b…2c88, address: 0x5fbd…0aa3, signature: NewResolver(indexed bytes32,address), sgd: 1, subgraph_id: QmUqJV5Z..., component: SubgraphInstanceManager
+graph-node_1  | Jul 11 10:39:41.729 INFO Applying 7 entity operation(s), block_hash: 0xb51c59cdbc..., block_number: 79, sgd: 1, subgraph_id: QmUqJV5Z..., component: SubgraphInstanceManager
+```
+
 #### 2. Deploy ENS Subgraph
 
 In a second terminal, run:
