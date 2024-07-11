@@ -101,8 +101,8 @@ pnpm dev:glocal
 You'll need an account with POH to fully use the local env, if you don't, you can get it [here] (https://poh.linea.build/)
 
 - Then browse http://localhost:3000/
-- Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key: `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`, for account: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
-- Add the local test network to your MetaMask with this info:
+- Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key: `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`, for address: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
+- Add the local test network to your MetaMask with these info:
 
   - Click on `Add a network manually`
   - Add this config:
@@ -115,7 +115,7 @@ You'll need an account with POH to fully use the local env, if you don't, you ca
   | Currency symbol | ETH                   |
 
   - Save and Swith to `Localhost 8455`
-- Transfer some ETH from the test account to your POH account
+- Transfer at least 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account
 - You can start testing the app and register a domain
 
 ### Running Dev env
