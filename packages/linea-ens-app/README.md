@@ -6,7 +6,7 @@ Friendly forked from ENS V3 app: https://github.com/ensdomains/ens-app-v3
 
 ## Usage
 
-### Requierements
+### Requirements
 
 See [Requirements](../../README.md#requirements)
 
@@ -38,7 +38,7 @@ cd packages/linea-ens-subgraph
 yarn setup
 ```
 
-#### 3. Start ENS frontend
+#### 3. Start Web3Signer
 
 In a third terminal run:
 
@@ -60,6 +60,8 @@ make dev
 ```
 
 Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in ./packages/linea-ens-app/.env.local
+
+#### 5. Start ENS frontend
 
 In a fifth terminal run:
 
