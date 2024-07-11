@@ -115,7 +115,8 @@ You'll need an account with POH to fully use the local env, if you don't, you ca
   | Currency symbol | ETH                   |
 
   - Save and Swith to `Localhost 8455`
-- Transfer at least 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account
+- Transfer at least 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account.
+- If you don't have an address with PoH, see [Common Errors](#common-errors)
 - You can start testing the app and register a domain
 
 ### Running Dev env
