@@ -51,7 +51,7 @@ Once successfully started, you should see:
 
 ```bash
 Build completed: QmRmG8bPjg3oy62b...
-Deployed to http://127.0.0.1:8000/subgraphs/name/graphprotocol/ens/graphql   
+Deployed to http://127.0.0.1:8000/subgraphs/name/graphprotocol/ens/graphql
 ```
 
 #### 3. Start Web3Signer
@@ -86,7 +86,7 @@ Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address
 Once successfully started, you should see:
 
 ```bash
-Poh Signer Api v1.0.0 development started on port: 4000 
+Poh Signer Api v1.0.0 development started on port: 4000
 ```
 
 #### 5. Start ENS frontend
@@ -101,12 +101,20 @@ pnpm dev:glocal
 You'll need an account with POH to fully use the local env, if you don't, you can get it [here] (https://poh.linea.build/)
 
 - Then browse http://localhost:3000/
-- Import one of the hardhat test accounts in your metamask to have funds (eg: ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
-- Add the local test network to your metamask with this info:
-  - Localhost 8545
-  - http://127.0.0.1:8545
-  - 1337
-  - ETH
+- Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key: `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`, for account: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
+- Add the local test network to your MetaMask with this info:
+
+  - Click on `Add a network manually`
+  - Add this config:
+
+  | Setting         | Value                 |
+  | --------------- | --------------------- |
+  | Network name    | Localhost 8545        |
+  | New RPC URL     | http://127.0.0.1:8545 |
+  | Chain ID        | 1337                  |
+  | Currency symbol | ETH                   |
+
+  - Save and Swith to `Localhost 8455`
 - Transfer some ETH from the test account to your POH account
 - You can start testing the app and register a domain
 
@@ -181,18 +189,17 @@ The structure of the `pages` folder is mimicked inside `components`. Components 
 
 Components that are used in multiple places will be found in the top level of the `components` folder.
 
-
 ### Common Errors
 
 **EACCES: permission denied, unlink**
 
 ```bash
-[Error: EACCES: permission denied, unlink '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'] {                                                                                                                                 
-  errno: -13,                                                                                                                                                                                                                                              
-  code: 'EACCES',                                                                                                                                                                                                                                          
-  syscall: 'unlink',                                                                                                                                                                                                                                       
-  path: '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'                                                                                                                                                                      
-}           
+[Error: EACCES: permission denied, unlink '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'] {
+  errno: -13,
+  code: 'EACCES',
+  syscall: 'unlink',
+  path: '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'
+}
 ```
 
 To fix this error, you can safely remove `data` in `./packages/linea-ens-app/data`.
