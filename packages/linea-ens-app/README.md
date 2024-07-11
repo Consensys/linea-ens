@@ -12,6 +12,8 @@ See [Requirements](../../README.md#requirements)
 
 ### Install
 
+In the `linea-ens` root folder, run:
+
 ```bash
 pnpm i
 ```
@@ -20,7 +22,7 @@ pnpm i
 
 #### 1. Run background services and deploy smart contracts
 
-In a first terminal run:
+In a first terminal, run:
 
 ```bash
 cd packages/linea-ens-app
@@ -31,7 +33,7 @@ pnpm denv
 
 #### 2. Deploy ENS Subgraph
 
-In a second terminal run:
+In a second terminal, run:
 
 ```bash
 cd packages/linea-ens-subgraph
@@ -47,7 +49,7 @@ Deployed to http://127.0.0.1:8000/subgraphs/name/graphprotocol/ens/graphql
 
 #### 3. Start Web3Signer
 
-In a third terminal run:
+In a third terminal, run:
 
 ```bash
 cd services/web3signer/
@@ -63,7 +65,7 @@ Web3Signer has started with TLS disabled, and ready to handle signing requests o
 
 #### 4. Start PoH Signer API
 
-In a fourth terminal run:
+In a fourth terminal, run:
 
 ```bash
 cd packages/poh-signer-api
@@ -82,7 +84,7 @@ Poh Signer Api v1.0.0 development started on port: 4000
 
 #### 5. Start ENS frontend
 
-In a fifth terminal run:
+In a fifth terminal, run:
 
 ```bash
 cd packages/linea-ens-app
