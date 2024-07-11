@@ -206,7 +206,7 @@ To fix this error, you can safely remove `data` in `./packages/linea-ens-app/dat
 
 **Linea PoH Status: INVALID**
 
-If your address doesn't have a PoH, you can temporally hack the PoH verifier to always return `PoH: true`:
+If your address doesn't have a PoH, for testing purpose you can temporally deactivate the PoH verification:
 
 Edit `linea-ens/packages/poh-signer-api/src/modules/poh/poh.service.ts`
 
