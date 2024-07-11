@@ -18,6 +18,7 @@
     "deploy:sepolia": "graph deploy --network sepolia --studio ens-sepolia",
     "deploy:holesky": "graph deploy --network holesky --studio ens-sepolia",
     "deploy:linea-sepolia": "graph deploy --network linea-sepolia --studio ens-linea-sepolia",
+    "deploy:linea-mainnet": "graph deploy --network linea --studio ens-linea-mainnet",
     "watch-local": "graph deploy graphprotocol/ens --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
   },
   "devDependencies": {
