@@ -16,11 +16,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       );
       break;
     case "mainnet":
-      // TODO add when deployed on mainnet
-      // args.push(PohVerifierSepoliaAddr,ENSRegistryMainnetAddr, NameWrapperMainnetAddr);
-      // break;
-      console.log("Mainnet deployment not ready");
-      return;
+      args.push(
+        ["https://linea-ens-gateway.linea.build/{sender}/{data}.json"],
+        "0xd19d4B5d358258f05D7B411E21A1460D11B0876F"
+      );
+      break;
     default:
       console.log(`Network ${network.name} not supported`);
       return;
