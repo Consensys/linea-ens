@@ -2,7 +2,7 @@
 
 This documentation provides instructions on how to set up, deploy, and run the Linea ENS App locally.
 
-Friendly forked from ENS V3 app: https://github.com/ensdomains/ens-app-v3
+Friendly forked from ENS V3 app: [https://github.com/ensdomains/ens-app-v3](https://github.com/ensdomains/ens-app-v3).
 
 ## Usage
 
@@ -10,7 +10,7 @@ Friendly forked from ENS V3 app: https://github.com/ensdomains/ens-app-v3
 
 Install `Node.js`, `pnpm`, `Yarn` and `docker-compose`. 
 
-See [Requirements](../../README.md#requirements)
+See [Requirements](../../README.md#requirements).
 
 ### Install
 
@@ -192,9 +192,9 @@ The structure of the `pages` folder is mimicked inside `components`. Components 
 
 Components that are used in multiple places will be found in the top level of the `components` folder.
 
-### Common Errors
+## Common Errors
 
-**Node.js version and other requirements**
+### Node.js version and other requirements
 
 Most installation errors are due to `Node.js`, `pnpm`, `yarn` or `docker-compose` versions. Verify the [requirements](../../README.md#requirements) if you encounter an error. To verify, you can execute:
 
@@ -218,7 +218,9 @@ docker-compose --version
 docker-compose version 1.29.2, build 5becea4c
 ```
 
-**EACCES: permission denied, unlink**
+### EACCES: permission denied, unlink
+
+If you encounter this error:
 
 ```bash
 [Error: EACCES: permission denied, unlink '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'] {
@@ -229,9 +231,9 @@ docker-compose version 1.29.2, build 5becea4c
 }
 ```
 
-To fix this error, you can safely remove `data` in `./packages/linea-ens-app/data`.
+To fix it, you can safely remove `data` in `./packages/linea-ens-app/data`.
 
-**Linea PoH Status: INVALID**
+### Linea PoH Status: INVALID
 
 If your address doesn't have a PoH, for testing purpose you can temporally deactivate the PoH verification:
 
