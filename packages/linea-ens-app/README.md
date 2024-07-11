@@ -8,6 +8,8 @@ Friendly forked from ENS V3 app: https://github.com/ensdomains/ens-app-v3
 
 ### Requirements
 
+Install `Node.js`, `pnpm`, `Yarn` and `docker-compose`. 
+
 See [Requirements](../../README.md#requirements)
 
 ### Install
