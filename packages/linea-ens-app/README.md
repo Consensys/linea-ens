@@ -192,6 +192,10 @@ Components that are used in multiple places will be found in the top level of th
 
 ### Common Errors
 
+**Node.js version and other requirements**
+
+Most installation errors are due to `Node.js` or `pnpm` version. Verify the [requirements](../../README.md#requirements) if you encounter an error.
+
 **EACCES: permission denied, unlink**
 
 ```bash
