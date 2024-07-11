@@ -38,6 +38,14 @@ cd packages/linea-ens-subgraph
 yarn setup
 ```
 
+Once successfully started, you should see:
+
+```bash
+Build completed: QmRmG8bPjg3oy62b...                                                                                                    │
+                                                                                                                                                                   │
+Deployed to http://127.0.0.1:8000/subgraphs/name/graphprotocol/ens/graphql   
+```
+
 #### 3. Start Web3Signer
 
 In a third terminal run:
@@ -46,6 +54,12 @@ In a third terminal run:
 cd services/web3signer/
 cp ./keyFiles/examples/signer.yaml ./keyFiles/signer.yaml
 make dev-docker
+```
+
+Once successfully started, you should see:
+
+```bash
+Web3Signer has started with TLS disabled, and ready to handle signing requests on 0.0.0.0:9000
 ```
 
 #### 4. Start PoH Signer API
@@ -60,6 +74,12 @@ make dev
 ```
 
 Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in ./packages/linea-ens-app/.env.local
+
+Once successfully started, you should see:
+
+```bash
+Poh Signer Api v1.0.0 development started on port: 4000 
+```
 
 #### 5. Start ENS frontend
 
@@ -152,3 +172,18 @@ pnpm buildandstart:glocal
 The structure of the `pages` folder is mimicked inside `components`. Components specific to a page can be found in the the `components` folder, in the folder corresponding to that page.
 
 Components that are used in multiple places will be found in the top level of the `components` folder.
+
+
+### Errors...
+
+
+```bash
+[Error: EACCES: permission denied, unlink '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'] {                                                                                                                                 
+  errno: -13,                                                                                                                                                                                                                                              
+  code: 'EACCES',                                                                                                                                                                                                                                          
+  syscall: 'unlink',                                                                                                                                                                                                                                       
+  path: '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'                                                                                                                                                                      
+}           
+```
+
+Remove `./data`
