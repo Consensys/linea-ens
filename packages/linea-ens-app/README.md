@@ -81,7 +81,7 @@ pnpm i
 make dev
 ```
 
-Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in ./packages/linea-ens-app/.env.local
+Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in `./packages/linea-ens-app/.env.local`.
 
 Once successfully started, you should see:
 
@@ -98,9 +98,9 @@ cd packages/linea-ens-app
 pnpm dev:glocal
 ```
 
-You'll need an account with POH to fully use the local env, if you don't, you can get it [here] (https://poh.linea.build/)
+You'll need an account with POH to fully use the local env, if you don't, you can get it [here] (https://poh.linea.build/).
 
-- Then browse http://localhost:3000/
+- Then browse http://localhost:3000/.
 - Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key: `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`, for address: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
 - Add the local test network to your MetaMask with these info:
 
@@ -114,10 +114,10 @@ You'll need an account with POH to fully use the local env, if you don't, you ca
   | Chain ID        | 1337                  |
   | Currency symbol | ETH                   |
 
-  - Save and Swith to `Localhost 8455`
-- Transfer at least 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account.
-  - If you don't have an address with PoH, see [Common Errors](#common-errors)
-- You can start testing the app and register a domain
+  - Save and Swith to `Localhost 8455`.
+- Transfer at least 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account
+  - If you don't have an address with PoH, see [Common Errors](#common-errors).
+- You can start testing the app and register a domain.
 
 ### Running Dev env
 
@@ -209,9 +209,9 @@ To fix this error, you can safely remove `data` in `./packages/linea-ens-app/dat
 
 If your address doesn't have a PoH, for testing purpose you can temporally deactivate the PoH verification:
 
-Edit `linea-ens/packages/poh-signer-api/src/modules/poh/poh.service.ts`
+1. Edit `linea-ens/packages/poh-signer-api/src/modules/poh/poh.service.ts`.
 
-Comment `if` statement on L.30, like:
+2. Comment `if` statement on L.30, like:
 
 ```
       // if (!pohResponse.poh) {
