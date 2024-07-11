@@ -194,7 +194,7 @@ Components that are used in multiple places will be found in the top level of th
 
 **Node.js version and other requirements**
 
-Most installation errors are due to `Node.js`, `pnpm` or `docker-compose` versions. Verify the [requirements](../../README.md#requirements) if you encounter an error. To verify, you can execute:
+Most installation errors are due to `Node.js`, `pnpm`, `yarn` or `docker-compose` versions. Verify the [requirements](../../README.md#requirements) if you encounter an error. To verify, you can execute:
 
 ```bash
 node --version
@@ -204,6 +204,11 @@ v18.20.4
 ```bash
 pnpm --version
 9.4.0
+```
+
+```bash
+yarn --version
+1.22.22
 ```
 
 ```bash

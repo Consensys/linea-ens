@@ -73,7 +73,7 @@ contract TestL1 is EVMFetchTarget {
 
 - [Node.js](https://nodejs.org/en/download/package-manager) v18.x.
 - [pnpm](https://pnpm.io/installation) v9.x
-- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install) for the linea-ens-contracts package only
+- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install) v1.2
 - [Docker](https://docs.docker.com/engine/install/)
 - [docker-compose](https://docs.docker.com/compose/install/) v1.2x
 
