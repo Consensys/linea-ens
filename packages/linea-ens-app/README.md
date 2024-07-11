@@ -194,7 +194,7 @@ Components that are used in multiple places will be found in the top level of th
 
 **Node.js version and other requirements**
 
-Most installation errors are due to `Node.js` or `pnpm` version. Verify the [requirements](../../README.md#requirements) if you encounter an error.
+Most installation errors are due to `Node.js`, `pnpm` or `docker-compose` versions. Verify the [requirements](../../README.md#requirements) if you encounter an error.
 
 **EACCES: permission denied, unlink**
 
