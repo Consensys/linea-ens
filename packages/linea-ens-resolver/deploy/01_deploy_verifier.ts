@@ -11,13 +11,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   switch (network.name) {
     case "sepolia":
       args.push(
-        ["https://linea-ens-gateway.sepolia.linea.build/{sender}/{data}.json"],
+        ["https://linea-ccip-gateway.sepolia.linea.build/{sender}/{data}.json"],
         "0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5"
       );
       break;
     case "mainnet":
       args.push(
-        ["https://linea-ens-gateway.linea.build/{sender}/{data}.json"],
+        ["https://linea-ccip-gateway.linea.build/{sender}/{data}.json"],
         "0xd19d4B5d358258f05D7B411E21A1460D11B0876F"
       );
       break;
