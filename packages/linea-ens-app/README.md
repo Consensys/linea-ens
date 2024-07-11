@@ -1,8 +1,14 @@
 # Linea ENS App
 
+This documentation provides instructions on how to set up, deploy, and run the Linea ENS App locally.
+
 Friendly forked from ENS V3 app: https://github.com/ensdomains/ens-app-v3
 
 ## Usage
+
+### Requierements
+
+See [Requirements](../../README.md#requirements)
 
 ### Install
 
@@ -11,6 +17,8 @@ pnpm i
 ```
 
 ### Quick start on localhost
+
+#### 1. Run background services and deploy smart contracts
 
 In a first terminal run:
 
@@ -21,12 +29,16 @@ pnpm i
 pnpm denv
 ```
 
+#### 2. Deploy ENS Subgraph
+
 In a second terminal run:
 
 ```bash
 cd packages/linea-ens-subgraph
 yarn setup
 ```
+
+#### 3. Start ENS frontend
 
 In a third terminal run:
 
@@ -36,13 +48,15 @@ cp ./keyFiles/examples/signer.yaml ./keyFiles/signer.yaml
 make dev-docker
 ```
 
+#### 4. Start PoH Signer API
+
 In a fourth terminal run:
 
 ```bash
 cd packages/poh-signer-api
 cp .env.example .env
-cp pnpm i
-make pnpm start
+pnpm i
+make dev
 ```
 
 Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in ./packages/linea-ens-app/.env.local
