@@ -203,3 +203,19 @@ Components that are used in multiple places will be found in the top level of th
 ```
 
 To fix this error, you can safely remove `data` in `./packages/linea-ens-app/data`.
+
+**Linea PoH Status: INVALID**
+
+If your address doesn't have a PoH, you can temporally hack the PoH verifier to always return `PoH: true`:
+
+Edit `linea-ens/packages/poh-signer-api/src/modules/poh/poh.service.ts`
+
+Comment `if` statement on L.30, like:
+
+```
+      // if (!pohResponse.poh) {
+      //   throw new Error('address not POH');
+      // }
+```
+
+But you cannot use an address twice, you have to change address for each new registration.
