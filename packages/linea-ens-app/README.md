@@ -41,8 +41,7 @@ yarn setup
 Once successfully started, you should see:
 
 ```bash
-Build completed: QmRmG8bPjg3oy62b...                                                                                                    │
-                                                                                                                                                                   │
+Build completed: QmRmG8bPjg3oy62b...
 Deployed to http://127.0.0.1:8000/subgraphs/name/graphprotocol/ens/graphql   
 ```
 
@@ -174,8 +173,9 @@ The structure of the `pages` folder is mimicked inside `components`. Components 
 Components that are used in multiple places will be found in the top level of the `components` folder.
 
 
-### Errors...
+### Common Errors
 
+**EACCES: permission denied, unlink**
 
 ```bash
 [Error: EACCES: permission denied, unlink '/home/rapha/studio/linea/ens/linea-ens/packages/linea-ens-app/data/ipfs/api'] {                                                                                                                                 
@@ -186,4 +186,4 @@ Components that are used in multiple places will be found in the top level of th
 }           
 ```
 
-Remove `./data`
+To fix this error, you can safely remove `data` in `./packages/linea-ens-app/data`.
