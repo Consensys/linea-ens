@@ -1,0 +1,326 @@
+{
+  "address": "0xE5fC544002067dFD69ADF8854D026217bE67BbB3",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferStarted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "acceptOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "hasRegisteredPoh",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "isRegistered",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "managers",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "markAsRegistered",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pendingOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_manager",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "isManager",
+          "type": "bool"
+        }
+      ],
+      "name": "setManager",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x891d39cbf4a38c275857558418fce7a579c045a3977707250030d9dd6d89a84a",
+  "receipt": {
+    "to": null,
+    "from": "0x3357e73873944D885c5496718D0A1326f2Cab9B4",
+    "contractAddress": "0xE5fC544002067dFD69ADF8854D026217bE67BbB3",
+    "transactionIndex": 9,
+    "gasUsed": "354046",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000020000000000000000000800000000000000000000400000000000400000000000000000000080000000000000000000000000000000000000000000000000004000000000001000000040000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xa6c0d17b1ccb13e2661291bf67fb9e655e162a9d1f9806f9dfe733f8e92c28f4",
+    "transactionHash": "0x891d39cbf4a38c275857558418fce7a579c045a3977707250030d9dd6d89a84a",
+    "logs": [
+      {
+        "transactionIndex": 9,
+        "blockNumber": 6682972,
+        "transactionHash": "0x891d39cbf4a38c275857558418fce7a579c045a3977707250030d9dd6d89a84a",
+        "address": "0xE5fC544002067dFD69ADF8854D026217bE67BbB3",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000003357e73873944d885c5496718d0a1326f2cab9b4"
+        ],
+        "data": "0x",
+        "logIndex": 24,
+        "blockHash": "0xa6c0d17b1ccb13e2661291bf67fb9e655e162a9d1f9806f9dfe733f8e92c28f4"
+      }
+    ],
+    "blockNumber": 6682972,
+    "cumulativeGasUsed": "1320351",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "ecf9ee221e9a3f6a0d5de2e6d402ddd7",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferStarted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"acceptOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"hasRegisteredPoh\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"managers\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"markAsRegistered\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pendingOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_manager\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isManager\",\"type\":\"bool\"}],\"name\":\"setManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Contract to manage the registration status of addresses using Proof of Humanity (PoH).\",\"kind\":\"dev\",\"methods\":{\"acceptOwnership()\":{\"details\":\"The new owner accepts the ownership transfer.\"},\"isRegistered(address)\":{\"details\":\"Checks if an address has successfully registered using PoH.\",\"params\":{\"_address\":\"The address to check.\"},\"returns\":{\"_0\":\"bool True if the address has registered, false otherwise.\"}},\"markAsRegistered(address)\":{\"details\":\"Marks an address as having successfully registered using PoH.\",\"params\":{\"_address\":\"The address to mark as registered.\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"pendingOwner()\":{\"details\":\"Returns the address of the pending owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setManager(address,bool)\":{\"details\":\"Sets or revokes the manager role for an address. Allows the contract owner to designate certain addresses as managers, who are then authorized to mark addresses as having successfully registered using PoH. This function can also be used to revoke the manager role by setting `isManager` to false.\",\"params\":{\"_manager\":\"The address to be set as a manager or to have its manager role revoked.\",\"isManager\":\"A boolean indicating whether the address should be set as a manager (true) or have its manager role revoked (false).\"}},\"transferOwnership(address)\":{\"details\":\"Starts the ownership transfer of the contract to a new account. Replaces the pending transfer if there is one. Can only be called by the current owner.\"}},\"title\":\"PohRegistrationManager\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/ethregistrar/PohRegistrationManager.sol\":\"PohRegistrationManager\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    constructor() {\\n        _transferOwnership(_msgSender());\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not the owner\\\");\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is the zero address\\\");\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218\",\"license\":\"MIT\"},\"@openzeppelin/contracts/access/Ownable2Step.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.0) (access/Ownable2Step.sol)\\n\\npragma solidity ^0.8.0;\\n\\nimport \\\"./Ownable.sol\\\";\\n\\n/**\\n * @dev Contract module which provides access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership} and {acceptOwnership}.\\n *\\n * This module is used through inheritance. It will make available all functions\\n * from parent (Ownable).\\n */\\nabstract contract Ownable2Step is Ownable {\\n    address private _pendingOwner;\\n\\n    event OwnershipTransferStarted(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Returns the address of the pending owner.\\n     */\\n    function pendingOwner() public view virtual returns (address) {\\n        return _pendingOwner;\\n    }\\n\\n    /**\\n     * @dev Starts the ownership transfer of the contract to a new account. Replaces the pending transfer if there is one.\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual override onlyOwner {\\n        _pendingOwner = newOwner;\\n        emit OwnershipTransferStarted(owner(), newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`) and deletes any pending owner.\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual override {\\n        delete _pendingOwner;\\n        super._transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev The new owner accepts the ownership transfer.\\n     */\\n    function acceptOwnership() public virtual {\\n        address sender = _msgSender();\\n        require(pendingOwner() == sender, \\\"Ownable2Step: caller is not the new owner\\\");\\n        _transferOwnership(sender);\\n    }\\n}\\n\",\"keccak256\":\"0xde231558366826d7cb61725af8147965a61c53b77a352cc8c9af38fc5a92ac3c\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.9.4) (utils/Context.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0xa92e4fa126feb6907daa0513ddd816b2eb91f30a808de54f63c17d0e162c3439\",\"license\":\"MIT\"},\"contracts/ethregistrar/PohRegistrationManager.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity ~0.8.17;\\nimport {Ownable2Step} from \\\"@openzeppelin/contracts/access/Ownable2Step.sol\\\";\\n\\n/**\\n * @title PohRegistrationManager\\n * @dev Contract to manage the registration status of addresses using Proof of Humanity (PoH).\\n */\\ncontract PohRegistrationManager is Ownable2Step {\\n    mapping(address => bool) public hasRegisteredPoh;\\n    mapping(address => bool) public managers;\\n\\n    modifier onlyManager() {\\n        require(managers[msg.sender]);\\n        _;\\n    }\\n\\n    /**\\n     * @dev Marks an address as having successfully registered using PoH.\\n     * @param _address The address to mark as registered.\\n     */\\n    function markAsRegistered(address _address) external onlyManager {\\n        hasRegisteredPoh[_address] = true;\\n    }\\n\\n    /**\\n     * @dev Checks if an address has successfully registered using PoH.\\n     * @param _address The address to check.\\n     * @return bool True if the address has registered, false otherwise.\\n     */\\n    function isRegistered(address _address) external view returns (bool) {\\n        return hasRegisteredPoh[_address];\\n    }\\n\\n    /**\\n     * @dev Sets or revokes the manager role for an address.\\n     * Allows the contract owner to designate certain addresses as managers,\\n     * who are then authorized to mark addresses as having successfully registered using PoH.\\n     * This function can also be used to revoke the manager role by setting `isManager` to false.\\n     *\\n     * @param _manager The address to be set as a manager or to have its manager role revoked.\\n     * @param isManager A boolean indicating whether the address should be set as a manager (true)\\n     * or have its manager role revoked (false).\\n     */\\n    function setManager(address _manager, bool isManager) external onlyOwner {\\n        managers[_manager] = isManager;\\n    }\\n}\\n\",\"keccak256\":\"0x15c9fec2f350a638cce8ef39faa278c9d3d286537c7b0e1d752536758621d060\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061001a3361001f565b610096565b600180546001600160a01b031916905561004381610046602090811b61036317901c565b50565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6104f0806100a56000396000f3fe608060405234801561001057600080fd5b50600436106100be5760003560e01c8063a5e90eee11610076578063e30c39781161005b578063e30c397814610184578063f2fde38b14610195578063fdff9b4d146101a857600080fd5b8063a5e90eee14610145578063c3c5a5471461015857600080fd5b806379ba5097116100a757806379ba5097146100e05780638da5cb5b146100e85780639241f0851461011257600080fd5b80633682447e146100c3578063715018a6146100d8575b600080fd5b6100d66100d136600461045c565b6101cb565b005b6100d661020b565b6100d661021f565b6000546001600160a01b03165b6040516001600160a01b0390911681526020015b60405180910390f35b61013561012036600461045c565b60026020526000908152604090205460ff1681565b6040519015158152602001610109565b6100d661015336600461047e565b6102b2565b61013561016636600461045c565b6001600160a01b031660009081526002602052604090205460ff1690565b6001546001600160a01b03166100f5565b6100d66101a336600461045c565b6102e5565b6101356101b636600461045c565b60036020526000908152604090205460ff1681565b3360009081526003602052604090205460ff166101e757600080fd5b6001600160a01b03166000908152600260205260409020805460ff19166001179055565b6102136103c0565b61021d600061041a565b565b60015433906001600160a01b031681146102a65760405162461bcd60e51b815260206004820152602960248201527f4f776e61626c6532537465703a2063616c6c6572206973206e6f74207468652060448201527f6e6577206f776e6572000000000000000000000000000000000000000000000060648201526084015b60405180910390fd5b6102af8161041a565b50565b6102ba6103c0565b6001600160a01b03919091166000908152600360205260409020805460ff1916911515919091179055565b6102ed6103c0565b600180546001600160a01b03831673ffffffffffffffffffffffffffffffffffffffff19909116811790915561032b6000546001600160a01b031690565b6001600160a01b03167f38d16b8cac22d99fc7c124b9cd0de2d3fa1faef420bfe791d8c362d765e2270060405160405180910390a350565b600080546001600160a01b0383811673ffffffffffffffffffffffffffffffffffffffff19831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6000546001600160a01b0316331461021d5760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015260640161029d565b6001805473ffffffffffffffffffffffffffffffffffffffff191690556102af81610363565b80356001600160a01b038116811461045757600080fd5b919050565b60006020828403121561046e57600080fd5b61047782610440565b9392505050565b6000806040838503121561049157600080fd5b61049a83610440565b9150602083013580151581146104af57600080fd5b80915050925092905056fea2646970667358221220b10ab274e56acac6e6ce708a414eea9d2d254db36a6f25424faa12243fe0a12764736f6c63430008110033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100be5760003560e01c8063a5e90eee11610076578063e30c39781161005b578063e30c397814610184578063f2fde38b14610195578063fdff9b4d146101a857600080fd5b8063a5e90eee14610145578063c3c5a5471461015857600080fd5b806379ba5097116100a757806379ba5097146100e05780638da5cb5b146100e85780639241f0851461011257600080fd5b80633682447e146100c3578063715018a6146100d8575b600080fd5b6100d66100d136600461045c565b6101cb565b005b6100d661020b565b6100d661021f565b6000546001600160a01b03165b6040516001600160a01b0390911681526020015b60405180910390f35b61013561012036600461045c565b60026020526000908152604090205460ff1681565b6040519015158152602001610109565b6100d661015336600461047e565b6102b2565b61013561016636600461045c565b6001600160a01b031660009081526002602052604090205460ff1690565b6001546001600160a01b03166100f5565b6100d66101a336600461045c565b6102e5565b6101356101b636600461045c565b60036020526000908152604090205460ff1681565b3360009081526003602052604090205460ff166101e757600080fd5b6001600160a01b03166000908152600260205260409020805460ff19166001179055565b6102136103c0565b61021d600061041a565b565b60015433906001600160a01b031681146102a65760405162461bcd60e51b815260206004820152602960248201527f4f776e61626c6532537465703a2063616c6c6572206973206e6f74207468652060448201527f6e6577206f776e6572000000000000000000000000000000000000000000000060648201526084015b60405180910390fd5b6102af8161041a565b50565b6102ba6103c0565b6001600160a01b03919091166000908152600360205260409020805460ff1916911515919091179055565b6102ed6103c0565b600180546001600160a01b03831673ffffffffffffffffffffffffffffffffffffffff19909116811790915561032b6000546001600160a01b031690565b6001600160a01b03167f38d16b8cac22d99fc7c124b9cd0de2d3fa1faef420bfe791d8c362d765e2270060405160405180910390a350565b600080546001600160a01b0383811673ffffffffffffffffffffffffffffffffffffffff19831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6000546001600160a01b0316331461021d5760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015260640161029d565b6001805473ffffffffffffffffffffffffffffffffffffffff191690556102af81610363565b80356001600160a01b038116811461045757600080fd5b919050565b60006020828403121561046e57600080fd5b61047782610440565b9392505050565b6000806040838503121561049157600080fd5b61049a83610440565b9150602083013580151581146104af57600080fd5b80915050925092905056fea2646970667358221220b10ab274e56acac6e6ce708a414eea9d2d254db36a6f25424faa12243fe0a12764736f6c63430008110033",
+  "devdoc": {
+    "details": "Contract to manage the registration status of addresses using Proof of Humanity (PoH).",
+    "kind": "dev",
+    "methods": {
+      "acceptOwnership()": {
+        "details": "The new owner accepts the ownership transfer."
+      },
+      "isRegistered(address)": {
+        "details": "Checks if an address has successfully registered using PoH.",
+        "params": {
+          "_address": "The address to check."
+        },
+        "returns": {
+          "_0": "bool True if the address has registered, false otherwise."
+        }
+      },
+      "markAsRegistered(address)": {
+        "details": "Marks an address as having successfully registered using PoH.",
+        "params": {
+          "_address": "The address to mark as registered."
+        }
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "pendingOwner()": {
+        "details": "Returns the address of the pending owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "setManager(address,bool)": {
+        "details": "Sets or revokes the manager role for an address. Allows the contract owner to designate certain addresses as managers, who are then authorized to mark addresses as having successfully registered using PoH. This function can also be used to revoke the manager role by setting `isManager` to false.",
+        "params": {
+          "_manager": "The address to be set as a manager or to have its manager role revoked.",
+          "isManager": "A boolean indicating whether the address should be set as a manager (true) or have its manager role revoked (false)."
+        }
+      },
+      "transferOwnership(address)": {
+        "details": "Starts the ownership transfer of the contract to a new account. Replaces the pending transfer if there is one. Can only be called by the current owner."
+      }
+    },
+    "title": "PohRegistrationManager",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 444,
+        "contract": "contracts/ethregistrar/PohRegistrationManager.sol:PohRegistrationManager",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 557,
+        "contract": "contracts/ethregistrar/PohRegistrationManager.sol:PohRegistrationManager",
+        "label": "_pendingOwner",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      },
+      {
+        "astId": 17012,
+        "contract": "contracts/ethregistrar/PohRegistrationManager.sol:PohRegistrationManager",
+        "label": "hasRegisteredPoh",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_address,t_bool)"
+      },
+      {
+        "astId": 17016,
+        "contract": "contracts/ethregistrar/PohRegistrationManager.sol:PohRegistrationManager",
+        "label": "managers",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_address,t_bool)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_address,t_bool)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bool)",
+        "numberOfBytes": "32",
+        "value": "t_bool"
+      }
+    }
+  }
+}
