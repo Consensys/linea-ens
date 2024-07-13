@@ -7,6 +7,7 @@ import { addEnsContracts } from '@ensdomains/ensjs'
 import type { Register } from '@app/local-contracts'
 import { makeLocalhostChainWithEns } from '@app/utils/chains/makeLocalhostChainWithEns'
 
+import { lineaMainnet, lineaMainnetEnsAddresses } from './lineaMainnet'
 import { lineaSepolia, lineaSepoliaEnsAddresses } from './lineaSepolia'
 
 export const deploymentAddresses = JSON.parse(
@@ -17,7 +18,7 @@ export const localhostWithEns = makeLocalhostChainWithEns<typeof localhost>(
   localhost,
   deploymentAddresses,
 )
-// TODO: Replace by linea mainnet after deployment is done
+// This has to stay for the test files to be able to compile
 export const mainnetWithEns = addEnsContracts(mainnet)
 
 const addCustomEnsContracts = <const TChain extends Chain>(
@@ -82,17 +83,28 @@ export const lineaSepoliaWithEns = addCustomEnsContracts(
   'https://linea-poh-api-verifier.sepolia.linea.build',
 )
 
-export const chainsWithEns = [lineaSepoliaWithEns, localhostWithEns] as const
+export const lineaMainnetWithEns = addCustomEnsContracts(
+  lineaMainnet,
+  lineaMainnetEnsAddresses,
+  'https://api.studio.thegraph.com/query/69290/ens-linea-mainnet/version/latest',
+  'linea',
+  'https://linea-poh-signer-api.linea.build',
+)
+
+export const chainsWithEns = [lineaMainnetWithEns, lineaSepoliaWithEns, localhostWithEns] as const
 
 export const getSupportedChainById = (chainId: number | undefined) => {
   return chainId ? chainsWithEns.find((c) => c.id === chainId) : undefined
 }
 
 export const getBaseDomain = (chain?: Chain) => {
-  return chain?.custom?.baseDomain ? chain.custom.baseDomain : 'linea-sepolia'
+  return chain?.custom?.baseDomain ? chain.custom.baseDomain : 'linea'
 }
 
-export type SupportedChain = typeof localhostWithEns | typeof lineaSepoliaWithEns
+export type SupportedChain =
+  | typeof localhostWithEns
+  | typeof lineaSepoliaWithEns
+  | typeof lineaMainnetWithEns
 
 type EnsAddresses = {
   ensRegistry: {

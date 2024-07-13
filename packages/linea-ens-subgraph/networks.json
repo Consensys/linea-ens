@@ -145,5 +145,35 @@
       "address": "0xF127De9E039a789806fEd4C6b1C0f3aFfeA9425e",
       "startBlock": 2395202
     }
+  },
+  "linea": {
+    "ENSRegistry": {
+      "address": "0x50130b669B28C339991d8676FA73CF122a121267",
+      "startBlock": 6682888
+    },
+    "ENSRegistryOld": {
+      "address": "0x50130b669B28C339991d8676FA73CF122a121267",
+      "startBlock": 6682888
+    },
+    "Resolver": {
+      "address": "0x86c5AED9F27837074612288610fB98ccC1733126",
+      "startBlock": 6682994
+    },
+    "BaseRegistrar": {
+      "address": "0x6e84390dCc5195414eC91A8c56A5c91021B95704",
+      "startBlock": 6682892
+    },
+    "EthRegistrarControllerOld": {
+      "address": "0xb92aDAd547D0585FbF05f52aC6454A96938d6A92",
+      "startBlock": 6682966
+    },
+    "EthRegistrarController": {
+      "address": "0xDb75Db974B1F2bD3b5916d503036208064D18295",
+      "startBlock": 6682978
+    },
+    "NameWrapper": {
+      "address": "0xA53cca02F98D590819141Aa85C891e2Af713C223",
+      "startBlock": 6682956
+    }
   }
 }

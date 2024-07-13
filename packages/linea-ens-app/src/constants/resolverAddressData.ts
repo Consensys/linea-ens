@@ -2,6 +2,7 @@
 import { Address } from 'viem'
 
 import { deploymentAddresses } from './chains'
+import { lineaMainnetEnsAddresses } from './lineaMainnet'
 import { lineaSepoliaEnsAddresses } from './lineaSepolia'
 import { RESOLVER_INTERFACE_IDS, ResolverInterfaceId } from './resolverInterfaceIds'
 
@@ -389,7 +390,25 @@ export const KNOWN_RESOLVER_DATA: KnownResolverData = {
         RESOLVER_INTERFACE_IDS.VersionableResolver,
       ],
     },
-    // TODO add for linea mainnet when deployed
+  ],
+  '59144': [
+    {
+      address: lineaMainnetEnsAddresses.ensPublicResolver.address,
+      deployer: 'Consensys',
+      tag: 'latest',
+      isNameWrapperAware: true,
+      supportedInterfaces: [
+        RESOLVER_INTERFACE_IDS.AddressResolver,
+        RESOLVER_INTERFACE_IDS.MultiCoinAddressResolver,
+        RESOLVER_INTERFACE_IDS.NameResolver,
+        RESOLVER_INTERFACE_IDS.AbiResolver,
+        RESOLVER_INTERFACE_IDS.TextResolver,
+        RESOLVER_INTERFACE_IDS.ContentHashResolver,
+        RESOLVER_INTERFACE_IDS.DnsRecordResolver,
+        RESOLVER_INTERFACE_IDS.InterfaceResolver,
+        RESOLVER_INTERFACE_IDS.VersionableResolver,
+      ],
+    },
   ],
   ...(process.env.NEXT_PUBLIC_ETH_NODE === 'anvil'
     ? {
