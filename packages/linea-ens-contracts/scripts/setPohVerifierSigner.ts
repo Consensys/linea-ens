@@ -3,8 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import 'dotenv/config'
 import pohVerifierLineaSepolia from '../deployments/lineaSepolia/PohVerifier.json'
 import { Contract } from 'ethers'
-// TODO: Uncomment when deployed on linea mainnet
-// import pohVerifierLineaMainnet from '../deployments/lineaMainnet/PohVerifier.json'
+import pohVerifierLineaMainnet from '../deployments/lineaMainnet/PohVerifier.json'
 
 async function main(hre: HardhatRuntimeEnvironment) {
   const network = hre.network.name
@@ -31,9 +30,12 @@ async function main(hre: HardhatRuntimeEnvironment) {
         throw 'Env POH_SIGNER_LINEA_MAINNET can not be undefined'
       }
       pohSignerAddr = process.env.POH_SIGNER_LINEA_MAINNET
-      // TODO: Uncomment when deployed on mainnet
-      // pohVerifier = new ethers.Contract(pohVerifierLineaMainnet.address,pohVerifierLineaMainnet.abi,owner)
-      throw 'Network not supported'
+      pohVerifier = new ethers.Contract(
+        pohVerifierLineaMainnet.address,
+        pohVerifierLineaMainnet.abi,
+        signer,
+      )
+      break
     default:
       throw 'Network not supported'
   }

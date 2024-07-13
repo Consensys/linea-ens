@@ -80,7 +80,7 @@ async function main(hre: HardhatRuntimeEnvironment) {
       break
     case 'lineaMainnet':
       registrarControllerAbi = loadAbi(
-        '../deployments/mainnet/ETHRegistrarController.json',
+        '../deployments/lineaMainnet/ETHRegistrarController.json',
       )
       resolverAbi = loadAbi('../deployments/lineaMainnet/PublicResolver.json')
       rpcUrl = `https://linea-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
