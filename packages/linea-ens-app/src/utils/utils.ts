@@ -51,7 +51,7 @@ export const makeEtherscanLink = (data: string, network?: string, route: string 
       return `https://etherscan.io/${route}/${data}`
     case 'linea sepolia':
       return `https://sepolia.lineascan.build/${route}/${data}`
-    case 'linea':
+    case 'linea mainnet':
       return `https://lineascan.build/${route}/${data}`
     default:
       return `https://${network}.etherscan.io/${route}/${data}`
