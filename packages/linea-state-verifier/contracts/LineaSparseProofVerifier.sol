@@ -13,6 +13,8 @@ interface IRollup {
 }
 
 contract LineaSparseProofVerifier is IEVMVerifier {
+    uint256 public constant L2_BLOCK_RANGE_ACCEPTED = 96400;
+
     string[] public _gatewayURLs;
     address public _rollup;
 
@@ -36,10 +38,13 @@ contract LineaSparseProofVerifier is IEVMVerifier {
                 (uint256, AccountProofStruct, StorageProofStruct[])
             );
 
-        // Check that the L2 block number used is the most recent one
+        // Check that the L2 block number used is a recent one
+        uint256 currentL2BlockNumber = IRollup(_rollup).currentL2BlockNumber();
         require(
-            blockNo == IRollup(_rollup).currentL2BlockNumber(),
-            "LineaSparseProofVerifier: not latest finalized block"
+            (currentL2BlockNumber <= L2_BLOCK_RANGE_ACCEPTED &&
+                blockNo <= currentL2BlockNumber) ||
+                blockNo >= currentL2BlockNumber - L2_BLOCK_RANGE_ACCEPTED,
+            "LineaSparseProofVerifier: block not in range accepted"
         );
 
         bytes32 stateRoot = IRollup(_rollup).stateRootHashes(blockNo);

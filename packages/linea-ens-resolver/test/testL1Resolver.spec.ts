@@ -452,7 +452,7 @@ describe("Crosschain Resolver", () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     // Put a wrong block number
-    await rollup.setCurrentStateRoot(5, stateRoot);
+    await rollup.setCurrentStateRoot(blockNo + 100_000, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
       [
         "uint256",
@@ -466,7 +466,7 @@ describe("Crosschain Resolver", () => {
       await target.getStorageSlotsCallback(proofsEncoded, extraDataTest);
     } catch (error) {
       expect(error.reason).to.equal(
-        "LineaSparseProofVerifier: not latest finalized block"
+        "LineaSparseProofVerifier: block not in range accepted"
       );
     }
     // Put back the right block number and state root
