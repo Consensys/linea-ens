@@ -422,7 +422,6 @@ describe("Crosschain Resolver", () => {
   it("should revert if the number of commands is bigger than the number of storage proofs returned by the gateway", async () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
-    // Put a wrong block number
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
       [
@@ -437,7 +436,8 @@ describe("Crosschain Resolver", () => {
         l2ResolverAddress,
         commands2Test,
         constantsTest,
-        proofsEncoded
+        proofsEncoded,
+        AbiCoder.defaultAbiCoder().encode(["uint256"], [blockNo])
       );
     } catch (error) {
       expect(error.reason).to.equal(

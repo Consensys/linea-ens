@@ -27,22 +27,23 @@ abstract contract EVMFetchTarget {
             bytes32[] memory commands,
             bytes[] memory constants,
             bytes4 callback,
-            bytes memory callbackData
+            uint256 l2BlockRangeAccepted
         ) = abi.decode(
                 extradata,
-                (IEVMVerifier, address, bytes32[], bytes[], bytes4, bytes)
+                (IEVMVerifier, address, bytes32[], bytes[], bytes4, uint256)
             );
         bytes[] memory values = verifier.getStorageValues(
             addr,
             commands,
             constants,
-            proof
+            proof,
+            l2BlockRangeAccepted
         );
         if (values.length != commands.length) {
             revert ResponseLengthMismatch(values.length, commands.length);
         }
         bytes memory ret = address(this).functionCall(
-            abi.encodeWithSelector(callback, values, callbackData)
+            abi.encodeWithSelector(callback, values, "")
         );
         assembly {
             return(add(ret, 32), mload(ret))

@@ -8,6 +8,8 @@ import {IEVMVerifier} from "linea-state-verifier/contracts/IEVMVerifier.sol";
 contract TestL1 is EVMFetchTarget {
     using EVMFetcher for EVMFetcher.EVMFetchRequest;
 
+    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 96400;
+
     IEVMVerifier verifier; // Slot 0
     address target;
 
@@ -19,7 +21,7 @@ contract TestL1 is EVMFetchTarget {
     function getLatest() public view returns (uint256) {
         EVMFetcher.newFetchRequest(verifier, target).getStatic(0).fetch(
             this.getLatestCallback.selector,
-            ""
+            abi.encode(L2_BLOCK_RANGE_ACCEPTED)
         );
     }
 
@@ -33,7 +35,7 @@ contract TestL1 is EVMFetchTarget {
     function getName() public view returns (string memory) {
         EVMFetcher.newFetchRequest(verifier, target).getDynamic(1).fetch(
             this.getNameCallback.selector,
-            ""
+            abi.encode(L2_BLOCK_RANGE_ACCEPTED)
         );
     }
 
@@ -49,7 +51,10 @@ contract TestL1 is EVMFetchTarget {
             .newFetchRequest(verifier, target)
             .getDynamic(3)
             .element(idx)
-            .fetch(this.getHighscorerCallback.selector, "");
+            .fetch(
+                this.getHighscorerCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function getHighscorerCallback(
@@ -65,7 +70,10 @@ contract TestL1 is EVMFetchTarget {
             .getStatic(0)
             .getStatic(2)
             .ref(0)
-            .fetch(this.getLatestHighscoreCallback.selector, "");
+            .fetch(
+                this.getLatestHighscoreCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function getLatestHighscoreCallback(
@@ -81,7 +89,10 @@ contract TestL1 is EVMFetchTarget {
             .getStatic(0)
             .getDynamic(3)
             .ref(0)
-            .fetch(this.getLatestHighscorerCallback.selector, "");
+            .fetch(
+                this.getLatestHighscorerCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function getLatestHighscorerCallback(
@@ -98,7 +109,10 @@ contract TestL1 is EVMFetchTarget {
             .newFetchRequest(verifier, target)
             .getDynamic(4)
             .element(_name)
-            .fetch(this.getNicknameCallback.selector, "");
+            .fetch(
+                this.getNicknameCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function getNicknameCallback(
@@ -114,7 +128,10 @@ contract TestL1 is EVMFetchTarget {
             .getDynamic(1)
             .getDynamic(4)
             .ref(0)
-            .fetch(this.getPrimaryNicknameCallback.selector, "");
+            .fetch(
+                this.getPrimaryNicknameCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function getPrimaryNicknameCallback(
@@ -127,7 +144,7 @@ contract TestL1 is EVMFetchTarget {
     function getZero() public view returns (uint256) {
         EVMFetcher.newFetchRequest(verifier, target).getStatic(5).fetch(
             this.getZeroCallback.selector,
-            ""
+            abi.encode(L2_BLOCK_RANGE_ACCEPTED)
         );
     }
 
@@ -144,7 +161,10 @@ contract TestL1 is EVMFetchTarget {
             .getStatic(5)
             .getStatic(2)
             .ref(0)
-            .fetch(this.getZeroIndexCallback.selector, "");
+            .fetch(
+                this.getZeroIndexCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function getZeroIndexCallback(

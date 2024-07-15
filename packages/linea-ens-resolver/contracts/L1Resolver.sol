@@ -38,6 +38,8 @@ contract L1Resolver is
     uint256 constant VERSIONABLE_ADDRESSES_SLOT = 2;
     uint256 constant VERSIONABLE_HASHES_SLOT = 3;
     uint256 constant VERSIONABLE_TEXTS_SLOT = 10;
+    // To check how old is the value/proof returned and is in the acceptable range
+    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 96400;
     string public graphqlUrl;
 
     event TargetSet(bytes name, address target);
@@ -207,7 +209,10 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(COIN_TYPE_ETH)
-            .fetch(this.addrCallback.selector, ""); // recordVersions
+            .fetch(
+                this.addrCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            ); // recordVersions
     }
 
     function addrCallback(
@@ -230,7 +235,10 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(coinType)
-            .fetch(this.addrCoinTypeCallback.selector, "");
+            .fetch(
+                this.addrCoinTypeCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function addrCoinTypeCallback(
@@ -253,7 +261,10 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(key)
-            .fetch(this.textCallback.selector, "");
+            .fetch(
+                this.textCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function textCallback(
@@ -274,7 +285,10 @@ contract L1Resolver is
             .getDynamic(VERSIONABLE_HASHES_SLOT)
             .ref(0)
             .element(node)
-            .fetch(this.contenthashCallback.selector, "");
+            .fetch(
+                this.contenthashCallback.selector,
+                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+            );
     }
 
     function contenthashCallback(
