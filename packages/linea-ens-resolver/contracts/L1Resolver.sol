@@ -39,7 +39,7 @@ contract L1Resolver is
     uint256 constant VERSIONABLE_HASHES_SLOT = 3;
     uint256 constant VERSIONABLE_TEXTS_SLOT = 10;
     // To check how old is the value/proof returned and is in the acceptable range
-    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 96400;
+    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 86400;
     string public graphqlUrl;
 
     event TargetSet(bytes name, address target);

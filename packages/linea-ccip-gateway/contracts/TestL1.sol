@@ -8,7 +8,7 @@ import {IEVMVerifier} from "linea-state-verifier/contracts/IEVMVerifier.sol";
 contract TestL1 is EVMFetchTarget {
     using EVMFetcher for EVMFetcher.EVMFetchRequest;
 
-    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 96400;
+    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 86400;
 
     IEVMVerifier verifier; // Slot 0
     address target;
