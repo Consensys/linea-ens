@@ -46,8 +46,13 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   async getProvableBlock(): Promise<number> {
     try {
       const rollupAddress = await this.rollup.getAddress();
+      // Get the logs on the last 48 hours on L1
+      const nbBlock48h = 14400;
+      const l1BlockNumber = await this.l1Provider.getBlockNumber();
+      const fromBlock =
+        l1BlockNumber > nbBlock48h ? l1BlockNumber - nbBlock48h : 0;
       const filterLog: ethers.Filter = {
-        fromBlock: 0,
+        fromBlock,
         toBlock: "latest",
         topics: [
           "0x1335f1a2b3ff25f07f5fef07dd35d8fb4312c3c73b138e2fad9347b3319ab53c", // DataFinalized topic
