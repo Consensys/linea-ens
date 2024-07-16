@@ -8,6 +8,7 @@ interface IEVMVerifier {
         address target,
         bytes32[] memory commands,
         bytes[] memory constants,
-        bytes memory proof
+        bytes memory proof,
+        uint256 l2BlockRangeAccepted
     ) external view returns (bytes[] memory values);
 }

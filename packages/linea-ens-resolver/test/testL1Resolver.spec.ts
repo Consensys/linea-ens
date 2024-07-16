@@ -422,7 +422,6 @@ describe("Crosschain Resolver", () => {
   it("should revert if the number of commands is bigger than the number of storage proofs returned by the gateway", async () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
-    // Put a wrong block number
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
       [
@@ -437,7 +436,8 @@ describe("Crosschain Resolver", () => {
         l2ResolverAddress,
         commands2Test,
         constantsTest,
-        proofsEncoded
+        proofsEncoded,
+        AbiCoder.defaultAbiCoder().encode(["uint256"], [blockNo])
       );
     } catch (error) {
       expect(error.reason).to.equal(
@@ -452,7 +452,7 @@ describe("Crosschain Resolver", () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     // Put a wrong block number
-    await rollup.setCurrentStateRoot(5, stateRoot);
+    await rollup.setCurrentStateRoot(blockNo + 100_000, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
       [
         "uint256",
@@ -466,7 +466,7 @@ describe("Crosschain Resolver", () => {
       await target.getStorageSlotsCallback(proofsEncoded, extraDataTest);
     } catch (error) {
       expect(error.reason).to.equal(
-        "LineaSparseProofVerifier: not latest finalized block"
+        "LineaSparseProofVerifier: block not in range accepted"
       );
     }
     // Put back the right block number and state root

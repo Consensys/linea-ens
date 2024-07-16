@@ -21,6 +21,7 @@ const currentL2BlockNumberSig =
 export class L2ProofService implements IProofService<L2ProvableBlock> {
   private readonly rollup: Contract;
   private readonly helper: EVMProofHelper;
+  private readonly l1Provider: JsonRpcProvider;
 
   constructor(
     providerL1: JsonRpcProvider,
@@ -36,6 +37,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
       currentL2BlockNumberIface,
       providerL1
     );
+    this.l1Provider = providerL1;
   }
 
   /**
@@ -43,9 +45,41 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
    */
   async getProvableBlock(): Promise<number> {
     try {
-      const lastBlockFinalized = await this.rollup.currentL2BlockNumber();
-      if (!lastBlockFinalized) throw new Error("No block found");
-      return lastBlockFinalized;
+      const rollupAddress = await this.rollup.getAddress();
+      // Get the logs on the last 48 hours on L1
+      const nbBlock48h = 14400;
+      const l1BlockNumber = await this.l1Provider.getBlockNumber();
+      const fromBlock =
+        l1BlockNumber > nbBlock48h ? l1BlockNumber - nbBlock48h : 0;
+      const filterLog: ethers.Filter = {
+        fromBlock,
+        toBlock: "latest",
+        topics: [
+          "0x1335f1a2b3ff25f07f5fef07dd35d8fb4312c3c73b138e2fad9347b3319ab53c", // DataFinalized topic
+        ],
+        address: rollupAddress,
+      };
+      const logs = await this.l1Provider.getLogs(filterLog);
+      const mostRecentlogs = logs.reverse();
+
+      if (mostRecentlogs.length === 0) {
+        throw new Error("No finalized block found");
+      }
+
+      // We take the latest finalized block if we only get one finalization otherwise we take the second most recent
+      // to avoid delays between the finalization tx and the coordinator notification update
+      let logIndex = 0;
+      if (mostRecentlogs.length > 1) {
+        logIndex = 1;
+      }
+
+      const provableBlock = AbiCoder.defaultAbiCoder().decode(
+        ["uint256"],
+        mostRecentlogs[logIndex].topics[1]
+      );
+      provableBlock.toString();
+
+      return parseInt(provableBlock.toString());
     } catch (e) {
       logError(e);
       throw e;
