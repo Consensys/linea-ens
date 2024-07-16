@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 
 import RegistrationPoh from '@app/components/pages/profile/[name]/registration/RegistrationPoh'
+import { getBaseDomain } from '@app/constants/chains'
 import { useInitial } from '@app/hooks/useInitial'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 import { getSelectedIndex } from '@app/hooks/useRegistrationReducer'
@@ -18,11 +19,28 @@ export default function Page() {
 
   const { address } = useAccount()
   const chainId = useChainId()
+  const { chain } = useAccount()
 
   const nameDetails = useNameDetails({ name })
   const { isLoading: detailsLoading, registrationStatus } = nameDetails
 
   const isLoading = detailsLoading || initial
+
+  const baseDomain = getBaseDomain(chain)
+
+  if (!isLoading) {
+    // If the selected network does not match the register url we redirect to the correct one
+    const nameSplit = nameDetails.name.split('.')
+    if (nameSplit.length > 1) {
+      const label = nameSplit[0]
+      const nameDomain = nameSplit[1]
+
+      if (nameDomain !== baseDomain) {
+        const fixedName = `${label}.${baseDomain}.eth`
+        router.push(`/${fixedName}/register`)
+      }
+    }
+  }
 
   if (!isLoading && registrationStatus !== 'available' && registrationStatus !== 'premium') {
     let redirect = true
