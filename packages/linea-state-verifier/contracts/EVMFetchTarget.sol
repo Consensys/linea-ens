@@ -27,11 +27,13 @@ abstract contract EVMFetchTarget {
             bytes32[] memory commands,
             bytes[] memory constants,
             bytes4 callback,
-            uint256 l2BlockRangeAccepted
+            bytes memory callbackData
         ) = abi.decode(
                 extradata,
-                (IEVMVerifier, address, bytes32[], bytes[], bytes4, uint256)
+                (IEVMVerifier, address, bytes32[], bytes[], bytes4, bytes)
             );
+
+        uint256 l2BlockRangeAccepted = uint256(bytes32(callbackData));
         bytes[] memory values = verifier.getStorageValues(
             addr,
             commands,
