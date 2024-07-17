@@ -437,7 +437,7 @@ describe("Crosschain Resolver", () => {
         commands2Test,
         constantsTest,
         proofsEncoded,
-        AbiCoder.defaultAbiCoder().encode(["uint256"], [blockNo])
+        86400
       );
     } catch (error) {
       expect(error.reason).to.equal(
