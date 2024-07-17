@@ -80,7 +80,7 @@ const LogoAndLanguage = styled.div(
     justify-content: flex-start;
     gap: ${theme.space['2']};
     flex-gap: ${theme.space['2']};
-    width: 50%;
+    width: 40%;
   `,
 )
 
@@ -105,7 +105,8 @@ export default function Page() {
         <LogoAndLanguage>
           <LineaLogo />
           <LineLogo height="27.5" />
-          <ENSLogo />
+          {/* width="107" height="94" viewBox="0 0 300 94 */}
+          <ENSLogo width="91" height="80" transform="translateY(100px)" />
           {/* <StyledENS as={ENSFull} /> */}
         </LogoAndLanguage>
         {
