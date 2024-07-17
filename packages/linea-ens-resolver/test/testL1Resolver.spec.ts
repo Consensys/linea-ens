@@ -474,7 +474,7 @@ describe("Crosschain Resolver", () => {
       proofsEncoded,
       extraDataTest
     );
-    expect(result.data).to.contain(retValueTest);
+    expect(result.data.endsWith(retValueTest)).to.be.true;
   });
 
   it("should revert if the block number returned by the gateway is not in the accepted block range", async () => {
@@ -523,7 +523,7 @@ describe("Crosschain Resolver", () => {
       extraDataWithLongCallBackData
     );
 
-    expect(result.data).to.contain(retValueLongTest);
+    expect(result.data.endsWith(retValueLongTest)).to.be.true;
   });
 
   it("should revert when callbackdata < 32 bytes", async () => {
@@ -571,7 +571,8 @@ describe("Crosschain Resolver", () => {
       proofsEncoded,
       extraDataTest
     );
-    expect(result.data).to.contain(retValueTest);
+
+    expect(result.data.endsWith(retValueTest)).to.be.true;
   });
 
   it("should revert when block sent by the gateway > currentL2BlockNumber and currentL2BlockNumber <= ACCEPTED_BLOCK_RANGE_LENGTH", async () => {
