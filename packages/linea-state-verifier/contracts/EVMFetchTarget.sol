@@ -16,7 +16,7 @@ abstract contract EVMFetchTarget {
     /**
      * @dev Internal callback function invoked by CCIP-Read in response to a `getStorageSlots` request.
      * @dev callbackData has to be 32 bytes length minimum since the function uses the first
-     *      32 bytes to get the acceptedL2BlockRangeLength, this is a difference from the initial ENS implementation.
+     *      32 bytes to get the acceptedL2BlockRangeLength, this differs from initial ENS implementation that sends ''.
      */
     function getStorageSlotsCallback(
         bytes calldata response,

@@ -231,9 +231,10 @@ library EVMFetcher {
      *      Calling this function terminates execution; clients that implement CCIP-Read will make a callback to
      *      `callback` with the results of the operation.
      * @dev This implementation makes use of callbackData to pass the acceptedL2BlockRangeLength needed to check
-     *      the block used when checking the proof is not too old, this is a difference from ENS initial implementation.
-     *      When calling this function the first 32 bytes in callbackData have to contain a number of L2 blocks that
-     *      represent the block range accepted for the verification.
+     *      that the block used when checking the proof is not too old, this is a difference from ENS initial implementation
+     *      as at the time of writing they did not check how old the block being verified is.
+     *      When calling this function, the first 32 bytes in callbackData has to contain a number of L2 blocks that
+     *      represents the block range accepted for the verification.
      * @param callbackId A callback function selector on this contract that will be invoked via CCIP-Read with the result of the lookup.
      *        The function must have a signature matching `(bytes[] memory values, bytes callbackData)` with a return type matching the call in which
      *        this function was invoked. Its return data will be returned as the return value of the entire CCIP-read operation.
