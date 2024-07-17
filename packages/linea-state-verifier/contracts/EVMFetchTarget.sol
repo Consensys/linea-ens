@@ -15,6 +15,7 @@ abstract contract EVMFetchTarget {
 
     /**
      * @dev Internal callback function invoked by CCIP-Read in response to a `getStorageSlots` request.
+     * @dev Only the first 32 bytes are used for callbackData and is never longer than 32 bytes
      */
     function getStorageSlotsCallback(
         bytes calldata response,
@@ -33,13 +34,13 @@ abstract contract EVMFetchTarget {
                 (IEVMVerifier, address, bytes32[], bytes[], bytes4, bytes)
             );
 
-        uint256 l2BlockRangeAccepted = uint256(bytes32(callbackData));
+        uint256 acceptedL2BlockRangeLength = uint256(bytes32(callbackData));
         bytes[] memory values = verifier.getStorageValues(
             addr,
             commands,
             constants,
             proof,
-            l2BlockRangeAccepted
+            acceptedL2BlockRangeLength
         );
         if (values.length != commands.length) {
             revert ResponseLengthMismatch(values.length, commands.length);

@@ -26,7 +26,7 @@ contract LineaSparseProofVerifier is IEVMVerifier {
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes memory proof,
-        uint256 l2BlockRangeAccepted
+        uint256 acceptedL2BlockRangeLength
     ) external view returns (bytes[] memory values) {
         (
             uint256 blockNo,
@@ -40,9 +40,9 @@ contract LineaSparseProofVerifier is IEVMVerifier {
         // Check that the L2 block number used is a recent one and is part of the range accepted
         uint256 currentL2BlockNumber = IRollup(_rollup).currentL2BlockNumber();
         require(
-            (currentL2BlockNumber <= l2BlockRangeAccepted &&
+            (currentL2BlockNumber <= acceptedL2BlockRangeLength &&
                 blockNo <= currentL2BlockNumber) ||
-                blockNo >= currentL2BlockNumber - l2BlockRangeAccepted,
+                blockNo >= currentL2BlockNumber - acceptedL2BlockRangeLength,
             "LineaSparseProofVerifier: block not in range accepted"
         );
 
