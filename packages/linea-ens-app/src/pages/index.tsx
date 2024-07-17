@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useTranslation } from 'react-i18next'
-import styled, { css, useTheme } from 'styled-components'
-
+import styled, { css } from 'styled-components'
 import { mq, Typography } from '@ensdomains/thorin'
 
 import FaucetBanner from '@app/components/@molecules/FaucetBanner'
@@ -105,9 +104,7 @@ export default function Page() {
         <LogoAndLanguage>
           <LineaLogo />
           <LineLogo height="27.5" />
-          {/* width="107" height="94" viewBox="0 0 300 94 */}
-          <ENSLogo width="91" height="80" transform="translateY(100px)" />
-          {/* <StyledENS as={ENSFull} /> */}
+          <ENSLogo width="91" height="80" />
         </LogoAndLanguage>
         {
           isConnected && <Hamburger />
