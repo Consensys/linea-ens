@@ -25,6 +25,8 @@ import {
   extraDataTest,
   stateRoot,
   wrongExtraData,
+  extraDataWithLongCallBackData,
+  extraDataWithShortCallBackData,
 } from "./testData";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
@@ -44,6 +46,8 @@ const EMPTY_BYTES32 =
 
 const PROOF_ENCODING_PADDING =
   "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000044e0";
+
+const ACCEPTED_BLOCK_RANGE_LENGTH = 86400;
 
 type ethersObj = typeof ethersT &
   Omit<HardhatEthersHelpers, "provider"> & {
@@ -261,6 +265,7 @@ describe("Crosschain Resolver", () => {
     const incorrectname = encodeName("notowned.eth");
     try {
       await target.setTarget(incorrectname, l2ResolverAddress);
+      throw "Should have reverted";
     } catch (e) {
       expect(e.reason).equal("Not authorized to set target for this node");
     }
@@ -397,6 +402,7 @@ describe("Crosschain Resolver", () => {
       await target.resolve(encodedname, calldata, {
         enableCcipRead: true,
       });
+      throw "Should have reverted";
     } catch (error) {
       expect(error.reason).to.equal("invalid selector");
     }
@@ -414,6 +420,7 @@ describe("Crosschain Resolver", () => {
       await target.resolve(encodedname, calldata, {
         enableCcipRead: true,
       });
+      throw "Should have reverted";
     } catch (error) {
       expect(error.reason).to.equal("param data too short");
     }
@@ -437,8 +444,9 @@ describe("Crosschain Resolver", () => {
         commands2Test,
         constantsTest,
         proofsEncoded,
-        86400
+        ACCEPTED_BLOCK_RANGE_LENGTH
       );
+      throw "Should have reverted";
     } catch (error) {
       expect(error.reason).to.equal(
         "LineaProofHelper: commands number > storage proofs number"
@@ -448,11 +456,42 @@ describe("Crosschain Resolver", () => {
     await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 
-  it("should revert if the block number returned by the gateway is not the most recent one", async () => {
+  it("should not revert if the block number returned by the gateway is in the accepted block range", async () => {
     const currentBlockNo = await rollup.currentL2BlockNumber();
     const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
-    // Put a wrong block number
-    await rollup.setCurrentStateRoot(blockNo + 100_000, stateRoot);
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    await rollup.setCurrentStateRoot(
+      blockNo + ACCEPTED_BLOCK_RANGE_LENGTH - 10,
+      stateRoot
+    );
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+
+    const result = await target.getStorageSlotsCallback(
+      proofsEncoded,
+      extraDataTest
+    );
+    expect(result).to.not.be.null;
+
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should revert if the block number returned by the gateway is not in the accepted block range", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    await rollup.setCurrentStateRoot(
+      blockNo + ACCEPTED_BLOCK_RANGE_LENGTH + 10,
+      stateRoot
+    );
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
       [
         "uint256",
@@ -464,11 +503,131 @@ describe("Crosschain Resolver", () => {
     proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
     try {
       await target.getStorageSlotsCallback(proofsEncoded, extraDataTest);
+      throw "Should have reverted";
     } catch (error) {
       expect(error.reason).to.equal(
         "LineaSparseProofVerifier: block not in range accepted"
       );
     }
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should not revert when callbackdata > 32 bytes", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    await rollup.setCurrentStateRoot(
+      blockNo + ACCEPTED_BLOCK_RANGE_LENGTH - 10,
+      stateRoot
+    );
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+
+    const result = await target.getStorageSlotsCallback(
+      proofsEncoded,
+      extraDataWithLongCallBackData
+    );
+    expect(result).to.not.be.null;
+
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should revert when callbackdata < 32 bytes", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    await rollup.setCurrentStateRoot(blockNo, stateRoot);
+    await rollup.setCurrentStateRoot(
+      blockNo + ACCEPTED_BLOCK_RANGE_LENGTH - 10,
+      stateRoot
+    );
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [blockNo, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+
+    try {
+      await target.getStorageSlotsCallback(
+        proofsEncoded,
+        extraDataWithShortCallBackData
+      );
+      throw "Should have reverted";
+    } catch (error) {
+      expect(error.reason).to.equal("require(false)");
+    }
+
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should not revert when block sent by the gateway <= currentL2BlockNumber and currentL2BlockNumber <= ACCEPTED_BLOCK_RANGE_LENGTH", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    const veryOldBlockNb = 1;
+    await rollup.setCurrentStateRoot(veryOldBlockNb, stateRoot);
+    await rollup.setCurrentStateRoot(ACCEPTED_BLOCK_RANGE_LENGTH, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [veryOldBlockNb, proofTest.accountProof, proofTest.storageProofs]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+
+    const result = await target.getStorageSlotsCallback(
+      proofsEncoded,
+      extraDataTest
+    );
+    expect(result).to.not.be.null;
+
+    // Put back the right block number and state root
+    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+  });
+
+  it("should revert when block sent by the gateway > currentL2BlockNumber and currentL2BlockNumber <= ACCEPTED_BLOCK_RANGE_LENGTH", async () => {
+    const currentBlockNo = await rollup.currentL2BlockNumber();
+    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
+    const veryOldBlockNb = ACCEPTED_BLOCK_RANGE_LENGTH + 1;
+    await rollup.setCurrentStateRoot(veryOldBlockNb, stateRoot);
+    await rollup.setCurrentStateRoot(ACCEPTED_BLOCK_RANGE_LENGTH, stateRoot);
+    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
+      [
+        "uint256",
+        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
+        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+      ],
+      [
+        veryOldBlockNb + ACCEPTED_BLOCK_RANGE_LENGTH,
+        proofTest.accountProof,
+        proofTest.storageProofs,
+      ]
+    );
+    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
+
+    try {
+      await target.getStorageSlotsCallback(proofsEncoded, extraDataTest);
+      throw "Should have reverted";
+    } catch (error) {
+      expect(error.reason).to.equal(
+        "LineaSparseProofVerifier: invalid state root"
+      );
+    }
+
     // Put back the right block number and state root
     await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
@@ -489,6 +648,7 @@ describe("Crosschain Resolver", () => {
     proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
     try {
       await target.getStorageSlotsCallback(proofsEncoded, wrongExtraData);
+      throw "Should have reverted";
     } catch (error) {
       expect(error.reason).to.equal("LineaProofHelper: wrong target");
     }

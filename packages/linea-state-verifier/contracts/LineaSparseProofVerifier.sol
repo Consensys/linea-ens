@@ -3,6 +3,7 @@ pragma solidity ^0.8.25;
 
 import {IEVMVerifier} from "./IEVMVerifier.sol";
 import {StorageProofStruct, AccountProofStruct, LineaProofHelper} from "./LineaProofHelper.sol";
+import "hardhat/console.sol";
 
 interface IRollup {
     function stateRootHashes(
@@ -42,7 +43,7 @@ contract LineaSparseProofVerifier is IEVMVerifier {
         require(
             (currentL2BlockNumber <= acceptedL2BlockRangeLength &&
                 blockNo <= currentL2BlockNumber) ||
-                blockNo >= currentL2BlockNumber - acceptedL2BlockRangeLength,
+                (blockNo >= currentL2BlockNumber - acceptedL2BlockRangeLength),
             "LineaSparseProofVerifier: block not in range accepted"
         );
 
