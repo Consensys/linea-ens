@@ -202,6 +202,7 @@ Most installation errors are due to `Node.js`, `pnpm`, `yarn` or `docker-compose
 node --version
 v18.20.4
 ```
+Node Version Manager (nvm) can be used to manage multiple versions of Node.js if you find you are not in the correct version of Node.
 
 ```bash
 pnpm --version
@@ -217,6 +218,37 @@ yarn --version
 docker-compose --version
 docker-compose version 1.29.2, build 5becea4c
 ```
+
+### Canvas issues
+It is possible the Canvas libraries are not installed correctly or missing.
+To install/reinstall: First install pkg-config: 
+```bash
+brew install pkg-config
+```
+
+Then install dependencies for canvas
+```bash
+brew install cairo pango libpng jpeg giflib librsvg
+```
+
+After installing the dependencies, set the PKG_CONFIG_PATH environment variable:
+```bash
+export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:/opt/homebrew/share/pkgconfig:$PKG_CONFIG_PATH"
+```
+
+Finally clear npm cache and node_modules:
+```bash
+npm cache clean --force
+rm -rf node_modules
+```
+
+### Package Manager errors:
+If you encounter a Package Manager error this stems from a Yarn compatibility issue. To resolve this we need to disable Yarn that has been bundled in with the latest versions of Node.js and install Yarn separately.
+
+To do so follow these steps in the root folder:
+1. `corepack disable`
+2. `npm install -g pnpm`
+3. `npm install -g yarn`
 
 ### EACCES: permission denied, unlink
 
