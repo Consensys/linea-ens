@@ -27,6 +27,8 @@ import {
   wrongExtraData,
   extraDataWithLongCallBackData,
   extraDataWithShortCallBackData,
+  retValueTest,
+  retValueLongTest,
 } from "./testData";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
@@ -427,8 +429,6 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should revert if the number of commands is bigger than the number of storage proofs returned by the gateway", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
       [
@@ -452,13 +452,9 @@ describe("Crosschain Resolver", () => {
         "LineaProofHelper: commands number > storage proofs number"
       );
     }
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 
   it("should not revert if the block number returned by the gateway is in the accepted block range", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     await rollup.setCurrentStateRoot(
       blockNo + ACCEPTED_BLOCK_RANGE_LENGTH - 10,
@@ -478,15 +474,10 @@ describe("Crosschain Resolver", () => {
       proofsEncoded,
       extraDataTest
     );
-    expect(result).to.not.be.null;
-
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+    expect(result.data).to.contain(retValueTest);
   });
 
   it("should revert if the block number returned by the gateway is not in the accepted block range", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     await rollup.setCurrentStateRoot(
       blockNo + ACCEPTED_BLOCK_RANGE_LENGTH + 10,
@@ -509,13 +500,9 @@ describe("Crosschain Resolver", () => {
         "LineaSparseProofVerifier: block not in range accepted"
       );
     }
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 
   it("should not revert when callbackdata > 32 bytes", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     await rollup.setCurrentStateRoot(
       blockNo + ACCEPTED_BLOCK_RANGE_LENGTH - 10,
@@ -535,15 +522,11 @@ describe("Crosschain Resolver", () => {
       proofsEncoded,
       extraDataWithLongCallBackData
     );
-    expect(result).to.not.be.null;
 
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+    expect(result.data).to.contain(retValueLongTest);
   });
 
   it("should revert when callbackdata < 32 bytes", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     await rollup.setCurrentStateRoot(
       blockNo + ACCEPTED_BLOCK_RANGE_LENGTH - 10,
@@ -568,14 +551,9 @@ describe("Crosschain Resolver", () => {
     } catch (error) {
       expect(error.reason).to.equal("require(false)");
     }
-
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 
   it("should not revert when block sent by the gateway <= currentL2BlockNumber and currentL2BlockNumber <= ACCEPTED_BLOCK_RANGE_LENGTH", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     const veryOldBlockNb = 1;
     await rollup.setCurrentStateRoot(veryOldBlockNb, stateRoot);
     await rollup.setCurrentStateRoot(ACCEPTED_BLOCK_RANGE_LENGTH, stateRoot);
@@ -593,15 +571,10 @@ describe("Crosschain Resolver", () => {
       proofsEncoded,
       extraDataTest
     );
-    expect(result).to.not.be.null;
-
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
+    expect(result.data).to.contain(retValueTest);
   });
 
   it("should revert when block sent by the gateway > currentL2BlockNumber and currentL2BlockNumber <= ACCEPTED_BLOCK_RANGE_LENGTH", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     const veryOldBlockNb = ACCEPTED_BLOCK_RANGE_LENGTH + 1;
     await rollup.setCurrentStateRoot(veryOldBlockNb, stateRoot);
     await rollup.setCurrentStateRoot(ACCEPTED_BLOCK_RANGE_LENGTH, stateRoot);
@@ -627,14 +600,9 @@ describe("Crosschain Resolver", () => {
         "LineaSparseProofVerifier: invalid state root"
       );
     }
-
-    // Put back the right block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 
   it("should revert if the proof's target is not matching the one queried", async () => {
-    const currentBlockNo = await rollup.currentL2BlockNumber();
-    const currentStateRoot = await rollup.stateRootHashes(currentBlockNo);
     // Set the block number and stateRoot to match the predefined proof in the proof test file
     await rollup.setCurrentStateRoot(blockNo, stateRoot);
     let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
@@ -652,7 +620,5 @@ describe("Crosschain Resolver", () => {
     } catch (error) {
       expect(error.reason).to.equal("LineaProofHelper: wrong target");
     }
-    // Put back block number and state root
-    await rollup.setCurrentStateRoot(currentBlockNo, currentStateRoot);
   });
 });
