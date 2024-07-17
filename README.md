@@ -115,3 +115,7 @@ More information about POH in the package's readme.
 Check the deployment folders in [./packages/linea-ens-resolver/deployments](./packages/linea-ens-resolver/deployments) and [./packages/linea-ens-contracts/deployments](./packages/linea-ens-contracts/deployments)
 
 For detailed information about each package, please check their own Readme file.
+
+## Audit report
+
+An audit has been conducted by Consensys Diligence: https://consensys.io/diligence/audits/2024/06/linea-ens/
