@@ -66,7 +66,6 @@ const TabWrapper = styled.div(
     left: 0;
     right: 0;
     z-index: 100;
-
     padding: ${theme.space['4']};
     ${mq.sm.min(css`
       display: none;
