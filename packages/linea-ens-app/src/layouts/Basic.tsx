@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useErrorBoundary, withErrorBoundary } from 'react-use-error-boundary'
 import styled, { css } from 'styled-components'
-import { useAccount, useSwitchChain } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 import { mq } from '@ensdomains/thorin'
 
@@ -61,17 +61,15 @@ export const StyledFeedbackSVG = styled(FeedbackSVG)(() => css``)
 
 export const Basic = withErrorBoundary(({ children }: { children: React.ReactNode }) => {
   const { chainId, isConnected } = useAccount()
-  const { switchChain } = useSwitchChain()
 
   const router = useRouterWithHistory()
   const [error] = useErrorBoundary()
 
   useEffect(() => {
     if (isConnected && !getSupportedChainById(chainId)) {
-      switchChain({ chainId: 59141 })
       router.push('/unsupportedNetwork')
     }
-  }, [isConnected, chainId, switchChain, router])
+  }, [isConnected, chainId, router])
 
   return (
     <Container className="min-safe">
