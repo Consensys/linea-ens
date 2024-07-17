@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { mq, Typography } from '@ensdomains/thorin'
 
@@ -9,8 +9,13 @@ import Hamburger from '@app/components/@molecules/Hamburger/Hamburger'
 import { SearchInput } from '@app/components/@molecules/SearchInput/SearchInput'
 import { LeadingHeading } from '@app/components/LeadingHeading'
 import { Banner } from '@app/components/pages/Banner'
+import LineaLogo from '../assets/linea/LineaLogoMobile.svg'
+import LineLogo from '../assets/linea/LineLogo.svg'
+import ENSLogo from '../assets/linea/ENSLogo.svg'
 
-import ENSFull from '../assets/ENSFull.svg'
+import { useAccount } from 'wagmi'
+
+// import ENSFull from '../assets/ENSFull.svg'
 
 const GradientTitle = styled.h1(
   ({ theme }) => css`
@@ -73,8 +78,9 @@ const LogoAndLanguage = styled.div(
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: ${theme.space['4']};
-    flex-gap: ${theme.space['4']};
+    gap: ${theme.space['2']};
+    flex-gap: ${theme.space['2']};
+    width: 50%;
   `,
 )
 
@@ -88,6 +94,7 @@ const StyledLeadingHeading = styled(LeadingHeading)(
 
 export default function Page() {
   const { t } = useTranslation('common')
+  const { isConnected } = useAccount()
 
   return (
     <>
@@ -96,9 +103,14 @@ export default function Page() {
       </Head>
       <StyledLeadingHeading>
         <LogoAndLanguage>
-          <StyledENS as={ENSFull} />
+          <LineaLogo />
+          <LineLogo height="27.5" />
+          <ENSLogo />
+          {/* <StyledENS as={ENSFull} /> */}
         </LogoAndLanguage>
-        <Hamburger />
+        {
+          isConnected && <Hamburger />
+        }
       </StyledLeadingHeading>
       <FaucetBanner />
       <Container>
