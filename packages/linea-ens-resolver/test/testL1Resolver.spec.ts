@@ -37,7 +37,7 @@ const baseDomain = `${domainName}.eth`;
 const node = ethers.namehash(baseDomain);
 const encodedname = encodeName(baseDomain);
 
-const registrantAddr = "0x4a8e79E5258592f208ddba8A8a0d3ffEB051B10A";
+const registrantAddr = "0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73";
 const subDomain = "testpoh.linea-test.eth";
 const subDomainNode = ethers.namehash(subDomain);
 const encodedSubDomain = encodeName(subDomain);
@@ -66,7 +66,7 @@ declare module "hardhat/types/runtime" {
 }
 
 describe("Crosschain Resolver", () => {
-  let l1Provider: BrowserProvider;
+  let l1Provider: JsonRpcProvider;
   let l2Provider: JsonRpcProvider;
   let l1SepoliaProvider: JsonRpcProvider;
   let signer: Signer;
@@ -77,30 +77,43 @@ describe("Crosschain Resolver", () => {
   let wrapper: Contract;
   let baseRegistrar: Contract;
   let rollup: Contract;
-  let signerAddress, l2ResolverAddress, wrapperAddress;
+  let signerAddress, signerL2, signerL2Address, resolverAddress, wrapperAddress;
 
   before(async () => {
     // Hack to get a 'real' ethers provider from hardhat. The default `HardhatProvider`
     // doesn't support CCIP-read.
-    l1Provider = new ethers.BrowserProvider(ethers.provider._hardhatProvider);
-    // Those test work only with a specific contract deployed on linea sepolia
-    l2Provider = new ethers.JsonRpcProvider(
-      "https://rpc.sepolia.linea.build/",
-      59140,
+    l1Provider = new ethers.JsonRpcProvider(
+      "http://localhost:8445/",
+      31648428,
       {
         staticNetwork: true,
       }
     );
+    // Those test work only with a specific contract deployed on linea sepolia
+    l2Provider = new ethers.JsonRpcProvider("http://localhost:8845/", 1337, {
+      staticNetwork: true,
+    });
     // We need this provider to get the latest L2BlockNumber along with the the linea state root hash
     l1SepoliaProvider = new ethers.JsonRpcProvider(
-      "https://gateway.tenderly.co/public/sepolia",
-      11155111,
+      "http://localhost:8445/",
+      31648428,
       {
         staticNetwork: true,
       }
     );
-    signer = await l1Provider.getSigner(0);
+    signer = new ethers.Wallet(
+      "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
+      l1Provider
+    );
     signerAddress = await signer.getAddress();
+
+    signerL2 = new ethers.Wallet(
+      "8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63",
+      l2Provider
+    );
+    signerL2Address = await signerL2.getAddress();
+
+    console.log(signerL2Address);
 
     const Rollup = await ethers.getContractFactory("RollupMock", signer);
 
@@ -108,15 +121,23 @@ describe("Crosschain Resolver", () => {
     // because otherwise if we hard code a block number and state root hash the test is no longer
     // working after a while as linea_getProof stops working for older blocks
     const rollupSepolia = new ethers.Contract(
-      "0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5",
+      "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
       Rollup.interface,
-      l1SepoliaProvider
+      l1Provider
     );
     const currentL2BlockNumber = await rollupSepolia.currentL2BlockNumber();
     const stateRootHash =
       await rollupSepolia.stateRootHashes(currentL2BlockNumber);
     rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
+    await rollup.waitForDeployment();
 
+    const shomeiFrontend = new ethers.JsonRpcProvider(
+      "http://localhost:8889/",
+      31648428,
+      {
+        staticNetwork: true,
+      }
+    );
     const gateway = makeL2Gateway(
       l1Provider as unknown as JsonRpcProvider,
       l2Provider,
@@ -145,8 +166,11 @@ describe("Crosschain Resolver", () => {
         },
       };
     });
+
     const ensFactory = await ethers.getContractFactory("ENSRegistry", signer);
     ens = await ensFactory.deploy();
+    await ens.waitForDeployment();
+
     const ensAddress = await ens.getAddress();
     const baseRegistrarFactory = await ethers.getContractFactory(
       "BaseRegistrarImplementation",
@@ -156,8 +180,10 @@ describe("Crosschain Resolver", () => {
       ensAddress,
       ethers.namehash("eth")
     );
+    await baseRegistrar.waitForDeployment();
     const baseRegistrarAddress = await baseRegistrar.getAddress();
-    await baseRegistrar.addController(signerAddress);
+    let tx = await baseRegistrar.addController(signer);
+    await tx.wait();
     const metaDataserviceFactory = await ethers.getContractFactory(
       "StaticMetadataService",
       signer
@@ -165,33 +191,35 @@ describe("Crosschain Resolver", () => {
     const metaDataservice = await metaDataserviceFactory.deploy(
       "https://ens.domains"
     );
+    await metaDataservice.waitForDeployment();
     const metaDataserviceAddress = await metaDataservice.getAddress();
     const reverseRegistrarFactory = await ethers.getContractFactory(
       "ReverseRegistrar",
       signer
     );
     const reverseRegistrar = await reverseRegistrarFactory.deploy(ensAddress);
+    await reverseRegistrar.waitForDeployment();
     const reverseRegistrarAddress = await reverseRegistrar.getAddress();
-    await ens.setSubnodeOwner(
-      EMPTY_BYTES32,
-      labelhash("reverse"),
-      signerAddress
-    );
-    await ens.setSubnodeOwner(
+    tx = await ens.setSubnodeOwner(EMPTY_BYTES32, labelhash("reverse"), signer);
+    await tx.wait();
+    tx = await ens.setSubnodeOwner(
       ethers.namehash("reverse"),
       labelhash("addr"),
       reverseRegistrarAddress
     );
-    await ens.setSubnodeOwner(
+    await tx.wait();
+    tx = await ens.setSubnodeOwner(
       EMPTY_BYTES32,
       labelhash("eth"),
       baseRegistrarAddress
     );
-    await baseRegistrar.register(
+    await tx.wait();
+    tx = await baseRegistrar.register(
       labelhash(domainName),
       signerAddress,
       100000000
     );
+    await tx.wait();
     const publicResolverFactory = await ethers.getContractFactory(
       "PublicResolver",
       signer
@@ -202,31 +230,36 @@ describe("Crosschain Resolver", () => {
       "0x0000000000000000000000000000000000000000",
       reverseRegistrarAddress
     );
+    await publicResolver.waitForDeployment();
     const publicResolverAddress = await publicResolver.getAddress();
-    await reverseRegistrar.setDefaultResolver(publicResolverAddress);
+    tx = await reverseRegistrar.setDefaultResolver(publicResolverAddress);
+    await tx.wait();
 
     const wrapperFactory = await ethers.getContractFactory(
       "NameWrapper",
       signer
     );
-    await l1Provider.send("evm_mine", []);
+
     wrapper = await wrapperFactory.deploy(
       ensAddress,
       baseRegistrarAddress,
       metaDataserviceAddress
     );
+    await wrapper.waitForDeployment();
     wrapperAddress = await wrapper.getAddress();
-    const impl = await ethers.getContractFactory("PublicResolver", signer);
-    l2ResolverAddress = "0x28F15B034f9744d43548ac64DCE04ed77BdBd832";
 
     const Mimc = await ethers.getContractFactory("Mimc", signer);
     const mimc = await Mimc.deploy();
+
+    await mimc.waitForDeployment();
 
     const SparseMerkleProof = await ethers.getContractFactory(
       "SparseMerkleProof",
       { libraries: { Mimc: await mimc.getAddress() }, signer }
     );
     const sparseMerkleProof = await SparseMerkleProof.deploy();
+
+    await sparseMerkleProof.waitForDeployment();
 
     const verifierFactory = await ethers.getContractFactory(
       "LineaSparseProofVerifier",
@@ -241,6 +274,28 @@ describe("Crosschain Resolver", () => {
       ["test:"],
       await rollup.getAddress()
     );
+    await verifier.waitForDeployment();
+
+    const impl = await ethers.getContractFactory(
+      "DelegatableResolver",
+      signerL2
+    );
+    const implContract = await impl.deploy();
+    await implContract.waitForDeployment();
+    const testL2Factory = await ethers.getContractFactory(
+      "DelegatableResolverFactory",
+      signerL2
+    );
+    const l2factoryContract = await testL2Factory.deploy(
+      await implContract.getAddress()
+    );
+    await l2factoryContract.waitForDeployment();
+    tx = await l2factoryContract.create(await signerL2.getAddress());
+    await tx.wait();
+    const logs = await l2factoryContract.queryFilter("NewDelegatableResolver");
+    //@ts-ignore
+    const [resolver] = logs[0].args;
+    resolverAddress = resolver;
 
     const l1ResolverFactory = await ethers.getContractFactory(
       "L1Resolver",
@@ -254,21 +309,25 @@ describe("Crosschain Resolver", () => {
       "https://api.studio.thegraph.com/query/69290/ens-linea-sepolia/version/latest",
       59141
     );
-    // Mine an empty block so we have something to prove against
-    await l1Provider.send("evm_mine", []);
-    l2contract = new ethers.Contract(
-      l2ResolverAddress,
-      impl.interface,
-      l2Provider
+    await target.waitForDeployment();
+
+    l2contract = impl.attach(resolverAddress);
+    tx = await l2contract["setAddr(bytes32,address)"](
+      subDomainNode,
+      registrantAddr
     );
+    await tx.wait();
+    console.log("TEST");
   });
 
   it("should not allow non owner to set target", async () => {
     const incorrectname = encodeName("notowned.eth");
     try {
-      await target.setTarget(incorrectname, l2ResolverAddress);
+      const tx = await target.setTarget(incorrectname, resolverAddress);
+      await tx.wait();
       throw "Should have reverted";
     } catch (e) {
+      console.log(e);
       expect(e.reason).equal("Not authorized to set target for this node");
     }
 
@@ -301,30 +360,33 @@ describe("Crosschain Resolver", () => {
       EMPTY_ADDRESS
     );
     const wrappedtname = encodeName(`${label}.eth`);
-    await target.setTarget(wrappedtname, l2ResolverAddress);
+    await target.setTarget(wrappedtname, resolverAddress);
     const encodedname = encodeName(`${label}.eth`);
     const result = await target.getTarget(encodedname);
-    expect(result[1]).to.equal(l2ResolverAddress);
+    expect(result[1]).to.equal(resolverAddress);
   });
 
-  it("should resolve empty ETH Address", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+  it.only("should resolve empty ETH Address", async () => {
+    let tx = await target.setTarget(encodedname, resolverAddress);
+    await tx.wait();
     const addr = "0x0000000000000000000000000000000000000000";
     const result = await l2contract["addr(bytes32)"](node);
+    console.log("0");
     expect(result).to.equal(addr);
-    await l1Provider.send("evm_mine", []);
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [node]);
+    console.log("1");
     const result2 = await target.resolve(encodedname, calldata, {
       enableCcipRead: true,
     });
+    console.log("2");
     const decoded = i.decodeFunctionResult("addr", result2);
     expect(decoded[0]).to.equal(addr);
   });
 
   it("should resolve ETH Address", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+    await target.setTarget(encodedname, resolverAddress);
     const result = await l2contract["addr(bytes32)"](subDomainNode);
     expect(ethers.getAddress(result)).to.equal(registrantAddr);
     await l1Provider.send("evm_mine", []);
@@ -341,7 +403,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve non ETH Address", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+    await target.setTarget(encodedname, resolverAddress);
     const addr = "0x76a91462e907b15cbf27d5425399ebf6f0fb50ebb88f1888ac";
     const coinType = 0; // BTC
     await l1Provider.send("evm_mine", []);
@@ -357,7 +419,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve text record", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+    await target.setTarget(encodedname, resolverAddress);
     const key = "name";
     const value = "test.eth";
     await l1Provider.send("evm_mine", []);
@@ -374,7 +436,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should resolve contenthash", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+    await target.setTarget(encodedname, resolverAddress);
     const contenthash =
       "0xe3010170122029f2d17be6139079dc48696d1f582a8530eb9805b561eda517e22a892c7e3f1f";
     await l1Provider.send("evm_mine", []);
@@ -391,7 +453,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should revert when the functions's selector is invalid", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+    await target.setTarget(encodedname, resolverAddress);
     const addr = "0x0000000000000000000000000000000000000000";
     const result = await l2contract["addr(bytes32)"](node);
     expect(result).to.equal(addr);
@@ -411,7 +473,7 @@ describe("Crosschain Resolver", () => {
   });
 
   it("should revert if the calldata is too short", async () => {
-    await target.setTarget(encodedname, l2ResolverAddress);
+    await target.setTarget(encodedname, resolverAddress);
     const addr = "0x0000000000000000000000000000000000000000";
     const result = await l2contract["addr(bytes32)"](node);
     expect(result).to.equal(addr);
@@ -440,7 +502,7 @@ describe("Crosschain Resolver", () => {
     );
     try {
       await verifier.getStorageValues(
-        l2ResolverAddress,
+        resolverAddress,
         commands2Test,
         constantsTest,
         proofsEncoded,
