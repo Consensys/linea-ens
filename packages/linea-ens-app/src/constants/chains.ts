@@ -80,7 +80,7 @@ export const lineaSepoliaWithEns = addCustomEnsContracts(
   lineaSepoliaEnsAddresses,
   'https://api.studio.thegraph.com/proxy/69290/ens-linea-sepolia/version/latest',
   'linea-sepolia',
-  'https://linea-poh-api-verifier.sepolia.linea.build',
+  'https://linea-poh-signer-api.sepolia.linea.build',
 )
 
 export const lineaMainnetWithEns = addCustomEnsContracts(
