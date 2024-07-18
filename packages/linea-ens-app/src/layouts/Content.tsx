@@ -4,7 +4,6 @@ import styled, { css } from 'styled-components'
 
 import { Banner, Button, mq, Skeleton, Typography } from '@ensdomains/thorin'
 
-import Hamburger from '@app/components/@molecules/Hamburger/Hamburger'
 import { IconCopyAnimated } from '@app/components/IconCopyAnimated'
 import { LeadingHeading } from '@app/components/LeadingHeading'
 import { useContentWarning } from '@app/hooks/useContentWarning'
@@ -314,7 +313,6 @@ export const Content = ({
                   <Skeleton loading={loading}>{children.header}</Skeleton>
                 </ContentContainer>
               )}
-              {!isDesktopMode && <Hamburger />}
             </CustomLeadingHeading>
             {!isDesktopMode && children.titleExtra}
           </Skeleton>

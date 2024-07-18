@@ -66,11 +66,6 @@ const TabWrapper = styled.div(
     left: 0;
     right: 0;
     z-index: 100;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      ${theme.colors.backgroundSecondary} 60%
-    );
     padding: ${theme.space['4']};
     ${mq.sm.min(css`
       display: none;

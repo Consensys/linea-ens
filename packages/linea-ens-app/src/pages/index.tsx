@@ -5,12 +5,13 @@ import styled, { css } from 'styled-components'
 import { mq, Typography } from '@ensdomains/thorin'
 
 import FaucetBanner from '@app/components/@molecules/FaucetBanner'
-import Hamburger from '@app/components/@molecules/Hamburger/Hamburger'
 import { SearchInput } from '@app/components/@molecules/SearchInput/SearchInput'
 import { LeadingHeading } from '@app/components/LeadingHeading'
 import { Banner } from '@app/components/pages/Banner'
 
-import ENSFull from '../assets/ENSFull.svg'
+import ENSLogo from '../assets/linea/ENSLogo.svg'
+import LineaLogo from '../assets/linea/LineaLogoMobile.svg'
+import LineLogo from '../assets/linea/LineLogo.svg'
 
 const GradientTitle = styled.h1(
   ({ theme }) => css`
@@ -61,20 +62,15 @@ const Stack = styled.div(
   `,
 )
 
-const StyledENS = styled.div(
-  ({ theme }) => css`
-    height: ${theme.space['8.5']};
-  `,
-)
-
 const LogoAndLanguage = styled.div(
   ({ theme }) => css`
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: ${theme.space['4']};
-    flex-gap: ${theme.space['4']};
+    gap: ${theme.space['2']};
+    flex-gap: ${theme.space['2']};
+    width: 40%;
   `,
 )
 
@@ -96,9 +92,10 @@ export default function Page() {
       </Head>
       <StyledLeadingHeading>
         <LogoAndLanguage>
-          <StyledENS as={ENSFull} />
+          <LineaLogo />
+          <LineLogo height="27.5" />
+          <ENSLogo width="91" height="80" />
         </LogoAndLanguage>
-        <Hamburger />
       </StyledLeadingHeading>
       <FaucetBanner />
       <Container>
