@@ -4,16 +4,11 @@ import styled, { css } from 'styled-components'
 
 import { mq } from '@ensdomains/thorin'
 
+import ENSLogo from '@app/assets/linea/ENSLogo.svg'
+import LineaLogo from '@app/assets/linea/LineaLogoMobile.svg'
+import LineLogo from '@app/assets/linea/LineLogo.svg'
 import ErrorScreen from '@app/components/@atoms/ErrorScreen'
 import { LeadingHeading } from '@app/components/LeadingHeading'
-
-import ENSFull from '../assets/ENSFull.svg'
-
-const StyledENS = styled.div(
-  ({ theme }) => css`
-    height: ${theme.space['8.5']};
-  `,
-)
 
 const LogoAndLanguage = styled.div(
   ({ theme }) => css`
@@ -21,8 +16,9 @@ const LogoAndLanguage = styled.div(
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: ${theme.space['4']};
-    flex-gap: ${theme.space['4']};
+    gap: ${theme.space['2']};
+    flex-gap: ${theme.space['2']};
+    width: 40%;
   `,
 )
 
@@ -44,7 +40,9 @@ export default function Page() {
       </Head>
       <StyledLeadingHeading>
         <LogoAndLanguage>
-          <StyledENS as={ENSFull} />
+          <LineaLogo />
+          <LineLogo height="27.5" />
+          <ENSLogo width="91" height="80" />
         </LogoAndLanguage>
       </StyledLeadingHeading>
       <ErrorScreen errorType="not-found" />
