@@ -39,7 +39,7 @@ contract L1Resolver is
     uint256 constant VERSIONABLE_HASHES_SLOT = 3;
     uint256 constant VERSIONABLE_TEXTS_SLOT = 10;
     // To check how old is the value/proof returned and is in the acceptable range
-    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 86400;
+    uint256 constant ACCEPTED_L2_BLOCK_RANGE_LENGTH = 86400;
     string public graphqlUrl;
 
     event TargetSet(bytes name, address target);
@@ -63,6 +63,24 @@ contract L1Resolver is
      * @param contractAddress Contract Address at which the deferred mutation should transact with.
      */
     error StorageHandledByL2(uint256 chainId, address contractAddress);
+    error wrongl2BlockRangeLength(uint256 expected, uint256 actual);
+
+    /**
+     * @dev extra modifier added compared to the ENS initial implementation to make sure the
+     *      l2 block range sent in the callbackData is not altered during the ccip-read flow
+     *      when calling the EVMFetchTarget. It is not needed in the initial ENS implementation
+     *      since the callbackData is not used.
+     */
+    modifier callbackDataHasL2BlockRangeLength(bytes memory callbackData) {
+        uint256 acceptedL2BlockRangeLength = uint256(bytes32(callbackData));
+        if (acceptedL2BlockRangeLength != ACCEPTED_L2_BLOCK_RANGE_LENGTH) {
+            revert wrongl2BlockRangeLength(
+                ACCEPTED_L2_BLOCK_RANGE_LENGTH,
+                acceptedL2BlockRangeLength
+            );
+        }
+        _;
+    }
 
     /**
      * @param _verifier     The chain verifier address
@@ -211,14 +229,19 @@ contract L1Resolver is
             .element(COIN_TYPE_ETH)
             .fetch(
                 this.addrCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
             ); // recordVersions
     }
 
     function addrCallback(
         bytes[] memory values,
-        bytes memory
-    ) external pure returns (bytes memory) {
+        bytes memory callbackData
+    )
+        external
+        pure
+        callbackDataHasL2BlockRangeLength(callbackData)
+        returns (bytes memory)
+    {
         return abi.encode(address(bytes20(values[1])));
     }
 
@@ -237,14 +260,19 @@ contract L1Resolver is
             .element(coinType)
             .fetch(
                 this.addrCoinTypeCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
             );
     }
 
     function addrCoinTypeCallback(
         bytes[] memory values,
-        bytes memory
-    ) external pure returns (bytes memory) {
+        bytes memory callbackData
+    )
+        external
+        pure
+        callbackDataHasL2BlockRangeLength(callbackData)
+        returns (bytes memory)
+    {
         return abi.encode(values[1]);
     }
 
@@ -263,14 +291,19 @@ contract L1Resolver is
             .element(key)
             .fetch(
                 this.textCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
             );
     }
 
     function textCallback(
         bytes[] memory values,
-        bytes memory
-    ) external pure returns (bytes memory) {
+        bytes memory callbackData
+    )
+        external
+        pure
+        callbackDataHasL2BlockRangeLength(callbackData)
+        returns (bytes memory)
+    {
         return abi.encode(string(values[1]));
     }
 
@@ -287,14 +320,19 @@ contract L1Resolver is
             .element(node)
             .fetch(
                 this.contenthashCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
+                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
             );
     }
 
     function contenthashCallback(
         bytes[] memory values,
-        bytes memory
-    ) external pure returns (bytes memory) {
+        bytes memory callbackData
+    )
+        external
+        pure
+        callbackDataHasL2BlockRangeLength(callbackData)
+        returns (bytes memory)
+    {
         return abi.encode(values[1]);
     }
 
