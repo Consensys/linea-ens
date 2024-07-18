@@ -1,12 +1,10 @@
 import Head from 'next/head'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
-import { useAccount } from 'wagmi'
 
 import { mq, Typography } from '@ensdomains/thorin'
 
 import FaucetBanner from '@app/components/@molecules/FaucetBanner'
-import Hamburger from '@app/components/@molecules/Hamburger/Hamburger'
 import { SearchInput } from '@app/components/@molecules/SearchInput/SearchInput'
 import { LeadingHeading } from '@app/components/LeadingHeading'
 import { Banner } from '@app/components/pages/Banner'
@@ -86,7 +84,6 @@ const StyledLeadingHeading = styled(LeadingHeading)(
 
 export default function Page() {
   const { t } = useTranslation('common')
-  const { isConnected } = useAccount()
 
   return (
     <>
@@ -99,7 +96,6 @@ export default function Page() {
           <LineLogo height="27.5" />
           <ENSLogo width="91" height="80" />
         </LogoAndLanguage>
-        {isConnected && <Hamburger />}
       </StyledLeadingHeading>
       <FaucetBanner />
       <Container>
