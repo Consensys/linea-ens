@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components'
 import { mq } from '@ensdomains/thorin'
 
 import ErrorScreen from '@app/components/@atoms/ErrorScreen'
-import Hamburger from '@app/components/@molecules/Hamburger/Hamburger'
 import { LeadingHeading } from '@app/components/LeadingHeading'
 
 import ENSFull from '../assets/ENSFull.svg'
@@ -47,7 +46,6 @@ export default function Page() {
         <LogoAndLanguage>
           <StyledENS as={ENSFull} />
         </LogoAndLanguage>
-        <Hamburger />
       </StyledLeadingHeading>
       <ErrorScreen errorType="not-found" />
     </>
