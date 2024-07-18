@@ -15,8 +15,6 @@ abstract contract EVMFetchTarget {
 
     /**
      * @dev Internal callback function invoked by CCIP-Read in response to a `getStorageSlots` request.
-     * @dev callbackData has to be 32 bytes length minimum since the function uses the first
-     *      32 bytes to get the acceptedL2BlockRangeLength, this differs from initial ENS implementation that sends ''.
      */
     function getStorageSlotsCallback(
         bytes calldata response,
@@ -35,13 +33,12 @@ abstract contract EVMFetchTarget {
                 (IEVMVerifier, address, bytes32[], bytes[], bytes4, bytes)
             );
 
-        uint256 acceptedL2BlockRangeLength = uint256(bytes32(callbackData));
         bytes[] memory values = verifier.getStorageValues(
             addr,
             commands,
             constants,
             proof,
-            acceptedL2BlockRangeLength
+            getAcceptedL2BlockRangeLength()
         );
         if (values.length != commands.length) {
             revert ResponseLengthMismatch(values.length, commands.length);
@@ -53,4 +50,14 @@ abstract contract EVMFetchTarget {
             return(add(ret, 32), mload(ret))
         }
     }
+
+    /**
+     * @dev The child contract has to return an accepted L2 block range used by the verifier
+     *      to verify that the block number verified is in the accepted block range.
+     */
+    function getAcceptedL2BlockRangeLength()
+        public
+        view
+        virtual
+        returns (uint256);
 }
