@@ -25,9 +25,10 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   constructor(
     providerL1: JsonRpcProvider,
     providerL2: JsonRpcProvider,
-    rollupAddress: string
+    rollupAddress: string,
+    shomeiNode?: JsonRpcProvider
   ) {
-    this.helper = new EVMProofHelper(providerL2);
+    this.helper = new EVMProofHelper(providerL2, shomeiNode);
     const currentL2BlockNumberIface = new ethers.Interface([
       currentL2BlockNumberSig,
     ]);

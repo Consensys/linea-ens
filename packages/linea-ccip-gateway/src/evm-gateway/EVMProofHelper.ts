@@ -26,9 +26,12 @@ export interface StateProof {
  */
 export class EVMProofHelper {
   private readonly providerL2: JsonRpcProvider;
+  private readonly shomeiNode: JsonRpcProvider;
 
-  constructor(providerL2: JsonRpcProvider) {
+  constructor(providerL2: JsonRpcProvider, shomeiNode?: JsonRpcProvider) {
     this.providerL2 = providerL2;
+    // shomeiNode optional since an rpc infura nodes can support both eth_getStorageAt and linea_getProof
+    this.shomeiNode = shomeiNode ? shomeiNode : providerL2;
   }
 
   /**
@@ -68,8 +71,8 @@ export class EVMProofHelper {
     // We have to reinitilize the provider L2 because of an issue when multiple
     // requests are sent at the same time, the provider becomes not aware of
     // the linea_getProof method
-    const providerUrl = await this.providerL2._getConnection().url;
-    const providerChainId = await this.providerL2._network.chainId;
+    const providerUrl = await this.shomeiNode._getConnection().url;
+    const providerChainId = await this.shomeiNode._network.chainId;
     const providerL2 = new ethers.JsonRpcProvider(
       providerUrl,
       providerChainId,
