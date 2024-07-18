@@ -72,11 +72,11 @@ contract L1Resolver is
      *      since the callbackData is not used.
      */
     modifier callbackDataHasL2BlockRangeLength(bytes memory callbackData) {
-        uint256 acceptedL2BlockRangeLength = uint256(bytes32(callbackData));
-        if (acceptedL2BlockRangeLength != ACCEPTED_L2_BLOCK_RANGE_LENGTH) {
+        uint256 callbackDataL2BlockRangeLength = uint256(bytes32(callbackData));
+        if (callbackDataL2BlockRangeLength != ACCEPTED_L2_BLOCK_RANGE_LENGTH) {
             revert wrongl2BlockRangeLength(
                 ACCEPTED_L2_BLOCK_RANGE_LENGTH,
-                acceptedL2BlockRangeLength
+                callbackDataL2BlockRangeLength
             );
         }
         _;
