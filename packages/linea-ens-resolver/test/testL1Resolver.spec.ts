@@ -29,7 +29,6 @@ import {
   extraDataWithShortCallBackData,
   retValueTest,
   retValueLongTest,
-  extraDataWithWrongL2BlockRangeLength,
 } from "./testData";
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
@@ -621,31 +620,6 @@ describe("Crosschain Resolver", () => {
       throw "Should have reverted";
     } catch (error) {
       expect(error.reason).to.equal("LineaProofHelper: wrong target");
-    }
-  });
-
-  it("should revert if the L2 block range length passed to the EVMFetchTarget has been modified", async () => {
-    // Set the block number and stateRoot to match the predefined proof in the proof test file
-    await rollup.setCurrentStateRoot(blockNo, stateRoot);
-    let proofsEncoded = AbiCoder.defaultAbiCoder().encode(
-      [
-        "uint256",
-        "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
-        "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
-      ],
-      [blockNo, proofTest.accountProof, proofTest.storageProofs]
-    );
-    proofsEncoded = PROOF_ENCODING_PADDING + proofsEncoded.substring(2);
-    try {
-      await target.getStorageSlotsCallback(
-        proofsEncoded,
-        extraDataWithWrongL2BlockRangeLength
-      );
-      throw "Should have reverted";
-    } catch (error) {
-      expect(error.info.error.message).to.equal(
-        `VM Exception while processing transaction: reverted with custom error 'wrongl2BlockRangeLength(${ACCEPTED_L2_BLOCK_RANGE_LENGTH}, 161061273)'`
-      );
     }
   });
 });

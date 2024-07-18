@@ -63,24 +63,6 @@ contract L1Resolver is
      * @param contractAddress Contract Address at which the deferred mutation should transact with.
      */
     error StorageHandledByL2(uint256 chainId, address contractAddress);
-    error wrongl2BlockRangeLength(uint256 expected, uint256 actual);
-
-    /**
-     * @dev extra modifier added compared to the ENS initial implementation to make sure the
-     *      l2 block range sent in the callbackData is not altered during the ccip-read flow
-     *      when calling the EVMFetchTarget. It is not needed in the initial ENS implementation
-     *      since the callbackData is not used.
-     */
-    modifier callbackDataHasL2BlockRangeLength(bytes memory callbackData) {
-        uint256 callbackDataL2BlockRangeLength = uint256(bytes32(callbackData));
-        if (callbackDataL2BlockRangeLength != ACCEPTED_L2_BLOCK_RANGE_LENGTH) {
-            revert wrongl2BlockRangeLength(
-                ACCEPTED_L2_BLOCK_RANGE_LENGTH,
-                callbackDataL2BlockRangeLength
-            );
-        }
-        _;
-    }
 
     /**
      * @param _verifier     The chain verifier address
@@ -110,6 +92,18 @@ contract L1Resolver is
         nameWrapper = _nameWrapper;
         graphqlUrl = _graphqlUrl;
         l2ChainId = _l2ChainId;
+    }
+
+    /**
+     * @dev inherits from EVMFetchTarget
+     */
+    function getAcceptedL2BlockRangeLength()
+        public
+        pure
+        override
+        returns (uint256)
+    {
+        return ACCEPTED_L2_BLOCK_RANGE_LENGTH;
     }
 
     /**
@@ -227,21 +221,13 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(COIN_TYPE_ETH)
-            .fetch(
-                this.addrCallback.selector,
-                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
-            ); // recordVersions
+            .fetch(this.addrCallback.selector, ""); // recordVersions
     }
 
     function addrCallback(
         bytes[] memory values,
-        bytes memory callbackData
-    )
-        external
-        pure
-        callbackDataHasL2BlockRangeLength(callbackData)
-        returns (bytes memory)
-    {
+        bytes memory
+    ) external pure returns (bytes memory) {
         return abi.encode(address(bytes20(values[1])));
     }
 
@@ -258,21 +244,13 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(coinType)
-            .fetch(
-                this.addrCoinTypeCallback.selector,
-                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
-            );
+            .fetch(this.addrCoinTypeCallback.selector, "");
     }
 
     function addrCoinTypeCallback(
         bytes[] memory values,
-        bytes memory callbackData
-    )
-        external
-        pure
-        callbackDataHasL2BlockRangeLength(callbackData)
-        returns (bytes memory)
-    {
+        bytes memory
+    ) external pure returns (bytes memory) {
         return abi.encode(values[1]);
     }
 
@@ -289,21 +267,13 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(key)
-            .fetch(
-                this.textCallback.selector,
-                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
-            );
+            .fetch(this.textCallback.selector, "");
     }
 
     function textCallback(
         bytes[] memory values,
-        bytes memory callbackData
-    )
-        external
-        pure
-        callbackDataHasL2BlockRangeLength(callbackData)
-        returns (bytes memory)
-    {
+        bytes memory
+    ) external pure returns (bytes memory) {
         return abi.encode(string(values[1]));
     }
 
@@ -318,21 +288,13 @@ contract L1Resolver is
             .getDynamic(VERSIONABLE_HASHES_SLOT)
             .ref(0)
             .element(node)
-            .fetch(
-                this.contenthashCallback.selector,
-                abi.encode(ACCEPTED_L2_BLOCK_RANGE_LENGTH)
-            );
+            .fetch(this.contenthashCallback.selector, "");
     }
 
     function contenthashCallback(
         bytes[] memory values,
-        bytes memory callbackData
-    )
-        external
-        pure
-        callbackDataHasL2BlockRangeLength(callbackData)
-        returns (bytes memory)
-    {
+        bytes memory
+    ) external pure returns (bytes memory) {
         return abi.encode(values[1]);
     }
 
