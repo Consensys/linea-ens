@@ -27,26 +27,37 @@ abstract contract EVMFetchTarget {
             bytes32[] memory commands,
             bytes[] memory constants,
             bytes4 callback,
-            uint256 l2BlockRangeAccepted
+            bytes memory callbackData
         ) = abi.decode(
                 extradata,
-                (IEVMVerifier, address, bytes32[], bytes[], bytes4, uint256)
+                (IEVMVerifier, address, bytes32[], bytes[], bytes4, bytes)
             );
+
         bytes[] memory values = verifier.getStorageValues(
             addr,
             commands,
             constants,
             proof,
-            l2BlockRangeAccepted
+            getAcceptedL2BlockRangeLength()
         );
         if (values.length != commands.length) {
             revert ResponseLengthMismatch(values.length, commands.length);
         }
         bytes memory ret = address(this).functionCall(
-            abi.encodeWithSelector(callback, values, "")
+            abi.encodeWithSelector(callback, values, callbackData)
         );
         assembly {
             return(add(ret, 32), mload(ret))
         }
     }
+
+    /**
+     * @dev The child contract has to return an accepted L2 block range used by the verifier
+     *      to verify that the block number verified is in the accepted block range.
+     */
+    function getAcceptedL2BlockRangeLength()
+        public
+        view
+        virtual
+        returns (uint256);
 }

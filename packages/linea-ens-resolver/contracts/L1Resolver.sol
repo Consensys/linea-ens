@@ -39,7 +39,7 @@ contract L1Resolver is
     uint256 constant VERSIONABLE_HASHES_SLOT = 3;
     uint256 constant VERSIONABLE_TEXTS_SLOT = 10;
     // To check how old is the value/proof returned and is in the acceptable range
-    uint256 constant L2_BLOCK_RANGE_ACCEPTED = 86400;
+    uint256 constant ACCEPTED_L2_BLOCK_RANGE_LENGTH = 86400;
     string public graphqlUrl;
 
     event TargetSet(bytes name, address target);
@@ -92,6 +92,18 @@ contract L1Resolver is
         nameWrapper = _nameWrapper;
         graphqlUrl = _graphqlUrl;
         l2ChainId = _l2ChainId;
+    }
+
+    /**
+     * @dev inherits from EVMFetchTarget
+     */
+    function getAcceptedL2BlockRangeLength()
+        public
+        pure
+        override
+        returns (uint256)
+    {
+        return ACCEPTED_L2_BLOCK_RANGE_LENGTH;
     }
 
     /**
@@ -209,10 +221,7 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(COIN_TYPE_ETH)
-            .fetch(
-                this.addrCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
-            ); // recordVersions
+            .fetch(this.addrCallback.selector, ""); // recordVersions
     }
 
     function addrCallback(
@@ -235,10 +244,7 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(coinType)
-            .fetch(
-                this.addrCoinTypeCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
-            );
+            .fetch(this.addrCoinTypeCallback.selector, "");
     }
 
     function addrCoinTypeCallback(
@@ -261,10 +267,7 @@ contract L1Resolver is
             .ref(0)
             .element(node)
             .element(key)
-            .fetch(
-                this.textCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
-            );
+            .fetch(this.textCallback.selector, "");
     }
 
     function textCallback(
@@ -285,10 +288,7 @@ contract L1Resolver is
             .getDynamic(VERSIONABLE_HASHES_SLOT)
             .ref(0)
             .element(node)
-            .fetch(
-                this.contenthashCallback.selector,
-                abi.encode(L2_BLOCK_RANGE_ACCEPTED)
-            );
+            .fetch(this.contenthashCallback.selector, "");
     }
 
     function contenthashCallback(

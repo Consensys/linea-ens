@@ -9,6 +9,6 @@ interface IEVMVerifier {
         bytes32[] memory commands,
         bytes[] memory constants,
         bytes memory proof,
-        uint256 l2BlockRangeAccepted
+        uint256 acceptedL2BlockRangeLength
     ) external view returns (bytes[] memory values);
 }
