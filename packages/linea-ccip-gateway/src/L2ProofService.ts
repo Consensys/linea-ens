@@ -90,6 +90,12 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   ): Promise<string> {
     try {
       let proof = await this.helper.getProofs(blockNo, address, slots);
+      if (!proof.accountProof) {
+        throw `No account proof on contract ${address} for block number ${blockNo}`;
+      }
+      if (proof.storageProofs.length === 0) {
+        throw `No storage proofs on contract ${address} for block number ${blockNo}`;
+      }
       proof = this.checkStorageInitialized(proof);
       return AbiCoder.defaultAbiCoder().encode(
         [
