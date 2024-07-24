@@ -4,6 +4,7 @@ import {
   FeeData,
   TransactionRequest,
   Wallet,
+  BlockTag,
 } from "ethers";
 import { ethers } from "hardhat";
 import { setTimeout } from "timers/promises";
@@ -50,12 +51,17 @@ export async function waitForL2BlockNumberFinalized(
 
 export async function waitForLatestL2BlockNumberFinalizedToChange(
   rollup: Contract,
-  pollingInterval: number
+  pollingInterval: number,
+  blockTag: BlockTag = "latest"
 ) {
-  const currentL2BlockNumber = await rollup.currentL2BlockNumber();
+  const currentL2BlockNumber = await rollup.currentL2BlockNumber({
+    blockTag,
+  });
   let newL2BlockNumber;
   do {
-    newL2BlockNumber = await rollup.currentL2BlockNumber();
+    newL2BlockNumber = await rollup.currentL2BlockNumber({
+      blockTag,
+    });
     await setTimeout(pollingInterval);
   } while (currentL2BlockNumber === newL2BlockNumber);
 }

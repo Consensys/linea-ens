@@ -31,7 +31,7 @@ const coinType = 0;
 // Account 1 on L1 "FOR LOCAL DEV ONLY - DO NOT REUSE THESE KEYS ELSEWHERE"
 const SIGNER_L1_PK =
   "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a";
-// Account 1 on L1 "FOR LOCAL DEV ONLY - DO NOT REUSE THESE KEYS ELSEWHERE"
+// Account 1 on L2 "FOR LOCAL DEV ONLY - DO NOT REUSE THESE KEYS ELSEWHERE"
 const SIGNER_L2_PK =
   "8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63";
 
@@ -270,7 +270,6 @@ describe("Crosschain Resolver Local", () => {
       .then((tx) => tx.wait());
 
     const tx = await l2Resolver.setContenthash(subDomainNode, contenthash);
-
     const txReceipt = await tx.wait();
     lastSetupTxBlockNumber = txReceipt.blockNumber;
 
@@ -291,6 +290,12 @@ describe("Crosschain Resolver Local", () => {
   });
 
   it("should revert when querying L1Resolver and the currentL2BlockNumber is older than the L2 block number we are fetching the data from", async () => {
+    // This test needs at least one finalized L2 block
+    await waitForLatestL2BlockNumberFinalizedToChange(
+      rollup,
+      2000,
+      "finalized"
+    );
     const currentL2BlockNumberFinalized = await rollup.currentL2BlockNumber({
       blockTag: "finalized",
     });
@@ -377,7 +382,7 @@ describe("Crosschain Resolver Local", () => {
     // Wait for the latest L2 finalized block to more recent than the L2 block number we are fetching the data from
     await waitForL2BlockNumberFinalized(rollup, lastSetupTxBlockNumber, 5000);
 
-    let tx = await target
+    await target
       .setTarget(encodedname, l2ResolverAddress)
       .then((tx) => tx.wait());
     const result = await l2Resolver["addr(bytes32)"](node);
@@ -468,8 +473,26 @@ describe("Crosschain Resolver Local", () => {
     }
   });
 
-  it("should not revert when querying L1Resolver right after a finalization has occured", async () => {
-    waitForLatestL2BlockNumberFinalizedToChange(rollup, 2000);
+  it("should not revert when querying L1Resolver right after a finalization has occured(based on latest L1 block)", async () => {
+    await waitForLatestL2BlockNumberFinalizedToChange(rollup, 2000);
+
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = i.encodeFunctionData("addr", [subDomainNode]);
+    const result2 = await target.resolve(encodedSubDomain, calldata, {
+      enableCcipRead: true,
+    });
+    const decoded = i.decodeFunctionResult("addr", result2);
+    expect(ethers.getAddress(decoded[0])).to.equal(
+      ethers.getAddress(REGISTRANT_ADDR)
+    );
+  });
+
+  it("should not revert when querying L1Resolver right after a finalization has occured(based on lastest L1 finalized block)", async () => {
+    await waitForLatestL2BlockNumberFinalizedToChange(
+      rollup,
+      2000,
+      "finalized"
+    );
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [subDomainNode]);
