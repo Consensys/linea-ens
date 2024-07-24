@@ -5,6 +5,8 @@ import {
   TransactionRequest,
   Wallet,
   BlockTag,
+  FetchRequest,
+  AbiCoder,
 } from "ethers";
 import { ethers } from "hardhat";
 import { setTimeout } from "timers/promises";
@@ -63,16 +65,45 @@ export async function waitForLatestL2BlockNumberFinalizedToChange(
       blockTag,
     });
     await setTimeout(pollingInterval);
-  } while (currentL2BlockNumber === newL2BlockNumber);
+  } while (currentL2BlockNumber >= newL2BlockNumber);
 }
 
-export const deployContract = async (
+export async function deployContract(
   name: string,
   provider: Wallet,
   ...args: any[]
-) => {
+) {
   const factory = await ethers.getContractFactory(name, provider);
   const contract = await factory.deploy(...args);
   await contract.waitForDeployment();
   return contract;
-};
+}
+
+export async function fetchCCIPGateway(ccipCustomException) {
+  const sender = ccipCustomException.revert.args[0];
+  const url = ccipCustomException.revert.args[1];
+  const data = ccipCustomException.revert.args[2];
+  const request = new FetchRequest(url);
+  request.body = { data, sender };
+
+  const resp = await request.send();
+  return resp.bodyJson.data;
+}
+
+export function getExtraData(ccipCustomException) {
+  return ccipCustomException.revert.args[4];
+}
+
+export function changeBlockNumberInCCIPResponse(
+  ccipRespData: string,
+  newBlockNumber: bigint
+) {
+  const prefix = ccipRespData.slice(0, 2 + 64 * 2);
+  const suffix = ccipRespData.slice(2 + 64 * 3);
+
+  const blockNoTestHex = AbiCoder.defaultAbiCoder()
+    .encode(["uint256"], [newBlockNumber])
+    .slice(2);
+
+  return prefix + blockNoTestHex + suffix;
+}

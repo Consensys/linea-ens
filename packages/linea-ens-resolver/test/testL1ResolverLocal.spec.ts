@@ -10,8 +10,11 @@ import { HardhatEthersProvider } from "@nomicfoundation/hardhat-ethers/internal/
 import { HardhatEthersHelpers } from "@nomicfoundation/hardhat-ethers/types";
 import { EthereumProvider } from "hardhat/types";
 import {
+  changeBlockNumberInCCIPResponse,
   deployContract,
+  fetchCCIPGateway,
   getAndIncreaseFeeData,
+  getExtraData,
   sendTransactionsWithInterval,
   waitForL2BlockNumberFinalized,
   waitForLatestL2BlockNumberFinalizedToChange,
@@ -503,6 +506,37 @@ describe("Crosschain Resolver Local", () => {
     expect(ethers.getAddress(decoded[0])).to.equal(
       ethers.getAddress(REGISTRANT_ADDR)
     );
+  });
+
+  it("should revert when block sent by the gateway > currentL2BlockNumber", async () => {
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = i.encodeFunctionData("addr", [subDomainNode]);
+    try {
+      await target.resolve(encodedSubDomain, calldata);
+    } catch (e) {
+      const extraData: string = getExtraData(e);
+      const resultData: string = await fetchCCIPGateway(e);
+
+      const currentL2BlockNumberFinalized = await rollup.currentL2BlockNumber({
+        blockTag: "finalized",
+      });
+      const wrongL2BlockNumber = currentL2BlockNumberFinalized + BigInt(10);
+
+      // Construct the new data string
+      const resultDataModified = changeBlockNumberInCCIPResponse(
+        resultData,
+        wrongL2BlockNumber
+      );
+
+      try {
+        await target.getStorageSlotsCallback(resultDataModified, extraData);
+        throw "Should have reverted";
+      } catch (error) {
+        expect(error.reason).to.equal(
+          "LineaSparseProofVerifier: invalid state root"
+        );
+      }
+    }
   });
 
   after(async () => {
