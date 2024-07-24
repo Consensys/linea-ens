@@ -181,7 +181,7 @@ const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
           warning: {
             type: 'warning',
             message:
-              'You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href="https://google.com" style="color:blue;" target="_blank">Read more</a>',
+              'You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href="https://docs.linea.build/" style="color:blue;" target="_blank">Read more</a>',
           },
           trailing: <></>,
         }}
