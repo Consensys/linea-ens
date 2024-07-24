@@ -22,6 +22,7 @@ import { useAddRecentTransaction } from '@app/hooks/transactions/useAddRecentTra
 import { useRecentTransactions } from '@app/hooks/transactions/useRecentTransactions'
 import { useIsSafeApp } from '@app/hooks/useIsSafeApp'
 import { useQueryOptions } from '@app/hooks/useQueryOptions'
+import { Content } from '@app/layouts/Content'
 import {
   ManagedDialogProps,
   TransactionFlowAction,
@@ -506,6 +507,18 @@ export const TransactionStageModal = ({
           </Outlink>
         )}
         {lowerError && <Helper type="error">{lowerError}</Helper>}
+        {stage === 'complete' ? (
+          <Content title="" hideHeading={true}>
+            {{
+              warning: {
+                type: 'warning',
+                message:
+                  'You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href="https://google.com" style="color:blue;" target="_blank">Read more</a>',
+              },
+              trailing: <></>,
+            }}
+          </Content>
+        ) : null}
       </InnerDialog>
       <Dialog.Footer
         currentStep={currentStep}

@@ -13,6 +13,7 @@ import { Card } from '@app/components/Card'
 import { Button } from '@app/components/styled/Button'
 import { Typography } from '@app/components/styled/Typography'
 import useWindowSize from '@app/hooks/useWindowSize'
+import { Content } from '@app/layouts/Content'
 
 const StyledCard = styled(Card)(
   ({ theme }) => css`
@@ -175,6 +176,16 @@ const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
         </Typography>
       </TitleContainer>
       <Typography>{t('steps.complete.description')}</Typography>
+      <Content title="" hideHeading={true}>
+        {{
+          warning: {
+            type: 'warning',
+            message:
+              'You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href="https://google.com" style="color:blue;" target="_blank">Read more</a>',
+          },
+          trailing: <></>,
+        }}
+      </Content>
       <ButtonContainer>
         <MobileFullWidth>
           <Button data-testid="view-name" onClick={() => callback(true)}>
