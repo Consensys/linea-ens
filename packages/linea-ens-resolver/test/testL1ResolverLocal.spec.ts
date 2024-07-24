@@ -12,6 +12,7 @@ import { EthereumProvider } from "hardhat/types";
 import {
   changeBlockNumberInCCIPResponse,
   deployContract,
+  execDockerCommand,
   fetchCCIPGateway,
   getAndIncreaseFeeData,
   getExtraData,
@@ -19,6 +20,7 @@ import {
   waitForL2BlockNumberFinalized,
   waitForLatestL2BlockNumberFinalizedToChange,
 } from "./utils";
+import { setTimeout } from "timers/promises";
 
 const labelhash = (label) => ethers.keccak256(ethers.toUtf8Bytes(label));
 const encodeName = (name) => "0x" + packet.name.encode(name).toString("hex");
@@ -37,12 +39,19 @@ const SIGNER_L1_PK =
 // Account 1 on L2 "FOR LOCAL DEV ONLY - DO NOT REUSE THESE KEYS ELSEWHERE"
 const SIGNER_L2_PK =
   "8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63";
+// Account 2 on L2 "FOR LOCAL DEV ONLY - DO NOT REUSE THESE KEYS ELSEWHERE"
+const SIGNER_L2_2_PK =
+  "c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3";
 
 const REGISTRANT_ADDR = "0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73";
 
 const SUB_DOMAIN = "testpoh.linea-test.eth";
 const subDomainNode = ethers.namehash(SUB_DOMAIN);
 const encodedSubDomain = encodeName(SUB_DOMAIN);
+
+const SUB_SUB_DOMAIN = "foo.testpoh.linea-test.eth";
+const subSubNode = ethers.namehash(SUB_SUB_DOMAIN);
+const encodedSubSubDomain = encodeName(SUB_SUB_DOMAIN);
 
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 const EMPTY_BYTES32 =
@@ -81,13 +90,14 @@ describe("Crosschain Resolver Local", () => {
   let wrapper: Contract;
   let baseRegistrar: Contract;
   let rollup: Contract;
+  let l2factoryContract: Contract;
   let signerL1,
     signerL2,
     signerL1Address,
     signerL2Address,
     l2ResolverAddress,
     wrapperAddress;
-  let lastSetupTxBlockNumber: bigint;
+  let lastSetupTxBlockNumber = BigInt(0);
   let sendTransactionsPromise: NodeJS.Timeout;
 
   before(async () => {
@@ -230,7 +240,7 @@ describe("Crosschain Resolver Local", () => {
     await verifier.waitForDeployment();
 
     const implContract = await deployContract("DelegatableResolver", signerL2);
-    const l2factoryContract = await deployContract(
+    l2factoryContract = await deployContract(
       "DelegatableResolverFactory",
       signerL2,
       await implContract.getAddress()
@@ -249,7 +259,7 @@ describe("Crosschain Resolver Local", () => {
       await ens.getAddress(),
       wrapperAddress,
       "",
-      59141
+      L2_CHAIN_ID
     );
 
     const delegatableResolverImpl = await ethers.getContractFactory(
@@ -272,8 +282,16 @@ describe("Crosschain Resolver Local", () => {
       .setText(subDomainNode, "name", "test.eth")
       .then((tx) => tx.wait());
 
-    const tx = await l2Resolver.setContenthash(subDomainNode, contenthash);
+    await l2Resolver
+      .setContenthash(subDomainNode, contenthash)
+      .then((tx) => tx.wait());
+
+    const tx = await l2Resolver["setAddr(bytes32,address)"](
+      subSubNode,
+      REGISTRANT_ADDR
+    );
     const txReceipt = await tx.wait();
+    // Kepp track of the last block tx's setup block number
     lastSetupTxBlockNumber = BigInt(txReceipt.blockNumber);
 
     // Generate activity on Linea to make finalization events happen
@@ -293,18 +311,7 @@ describe("Crosschain Resolver Local", () => {
   });
 
   it("should revert when querying L1Resolver and the currentL2BlockNumber is older than the L2 block number we are fetching the data from", async () => {
-    // This test needs at least one finalized L2 block
-    await waitForLatestL2BlockNumberFinalizedToChange(
-      rollup,
-      2000,
-      "finalized"
-    );
-    const currentL2BlockNumberFinalized = await rollup.currentL2BlockNumber({
-      blockTag: "finalized",
-    });
-    expect(lastSetupTxBlockNumber).to.be.greaterThan(
-      currentL2BlockNumberFinalized
-    );
+    await waitForL2BlockNumberFinalized(rollup, BigInt(1), 2000);
     await target
       .setTarget(encodedname, l2ResolverAddress)
       .then((tx) => tx.wait());
@@ -390,25 +397,23 @@ describe("Crosschain Resolver Local", () => {
     await target
       .setTarget(encodedname, l2ResolverAddress)
       .then((tx) => tx.wait());
-    const result = await l2Resolver["addr(bytes32)"](node);
-    expect(result).to.equal(EMPTY_ADDRESS);
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [node]);
-    const result2 = await target.resolve(encodedname, calldata, {
+    const result = await target.resolve(encodedname, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("addr", result2);
+    const decoded = i.decodeFunctionResult("addr", result);
     expect(decoded[0]).to.equal(EMPTY_ADDRESS);
   });
 
   it("should resolve ETH Address", async () => {
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [subDomainNode]);
-    const result2 = await target.resolve(encodedSubDomain, calldata, {
+    const result = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("addr", result2);
+    const decoded = i.decodeFunctionResult("addr", result);
     expect(ethers.getAddress(decoded[0])).to.equal(
       ethers.getAddress(REGISTRANT_ADDR)
     );
@@ -419,10 +424,10 @@ describe("Crosschain Resolver Local", () => {
       "function addr(bytes32,uint256) returns(bytes)",
     ]);
     const calldata = i.encodeFunctionData("addr", [subDomainNode, coinType]);
-    const result2 = await target.resolve(encodedSubDomain, calldata, {
+    const result = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("addr", result2);
+    const decoded = i.decodeFunctionResult("addr", result);
     expect(decoded[0]).to.equal(testAddr);
   });
 
@@ -431,11 +436,22 @@ describe("Crosschain Resolver Local", () => {
       "function text(bytes32,string) returns(string)",
     ]);
     const calldata = i.encodeFunctionData("text", [subDomainNode, "name"]);
-    const result2 = await target.resolve(encodedSubDomain, calldata, {
+    const result = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("text", result2);
+    const decoded = i.decodeFunctionResult("text", result);
     expect(decoded[0]).to.equal("test.eth");
+  });
+
+  it("should resolve ETH Address for sub sub domain", async () => {
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = i.encodeFunctionData("addr", [subSubNode]);
+
+    const result = await target.resolve(encodedSubSubDomain, calldata, {
+      enableCcipRead: true,
+    });
+    const decoded = i.decodeFunctionResult("addr", result);
+    expect(decoded[0]).to.equal(REGISTRANT_ADDR);
   });
 
   it("should resolve contenthash", async () => {
@@ -443,10 +459,10 @@ describe("Crosschain Resolver Local", () => {
       "function contenthash(bytes32) returns(bytes)",
     ]);
     const calldata = i.encodeFunctionData("contenthash", [subDomainNode]);
-    const result2 = await target.resolve(encodedSubDomain, calldata, {
+    const result = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("contenthash", result2);
+    const decoded = i.decodeFunctionResult("contenthash", result);
     expect(decoded[0]).to.equal(contenthash);
   });
 
@@ -483,10 +499,10 @@ describe("Crosschain Resolver Local", () => {
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [subDomainNode]);
-    const result2 = await target.resolve(encodedSubDomain, calldata, {
+    const result = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("addr", result2);
+    const decoded = i.decodeFunctionResult("addr", result);
     expect(ethers.getAddress(decoded[0])).to.equal(
       ethers.getAddress(REGISTRANT_ADDR)
     );
@@ -501,10 +517,10 @@ describe("Crosschain Resolver Local", () => {
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [subDomainNode]);
-    const result2 = await target.resolve(encodedSubDomain, calldata, {
+    const result = await target.resolve(encodedSubDomain, calldata, {
       enableCcipRead: true,
     });
-    const decoded = i.decodeFunctionResult("addr", result2);
+    const decoded = i.decodeFunctionResult("addr", result);
     expect(ethers.getAddress(decoded[0])).to.equal(
       ethers.getAddress(REGISTRANT_ADDR)
     );
@@ -524,7 +540,6 @@ describe("Crosschain Resolver Local", () => {
       });
       const wrongL2BlockNumber = currentL2BlockNumberFinalized + BigInt(10);
 
-      // Construct the new data string
       const resultDataModified = changeBlockNumberInCCIPResponse(
         resultData,
         wrongL2BlockNumber
@@ -539,6 +554,106 @@ describe("Crosschain Resolver Local", () => {
         );
       }
     }
+  });
+
+  it("should revert when block number has been altered and does not match the state root hash used by the gateway", async () => {
+    const previousL2BlockNumber = await rollup.currentL2BlockNumber({
+      blockTag: "finalized",
+    });
+    await waitForLatestL2BlockNumberFinalizedToChange(
+      rollup,
+      2000,
+      "finalized"
+    );
+    const currentL2BlockNumber = await rollup.currentL2BlockNumber({
+      blockTag: "finalized",
+    });
+
+    expect(currentL2BlockNumber).to.be.greaterThan(previousL2BlockNumber);
+
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = i.encodeFunctionData("addr", [subDomainNode]);
+    try {
+      await target.resolve(encodedSubDomain, calldata);
+    } catch (e) {
+      const extraData: string = getExtraData(e);
+      const resultData: string = await fetchCCIPGateway(e);
+      // Construct the new data string
+      const resultDataModified = changeBlockNumberInCCIPResponse(
+        resultData,
+        previousL2BlockNumber
+      );
+
+      try {
+        await target.getStorageSlotsCallback(resultDataModified, extraData);
+        throw "Should have reverted";
+      } catch (error) {
+        expect(error.reason).to.equal(
+          "LineaProofHelper: invalid account proof"
+        );
+      }
+    }
+  });
+
+  it("should revert if shomei node is down and keep resolving after it starts back up", async () => {
+    await execDockerCommand("stop", "shomei-frontend");
+
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = i.encodeFunctionData("addr", [subDomainNode]);
+
+    try {
+      await target.resolve(encodedSubDomain, calldata, {
+        enableCcipRead: true,
+      });
+      throw "Should have reverted";
+    } catch (error) {
+      expect(error.shortMessage).to.equal(
+        `error encountered during CCIP fetch: "Internal server error: Error: connect ECONNREFUSED ::1:8889"`
+      );
+    }
+
+    await execDockerCommand("start", "shomei-frontend");
+    await setTimeout(5_000);
+    await waitForLatestL2BlockNumberFinalizedToChange(
+      rollup,
+      2000,
+      "finalized"
+    );
+    const result = await target.resolve(encodedSubDomain, calldata, {
+      enableCcipRead: true,
+    });
+    const decoded = i.decodeFunctionResult("addr", result);
+    expect(ethers.getAddress(decoded[0])).to.equal(
+      ethers.getAddress(REGISTRANT_ADDR)
+    );
+  });
+
+  it("should revert if l2 node is down and keep resolving after it starts back up", async () => {
+    await execDockerCommand("stop", "l2-node");
+
+    const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
+    const calldata = i.encodeFunctionData("addr", [subDomainNode]);
+
+    try {
+      await target.resolve(encodedSubDomain, calldata, {
+        enableCcipRead: true,
+      });
+      throw "Should have reverted";
+    } catch (error) {
+      expect(error.shortMessage).to.equal(
+        `error encountered during CCIP fetch: "Internal server error: Error: connect ECONNREFUSED ::1:8845"`
+      );
+    }
+
+    await execDockerCommand("start", "l2-node");
+    await setTimeout(5_000);
+    const result = await target.resolve(encodedSubDomain, calldata, {
+      enableCcipRead: true,
+    });
+    const decoded = i.decodeFunctionResult("addr", result);
+    expect(ethers.getAddress(decoded[0])).to.equal(
+      ethers.getAddress(REGISTRANT_ADDR)
+    );
   });
 
   after(async () => {

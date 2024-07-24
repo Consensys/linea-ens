@@ -1,3 +1,4 @@
+import { exec } from "child_process";
 import {
   BigNumberish,
   Contract,
@@ -44,9 +45,10 @@ export async function waitForL2BlockNumberFinalized(
 ) {
   let currentL2BlockNumberFinalized;
   do {
-    currentL2BlockNumberFinalized = await rollup.currentL2BlockNumber({
-      blockTag: "finalized",
-    });
+    currentL2BlockNumberFinalized =
+      (await rollup.currentL2BlockNumber({
+        blockTag: "finalized",
+      })) || BigInt(0);
     await setTimeout(pollingInterval);
   } while (currentL2BlockNumberFinalized < afterBlockNo);
 }
@@ -56,14 +58,16 @@ export async function waitForLatestL2BlockNumberFinalizedToChange(
   pollingInterval: number,
   blockTag: BlockTag = "latest"
 ) {
-  const currentL2BlockNumber = await rollup.currentL2BlockNumber({
-    blockTag,
-  });
+  const currentL2BlockNumber =
+    (await rollup.currentL2BlockNumber({
+      blockTag,
+    })) || BigInt(0);
   let newL2BlockNumber;
   do {
-    newL2BlockNumber = await rollup.currentL2BlockNumber({
-      blockTag,
-    });
+    newL2BlockNumber =
+      (await rollup.currentL2BlockNumber({
+        blockTag,
+      })) || BigInt(0);
     await setTimeout(pollingInterval);
   } while (currentL2BlockNumber >= newL2BlockNumber);
 }
@@ -106,4 +110,22 @@ export function changeBlockNumberInCCIPResponse(
     .slice(2);
 
   return prefix + blockNoTestHex + suffix;
+}
+
+export async function execDockerCommand(
+  command: string,
+  containerName: string
+): Promise<string> {
+  const dockerCommand = `docker ${command} ${containerName}`;
+  console.log(`Executing: ${dockerCommand}...`);
+  return new Promise((resolve, reject) => {
+    exec(dockerCommand, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing (${dockerCommand}): ${stderr}`);
+        reject(error);
+      }
+      console.log(`Execution success (${dockerCommand}): ${stdout}`);
+      resolve(stdout);
+    });
+  });
 }
