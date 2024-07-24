@@ -123,6 +123,7 @@ type Props = {
 
 const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
   const { t } = useTranslation('register')
+  const { t:translateCommon } = useTranslation()
   const { width, height } = useWindowSize()
   const { avatarSrc } = useEthInvoice(name)
 
@@ -176,12 +177,11 @@ const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
         </Typography>
       </TitleContainer>
       <Typography>{t('steps.complete.description')}</Typography>
-      <Content title="" hideHeading={true}>
+      <Content title="" hideHeading>
         {{
           warning: {
             type: 'warning',
-            message:
-              'You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href="https://docs.linea.build/" style="color:blue;" target="_blank">Read more</a>',
+            message: translateCommon('warning.finalization'),
           },
           trailing: <></>,
         }}
