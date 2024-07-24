@@ -39,7 +39,7 @@ export function getAndIncreaseFeeData(
 
 export async function waitForL2BlockNumberFinalized(
   rollup: Contract,
-  afterBlockNo: number,
+  afterBlockNo: bigint,
   pollingInterval: number
 ) {
   let currentL2BlockNumberFinalized;

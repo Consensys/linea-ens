@@ -87,7 +87,7 @@ describe("Crosschain Resolver Local", () => {
     signerL2Address,
     l2ResolverAddress,
     wrapperAddress;
-  let lastSetupTxBlockNumber: number;
+  let lastSetupTxBlockNumber: bigint;
   let sendTransactionsPromise: NodeJS.Timeout;
 
   before(async () => {
@@ -274,7 +274,7 @@ describe("Crosschain Resolver Local", () => {
 
     const tx = await l2Resolver.setContenthash(subDomainNode, contenthash);
     const txReceipt = await tx.wait();
-    lastSetupTxBlockNumber = txReceipt.blockNumber;
+    lastSetupTxBlockNumber = BigInt(txReceipt.blockNumber);
 
     // Generate activity on Linea to make finalization events happen
     const [maxPriorityFeePerGas, maxFeePerGas] = getAndIncreaseFeeData(
@@ -302,7 +302,9 @@ describe("Crosschain Resolver Local", () => {
     const currentL2BlockNumberFinalized = await rollup.currentL2BlockNumber({
       blockTag: "finalized",
     });
-    expect(currentL2BlockNumberFinalized < lastSetupTxBlockNumber);
+    expect(lastSetupTxBlockNumber).to.be.greaterThan(
+      currentL2BlockNumberFinalized
+    );
     await target
       .setTarget(encodedname, l2ResolverAddress)
       .then((tx) => tx.wait());
