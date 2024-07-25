@@ -2,7 +2,9 @@ import type { Hex } from 'viem'
 import { useAccount } from 'wagmi'
 
 import ProfileContent from '@app/components/pages/profile/[name]/Profile'
+import { getBaseDomain } from '@app/constants/chains'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
+import { useDomainRedirect } from '@app/hooks/useDomainRedirect'
 import { useInitial } from '@app/hooks/useInitial'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
@@ -22,11 +24,15 @@ export default function Page() {
 
   const name = isSelf && primary.data?.name ? primary.data.name : _name
 
+  const { chain } = useAccount()
+
   // Skip graph for for initial load and router redirect
   const nameDetails = useNameDetails({ name })
   const { isLoading: detailsLoading, registrationStatus, gracePeriodEndDate } = nameDetails
 
   const isLoading = detailsLoading || primary.isLoading || initial || !router.isReady
+
+  useDomainRedirect({ chain, nameDetails, isLoading })
 
   if (isViewingExpired && gracePeriodEndDate && gracePeriodEndDate > new Date()) {
     router.push(`/profile/${name}`)
