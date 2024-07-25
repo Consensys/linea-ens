@@ -13,6 +13,7 @@ import { Card } from '@app/components/Card'
 import { Button } from '@app/components/styled/Button'
 import { Typography } from '@app/components/styled/Typography'
 import useWindowSize from '@app/hooks/useWindowSize'
+import { Content } from '@app/layouts/Content'
 
 const StyledCard = styled(Card)(
   ({ theme }) => css`
@@ -122,6 +123,7 @@ type Props = {
 
 const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
   const { t } = useTranslation('register')
+  const { t: translateCommon } = useTranslation()
   const { width, height } = useWindowSize()
   const { avatarSrc } = useEthInvoice(name)
 
@@ -175,6 +177,15 @@ const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
         </Typography>
       </TitleContainer>
       <Typography>{t('steps.complete.description')}</Typography>
+      <Content title="" hideHeading>
+        {{
+          warning: {
+            type: 'warning',
+            message: translateCommon('warning.finalization'),
+          },
+          trailing: <></>,
+        }}
+      </Content>
       <ButtonContainer>
         <MobileFullWidth>
           <Button data-testid="view-name" onClick={() => callback(true)}>

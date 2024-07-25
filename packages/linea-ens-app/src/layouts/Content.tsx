@@ -263,7 +263,7 @@ export const Content = ({
   const WarningComponent = !loading && warning && (
     <WarningWrapper>
       <Banner title={warning.title} alert={warning.type}>
-        {warning.message}
+        <div dangerouslySetInnerHTML={{ __html: warning.message! }} />
       </Banner>
     </WarningWrapper>
   )

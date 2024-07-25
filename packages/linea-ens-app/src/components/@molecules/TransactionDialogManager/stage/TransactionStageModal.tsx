@@ -22,6 +22,7 @@ import { useAddRecentTransaction } from '@app/hooks/transactions/useAddRecentTra
 import { useRecentTransactions } from '@app/hooks/transactions/useRecentTransactions'
 import { useIsSafeApp } from '@app/hooks/useIsSafeApp'
 import { useQueryOptions } from '@app/hooks/useQueryOptions'
+import { Content } from '@app/layouts/Content'
 import {
   ManagedDialogProps,
   TransactionFlowAction,
@@ -506,6 +507,17 @@ export const TransactionStageModal = ({
           </Outlink>
         )}
         {lowerError && <Helper type="error">{lowerError}</Helper>}
+        {stage === 'complete' ? (
+          <Content title="" hideHeading>
+            {{
+              warning: {
+                type: 'warning',
+                message: t('warning.finalization'),
+              },
+              trailing: <></>,
+            }}
+          </Content>
+        ) : null}
       </InnerDialog>
       <Dialog.Footer
         currentStep={currentStep}
