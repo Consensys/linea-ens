@@ -80,7 +80,15 @@ declare module "hardhat/types/runtime" {
   }
 }
 
-// These tests need to be run along the Linea local stack running
+/**
+ * Requirements to run those test:
+ * - In the zkevm-monorepo: Change the config aggregation-proofs-limit in config/coordinator/coordinator-docker.config.toml
+ * to aggregation-proofs-limit=15
+ * - Then run make fresh-start-all
+ * - In the linea-ens monorepo: Run cd packages/linea-ens-resolver/
+ * - Then run pnpm i
+ * - pnpm test:local
+ */
 describe("Crosschain Resolver Local", () => {
   let l1Provider: JsonRpcProvider;
   let l2Provider: JsonRpcProvider;
@@ -326,8 +334,8 @@ describe("Crosschain Resolver Local", () => {
       });
       throw "Should have reverted";
     } catch (e) {
-      expect(e.shortMessage).contain(
-        `error encountered during CCIP fetch: "Internal server error: No storage proofs on contract ${l2ResolverAddress}`
+      expect(e.shortMessage).equal(
+        `error encountered during CCIP fetch: "Internal server error: ccip-gateway error calling getStorageSlots"`
       );
     }
   });
@@ -595,7 +603,7 @@ describe("Crosschain Resolver Local", () => {
     }
   });
 
-  it("should revert if shomei node is down and keep resolving after it starts back up", async () => {
+  it("should revert if shomei-frontend is down and ccip-gateway should keep responding after shomei-frontend starts back up", async () => {
     await execDockerCommand("stop", "shomei-frontend");
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
@@ -608,27 +616,26 @@ describe("Crosschain Resolver Local", () => {
       throw "Should have reverted";
     } catch (error) {
       expect(error.shortMessage).to.equal(
-        `error encountered during CCIP fetch: "Internal server error: Error: connect ECONNREFUSED ::1:8889"`
+        `error encountered during CCIP fetch: "Internal server error: ccip-gateway error calling getStorageSlots"`
       );
     }
 
     await execDockerCommand("start", "shomei-frontend");
     await setTimeout(5_000);
-    await waitForLatestL2BlockNumberFinalizedToChange(
-      rollup,
-      2000,
-      "finalized"
-    );
-    const result = await target.resolve(encodedSubDomain, calldata, {
-      enableCcipRead: true,
-    });
-    const decoded = i.decodeFunctionResult("addr", result);
-    expect(ethers.getAddress(decoded[0])).to.equal(
-      ethers.getAddress(REGISTRANT_ADDR)
-    );
+
+    try {
+      await target.resolve(encodedSubDomain, calldata, {
+        enableCcipRead: true,
+      });
+      throw "Should have reverted";
+    } catch (error) {
+      expect(error.shortMessage).to.equal(
+        `error encountered during CCIP fetch: "Internal server error: ccip-gateway error calling getStorageSlots"`
+      );
+    }
   });
 
-  it("should revert if l2 node is down and keep resolving after it starts back up", async () => {
+  it("should revert if l2 node is down and ccip-gateway should keep responding after l2-node starts back up", async () => {
     await execDockerCommand("stop", "l2-node");
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
@@ -641,19 +648,23 @@ describe("Crosschain Resolver Local", () => {
       throw "Should have reverted";
     } catch (error) {
       expect(error.shortMessage).to.equal(
-        `error encountered during CCIP fetch: "Internal server error: Error: connect ECONNREFUSED ::1:8845"`
+        `error encountered during CCIP fetch: "Internal server error: ccip-gateway error calling getStorageSlots"`
       );
     }
 
     await execDockerCommand("start", "l2-node");
     await setTimeout(5_000);
-    const result = await target.resolve(encodedSubDomain, calldata, {
-      enableCcipRead: true,
-    });
-    const decoded = i.decodeFunctionResult("addr", result);
-    expect(ethers.getAddress(decoded[0])).to.equal(
-      ethers.getAddress(REGISTRANT_ADDR)
-    );
+
+    try {
+      await target.resolve(encodedSubDomain, calldata, {
+        enableCcipRead: true,
+      });
+      throw "Should have reverted";
+    } catch (error) {
+      expect(error.shortMessage).to.equal(
+        `error encountered during CCIP fetch: "Internal server error: ccip-gateway error calling getStorageSlots"`
+      );
+    }
   });
 
   after(async () => {

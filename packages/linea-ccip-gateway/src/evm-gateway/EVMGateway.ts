@@ -103,7 +103,7 @@ export class EVMGateway<T extends ProvableBlock> {
             return [proofs];
           } catch (e) {
             logError(e, { addr, commands, constants });
-            throw e;
+            throw "ccip-gateway error calling getStorageSlots";
           }
         },
       },
