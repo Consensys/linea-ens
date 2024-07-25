@@ -51,11 +51,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Docker Image Build and Publish Testnet
+      - name: Docker Image Build and Publish on Sepolia Testnet
         uses: docker/build-push-action@v4
         with:
           build-args: |
-            ENV_FILE=.env.testnet
+            ENV_FILE=.env.sepolia
             WEB3SIGNER_BASE_URL=${{ secrets.WEB3SIGNER_BASE_URL_TESTNET }}
             WEB3SIGNER_PUBLIC_KEY=${{ secrets.WEB3SIGNER_PUBLIC_KEY_TESTNET }}
           context: ./packages/poh-signer-api
@@ -63,7 +63,7 @@ jobs:
           push: true
           tags: consensys/linea-resolver:${{ env.DOCKER_TAG_TESTNET }}
 
-      - name: Docker Image Build and Publish Mainnet
+      - name: Docker Image Build and Publish on Mainnet
         uses: docker/build-push-action@v4
         with:
           build-args: |
