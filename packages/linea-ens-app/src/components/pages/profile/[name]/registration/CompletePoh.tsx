@@ -123,7 +123,7 @@ type Props = {
 
 const CompletePoh = ({ name, beautifiedName, callback }: Props) => {
   const { t } = useTranslation('register')
-  const { t:translateCommon } = useTranslation()
+  const { t: translateCommon } = useTranslation()
   const { width, height } = useWindowSize()
   const { avatarSrc } = useEthInvoice(name)
 
