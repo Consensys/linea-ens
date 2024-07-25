@@ -2,7 +2,6 @@ import type { Hex } from 'viem'
 import { useAccount } from 'wagmi'
 
 import ProfileContent from '@app/components/pages/profile/[name]/Profile'
-import { getBaseDomain } from '@app/constants/chains'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
 import { useDomainRedirect } from '@app/hooks/useDomainRedirect'
 import { useInitial } from '@app/hooks/useInitial'
