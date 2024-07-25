@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 
 import RegistrationPoh from '@app/components/pages/profile/[name]/registration/RegistrationPoh'
@@ -27,20 +27,21 @@ export default function Page() {
   const isLoading = detailsLoading || initial
 
   const baseDomain = getBaseDomain(chain)
+  const nameSplit = nameDetails.name.split('.')
+  const label = nameSplit[0]
+  const nameDomain = nameSplit[1]
+  const fixedName = `${label}.${baseDomain}.eth`
 
-  if (!isLoading) {
-    // If the selected network does not match the register url we redirect to the correct one
-    const nameSplit = nameDetails.name.split('.')
-    if (nameSplit.length > 1) {
-      const label = nameSplit[0]
-      const nameDomain = nameSplit[1]
-
-      if (nameDomain !== baseDomain) {
-        const fixedName = `${label}.${baseDomain}.eth`
-        router.push(`/${fixedName}/register`)
+  useEffect(() => {
+    if (!isLoading) {
+      // If the selected network does not match the register url we redirect to the correct one
+      if (nameSplit.length > 1) {
+        if (nameDomain !== baseDomain) {
+          router.push(`/${fixedName}/register`)
+        }
       }
     }
-  }
+  }, [nameDomain, baseDomain, isLoading])
 
   if (!isLoading && registrationStatus !== 'available' && registrationStatus !== 'premium') {
     let redirect = true
