@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 
 import RegistrationPoh from '@app/components/pages/profile/[name]/registration/RegistrationPoh'
+import { useDomainRedirect } from '@app/hooks/useDomainRedirect'
 import { useInitial } from '@app/hooks/useInitial'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 import { getSelectedIndex } from '@app/hooks/useRegistrationReducer'
@@ -16,13 +17,15 @@ export default function Page() {
 
   const initial = useInitial()
 
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
   const chainId = useChainId()
 
   const nameDetails = useNameDetails({ name })
   const { isLoading: detailsLoading, registrationStatus } = nameDetails
 
   const isLoading = detailsLoading || initial
+
+  useDomainRedirect({ chain, nameDetails, isLoading, route: 'register' })
 
   if (!isLoading && registrationStatus !== 'available' && registrationStatus !== 'premium') {
     let redirect = true

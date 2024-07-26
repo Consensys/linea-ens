@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi'
 
 import ProfileContent from '@app/components/pages/profile/[name]/Profile'
 import { usePrimaryName } from '@app/hooks/ensjs/public/usePrimaryName'
+import { useDomainRedirect } from '@app/hooks/useDomainRedirect'
 import { useInitial } from '@app/hooks/useInitial'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 import { useRouterWithHistory } from '@app/hooks/useRouterWithHistory'
@@ -16,7 +17,7 @@ export default function Page() {
 
   const initial = useInitial()
 
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
 
   const primary = usePrimaryName({ address: address as Hex })
 
@@ -27,6 +28,8 @@ export default function Page() {
   const { isLoading: detailsLoading, registrationStatus, gracePeriodEndDate } = nameDetails
 
   const isLoading = detailsLoading || primary.isLoading || initial || !router.isReady
+
+  useDomainRedirect({ chain, nameDetails, isLoading, route: '' })
 
   if (isViewingExpired && gracePeriodEndDate && gracePeriodEndDate > new Date()) {
     router.push(`/profile/${name}`)

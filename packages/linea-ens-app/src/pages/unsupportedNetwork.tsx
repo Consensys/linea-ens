@@ -51,7 +51,7 @@ export default function Page() {
   }, [isConnected, chainId, router])
 
   const handleChangeNetwork = () => {
-    switchChain({ chainId: 59141 })
+    switchChain({ chainId: 59144 })
   }
 
   return (
