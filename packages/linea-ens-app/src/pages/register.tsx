@@ -17,9 +17,8 @@ export default function Page() {
 
   const initial = useInitial()
 
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
   const chainId = useChainId()
-  const { chain } = useAccount()
 
   const nameDetails = useNameDetails({ name })
   const { isLoading: detailsLoading, registrationStatus } = nameDetails

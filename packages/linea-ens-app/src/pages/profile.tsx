@@ -17,13 +17,11 @@ export default function Page() {
 
   const initial = useInitial()
 
-  const { address } = useAccount()
+  const { address, chain } = useAccount()
 
   const primary = usePrimaryName({ address: address as Hex })
 
   const name = isSelf && primary.data?.name ? primary.data.name : _name
-
-  const { chain } = useAccount()
 
   // Skip graph for for initial load and router redirect
   const nameDetails = useNameDetails({ name })
