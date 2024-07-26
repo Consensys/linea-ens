@@ -9,7 +9,7 @@ import {
   zeroPadValue,
 } from "ethers";
 import { IProofService, ProvableBlock } from "./IProofService";
-import { logError } from "../utils";
+import { logDebug, logError } from "../utils";
 
 const OP_CONSTANT = 0x00;
 const OP_BACKREF = 0x20;
@@ -98,8 +98,10 @@ export class EVMGateway<T extends ProvableBlock> {
         type: "getStorageSlots",
         func: async (args) => {
           const [addr, commands, constants] = args;
+          logDebug("CCIP request started", addr, commands, constants);
           try {
             const proofs = await this.createProofs(addr, commands, constants);
+            logDebug("CCIP request finished with encoded proofs", proofs);
             return [proofs];
           } catch (e) {
             logError(e, { addr, commands, constants });

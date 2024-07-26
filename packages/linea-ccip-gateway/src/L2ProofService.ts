@@ -6,7 +6,7 @@ import {
   ethers,
 } from "ethers";
 import { EVMProofHelper, IProofService, StateProof } from "./evm-gateway";
-import { logError } from "./utils";
+import { logDebug, logError } from "./utils";
 
 export type L2ProvableBlock = number;
 
@@ -44,10 +44,15 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
    */
   async getProvableBlock(): Promise<number> {
     try {
+      logDebug(
+        "Calling currentL2BlockNumber() on Rollup Contract",
+        await this.rollup.getAddress()
+      );
       const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
         blockTag: "finalized",
       });
       if (!lastBlockFinalized) throw new Error("No block found");
+      logDebug("Provable block found", lastBlockFinalized);
       return lastBlockFinalized;
     } catch (e) {
       logError(e);
