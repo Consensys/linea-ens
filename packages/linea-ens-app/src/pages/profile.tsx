@@ -31,7 +31,7 @@ export default function Page() {
 
   const isLoading = detailsLoading || primary.isLoading || initial || !router.isReady
 
-  useDomainRedirect({ chain, nameDetails, isLoading })
+  useDomainRedirect({ chain, nameDetails, isLoading, route: '' })
 
   if (isViewingExpired && gracePeriodEndDate && gracePeriodEndDate > new Date()) {
     router.push(`/profile/${name}`)

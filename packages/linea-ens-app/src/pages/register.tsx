@@ -26,7 +26,7 @@ export default function Page() {
 
   const isLoading = detailsLoading || initial
 
-  useDomainRedirect({ chain, nameDetails, isLoading })
+  useDomainRedirect({ chain, nameDetails, isLoading, route: 'register' })
 
   if (!isLoading && registrationStatus !== 'available' && registrationStatus !== 'premium') {
     let redirect = true
