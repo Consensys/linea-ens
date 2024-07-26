@@ -1,5 +1,5 @@
 SERVICE := ENS WEB3SIGNER
-NETWORK_NAME := ens-resolver
+NETWORK_NAME := ens-network
 SHOW_DOCKER_HELP := true
 
 include .makefiles/help.mk

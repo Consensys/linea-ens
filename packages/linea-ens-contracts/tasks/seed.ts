@@ -1,6 +1,7 @@
 import fs from 'fs'
 
 import * as envfile from 'envfile'
+// @ts-ignore
 import n from 'eth-ens-namehash'
 import { task } from 'hardhat/config'
 

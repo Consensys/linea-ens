@@ -1,3 +1,4 @@
+// @ts-ignore
 import packet from 'dns-packet'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
