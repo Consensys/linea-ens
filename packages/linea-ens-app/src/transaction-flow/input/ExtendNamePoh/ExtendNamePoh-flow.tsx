@@ -220,7 +220,7 @@ const ExtendNamePoh = ({ data: { names, isSelf }, dispatch, onDismiss }: Props) 
       enabled: !!pohSignature,
     })
 
-  const { title, alert } = match(view)
+  const { title, } = match(view)
     .with('no-ownership-warning', () => ({
       title: t('input.extendNames.ownershipWarning.title', { count: names.length }),
       alert: 'warning' as const,
