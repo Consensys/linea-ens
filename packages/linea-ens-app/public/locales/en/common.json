@@ -388,7 +388,7 @@
     "refresh": "Refresh DNS"
   },
   "warning": {
-    "finalization": "You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href='https://docs.linea.build/' style='color:blue;' target='_blank'>Read more</a>",
-    "finalizationAfterModification": "The changes will be effective anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href='https://docs.linea.build/' style='color:blue;' target='_blank'>Read more</a>"
+    "finalization": "You will be able to use your new domain anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href='https://support.linea.build/general/ens#finalization-delay' style='color:blue;' target='_blank'>Read more</a>",
+    "finalizationAfterModification": "The changes will be effective anywhere ENS is supported once the transaction is finalized on L1. This process takes 8 to 32 hours. <a href='https://support.linea.build/general/ens#finalization-delay' style='color:blue;' target='_blank'>Read more</a>"
   }
 }
