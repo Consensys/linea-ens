@@ -512,7 +512,7 @@ export const TransactionStageModal = ({
             {{
               warning: {
                 type: 'warning',
-                message: t('warning.finalization'),
+                message: t('warning.finalizationAfterModification'),
               },
               trailing: <></>,
             }}
