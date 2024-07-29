@@ -1,4 +1,5 @@
 import { toBeHex, AddressLike, JsonRpcProvider, ethers } from "ethers";
+import { logDebug, logInfo } from "../utils";
 
 interface ProofStruct {
   key: string;
@@ -26,9 +27,12 @@ export interface StateProof {
  */
 export class EVMProofHelper {
   private readonly providerL2: JsonRpcProvider;
+  private readonly shomeiNode: JsonRpcProvider;
 
-  constructor(providerL2: JsonRpcProvider) {
+  constructor(providerL2: JsonRpcProvider, shomeiNode?: JsonRpcProvider) {
     this.providerL2 = providerL2;
+    // shomeiNode optional since an rpc infura nodes can support both eth_getStorageAt and linea_getProof
+    this.shomeiNode = shomeiNode ? shomeiNode : providerL2;
   }
 
   /**
@@ -65,11 +69,13 @@ export class EVMProofHelper {
       "0x" + blockNo.toString(16),
     ];
 
+    logInfo("Calling linea_getProof with args", args);
+
     // We have to reinitilize the provider L2 because of an issue when multiple
     // requests are sent at the same time, the provider becomes not aware of
     // the linea_getProof method
-    const providerUrl = await this.providerL2._getConnection().url;
-    const providerChainId = await this.providerL2._network.chainId;
+    const providerUrl = await this.shomeiNode._getConnection().url;
+    const providerChainId = await this.shomeiNode._network.chainId;
     const providerL2 = new ethers.JsonRpcProvider(
       providerUrl,
       providerChainId,
@@ -77,7 +83,9 @@ export class EVMProofHelper {
         staticNetwork: true,
       }
     );
+    logDebug("Calling linea_getProof with L2 provider", providerUrl);
     const proofs: StateProof = await providerL2.send("linea_getProof", args);
+    logDebug("Proof result", proofs);
     return proofs;
   }
 }

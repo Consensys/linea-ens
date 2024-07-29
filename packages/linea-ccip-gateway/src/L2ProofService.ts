@@ -6,7 +6,7 @@ import {
   ethers,
 } from "ethers";
 import { EVMProofHelper, IProofService, StateProof } from "./evm-gateway";
-import { logError } from "./utils";
+import { logDebug, logError } from "./utils";
 
 export type L2ProvableBlock = number;
 
@@ -25,9 +25,10 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   constructor(
     providerL1: JsonRpcProvider,
     providerL2: JsonRpcProvider,
-    rollupAddress: string
+    rollupAddress: string,
+    shomeiNode?: JsonRpcProvider
   ) {
-    this.helper = new EVMProofHelper(providerL2);
+    this.helper = new EVMProofHelper(providerL2, shomeiNode);
     const currentL2BlockNumberIface = new ethers.Interface([
       currentL2BlockNumberSig,
     ]);
@@ -43,10 +44,15 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
    */
   async getProvableBlock(): Promise<number> {
     try {
+      logDebug(
+        "Calling currentL2BlockNumber() on Rollup Contract",
+        await this.rollup.getAddress()
+      );
       const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
         blockTag: "finalized",
       });
       if (!lastBlockFinalized) throw new Error("No block found");
+      logDebug("Provable block found", lastBlockFinalized);
       return lastBlockFinalized;
     } catch (e) {
       logError(e);
@@ -89,6 +95,12 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   ): Promise<string> {
     try {
       let proof = await this.helper.getProofs(blockNo, address, slots);
+      if (!proof.accountProof) {
+        throw `No account proof on contract ${address} for block number ${blockNo}`;
+      }
+      if (proof.storageProofs.length === 0) {
+        throw `No storage proofs on contract ${address} for block number ${blockNo}`;
+      }
       proof = this.checkStorageInitialized(proof);
       return AbiCoder.defaultAbiCoder().encode(
         [

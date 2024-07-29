@@ -7,10 +7,11 @@ export type L1Gateway = EVMGateway<L2ProvableBlock>;
 export function makeL2Gateway(
   providerL1: JsonRpcProvider,
   providerL2: JsonRpcProvider,
-  rollupAddress: string
+  rollupAddress: string,
+  shomeiNode?: JsonRpcProvider
 ): L1Gateway {
   return new EVMGateway(
-    new L2ProofService(providerL1, providerL2, rollupAddress)
+    new L2ProofService(providerL1, providerL2, rollupAddress, shomeiNode)
   );
 }
 

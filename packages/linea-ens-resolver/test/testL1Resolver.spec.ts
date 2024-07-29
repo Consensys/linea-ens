@@ -19,7 +19,6 @@ import packet from "dns-packet";
 import {
   blockNo,
   commands2Test,
-  commandsTest,
   constantsTest,
   proofTest,
   extraDataTest,

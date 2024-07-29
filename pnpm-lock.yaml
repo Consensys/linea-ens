@@ -562,8 +562,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       '@ensdomains/ens-contracts':
-        specifier: ^1.1.4
-        version: 1.1.4
+        specifier: ensdomains/ens-contracts#feature/crosschain-resolver-with-reverse-registrar
+        version: https://codeload.github.com/ensdomains/ens-contracts/tar.gz/9d6d5b727db18247d74937aa3c6ed162f9121c52(hardhat@2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@nomicfoundation/hardhat-chai-matchers':
         specifier: ^2.0.0
         version: 2.0.6(@nomicfoundation/hardhat-ethers@3.0.5(ethers@6.11.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)))(chai@4.4.1)(ethers@6.11.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
@@ -603,9 +603,6 @@ importers:
       chai:
         specifier: ^4.2.0
         version: 4.4.1
-      clones-with-immutable-args:
-        specifier: Arachnid/clones-with-immutable-args#feature/create2
-        version: https://codeload.github.com/Arachnid/clones-with-immutable-args/tar.gz/23768824cdc037f361f7065538b8f949cae9d3d1
       dns-packet:
         specifier: ^5.6.1
         version: 5.6.1
@@ -1765,11 +1762,12 @@ packages:
     resolution: {integrity: sha512-nfm4ggpK5YBVwVwLZKF9WPjRGRTL9aUxX2O4pqv/AnQCz3WeGHsW7VhVFLj2s4EoWSzCXwR1E6nuqgUwnH692w==}
     engines: {node: '>=16.8'}
 
-  '@ensdomains/ens-contracts@1.1.4':
-    resolution: {integrity: sha512-kjdcjaznMtE2lwjAVTX2irs8mgNgJCVuB5hnhFhiMaO8dR/tlHQ5UhtZjhSYRhkZd0hLXYrMkXp6thnwpG+ltg==}
-
   '@ensdomains/ens-contracts@file:packages/linea-ens-contracts':
     resolution: {directory: packages/linea-ens-contracts, type: directory}
+
+  '@ensdomains/ens-contracts@https://codeload.github.com/ensdomains/ens-contracts/tar.gz/9d6d5b727db18247d74937aa3c6ed162f9121c52':
+    resolution: {tarball: https://codeload.github.com/ensdomains/ens-contracts/tar.gz/9d6d5b727db18247d74937aa3c6ed162f9121c52}
+    version: 0.0.21
 
   '@ensdomains/ens-test-env@0.4.0-beta.0':
     resolution: {integrity: sha512-B/Kv0EhPQnwHbgHV1yH178es3EIejYf5LbRtTN1N69jbyoxjT+0cUE74YfaH9EZFQ6sLmpJP/Yk7vE3wTpBglQ==}
@@ -3018,6 +3016,11 @@ packages:
     peerDependencies:
       hardhat: ^2.0.4
 
+  '@nomicfoundation/hardhat-verify@2.0.8':
+    resolution: {integrity: sha512-x/OYya7A2Kcz+3W/J78dyDHxr0ezU23DKTrRKfy5wDPCnePqnr79vm8EXqX3gYps6IjPBYyGPZ9K6E5BnrWx5Q==}
+    peerDependencies:
+      hardhat: ^2.0.4
+
   '@nomicfoundation/ignition-core@0.15.1':
     resolution: {integrity: sha512-/AZO0YHRv1+yQSOtSSbg4GEH9YhU8EVePSfByU2PZW2bsAK0SA8GdoLYFbVNl140dogem5lrE+bCKtX0eN/n+A==}
 
@@ -3114,6 +3117,9 @@ packages:
 
   '@openzeppelin/contract-loader@0.6.3':
     resolution: {integrity: sha512-cOFIjBjwbGgZhDZsitNgJl0Ye1rd5yu/Yx5LMgeq3u0ZYzldm4uObzHDFq4gjDdoypvyORjjJa3BlFA7eAnVIg==}
+
+  '@openzeppelin/contracts@4.9.3':
+    resolution: {integrity: sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg==}
 
   '@openzeppelin/contracts@4.9.6':
     resolution: {integrity: sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA==}
@@ -5013,6 +5019,7 @@ packages:
   are-we-there-yet@2.0.0:
     resolution: {integrity: sha512-Ci/qENmwHnsYo9xKIcUJN5LeDKdJ6R1Z1j9V/J5wyq8nh/mYPEpIKJbBZXtZjG04HiK7zV/p6Vs9952MrMeUIw==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer supported.
 
   arg@4.1.3:
     resolution: {integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==}
@@ -7658,6 +7665,7 @@ packages:
   gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer supported.
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -10234,6 +10242,7 @@ packages:
 
   npmlog@5.0.1:
     resolution: {integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==}
+    deprecated: This package is no longer supported.
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -15090,13 +15099,6 @@ snapshots:
       dns-packet: 5.6.1
       typescript-logging: 1.0.1
 
-  '@ensdomains/ens-contracts@1.1.4':
-    dependencies:
-      '@ensdomains/buffer': 0.1.1
-      '@ensdomains/solsha1': 0.0.3
-      '@openzeppelin/contracts': 4.9.6
-      dns-packet: 5.6.1
-
   '@ensdomains/ens-contracts@file:packages/linea-ens-contracts':
     dependencies:
       '@ensdomains/buffer': 0.1.1
@@ -15107,6 +15109,18 @@ snapshots:
       dns-packet: 5.6.1
     transitivePeerDependencies:
       - debug
+
+  '@ensdomains/ens-contracts@https://codeload.github.com/ensdomains/ens-contracts/tar.gz/9d6d5b727db18247d74937aa3c6ed162f9121c52(hardhat@2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
+    dependencies:
+      '@ensdomains/buffer': 0.1.1
+      '@ensdomains/solsha1': 0.0.3
+      '@nomicfoundation/hardhat-verify': 2.0.8(hardhat@2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
+      '@openzeppelin/contracts': 4.9.3
+      clones-with-immutable-args: https://codeload.github.com/Arachnid/clones-with-immutable-args/tar.gz/23768824cdc037f361f7065538b8f949cae9d3d1
+      dns-packet: 5.6.1
+    transitivePeerDependencies:
+      - hardhat
+      - supports-color
 
   '@ensdomains/ens-test-env@0.4.0-beta.0':
     dependencies:
@@ -16944,6 +16958,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@nomicfoundation/hardhat-verify@2.0.8(hardhat@2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
+    dependencies:
+      '@ethersproject/abi': 5.7.0
+      '@ethersproject/address': 5.7.0
+      cbor: 8.1.0
+      chalk: 2.4.2
+      debug: 4.3.4(supports-color@5.5.0)
+      hardhat: 2.22.2(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
+      lodash.clonedeep: 4.5.0
+      semver: 6.3.1
+      table: 6.8.2
+      undici: 5.28.4
+    transitivePeerDependencies:
+      - supports-color
+
   '@nomicfoundation/ignition-core@0.15.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@ethersproject/address': 5.6.1
@@ -17115,6 +17144,8 @@ snapshots:
     dependencies:
       find-up: 4.1.0
       fs-extra: 8.1.0
+
+  '@openzeppelin/contracts@4.9.3': {}
 
   '@openzeppelin/contracts@4.9.6': {}
 
