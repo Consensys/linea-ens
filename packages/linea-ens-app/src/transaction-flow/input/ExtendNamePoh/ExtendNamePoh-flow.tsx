@@ -8,6 +8,7 @@ import { Avatar, Button, Dialog, mq, ScrollBox, Typography } from '@ensdomains/t
 
 import { PlusMinusControl } from '@app/components/@atoms/PlusMinusControl/PlusMinusControl'
 import { StyledName } from '@app/components/@atoms/StyledName/StyledName'
+import { DialogHeading } from '@app/components/styled/Dialog'
 import { useEstimateGasWithStateOverride } from '@app/hooks/chain/useEstimateGasWithStateOverride'
 import { useExpiry } from '@app/hooks/ensjs/public/useExpiry'
 import { usePohSignature } from '@app/hooks/usePohStatus'
@@ -219,7 +220,7 @@ const ExtendNamePoh = ({ data: { names, isSelf }, dispatch, onDismiss }: Props) 
       enabled: !!pohSignature,
     })
 
-  const { title, alert } = match(view)
+  const { title } = match(view)
     .with('no-ownership-warning', () => ({
       title: t('input.extendNames.ownershipWarning.title', { count: names.length }),
       alert: 'warning' as const,
@@ -249,7 +250,7 @@ const ExtendNamePoh = ({ data: { names, isSelf }, dispatch, onDismiss }: Props) 
 
   return (
     <Container data-testid="extend-names-modal">
-      <Dialog.Heading title={title} alert={alert} />
+      <DialogHeading>{title}</DialogHeading>
       <ScrollBoxWrapper>
         <InnerContainer>
           {match(view)

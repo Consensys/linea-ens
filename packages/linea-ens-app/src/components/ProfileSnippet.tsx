@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { mq } from '@ensdomains/thorin'
 
@@ -143,6 +143,7 @@ export const ProfileSnippet = ({
   button?: 'viewProfile' | 'extend' | 'register'
   children?: React.ReactNode
 }) => {
+  const theme = useTheme()
   const router = useRouterWithHistory()
   const { t } = useTranslation('common')
 
@@ -163,7 +164,13 @@ export const ProfileSnippet = ({
       return (
         <Button
           size="small"
-          prefix={<FastForwardSVG />}
+          prefix={
+            <FastForwardSVG
+              style={{
+                color: theme.colors.textSecondary,
+              }}
+            />
+          }
           data-testid="extend-button"
           onClick={() => {
             showExtendNamePohInput(`extend-names-${name}`, {
