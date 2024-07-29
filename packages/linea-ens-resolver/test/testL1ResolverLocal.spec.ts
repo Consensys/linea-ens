@@ -13,6 +13,7 @@ import {
   changeBlockNumberInCCIPResponse,
   deployContract,
   execDockerCommand,
+  executeTransaction,
   fetchCCIPGateway,
   getAndIncreaseFeeData,
   getExtraData,
@@ -170,7 +171,7 @@ describe("Crosschain Resolver Local", () => {
       ethers.namehash("eth")
     );
     const baseRegistrarAddress = await baseRegistrar.getAddress();
-    await baseRegistrar.addController(signerL1Address).then((tx) => tx.wait());
+    await executeTransaction(baseRegistrar.addController(signerL1Address));
     const metaDataservice = await deployContract(
       "StaticMetadataService",
       signerL1,
@@ -183,22 +184,22 @@ describe("Crosschain Resolver Local", () => {
     );
     const reverseRegistrarAddress = await reverseRegistrar.getAddress();
 
-    await ens
-      .setSubnodeOwner(EMPTY_BYTES32, labelhash("reverse"), signerL1)
-      .then((tx) => tx.wait());
-    await ens
-      .setSubnodeOwner(
+    await executeTransaction(
+      ens.setSubnodeOwner(EMPTY_BYTES32, labelhash("reverse"), signerL1)
+    );
+    await executeTransaction(
+      ens.setSubnodeOwner(
         ethers.namehash("reverse"),
         labelhash("addr"),
         reverseRegistrarAddress
       )
-      .then((tx) => tx.wait());
-    await ens
-      .setSubnodeOwner(EMPTY_BYTES32, labelhash("eth"), baseRegistrarAddress)
-      .then((tx) => tx.wait());
-    await baseRegistrar
-      .register(labelhash(domainName), signerL1Address, 100000000)
-      .then((tx) => tx.wait());
+    );
+    await executeTransaction(
+      ens.setSubnodeOwner(EMPTY_BYTES32, labelhash("eth"), baseRegistrarAddress)
+    );
+    await executeTransaction(
+      baseRegistrar.register(labelhash(domainName), signerL1Address, 100000000)
+    );
 
     const publicResolver = await deployContract(
       "PublicResolver",
@@ -209,9 +210,9 @@ describe("Crosschain Resolver Local", () => {
       await reverseRegistrar.getAddress()
     );
     const publicResolverAddress = await publicResolver.getAddress();
-    await reverseRegistrar
-      .setDefaultResolver(publicResolverAddress)
-      .then((tx) => tx.wait());
+    await executeTransaction(
+      reverseRegistrar.setDefaultResolver(publicResolverAddress)
+    );
 
     wrapper = await deployContract(
       "NameWrapper",
@@ -250,9 +251,9 @@ describe("Crosschain Resolver Local", () => {
       signerL2,
       await implContract.getAddress()
     );
-    await l2factoryContract
-      .create(await signerL2.getAddress())
-      .then((tx) => tx.wait());
+    await executeTransaction(
+      l2factoryContract.create(await signerL2.getAddress())
+    );
     const logs = await l2factoryContract.queryFilter("NewDelegatableResolver");
     //@ts-ignore
     l2ResolverAddress = logs[0].args[0];
@@ -272,24 +273,25 @@ describe("Crosschain Resolver Local", () => {
       signerL2
     );
     l2Resolver = delegatableResolverImpl.attach(l2ResolverAddress);
-    await l2Resolver["setAddr(bytes32,address)"](
-      subDomainNode,
-      REGISTRANT_ADDR
-    ).then((tx) => tx.wait());
+    await executeTransaction(
+      l2Resolver["setAddr(bytes32,address)"](subDomainNode, REGISTRANT_ADDR)
+    );
 
-    await l2Resolver["setAddr(bytes32,uint256,bytes)"](
-      subDomainNode,
-      coinType,
-      testAddr
-    ).then((tx) => tx.wait());
+    await executeTransaction(
+      l2Resolver["setAddr(bytes32,uint256,bytes)"](
+        subDomainNode,
+        coinType,
+        testAddr
+      )
+    );
 
-    await l2Resolver
-      .setText(subDomainNode, "name", "test.eth")
-      .then((tx) => tx.wait());
+    await executeTransaction(
+      l2Resolver.setText(subDomainNode, "name", "test.eth")
+    );
 
-    await l2Resolver
-      .setContenthash(subDomainNode, contenthash)
-      .then((tx) => tx.wait());
+    await executeTransaction(
+      l2Resolver.setContenthash(subDomainNode, contenthash)
+    );
 
     const tx = await l2Resolver["setAddr(bytes32,address)"](
       subSubNode,
@@ -317,9 +319,7 @@ describe("Crosschain Resolver Local", () => {
 
   it("should revert when querying L1Resolver and the currentL2BlockNumber is older than the L2 block number we are fetching the data from", async () => {
     await waitForL2BlockNumberFinalized(rollup, BigInt(1), 2000);
-    await target
-      .setTarget(encodedname, l2ResolverAddress)
-      .then((tx) => tx.wait());
+    await executeTransaction(target.setTarget(encodedname, l2ResolverAddress));
     const result = await l2Resolver["addr(bytes32)"](subDomainNode);
     expect(ethers.getAddress(result)).to.equal(REGISTRANT_ADDR);
 
@@ -340,9 +340,9 @@ describe("Crosschain Resolver Local", () => {
   it("should not allow non owner to set target", async () => {
     const incorrectname = encodeName("notowned.eth");
     try {
-      await target
-        .setTarget(incorrectname, l2ResolverAddress)
-        .then((tx) => tx.wait());
+      await executeTransaction(
+        target.setTarget(incorrectname, l2ResolverAddress)
+      );
       throw "Should have reverted";
     } catch (e) {
       expect(e.reason).equal("Not authorized to set target for this node");
@@ -353,17 +353,13 @@ describe("Crosschain Resolver Local", () => {
   });
 
   it("should allow owner to set target", async () => {
-    await target
-      .setTarget(encodedname, signerL1Address)
-      .then((tx) => tx.wait());
+    await executeTransaction(target.setTarget(encodedname, signerL1Address));
     const result = await target.getTarget(encodeName(baseDomain));
     expect(result[1]).to.equal(signerL1Address);
   });
 
   it("subname should get target of its parent", async () => {
-    await target
-      .setTarget(encodedname, signerL1Address)
-      .then((tx) => tx.wait());
+    await executeTransaction(target.setTarget(encodedname, signerL1Address));
     const result = await target.getTarget(encodedSubDomain);
     expect(result[0]).to.equal(subDomainNode);
     expect(result[1]).to.equal(signerL1Address);
@@ -372,24 +368,22 @@ describe("Crosschain Resolver Local", () => {
   it("should allow wrapped owner to set target", async () => {
     const label = "wrapped";
     const tokenId = labelhash(label);
-    await baseRegistrar
-      .setApprovalForAll(wrapperAddress, true)
-      .then((tx) => tx.wait());
-    await baseRegistrar
-      .register(tokenId, signerL1Address, 100000000)
-      .then((tx) => tx.wait());
-    await wrapper
-      .wrapETH2LD(
+    await executeTransaction(
+      baseRegistrar.setApprovalForAll(wrapperAddress, true)
+    );
+    await executeTransaction(
+      baseRegistrar.register(tokenId, signerL1Address, 100000000)
+    );
+    await executeTransaction(
+      wrapper.wrapETH2LD(
         label,
         signerL1Address,
         0, // CAN_DO_EVERYTHING
         EMPTY_ADDRESS
       )
-      .then((tx) => tx.wait());
+    );
     const wrappedtname = encodeName(`${label}.eth`);
-    await target
-      .setTarget(wrappedtname, l2ResolverAddress)
-      .then((tx) => tx.wait());
+    await executeTransaction(target.setTarget(wrappedtname, l2ResolverAddress));
     const encodedname = encodeName(`${label}.eth`);
     const result = await target.getTarget(encodedname);
     expect(result[1]).to.equal(l2ResolverAddress);
@@ -399,9 +393,7 @@ describe("Crosschain Resolver Local", () => {
     // Wait for the latest L2 finalized block to more recent than the L2 block number we are fetching the data from
     await waitForL2BlockNumberFinalized(rollup, lastSetupTxBlockNumber, 5000);
 
-    await target
-      .setTarget(encodedname, l2ResolverAddress)
-      .then((tx) => tx.wait());
+    await executeTransaction(target.setTarget(encodedname, l2ResolverAddress));
 
     const i = new ethers.Interface(["function addr(bytes32) returns(address)"]);
     const calldata = i.encodeFunctionData("addr", [node]);

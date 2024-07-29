@@ -129,3 +129,8 @@ export async function execDockerCommand(
     });
   });
 }
+
+export async function executeTransaction(transactionPromise: Promise<any>) {
+  const tx = await transactionPromise;
+  return tx.wait();
+}
