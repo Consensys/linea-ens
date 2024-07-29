@@ -15,3 +15,11 @@ export function logDebug(message: string, ...objects: any[]) {
     console.dir(logObject, { depth: 6 });
   }
 }
+
+export function logInfo(message: string, ...objects: any[]) {
+  const logObject = {
+    message,
+    details: objects,
+  };
+  console.dir(logObject, { depth: 3 });
+}

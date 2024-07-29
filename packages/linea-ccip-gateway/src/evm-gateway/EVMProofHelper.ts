@@ -1,5 +1,5 @@
 import { toBeHex, AddressLike, JsonRpcProvider, ethers } from "ethers";
-import { logDebug } from "../utils";
+import { logDebug, logInfo } from "../utils";
 
 interface ProofStruct {
   key: string;
@@ -69,7 +69,7 @@ export class EVMProofHelper {
       "0x" + blockNo.toString(16),
     ];
 
-    logDebug("Starting getProofs", args);
+    logInfo("Calling linea_getProof with args", args);
 
     // We have to reinitilize the provider L2 because of an issue when multiple
     // requests are sent at the same time, the provider becomes not aware of
