@@ -35,7 +35,7 @@ import {
 
 import { Prettify } from '@app/types'
 
-import { checkIs3LDEth, checkIsDotEth } from './utils/validation'
+import { checkIs3LDEth } from './utils/validation'
 
 export type WrapNameDataParameters<
   TName extends string,
