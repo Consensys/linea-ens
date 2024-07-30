@@ -1,7 +1,6 @@
 import type { TFunction } from 'react-i18next'
 
-import { wrapName } from '@ensdomains/ensjs/wallet'
-
+import wrapName from '@app/ensJsOverrides/wrapName'
 import { Transaction, TransactionDisplayItem, TransactionFunctionParameters } from '@app/types'
 
 type Data = {

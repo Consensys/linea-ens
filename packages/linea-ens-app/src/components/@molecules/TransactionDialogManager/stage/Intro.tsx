@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components'
 import { Button, Dialog } from '@ensdomains/thorin'
 
 import { InnerDialog } from '@app/components/@atoms/InnerDialog'
+import { DialogHeading } from '@app/components/styled/Dialog'
 import { intros } from '@app/transaction-flow/intro'
 import { TransactionIntro } from '@app/transaction-flow/types'
 import { TransactionDisplayItemSingle } from '@app/types'
@@ -63,7 +64,7 @@ export const IntroStageModal = ({
 
   return (
     <>
-      <Dialog.Heading title={t(...title)} />
+      <DialogHeading>{t(...title)}</DialogHeading>
       <InnerDialog data-testid="transaction-modal-inner">
         <Content {...content.data} />
         {txCount > 1 && (
