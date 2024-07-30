@@ -48,11 +48,10 @@ export const Banner = () => {
             weight="bold"
             style={{ color: theme.colors.textPrimary }}
           >
-            Learn more on our Mirror post
+            Learn more on ENS Blog Post
           </Typography>
         </div>
       </Row>
-      {/* TODO: Replace link to linea mirror link */}
       <Button
         as="a"
         width="max"
@@ -60,7 +59,7 @@ export const Banner = () => {
           backgroundColor: theme.colors.backgroundSecondary,
           color: theme.colors.textSecondary,
         }}
-        href="https://linea.mirror.xyz/"
+        href="https://blog.ens.domains/post/ens-lands-on-linea"
         target="_blank"
       >
         Learn More
