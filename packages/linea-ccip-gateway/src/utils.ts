@@ -7,7 +7,7 @@ export function logError(error: any, ...objects: any[]) {
 }
 
 export function logDebug(message: string, ...objects: any[]) {
-  if (process.env.NODE_ENV === "debug") {
+  if (process.env.NODE_ENV === "development") {
     const logObject = {
       message,
       details: objects,
