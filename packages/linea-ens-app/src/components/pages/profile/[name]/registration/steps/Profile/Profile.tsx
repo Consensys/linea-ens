@@ -310,7 +310,9 @@ const Profile = ({ name, callback, registrationData, resolverExists }: Props) =>
               key={field.id}
               recordKey={field.key}
               group={field.group}
-              disabled={field.key === 'eth' && registrationData.reverseRecord}
+              disabled={
+                (field.key === 'eth' || field.key === 'linea') && registrationData.reverseRecord
+              }
               label={labelForRecord(field)}
               secondaryLabel={secondaryLabelForRecord(field)}
               placeholder={placeholderForRecord(field)}

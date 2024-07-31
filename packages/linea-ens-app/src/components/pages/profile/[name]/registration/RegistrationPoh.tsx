@@ -162,6 +162,7 @@ const RegistrationPoh = ({ nameDetails, isLoading }: Props) => {
     if (item.queue.includes('profile') && reverseRecord) {
       const recordsWithoutEth = item.records.filter((record) => record.key !== 'eth')
       const newRecords: ProfileRecord[] = [
+        { key: 'linea', group: 'address', type: 'addr', value: address! },
         { key: 'eth', group: 'address', type: 'addr', value: address! },
         ...recordsWithoutEth,
       ]
