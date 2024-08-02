@@ -25,9 +25,9 @@ pnpm compile
 pnpm test
 ```
 
-## Example of CCIP-Read Call
+## Example of how to use CCIP-Read using EtherJs
 
-This example demonstrates how to use CCIP-Read to call a contract that implements the protocol.
+This example demonstrates how to use CCIP-Read using EtherJs to call a contract that implements the protocol.
 
 ### Interacting with the `TestL1` Contract Using CCIP-Read
 
@@ -38,7 +38,6 @@ To interact with the `TestL1` contract using the CCIP-Read protocol, follow thes
 Before running the script, ensure that you have the necessary environment variables set up in your `.env` file:
 
 - **`INFURA_API_KEY`**: Your Infura project ID, which allows you to connect to the Ethereum network via Infura.
-- **`PRIVATE_KEY`**: The private key of your Ethereum account. Ensure this account has sufficient Sepolia testnet ETH for transaction fees.
 
 #### Adding the Script
 
@@ -66,6 +65,12 @@ const getLatestABI = [
 ];
 
 async function main() {
+  /* 
+  Address of the deployed TestL1 contract on the Sepolia testnet.
+  You can view the contract on Etherscan using the following link:
+  https://sepolia.etherscan.io/address/0xb12038acce44e39dd5b2f59f0f68bbfaac35dd16
+  */
+
   const testL1Address = "0xB12038acCE44e39dd5B2f59F0f68bbfAaC35dd16";
 
   const provider = new ethers.JsonRpcProvider(
@@ -74,7 +79,7 @@ async function main() {
 
   const testL1Contract = new ethers.Contract(
     testL1Address,
-    getLatestABI, // Use the specific function ABI
+    getLatestABI,
     provider
   );
 
@@ -112,10 +117,8 @@ npx hardhat run scripts/testL1.ts --network sepolia
 
 #### What the Script Does
 
--   **Connects to the Sepolia Network**: Utilizes Infura as the provider to connect to the Ethereum Sepolia testnet.
--   **Interacts with the Contract**: Calls the `getLatest` function on the `TestL1` contract, showcasing how to enable and leverage CCIP-Read capabilities.
--   **Handles Off-Chain Data**: Demonstrates the retrieval and verification of off-chain data, integrating it back into the on-chain environment using CCIP.
+- **Connects to the Sepolia Network**: Utilizes Infura as the provider to connect to the Ethereum Sepolia testnet.
+- **Interacts with the Contract**: Calls the `getLatest` function on the `TestL1` contract, showcasing how to enable and leverage CCIP-Read capabilities.
+- **Handles Off-Chain Data**: Demonstrates the retrieval and verification of off-chain data, integrating it back into the on-chain environment using CCIP.
 
 This example provides a practical demonstration of how to set up and utilize the CCIP-Read protocol within a dApp, highlighting the benefits of off-chain data fetching and proof verification.
-
-
