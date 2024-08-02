@@ -18,6 +18,18 @@ const config: HardhatUserConfig = {
       },
     ],
   },
+  networks: {
+    LineaSepolia: {
+      url: `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 59141,
+    },
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 11155111,
+    },
+  }
 };
 
 export default config;
