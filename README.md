@@ -34,9 +34,9 @@ The example below fetches another contract's storage value `testUint`.
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { EVMFetcher } from '@ensdomains/evm-verifier/contracts/EVMFetcher.sol';
-import { EVMFetchTarget } from '@ensdomains/evm-verifier/contracts/EVMFetchTarget.sol';
-import { IEVMVerifier } from '@ensdomains/evm-verifier/contracts/IEVMVerifier.sol';
+import { EVMFetcher } from 'linea-state-verifier/EVMFetcher.sol';
+import { EVMFetchTarget } from 'linea-state-verifier/EVMFetchTarget.sol';
+import { IEVMVerifier } from 'linea-state-verifier/IEVMVerifier.sol';
 
 contract TestL2 {
     uint256 testUint; // Slot 0
@@ -52,9 +52,23 @@ contract TestL1 is EVMFetchTarget {
     IEVMVerifier verifier;
     address target;
 
+    uint256 constant ACCEPTED_L2_BLOCK_RANGE_LENGTH = 86400; // Can be changed to your accepted block range
+
     constructor(IEVMVerifier _verifier, address _target) {
         verifier = _verifier;
         target = _target;
+    }
+
+    /**
+     * @dev inherits from EVMFetchTarget
+     */
+    function getAcceptedL2BlockRangeLength()
+        public
+        pure
+        override
+        returns (uint256)
+    {
+        return ACCEPTED_L2_BLOCK_RANGE_LENGTH;
     }
 
     function getTestUint() public view returns(uint256) {
@@ -78,6 +92,7 @@ contract TestL1 is EVMFetchTarget {
 - [docker-compose](https://docs.docker.com/compose/install/)
 
 ## Installation
+
 See [Install](./packages/linea-ens-app/README.md#install) in the linea-ens-app README.
 
 ## Packages
