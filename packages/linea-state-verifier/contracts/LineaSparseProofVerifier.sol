@@ -40,8 +40,7 @@ contract LineaSparseProofVerifier is IEVMVerifier {
         // Check that the L2 block number used is a recent one and is part of the range accepted
         uint256 currentL2BlockNumber = IRollup(_rollup).currentL2BlockNumber();
         require(
-            (currentL2BlockNumber <= acceptedL2BlockRangeLength &&
-                blockNo <= currentL2BlockNumber) ||
+            (blockNo <= currentL2BlockNumber) &&
                 (blockNo >= currentL2BlockNumber - acceptedL2BlockRangeLength),
             "LineaSparseProofVerifier: block not in range accepted"
         );
