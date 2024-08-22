@@ -90,7 +90,7 @@ const config: HardhatUserConfig = {
     },
     lineaSepolia: {
       url: `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['test', 'legacy', 'use_root'],
+      tags: ['test', 'legacy', 'use_root', 'reuse_poh_verifier'],
       chainId: 59141,
       accounts: real_accounts,
     },
@@ -102,7 +102,7 @@ const config: HardhatUserConfig = {
     },
     lineaMainnet: {
       url: `https://linea-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['use_root'],
+      tags: ['use_root', 'reuse_poh_verifier'],
       chainId: 59144,
       accounts: real_accounts,
     },

@@ -24,7 +24,25 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
-  const pohVerifier = await ethers.getContract('PohVerifier', owner)
+  let pohVerifierAddress
+  if (network.tags.reuse_poh_verifier) {
+    switch (network.name) {
+      case 'lineaMainnet':
+        // PohVerifier deployed on Linea Mainnet
+        pohVerifierAddress = '0xBf14cFAFD7B83f6de881ae6dc10796ddD7220831'
+        break
+      case 'lineaSepolia':
+        // PohVerifier deployed on Linea Sepolia
+        pohVerifierAddress = '0x576754D133C02B2E229F2630Baa2F06110cE9a9A'
+        break
+      default:
+        throw 'Network not supported with reuse_poh_verifier tag'
+    }
+    console.log(`Reusing PohVerifier at address ${pohVerifierAddress}`)
+  } else {
+    pohVerifierAddress = (await ethers.getContract('PohVerifier', owner))
+      .address
+  }
   const pohRegistrationManager = await ethers.getContract(
     'PohRegistrationManager',
     owner,
@@ -43,7 +61,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       reverseRegistrar.address,
       nameWrapper.address,
       registry.address,
-      pohVerifier.address,
+      pohVerifierAddress,
       pohRegistrationManager.address,
       baseNode,
       baseDomainStr,
