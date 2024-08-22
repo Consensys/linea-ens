@@ -16,3 +16,9 @@ const domainNamehash = ethers.utils.namehash(domainName)
 
 // Log the namehash
 console.log(`The namehash of '${domainName}' is: ${domainNamehash}`)
+
+// Calculate the DNS encoded name of the provided domain name
+const encodedDnsName = ethers.utils.dnsEncode(domainName)
+
+// Log the encoded DNS name
+console.log(`The DNS encoded name of '${domainName}' is: ${encodedDnsName}`)
