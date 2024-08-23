@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-import {EVMFetcher} from "linea-state-verifier/contracts/EVMFetcher.sol";
-import {EVMFetchTarget} from "linea-state-verifier/contracts/EVMFetchTarget.sol";
-import {IEVMVerifier} from "linea-state-verifier/contracts/IEVMVerifier.sol";
+import {EVMFetcher} from "@consensys/linea-state-verifier/contracts/EVMFetcher.sol";
+import {EVMFetchTarget} from "@consensys/linea-state-verifier/contracts/EVMFetchTarget.sol";
+import {IEVMVerifier} from "@consensys/linea-state-verifier/contracts/IEVMVerifier.sol";
 
 contract TestL1 is EVMFetchTarget {
     using EVMFetcher for EVMFetcher.EVMFetchRequest;

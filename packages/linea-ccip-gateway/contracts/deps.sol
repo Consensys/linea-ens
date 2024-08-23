@@ -1,3 +1,3 @@
 // SPDX-License-Identifier: MIT
 
-import {LineaSparseProofVerifier} from "linea-state-verifier/contracts/LineaSparseProofVerifier.sol";
+import {LineaSparseProofVerifier} from "@consensys/linea-state-verifier/contracts/LineaSparseProofVerifier.sol";
