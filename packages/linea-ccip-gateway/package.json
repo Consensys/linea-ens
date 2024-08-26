@@ -1,6 +1,6 @@
 {
   "name": "@consensys/linea-ccip-gateway",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "author": "Consensys",
   "license": "Apache-2.0",
