@@ -1,5 +1,5 @@
 {
-  "name": "linea-ccip-gateway",
+  "name": "@consensys/linea-ccip-gateway",
   "version": "1.0.0",
   "main": "dist/index.js",
   "author": "Consensys",
@@ -34,7 +34,7 @@
     "express": "^4.19.2",
     "hardhat": "^2.21.0",
     "hardhat-gas-reporter": "^1.0.8",
-    "linea-state-verifier": "link:../linea-state-verifier/",
+    "@consensys/linea-state-verifier": "^1.0.1",
     "mocha": "^10.3.0",
     "solidity-coverage": "^0.8.1",
     "supertest": "^6.3.3",

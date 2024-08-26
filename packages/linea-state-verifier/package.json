@@ -1,18 +1,39 @@
 {
-  "name": "linea-state-verifier",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@consensys/linea-state-verifier",
+  "version": "1.0.1",
+  "description": "This library is intended to be used specifacilly to resolve any Linea storage state on L1",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "hardhat compile",
+    "clean": "rm -fr artifacts cache node_modules typechain-types"
   },
   "keywords": [],
   "author": "Consensys",
   "license": "Apache-2.0",
   "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^4.9.3",
     "chai": "^4.2.0",
+    "dotenv": "^16.0.3",
     "ethers": "^6.13.1",
-    "hardhat": "^2.17.4"
+    "hardhat": "^2.17.4",
+    "hardhat-deploy": "^0.11.12",
+    "solidity-coverage": "^0.8.12"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-ignition": "^0.15.5",
+    "@nomicfoundation/hardhat-ignition-ethers": "^0.15.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/ignition-core": "^0.15.5",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "@types/chai": "^4.2.0",
+    "@types/mocha": ">=9.1.0",
+    "hardhat-gas-reporter": "^1.0.8",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.0",
+    "typescript": "^5.5.4"
   }
 }

@@ -8,5 +8,5 @@ For a detailed readme and usage instructions, see the [monorepo readme](https://
 ## Installation
 
 ```
-npm i linea-state-verifier
+npm i @consensys/linea-state-verifier
 ```
