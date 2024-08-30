@@ -22,7 +22,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   const baseNode = ethers.utils.namehash(`${process.env.BASE_DOMAIN}.eth`)
   const ETH_COIN_TYPE = 60
-  const LINEA_COIN_TYPE = 2147483785
+  const LINEA_COIN_TYPE = 2147542792
 
   const deployArgs = {
     from: deployer,
