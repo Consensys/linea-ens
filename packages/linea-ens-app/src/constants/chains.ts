@@ -78,7 +78,7 @@ const addCustomEnsContracts = <const TChain extends Chain>(
 export const lineaSepoliaWithEns = addCustomEnsContracts(
   lineaSepolia,
   lineaSepoliaEnsAddresses,
-  'https://api.studio.thegraph.com/proxy/69290/ens-linea-sepolia/version/latest',
+  `https://gateway-arbitrum.network.thegraph.com/api/${process.env.NEXT_PUBLIC_THE_GRAPH_SEPOLIA_API_KEY}/subgraphs/id/6Jjkuneo5SgozoKAzi5bu2pDSHr614iQKumbRAYr8bgh`,
   'linea-sepolia',
   'https://linea-poh-signer-api.sepolia.linea.build',
 )
@@ -86,7 +86,7 @@ export const lineaSepoliaWithEns = addCustomEnsContracts(
 export const lineaMainnetWithEns = addCustomEnsContracts(
   lineaMainnet,
   lineaMainnetEnsAddresses,
-  'https://api.studio.thegraph.com/query/69290/ens-linea-mainnet/version/latest',
+  `https://gateway-arbitrum.network.thegraph.com/api/${process.env.NEXT_PUBLIC_THE_GRAPH_MAINNET_API_KEY}/subgraphs/id/G5YH6BWrybbfua5sngRQ7Ku1LRCVx4qf5zjkqWG9FSuV`,
   'linea',
   'https://linea-poh-signer-api.linea.build',
 )
