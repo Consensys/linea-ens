@@ -4,10 +4,9 @@ import { ethers } from 'ethers'
 import path from 'path'
 import { parse } from 'csv-parse'
 
-const CSV_FILE_PATH = path.resolve(__dirname, './domains_2.csv')
+const CSV_FILE_PATH = path.resolve(__dirname, './domains.csv')
 const RESULT_CSV_FILE_PATH = path.resolve(__dirname, './result.json')
 
-const csv = fs.readFileSync(CSV_FILE_PATH, 'utf8')
 const txs: {
   to: string
   value: string
@@ -22,7 +21,7 @@ const txs: {
     owner: string
     duration: string
     resolver: string
-    data: string[]
+    data: string
     ownerControlledFuses: string
     reverseRecord: string
   }
@@ -128,7 +127,7 @@ function processDomain(owner: string, domain: string) {
       owner: owner,
       duration: '3122064000',
       resolver: '0x86c5AED9F27837074612288610fB98ccC1733126',
-      data,
+      data: JSON.stringify(data),
       ownerControlledFuses: '0',
       reverseRecord: 'true',
     },
