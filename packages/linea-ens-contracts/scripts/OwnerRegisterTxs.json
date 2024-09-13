@@ -1,0 +1,70 @@
+{
+    "version": "1.0",
+    "chainId": "59144",
+    "createdAt": 1726144999725,
+    "meta": {
+        "name": "Transactions Batch",
+        "description": "",
+        "txBuilderVersion": "1.16.5",
+        "createdFromSafeAddress": "0x9280D881b0180a5e2c378f6bb6071c905b070C97",
+        "createdFromOwnerAddress": "",
+        "checksum": "0x6c503b6f029a7a70f378e6a3629589a2047888c03604463f09fb2c4938a98c3f"
+    },
+    "transactions": [
+        {
+            "to": "0xDb75Db974B1F2bD3b5916d503036208064D18295",
+            "value": "0",
+            "data": null,
+            "contractMethod": {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "duration",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "resolver",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bytes[]",
+                        "name": "data",
+                        "type": "bytes[]"
+                    },
+                    {
+                        "internalType": "uint16",
+                        "name": "ownerControlledFuses",
+                        "type": "uint16"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "reverseRecord",
+                        "type": "bool"
+                    }
+                ],
+                "name": "ownerRegister",
+                "payable": false
+            },
+            "contractInputsValues": {
+                "name": "test",
+                "owner": "0xb4389C01AA4BAF470335A04090ee035c3f9d02BF",
+                "duration": "3122064000",
+                "resolver": "0x86c5AED9F27837074612288610fB98ccC1733126",
+                "data": "[0x8b95dd711569f3b8e2bfa8ba744232f3d5e164a41fb41929b156614faf765d1f468ea211000000000000000000000000000000000000000000000000000000008000e70800000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000014602b0fcdc92101c9c418df35a56c12ebc3b4d2c6000000000000000000000000, 0x8b95dd711569f3b8e2bfa8ba744232f3d5e164a41fb41929b156614faf765d1f468ea211000000000000000000000000000000000000000000000000000000000000003c00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000014602b0fcdc92101c9c418df35a56c12ebc3b4d2c6000000000000000000000000]",
+                "ownerControlledFuses": "0",
+                "reverseRecord": "true"
+            }
+        }
+    ]
+}
