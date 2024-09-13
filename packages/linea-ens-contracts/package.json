@@ -62,7 +62,8 @@
     "@openzeppelin/contracts": "^4.1.0",
     "axios": "^1.7.4",
     "csv-parse": "^5.5.6",
-    "dns-packet": "^5.3.0"
+    "dns-packet": "^5.3.0",
+    "fs": "^0.0.1-security"
   },
   "directories": {
     "test": "test"
