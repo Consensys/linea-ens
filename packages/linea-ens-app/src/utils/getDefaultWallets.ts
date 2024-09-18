@@ -7,7 +7,6 @@ import {
   ledgerWallet,
   metaMaskWallet,
   phantomWallet,
-  rainbowWallet,
   safeWallet,
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
@@ -35,7 +34,6 @@ export const getDefaultWallets = ({
         }),
         // always shown
         walletConnectWallet,
-        rainbowWallet,
         coinbaseWallet,
         metaMaskWallet,
         ledgerWallet,
