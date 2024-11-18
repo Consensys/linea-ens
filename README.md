@@ -3,7 +3,7 @@
 This repository contains smart contracts and a Node.js Gateway server that allow storing ENS names on Linea using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
 They have been adapted from ENS's [EVM gateway](https://github.com/ensdomains/evmgateway) and [ENS crosschain resolver](https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver)
 
-It also contain a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the deployed contract, to create and manage domains on Linea.
+It also contains a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the deployed contract, to create and manage domains on Linea.
 
 Thanks to ccip-read the domains created on Linea can also be resolved on Ethereum.
 
@@ -119,7 +119,7 @@ The Linea ENS frontend adapted from [ens-app-v3](https://github.com/ensdomains/e
 
 ### linea-ens-subgraph
 
-The Linea ENS subgrah consumed by the frontend, adapted from [ens-subgraph](https://github.com/ensdomains/ens-subgraph)
+The Linea ENS subgraph consumed by the frontend, adapted from [ens-subgraph](https://github.com/ensdomains/ens-subgraph)
 
 ### linea-state-verifier
 
@@ -127,7 +127,7 @@ The linea state verifier contracts are responsible for checking values using spa
 
 ### poh-signer-api
 
-A NestJS API responsible for signing a message aknowledging an address has passed the POH process, the signature created is then checked by the PohVerifier contract in the linea-ens-contracts.  
+A NestJS API responsible for signing a message acknowledging an address has passed the POH process, the signature created is then checked by the PohVerifier contract in the linea-ens-contracts.  
 More information about POH in the package's readme.
 
 ## Deployed contracts
