@@ -5,35 +5,13 @@ Uses the [POH api](https://linea-xp-poh-api.linea.build) to check if an address 
 
 POH stands for Proof Of Humanity, it respects a set of rules that determines if an address is human or not, a user has to go through a POH process to be marked as POH.
 
-## Access
-
-### On Prod
-
-Go to https://linea-poh-signer-api.linea.build
-
-Swagger: https://linea-poh-signer-api.linea.build/docs
-
-### On Sepolia
-
-Go to https://linea-poh-signer-api.sepolia.linea.build
-
-Swagger: https://linea-poh-signer-api.sepolia.linea.build/docs
-
-### On Devnet
-
-Go to https://linea-poh-signer-api.devnet.linea.build
-
-Swagger: https://linea-poh-signer-api.devnet.linea.build/docs
-
-## Development
-
-### Installation
+## Installation
 
 ```bash
 $ pnpm install
 ```
 
-### Running the app
+## Running the app
 
 ```bash
 # development
@@ -46,7 +24,7 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
-### Test
+## Test
 
 ```bash
 # unit tests
