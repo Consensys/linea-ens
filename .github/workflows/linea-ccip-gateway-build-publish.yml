@@ -56,20 +56,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Docker Image Build and Publish Testnet
-        uses: docker/build-push-action@v4
-        with:
-          build-args: |
-            L1_PROVIDER_URL=https://sepolia.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            L2_PROVIDER_URL=https://linea-sepolia.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            L1_ROLLUP_ADDRESS=${{ vars.L1_TESTNET_ROLLUP_ADDRESS }}
-            L2_CHAIN_ID=${{ vars.L2_TESTNET_CHAIN_ID }}
-            NODE_ENV=${{ vars.CCIP_GATEWAY_TESTNET_NODE_ENV }}
-          file: ./packages/linea-ccip-gateway/Dockerfile
-          context: ./
-          push: true
-          tags: consensys/linea-resolver:${{ env.DOCKER_TAG_TESTNET }}
-
       - name: Docker Image Build and Publish Mainnet
         uses: docker/build-push-action@v4
         with:
