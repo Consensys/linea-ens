@@ -1,4 +1,24 @@
-FROM node:18
+FROM node:20-slim AS base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    gcc \
+    build-essential \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM base AS build
 
 WORKDIR /app
 
@@ -15,20 +35,23 @@ ENV L2_CHAIN_ID=$L2_CHAIN_ID
 ENV NODE_ENV=$NODE_ENV
 
 COPY packages/linea-ccip-gateway ./packages/linea-ccip-gateway
-COPY packages/linea-state-verifier ./packages/linea-state-verifier
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
 COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-RUN npm install -g pnpm
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prefer-offline
 
-RUN pnpm install --filter ./packages/linea-state-verifier
-RUN pnpm install --filter ./packages/linea-ccip-gateway
+RUN pnpm run --filter=./packages/linea-ccip-gateway build
 
-WORKDIR /app/packages/linea-ccip-gateway
+RUN pnpm deploy --filter=./packages/linea-ccip-gateway --prod /prod/linea-ccip-gateway
 
-RUN pnpm compile
-RUN pnpm build
+FROM node:20-slim AS production
+
+WORKDIR /usr/src/app
+
+USER node
+
+COPY --from=build /prod/linea-ccip-gateway .
 
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+CMD [ "node", "./dist/server.js" ]
