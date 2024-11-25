@@ -40,7 +40,6 @@ COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prefer-offline
 
-RUN pnpm run --filter=./packages/linea-ccip-gateway compile
 RUN pnpm run --filter=./packages/linea-ccip-gateway build
 
 RUN pnpm deploy --filter=./packages/linea-ccip-gateway --prod /prod/linea-ccip-gateway
@@ -48,8 +47,6 @@ RUN pnpm deploy --filter=./packages/linea-ccip-gateway --prod /prod/linea-ccip-g
 FROM node:20-slim AS production
 
 WORKDIR /usr/src/app
-
-ENV NODE_ENV=production
 
 USER node
 

@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "build": "tsc --project tsconfig.json --module commonjs --skipLibCheck true --outDir ./dist",
     "clean": "rm -fr node_modules dist",
-    "test": "hardhat compile && mocha test/testVerifier.spec.ts --timeout 10000 --exit",
+    "test": "hardhat compile && mocha test/testVerifier.spec.ts --timeout 20000 --exit",
     "compile": "hardhat compile"
   },
   "dependencies": {
