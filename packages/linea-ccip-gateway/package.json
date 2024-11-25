@@ -23,13 +23,13 @@
     "@consensys/linea-state-verifier": "^1.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.6.2",
-    "winston": "^3.9.0"
+    "winston": "^3.9.0",
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
     "typechain": "^8.2.0",
     "@typechain/ethers-v6": "^0.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
     "supertest": "^6.3.3",
     "eslint": "^8.56.0",
     "mocha": "^10.3.0",
