@@ -23,7 +23,7 @@ type ExtensionRequest = {
   from: Address
 }
 
-type TenderlyRepsonse = {
+type TenderlyResponse = {
   gasUsed: number
   status: boolean
 }
@@ -32,7 +32,7 @@ export const fetchTenderlyEstimate = async (
   req: BaseRequest & (RegistrationRequest | ExtensionRequest),
 ) => {
   const { type, ...bodyData } = req
-  const result: TenderlyRepsonse = await fetch(`${TENDERLY_WORKER_URL}/${type}`, {
+  const result: TenderlyResponse = await fetch(`${TENDERLY_WORKER_URL}/${type}`, {
     method: 'POST',
     body: JSON.stringify(bodyData),
   }).then((res) => res.json())
