@@ -5988,7 +5988,7 @@ describe('Name Wrapper', () => {
       ).to.equal(true)
     })
 
-    it('Allows specifiying resolver address', async () => {
+    it('Allows specifying resolver address', async () => {
       await BaseRegistrar.register(tokenId, account, 1 * DAY)
 
       await BaseRegistrar['safeTransferFrom(address,address,uint256,bytes)'](
