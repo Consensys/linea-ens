@@ -52,7 +52,7 @@
     "ownership": {
       "name": "Ownership",
       "warning": {
-        "ownerNotManager": "You are the owner but not the manager. This may be unintended if you’ve recently recieved this name from another address.",
+        "ownerNotManager": "You are the owner but not the manager. This may be unintended if you’ve recently received this name from another address.",
         "managerNotParentOwner": "The owner of <strong>{{parent}}</strong> can change ownership, roles, and settings. They cannot change the profile.",
         "managerNotDNSOwner": "You are the Manager but not DNS Owner of this name. DNS names can be reclaimed by the DNS Owner at any time. You can send this name to the Owner, or update the DNS record to match.",
         "dnsOwnerNotManager": "You cannot make changes to this name because you are the DNS Owner, but not the Manager. You can sync the manager to fix this."
