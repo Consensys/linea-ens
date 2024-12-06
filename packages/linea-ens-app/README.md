@@ -116,7 +116,7 @@ You'll need an account with POH to fully use the local env, if you don't, you ca
   | Chain ID        | 1337                  |
   | Currency symbol | ETH                   |
 
-  - Save and Swith to `Localhost 8455`.
+  - Save and Switch to `Localhost 8455`.
 - Transfer 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account
   - If you don't have an address with PoH, see [Common Errors](#common-errors).
 - You can start testing the app and register a domain.
@@ -267,7 +267,7 @@ To fix it, you can safely remove `data` in `./packages/linea-ens-app/data`.
 
 ### Linea PoH Status: INVALID
 
-If your address doesn't have a PoH, for testing purpose you can temporally deactivate the PoH verification:
+If your address doesn't have a PoH, for testing purpose you can temporarily deactivate the PoH verification:
 
 1. Edit `linea-ens/packages/poh-signer-api/src/modules/poh/poh.service.ts`.
 
