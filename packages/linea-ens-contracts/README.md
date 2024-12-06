@@ -77,9 +77,9 @@ PohRegistrationManger is the contract responsible to keep track of the users tha
 
 ### PohVerifier
 
-PohVerifier is the contract responsible for checking the signature of the private key responsible for aknowledging an address has passed the POH process or not.
+PohVerifier is the contract responsible for checking the signature of the private key responsible for acknowledging an address has passed the POH process or not.
 
-- The owner of PohVerifier can set the signer address responsible for aknowledging a POH
+- The owner of PohVerifier can set the signer address responsible for acknowledging a POH
 
 ### FixedPriceOracle
 
