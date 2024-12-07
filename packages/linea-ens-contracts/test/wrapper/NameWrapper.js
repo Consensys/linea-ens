@@ -7234,7 +7234,7 @@ describe('Name Wrapper', () => {
       ).to.be.revertedWith(`Unauthorised("${namehash('xyz')}", "${hacker}")`)
     })
 
-    it('When .eth name expires, it is untransferrable', async () => {
+    it('When .eth name expires, it is untransferable', async () => {
       await BaseRegistrar.register(labelhash(label), account, 1 * DAY)
       await NameWrapper.wrapAnyLD(label, account, 0, EMPTY_ADDRESS)
 
