@@ -70,16 +70,16 @@ The minimum delay and expiry for commitments exist to prevent miners or other us
 
 ### PohRegistrationManger
 
-PohRegistrationManger is the contract responsible to keep track of the users that used their POH to register a domain (One registration by address).
+PohRegistrationManager is the contract responsible to keep track of the users that used their POH to register a domain (One registration by address).
 
 - The owner of the PohRegistrationManger can set addresses as managers.
 - The managers of PohRegistrationManager can mark an address as having used its POH, EthRegistrarController is intended to be a manager.
 
 ### PohVerifier
 
-PohVerifier is the contract responsible for checking the signature of the private key responsible for aknowledging an address has passed the POH process or not.
+PohVerifier is the contract responsible for checking the signature of the private key responsible for acknowledging an address has passed the POH process or not.
 
-- The owner of PohVerifier can set the signer address responsible for aknowledging a POH
+- The owner of PohVerifier can set the signer address responsible for acknowledging a POH
 
 ### FixedPriceOracle
 
