@@ -24,7 +24,7 @@
       "getPohExplainer": "You can get one free linea.eth subdomains if you completed the Linea Proof of Humanity on Verax. linea.eth subdomains cannot be bought",
       "getPoh": "GET LINEA PROOF OF HUMANITY",
       "getPohHereLink": "here",
-      "walletNotConnected": "Connect you wallet to proceed in registering you subdomain.",
+      "walletNotConnected": "Connect your wallet to proceed in registering your subdomain.",
       "pohNote": "Please note, you will no longer be able to register other subdomains with this address once you claim this subdomain.",
       "register": "REGISTER",
       "pohAlreadyUsedExplainer": "PoH was already used to register a subdomain. It is not possible to register several domains with the same address."
@@ -185,7 +185,7 @@
       "notEnoughEth": "Not enough ETH in wallet",
       "creditOrDebit": "Credit or debit card",
       "additionalFee": "Additional processing fee",
-      "pendingMoonpayTransaction": "Your MoonPay transaction is processing. This may take up to two minutes. You can check your progress from the confirmation email you recieved.",
+      "pendingMoonpayTransaction": "Your MoonPay transaction is processing. This may take up to two minutes. You can check your progress from the confirmation email you received.",
       "failedMoonpayTransaction": "Your MoonPay transaction has failed. Please try again or choose the 'Ethereum' payment method.",
       "ethereum": "Ethereum",
       "processing": "Processing",
