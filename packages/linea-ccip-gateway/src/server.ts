@@ -28,10 +28,18 @@ try {
 
   console.log("Server setup complete.");
 
-  // Add a health check page
-  app.get("/health", async (_req, res, _next) => {
-    const healthcheck = {
+  // Liveness probe
+  app.get("/live", async (_req, res, _next) => {
+    res.send({
       uptime: process.uptime(),
+      message: "OK",
+      timestamp: Date.now(),
+    });
+  });
+
+  // Readiness probe
+  app.get("/ready", async (_req, res, _next) => {
+    const readiness = {
       message: "OK",
       timestamp: Date.now(),
     };
@@ -47,15 +55,15 @@ try {
       }
       const check = await fetch(urlToCheck);
       if (check.status != 200) {
-        healthcheck.message = check.statusText;
-        logError(healthcheck);
+        readiness.message = check.statusText;
+        logError(readiness);
         res.status(check.status).send();
       } else {
-        res.send(healthcheck);
+        res.send(readiness);
       }
     } catch (error) {
-      healthcheck.message = error;
-      logError(error, healthcheck);
+      readiness.message = error;
+      logError(error, readiness);
       res.status(500).send();
     }
   });
