@@ -24,7 +24,7 @@
       "getPohExplainer": "You can get one free linea.eth subdomains if you completed the Linea Proof of Humanity on Verax. linea.eth subdomains cannot be bought",
       "getPoh": "GET LINEA PROOF OF HUMANITY",
       "getPohHereLink": "here",
-      "walletNotConnected": "Connect you wallet to proceed in registering you subdomain.",
+      "walletNotConnected": "Connect your wallet to proceed in registering your subdomain.",
       "pohNote": "Please note, you will no longer be able to register other subdomains with this address once you claim this subdomain.",
       "register": "REGISTER",
       "pohAlreadyUsedExplainer": "PoH was already used to register a subdomain. It is not possible to register several domains with the same address."
