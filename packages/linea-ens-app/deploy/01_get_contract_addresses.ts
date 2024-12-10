@@ -10,7 +10,7 @@ import YAML from 'yaml'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (!process.env.BASE_DOMAIN) {
-    throw 'BASE_DOMAIN env needs to be intialized'
+    throw 'BASE_DOMAIN env needs to be initialized'
   }
 
   const allDeployments = await hre.deployments.all()
