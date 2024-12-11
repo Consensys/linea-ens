@@ -68,11 +68,11 @@ It has the same the commit/reveal process is used to avoid frontrunning, and ope
 
 The minimum delay and expiry for commitments exist to prevent miners or other users from effectively frontrunning registrations.
 
-### PohRegistrationManger
+### PohRegistrationManager
 
-PohRegistrationManger is the contract responsible to keep track of the users that used their POH to register a domain (One registration by address).
+PohRegistrationManager is the contract responsible to keep track of the users that used their POH to register a domain (One registration by address).
 
-- The owner of the PohRegistrationManger can set addresses as managers.
+- The owner of the PohRegistrationManager can set addresses as managers.
 - The managers of PohRegistrationManager can mark an address as having used its POH, EthRegistrarController is intended to be a manager.
 
 ### PohVerifier
