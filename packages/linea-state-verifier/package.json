@@ -1,7 +1,7 @@
 {
   "name": "@consensys/linea-state-verifier",
   "version": "1.0.1",
-  "description": "This library is intended to be used specifacilly to resolve any Linea storage state on L1",
+  "description": "This library is intended to be used specifically to resolve any Linea storage state on L1",
   "scripts": {
     "compile": "hardhat compile",
     "clean": "rm -fr artifacts cache node_modules typechain-types"
