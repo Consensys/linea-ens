@@ -1,17 +1,17 @@
 import {
   AbiCoder,
   AddressLike,
-  JsonRpcProvider,
   Contract,
   ethers,
-} from "ethers";
-import { EVMProofHelper, IProofService, StateProof } from "./evm-gateway";
-import { logDebug, logError } from "./utils";
+  JsonRpcProvider,
+} from 'ethers';
+import { EVMProofHelper, IProofService, StateProof } from './evm-gateway';
+import { logDebug, logError } from './utils';
 
 export type L2ProvableBlock = number;
 
 const currentL2BlockNumberSig =
-  "function currentL2BlockNumber() view returns (uint256)";
+  'function currentL2BlockNumber() view returns (uint256)';
 
 /**
  * The proofService class can be used to calculate proofs for a given target and slot on the Optimism Bedrock network.
@@ -26,7 +26,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     providerL1: JsonRpcProvider,
     providerL2: JsonRpcProvider,
     rollupAddress: string,
-    shomeiNode?: JsonRpcProvider
+    shomeiNode?: JsonRpcProvider,
   ) {
     this.helper = new EVMProofHelper(providerL2, shomeiNode);
     const currentL2BlockNumberIface = new ethers.Interface([
@@ -35,7 +35,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     this.rollup = new Contract(
       rollupAddress,
       currentL2BlockNumberIface,
-      providerL1
+      providerL1,
     );
   }
 
@@ -43,21 +43,22 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
    * @dev Returns an object representing a block whose state can be proven on L1.
    */
   async getProvableBlock(): Promise<number> {
-    try {
-      logDebug(
-        "Calling currentL2BlockNumber() on Rollup Contract",
-        await this.rollup.getAddress()
-      );
-      const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
-        blockTag: "finalized",
-      });
-      if (!lastBlockFinalized) throw new Error("No block found");
-      logDebug("Provable block found", lastBlockFinalized);
-      return lastBlockFinalized;
-    } catch (e) {
-      logError(e);
-      throw e;
+    logDebug(
+      'Calling currentL2BlockNumber() on Rollup Contract',
+      await this.rollup.getAddress(),
+    );
+
+    const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
+      blockTag: 'finalized',
+    });
+
+    if (!lastBlockFinalized) {
+      logError('No block found');
+      return Promise.reject(new Error('No block found'));
     }
+
+    logDebug('Provable block found', lastBlockFinalized);
+    return lastBlockFinalized;
   }
 
   /**
@@ -70,7 +71,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   getStorageAt(
     block: L2ProvableBlock,
     address: AddressLike,
-    slot: bigint
+    slot: bigint,
   ): Promise<string> {
     try {
       return this.helper.getStorageAt(block, address, slot);
@@ -82,7 +83,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
 
   /**
    * @dev Fetches a set of proofs for the requested state slots.
-   * @param block A `ProvableBlock` returned by `getProvableBlock`.
+   * @param blockNo A `ProvableBlock`'s number returned by `getProvableBlock`.
    * @param address The address of the contract to fetch data from.
    * @param slots An array of slots to fetch data for.
    * @returns A proof of the given slots, encoded in a manner that this service's
@@ -91,28 +92,36 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   async getProofs(
     blockNo: L2ProvableBlock,
     address: AddressLike,
-    slots: bigint[]
+    slots: bigint[],
   ): Promise<string> {
     try {
-      let proof = await this.helper.getProofs(blockNo, address, slots);
+      const proof = await this.helper.getProofs(blockNo, address, slots);
+
       if (!proof.accountProof) {
-        throw `No account proof on contract ${address} for block number ${blockNo}`;
+        const error = `No account proof on contract ${address} for block number ${blockNo}`;
+        logError(error, { blockNo, address, slots });
+        return Promise.reject(new Error(error));
       }
+
       if (proof.storageProofs.length === 0) {
-        throw `No storage proofs on contract ${address} for block number ${blockNo}`;
+        const error = `No storage proofs on contract ${address} for block number ${blockNo}`;
+        logError(error, { blockNo, address, slots });
+        return Promise.reject(new Error(error));
       }
-      proof = this.checkStorageInitialized(proof);
+
+      const verifiedProof = this.checkStorageInitialized(proof);
+
       return AbiCoder.defaultAbiCoder().encode(
         [
-          "uint256",
-          "tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)",
-          "tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]",
+          'uint256',
+          'tuple(bytes key, uint256 leafIndex, tuple(bytes value, bytes[] proofRelatedNodes) proof)',
+          'tuple(bytes32 key, uint256 leafIndex, tuple(bytes32 value, bytes[] proofRelatedNodes) proof, bool initialized)[]',
         ],
-        [blockNo, proof.accountProof, proof.storageProofs]
+        [blockNo, verifiedProof.accountProof, verifiedProof.storageProofs],
       );
     } catch (e) {
       logError(e, { blockNo, address, slots });
-      throw e;
+      return Promise.reject(e);
     }
   }
 
@@ -123,15 +132,22 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
    * @returns modifier proof with the
    */
   checkStorageInitialized(proof: StateProof): StateProof {
-    for (let storageProof of proof.storageProofs) {
+    for (const storageProof of proof.storageProofs) {
       if (storageProof.leftProof || storageProof.rightProof) {
-        storageProof.proof = storageProof.leftProof;
-        storageProof.leafIndex = storageProof.leftLeafIndex;
-        storageProof.initialized = false;
-        delete storageProof.leftProof;
-        delete storageProof.rightProof;
-        delete storageProof.leftLeafIndex;
-        delete storageProof.rightLeafIndex;
+        if (
+          storageProof.leftProof &&
+          storageProof.leftLeafIndex !== undefined
+        ) {
+          storageProof.proof = storageProof.leftProof;
+          storageProof.leafIndex = storageProof.leftLeafIndex;
+          storageProof.initialized = false;
+          delete storageProof.leftProof;
+          delete storageProof.rightProof;
+          delete storageProof.leftLeafIndex;
+          delete storageProof.rightLeafIndex;
+        } else {
+          throw new Error('Left proof or left leaf index is undefined');
+        }
       } else {
         storageProof.initialized = true;
       }

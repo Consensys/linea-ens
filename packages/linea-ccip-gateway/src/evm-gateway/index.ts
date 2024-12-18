@@ -1,3 +1,3 @@
-export { EVMGateway, StorageLayout } from './EVMGateway';
+export { EVMGateway } from './EVMGateway';
 export { EVMProofHelper, StateProof } from './EVMProofHelper';
-export type { IProofService, ProvableBlock } from './IProofService';
+export { IProofService, ProvableBlock } from './IProofService';

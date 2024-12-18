@@ -1,13 +1,13 @@
-export function logError(error: any, ...objects: any[]) {
+export function logError(error: unknown, ...objects: unknown[]) {
   const logObject = {
-    error: error.message || error,
+    error: error instanceof Error ? error.message : error,
     details: objects,
   };
   console.error(logObject);
 }
 
-export function logDebug(message: string, ...objects: any[]) {
-  if (process.env.NODE_ENV === "development") {
+export function logDebug(message: string, ...objects: unknown[]) {
+  if (process.env.NODE_ENV === 'development') {
     const logObject = {
       message,
       details: objects,
@@ -16,7 +16,7 @@ export function logDebug(message: string, ...objects: any[]) {
   }
 }
 
-export function logInfo(message: string, ...objects: any[]) {
+export function logInfo(message: string, ...objects: unknown[]) {
   const logObject = {
     message,
     details: objects,
