@@ -211,7 +211,7 @@ export const createTransactionRequestQueryFn =
       account: connectorClient.account,
       data: transactionRequest.data,
       gas: gasLimit,
-      parameters: ['fees', 'nonce', 'type'],
+      parameters: ['nonce', 'type'],
       ...('value' in transactionRequest ? { value: transactionRequest.value } : {}),
     })
 
