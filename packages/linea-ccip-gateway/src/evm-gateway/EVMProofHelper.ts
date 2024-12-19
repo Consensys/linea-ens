@@ -1,5 +1,5 @@
-import { toBeHex, AddressLike, JsonRpcProvider, ethers } from "ethers";
-import { logDebug, logInfo } from "../utils";
+import { AddressLike, ethers, JsonRpcProvider, toBeHex } from 'ethers';
+import { logDebug, logInfo } from '../utils';
 
 interface ProofStruct {
   key: string;
@@ -37,7 +37,7 @@ export class EVMProofHelper {
 
   /**
    * @dev Returns the value of a contract state slot at the specified block
-   * @param block A `ProvableBlock` returned by `getProvableBlock`.
+   * @param blockNo A `ProvableBlock`'s number returned by `getProvableBlock`.
    * @param address The address of the contract to fetch data from.
    * @param slot The slot to fetch.
    * @returns The value in `slot` of `address` at block `block`
@@ -45,14 +45,14 @@ export class EVMProofHelper {
   getStorageAt(
     blockNo: number,
     address: AddressLike,
-    slot: bigint
+    slot: bigint,
   ): Promise<string> {
     return this.providerL2.getStorage(address, slot, blockNo);
   }
 
   /**
    * @dev Fetches a set of proofs for the requested state slots.
-   * @param block A `ProvableBlock` returned by `getProvableBlock`.
+   * @param blockNo A `ProvableBlock`'s number returned by `getProvableBlock`.
    * @param address The address of the contract to fetch data from.
    * @param slots An array of slots to fetch data for.
    * @returns A proof of the given slots, encoded in a manner that this service's
@@ -61,31 +61,31 @@ export class EVMProofHelper {
   async getProofs(
     blockNo: number,
     address: AddressLike,
-    slots: bigint[]
+    slots: bigint[],
   ): Promise<StateProof> {
     const args = [
       address,
-      slots.map((slot) => toBeHex(slot, 32)),
-      "0x" + blockNo.toString(16),
+      slots.map(slot => toBeHex(slot, 32)),
+      '0x' + blockNo.toString(16),
     ];
 
-    logInfo("Calling linea_getProof with args", args);
+    logInfo('Calling linea_getProof with args', args);
 
     // We have to reinitilize the provider L2 because of an issue when multiple
     // requests are sent at the same time, the provider becomes not aware of
     // the linea_getProof method
-    const providerUrl = await this.shomeiNode._getConnection().url;
-    const providerChainId = await this.shomeiNode._network.chainId;
+    const providerUrl = this.shomeiNode._getConnection().url;
+    const providerChainId = this.shomeiNode._network.chainId;
     const providerL2 = new ethers.JsonRpcProvider(
       providerUrl,
       providerChainId,
       {
         staticNetwork: true,
-      }
+      },
     );
-    logDebug("Calling linea_getProof with L2 provider", providerUrl);
-    const proofs: StateProof = await providerL2.send("linea_getProof", args);
-    logDebug("Proof result", proofs);
+    logDebug('Calling linea_getProof with L2 provider', providerUrl);
+    const proofs: StateProof = await providerL2.send('linea_getProof', args);
+    logDebug('Proof result', proofs);
     return proofs;
   }
 }
