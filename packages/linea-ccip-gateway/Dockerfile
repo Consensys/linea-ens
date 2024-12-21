@@ -38,7 +38,7 @@ COPY packages/linea-ccip-gateway ./packages/linea-ccip-gateway
 COPY pnpm-lock.yaml ./pnpm-lock.yaml
 COPY pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prefer-offline
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prefer-offline --prod=false
 
 RUN pnpm run --filter=./packages/linea-ccip-gateway build
 
