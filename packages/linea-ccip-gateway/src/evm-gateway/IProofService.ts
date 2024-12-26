@@ -1,4 +1,4 @@
-import type { AddressLike } from 'ethers';
+import { AddressLike } from 'ethers';
 
 export interface ProvableBlock {}
 
