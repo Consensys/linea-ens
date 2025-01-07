@@ -7,6 +7,7 @@ import {
   BrowserProvider,
   Contract,
   ethers,
+  FallbackProvider,
   FetchRequest,
   JsonRpcProvider,
   Signer,
@@ -75,8 +76,8 @@ describe('L1Verifier', () => {
     const rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
 
     const gateway = makeL2Gateway(
-      (l1Provider as unknown) as JsonRpcProvider,
-      l2Provider,
+      new FallbackProvider([(l1Provider as unknown) as JsonRpcProvider]),
+      new FallbackProvider([l2Provider]),
       await rollup.getAddress(),
     );
     const server = new Server();

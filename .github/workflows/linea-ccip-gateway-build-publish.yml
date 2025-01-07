@@ -56,8 +56,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           build-args: |
-            L1_PROVIDER_URL=https://sepolia.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            L2_PROVIDER_URL=https://linea-sepolia.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
+            L1_PROVIDER_URL=${{ secrets.L1_PROVIDER_URL }}
+            L1_PROVIDER_URL_FALLBACK=${{ secrets.L1_PROVIDER_URL_FALLBACK }}
+            L2_PROVIDER_URL=${{ secrets.L2_PROVIDER_URL }}
+            L2_PROVIDER_URL_FALLBACK=${{ secrets.L2_PROVIDER_URL_FALLBACK }}
             L1_ROLLUP_ADDRESS=${{ vars.L1_TESTNET_ROLLUP_ADDRESS }}
             L2_CHAIN_ID=${{ vars.L2_TESTNET_CHAIN_ID }}
             NODE_ENV=${{ vars.CCIP_GATEWAY_TESTNET_NODE_ENV }}
@@ -70,8 +72,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           build-args: |
-            L1_PROVIDER_URL=https://mainnet.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            L2_PROVIDER_URL=https://linea-mainnet.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
+            L1_PROVIDER_URL=${{ secrets.L1_PROVIDER_URL }}
+            L1_PROVIDER_URL_FALLBACK=${{ secrets.L1_PROVIDER_URL_FALLBACK }}
+            L2_PROVIDER_URL=${{ secrets.L2_PROVIDER_URL }}
+            L2_PROVIDER_URL_FALLBACK=${{ secrets.L2_PROVIDER_URL_FALLBACK }}
             L1_ROLLUP_ADDRESS=${{ vars.L1_MAINNET_ROLLUP_ADDRESS }}
             L2_CHAIN_ID=${{ vars.L2_MAINNET_CHAIN_ID }}
             NODE_ENV=${{ vars.CCIP_GATEWAY_MAINNET_NODE_ENV }}

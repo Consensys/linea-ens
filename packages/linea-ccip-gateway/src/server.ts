@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import { EVMGateway } from './evm-gateway';
-import { ethers } from 'ethers';
+import { FallbackProvider, JsonRpcProvider } from 'ethers';
 import { L2ProofService } from './L2ProofService';
 import 'dotenv/config';
 import { Server } from '@chainlink/ccip-read-server';
 import { logError } from './utils';
 
 const l1ProviderUrl = process.env.L1_PROVIDER_URL;
+const l1ProviderUrlFallback = process.env.L1_PROVIDER_URL_FALLBACK;
 const l2ProviderUrl = process.env.L2_PROVIDER_URL;
+const l2ProviderUrlFallback = process.env.L2_PROVIDER_URL_FALLBACK;
 const l2ChainId = parseInt(process.env.L2_CHAIN_ID ?? '59141');
 const rollupAddress =
   process.env.L1_ROLLUP_ADDRESS ?? '0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5';
@@ -15,10 +17,17 @@ const port = process.env.PORT || 3000;
 const nodeEnv = process.env.NODE_ENV || 'test';
 
 try {
-  const providerL1 = new ethers.JsonRpcProvider(l1ProviderUrl);
-  const providerL2 = new ethers.JsonRpcProvider(l2ProviderUrl, l2ChainId, {
-    staticNetwork: true,
-  });
+  const providerL1 = new FallbackProvider([
+    new JsonRpcProvider(l1ProviderUrl),
+    new JsonRpcProvider(l1ProviderUrlFallback),
+  ]);
+  const providerL2 = new FallbackProvider(
+    [
+      new JsonRpcProvider(l2ProviderUrl),
+      new JsonRpcProvider(l2ProviderUrlFallback),
+    ],
+    l2ChainId,
+  );
 
   const gateway = new EVMGateway(
     new L2ProofService(providerL1, providerL2, rollupAddress),

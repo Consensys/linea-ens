@@ -1,4 +1,4 @@
-import { AddressLike, ethers, JsonRpcProvider, toBeHex } from 'ethers';
+import { AddressLike, FallbackProvider, JsonRpcProvider, toBeHex } from 'ethers';
 import { logDebug, logInfo } from '../utils';
 
 interface ProofStruct {
@@ -26,13 +26,10 @@ export interface StateProof {
  *
  */
 export class EVMProofHelper {
-  private readonly providerL2: JsonRpcProvider;
-  private readonly shomeiNode: JsonRpcProvider;
+  private readonly providerL2: FallbackProvider;
 
-  constructor(providerL2: JsonRpcProvider, shomeiNode?: JsonRpcProvider) {
+  constructor(providerL2: FallbackProvider) {
     this.providerL2 = providerL2;
-    // shomeiNode optional since an rpc infura nodes can support both eth_getStorageAt and linea_getProof
-    this.shomeiNode = shomeiNode ? shomeiNode : providerL2;
   }
 
   /**
@@ -63,7 +60,7 @@ export class EVMProofHelper {
     address: AddressLike,
     slots: bigint[],
   ): Promise<StateProof> {
-    const args = [
+    const args: (AddressLike | string[])[] = [
       address,
       slots.map(slot => toBeHex(slot, 32)),
       '0x' + blockNo.toString(16),
@@ -71,21 +68,34 @@ export class EVMProofHelper {
 
     logInfo('Calling linea_getProof with args', args);
 
-    // We have to reinitilize the provider L2 because of an issue when multiple
-    // requests are sent at the same time, the provider becomes not aware of
+    // We have to reinitialize the provider L2 because of an issue when multiple
+    // requests are sent at the same time, the provider becomes unaware of
     // the linea_getProof method
-    const providerUrl = this.shomeiNode._getConnection().url;
-    const providerChainId = this.shomeiNode._network.chainId;
-    const providerL2 = new ethers.JsonRpcProvider(
-      providerUrl,
-      providerChainId,
-      {
-        staticNetwork: true,
-      },
-    );
-    logDebug('Calling linea_getProof with L2 provider', providerUrl);
-    const proofs: StateProof = await providerL2.send('linea_getProof', args);
-    logDebug('Proof result', proofs);
-    return proofs;
+
+    const providerConfigs = this.providerL2.providerConfigs;
+
+    for (const config of providerConfigs) {
+      // @ts-ignore - We know this is a JsonRpcProvider
+      const provider: JsonRpcProvider = config.provider;
+
+      try {
+        logDebug(
+          `Trying provider with URL: ${provider._getConnection().url}`,
+        );
+
+        const proofs: StateProof = await provider.send(
+          'linea_getProof',
+          args,
+        );
+
+        logDebug('Proof result from provider:', proofs);
+
+        return proofs;
+      } catch (error) {
+        logInfo(`Provider failed: ${provider._getConnection().url}`, error);
+      }
+    }
+
+    throw new Error('All providers failed to fetch linea_getProof');
   }
 }
