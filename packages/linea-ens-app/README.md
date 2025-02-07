@@ -8,7 +8,7 @@ Friendly forked from ENS V3 app: [https://github.com/ensdomains/ens-app-v3](http
 
 ### Requirements
 
-Install `Node.js`, `pnpm`, `Yarn` and `docker-compose`. 
+Install `Node.js`, `pnpm`, `Yarn` and `docker-compose`.
 
 See [Requirements](../../README.md#requirements).
 
@@ -83,7 +83,8 @@ pnpm i
 make dev
 ```
 
-Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in `./packages/linea-ens-app/.env.local`.
+Make sure `VERIFIER_CONTRACT_ADDRESS` matches the `PohVerifier` contract address in
+`./packages/linea-ens-app/.env.local`.
 
 Once successfully started, you should see:
 
@@ -100,25 +101,28 @@ cd packages/linea-ens-app
 pnpm dev:glocal
 ```
 
-You'll need an account with POH to fully use the local env, if you don't, you can get it [here] (https://poh.linea.build/).
+You'll need an account with POH to fully use the local env, if you don't, you can get
+it [here] (https://poh.linea.build/).
 
 - Then browse http://localhost:3000/.
-- Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key: `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`, for address: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
+- Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key:
+  `ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`, for address:
+  `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`)
 - Add the local test network to your MetaMask with these info:
 
-  - Click on `Add a network manually`
-  - Add this config:
+    - Click on `Add a network manually`
+    - Add this config:
 
   | Setting         | Value                 |
-  | --------------- | --------------------- |
+    | --------------- | --------------------- |
   | Network name    | Localhost 8545        |
   | New RPC URL     | http://127.0.0.1:8545 |
   | Chain ID        | 1337                  |
   | Currency symbol | ETH                   |
 
-  - Save and Swith to `Localhost 8455`.
+    - Save and Switch to `Localhost 8455`.
 - Transfer 1 ETH from the test account above (eg: `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266`), to your POH account
-  - If you don't have an address with PoH, see [Common Errors](#common-errors).
+    - If you don't have an address with PoH, see [Common Errors](#common-errors).
 - You can start testing the app and register a domain.
 
 ### Running Dev env
@@ -143,7 +147,8 @@ Currently the tests written by ENS are not working in this repo because they sti
 
 #### **If you need to deploy a new subgraph**
 
-You shouldn't deploy the subgraph on top of the existing dataset, instead you should create a clean dataset (explained below).
+You shouldn't deploy the subgraph on top of the existing dataset, instead you should create a clean dataset (explained
+below).
 
 1. Start the test environment
 
@@ -153,7 +158,8 @@ pnpm denv --save
 
 2. Deploy the subgraph
 
-After the deploy scripts have run, you can deploy the subgraph. Assuming you are in the [linea-ens-subgraph](https://github.com/Consensys/linea-enstree/main/packages/linea-ens-subgraph) repo, you can use:
+After the deploy scripts have run, you can deploy the subgraph. Assuming you are in
+the [linea-ens-subgraph](https://github.com/Consensys/linea-enstree/main/packages/linea-ens-subgraph) repo, you can use:
 
 ```bash
 yarn setup
@@ -188,7 +194,8 @@ pnpm buildandstart:glocal
 
 ## Architecture
 
-The structure of the `pages` folder is mimicked inside `components`. Components specific to a page can be found in the `components` folder, in the folder corresponding to that page.
+The structure of the `pages` folder is mimicked inside `components`. Components specific to a page can be found in the
+`components` folder, in the folder corresponding to that page.
 
 Components that are used in multiple places will be found in the top level of the `components` folder.
 
@@ -196,13 +203,16 @@ Components that are used in multiple places will be found in the top level of th
 
 ### Node.js version and other requirements
 
-Most installation errors are due to `Node.js`, `pnpm`, `yarn` or `docker-compose` versions. Verify the [requirements](../../README.md#requirements) if you encounter an error. To verify, you can execute:
+Most installation errors are due to `Node.js`, `pnpm`, `yarn` or `docker-compose` versions. Verify
+the [requirements](../../README.md#requirements) if you encounter an error. To verify, you can execute:
 
 ```bash
 node --version
 v18.20.4
 ```
-Node Version Manager (nvm) can be used to manage multiple versions of Node.js if you find you are not in the correct version of Node.
+
+Node Version Manager (nvm) can be used to manage multiple versions of Node.js if you find you are not in the correct
+version of Node.
 
 ```bash
 pnpm --version
@@ -220,32 +230,40 @@ docker-compose version 1.29.2, build 5becea4c
 ```
 
 ### Canvas issues
+
 It is possible the Canvas libraries are not installed correctly or missing.
-To install/reinstall: First install pkg-config: 
+To install/reinstall: First install pkg-config:
+
 ```bash
 brew install pkg-config
 ```
 
 Then install dependencies for canvas
+
 ```bash
 brew install cairo pango libpng jpeg giflib librsvg
 ```
 
 After installing the dependencies, set the PKG_CONFIG_PATH environment variable:
+
 ```bash
 export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:/opt/homebrew/share/pkgconfig:$PKG_CONFIG_PATH"
 ```
 
 Finally clear npm cache and node_modules:
+
 ```bash
 npm cache clean --force
 rm -rf node_modules
 ```
 
 ### Package Manager errors:
-If you encounter a Package Manager error this stems from a Yarn compatibility issue. To resolve this we need to disable Yarn that has been bundled in with the latest versions of Node.js and install Yarn separately.
+
+If you encounter a Package Manager error this stems from a Yarn compatibility issue. To resolve this we need to disable
+Yarn that has been bundled in with the latest versions of Node.js and install Yarn separately.
 
 To do so follow these steps in the root folder:
+
 1. `corepack disable`
 2. `npm install -g pnpm`
 3. `npm install -g yarn`
@@ -267,7 +285,7 @@ To fix it, you can safely remove `data` in `./packages/linea-ens-app/data`.
 
 ### Linea PoH Status: INVALID
 
-If your address doesn't have a PoH, for testing purpose you can temporally deactivate the PoH verification:
+If your address doesn't have a PoH, for testing purpose you can temporarily deactivate the PoH verification:
 
 1. Edit `linea-ens/packages/poh-signer-api/src/modules/poh/poh.service.ts`.
 

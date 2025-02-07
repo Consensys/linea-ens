@@ -106,14 +106,14 @@ See [Install](./packages/linea-ens-app/README.md#install) in the linea-ens-app R
 
 ### linea-ens-resolver
 
-The linea-ens-resolver contract intented to be deployed on L1 that is built on top
+The linea-ens-resolver contract intended to be deployed on L1 that is built on top
 of [linea-state-verifier](./packages/linea-state-verifier) and verifies Linea ENS data (domain names, metadata etc).
 
 More documentation available in [linea-ens-resolver/README.md](./packages/linea-ens-resolver/README.md)
 
 ### linea-ens-contracts
 
-The linea-ens-contracts contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve
+The linea-ens-contracts contracts intended to be deployed on L2 (Linea) stores and returns the data necessary to resolve
 a domain name and more data related to ENS.
 
 More documentation available in [linea-ens-contracts/README.md](./packages/linea-ens-contracts/README.md)
