@@ -1,9 +1,13 @@
 # Linea ENS
 
-This repository contains smart contracts and a Node.js Gateway server that allow storing ENS names on Linea using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
-They have been adapted from ENS's [EVM gateway](https://github.com/ensdomains/evmgateway) and [ENS crosschain resolver](https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver)
+This repository contains smart contracts and a Node.js Gateway server that allow storing ENS names on Linea
+using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668)
+and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
+They have been adapted from ENS's [EVM gateway](https://github.com/ensdomains/evmgateway)
+and [ENS crosschain resolver](https://github.com/ensdomains/ens-evmgateway/tree/master/crosschain-resolver)
 
-It also contains a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the deployed contract, to create and manage domains on Linea.
+It also contains a frontend adapted from [ENS's frontend](https://github.com/ensdomains/ens-app-v3) to interact with the
+deployed contract, to create and manage domains on Linea.
 
 Thanks to ccip-read the domains created on Linea can also be resolved on Ethereum.
 
@@ -11,20 +15,23 @@ Thanks to ccip-read the domains created on Linea can also be resolved on Ethereu
 
 ![alt text](./media/LineaENSCCIPRead.png?raw=true)
 
-This schema describes how a client application can resolve a domain name stored on Linea L2 from Ethereum L1 using CCIP Read.
+This schema describes how a client application can resolve a domain name stored on Linea L2 from Ethereum L1 using CCIP
+Read.
 
 ## Generic Usage
 
-This repository focuses on the ENS use case but the gateway and Verifier contracts are generic, this means that they can be reused for any other use cases
+This repository focuses on the ENS use case but the gateway and Verifier contracts are generic, this means that they can
+be reused for any other use cases
 that need to fetch data stored on Linea from Ethereum in a trustless way.
 
 The same Fetcher, Verifier contracts and gateway can be used without redeploying them.
 
 To implement your own contract you simply need to:
 
-1.  Have your own contract extend `EVMFetcher` (In the Linea ENS case this is the L1Resolver contract).
-2.  In a view/pure context, use `EVMFetcher` to fetch the value of slots from another contract stored on Linea. Calling `EVMFetcher.fetch()` terminates execution and generates a callback to the same contract on a function you specify.
-3.  In the callback function, use the information from the relevant slots as you see fit.
+1. Have your own contract extend `EVMFetcher` (In the Linea ENS case this is the L1Resolver contract).
+2. In a view/pure context, use `EVMFetcher` to fetch the value of slots from another contract stored on Linea. Calling
+   `EVMFetcher.fetch()` terminates execution and generates a callback to the same contract on a function you specify.
+3. In the callback function, use the information from the relevant slots as you see fit.
 
 ## Example
 
@@ -99,13 +106,15 @@ See [Install](./packages/linea-ens-app/README.md#install) in the linea-ens-app R
 
 ### linea-ens-resolver
 
-The linea-ens-resolver contract intented to be deployed on L1 that is built on top of [linea-state-verifier](./packages/linea-state-verifier) and verifies Linea ENS data (domain names, metadata etc).
+The linea-ens-resolver contract intented to be deployed on L1 that is built on top
+of [linea-state-verifier](./packages/linea-state-verifier) and verifies Linea ENS data (domain names, metadata etc).
 
 More documentation available in [linea-ens-resolver/README.md](./packages/linea-ens-resolver/README.md)
 
 ### linea-ens-contracts
 
-The linea-ens-contracts contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve a domain name and more data related to ENS.
+The linea-ens-contracts contracts intented to be deployed on L2 (Linea) stores and returns the data necessary to resolve
+a domain name and more data related to ENS.
 
 More documentation available in [linea-ens-contracts/README.md](./packages/linea-ens-contracts/README.md)
 
@@ -123,19 +132,43 @@ The Linea ENS subgraph consumed by the frontend, adapted from [ens-subgraph](htt
 
 ### linea-state-verifier
 
-The linea state verifier contracts are responsible for checking values using sparse merkle proofs returned by the linea-ccip-gateway for specific slots values stored on Linea, adapted from [evm-verifier](https://github.com/ensdomains/evmgateway/tree/main/evm-verifier)
+The linea state verifier contracts are responsible for checking values using sparse merkle proofs returned by the
+linea-ccip-gateway for specific slots values stored on Linea, adapted
+from [evm-verifier](https://github.com/ensdomains/evmgateway/tree/main/evm-verifier)
 
 ### poh-signer-api
 
-A NestJS API responsible for signing a message acknowledging an address has passed the POH process, the signature created is then checked by the PohVerifier contract in the linea-ens-contracts.  
+A NestJS API responsible for signing a message acknowledging an address has passed the POH process, the signature
+created is then checked by the PohVerifier contract in the linea-ens-contracts.  
 More information about POH in the package's readme.
 
 ## Deployed contracts
 
-Check the deployment folders in [./packages/linea-ens-resolver/deployments](./packages/linea-ens-resolver/deployments) and [./packages/linea-ens-contracts/deployments](./packages/linea-ens-contracts/deployments)
+Check the deployment folders in [./packages/linea-ens-resolver/deployments](./packages/linea-ens-resolver/deployments)
+and [./packages/linea-ens-contracts/deployments](./packages/linea-ens-contracts/deployments)
 
 For detailed information about each package, please check their own Readme file.
 
 ## Audit report
 
 An audit has been conducted by Consensys Diligence: https://consensys.io/diligence/audits/2024/06/linea-ens/
+
+## How to contribute
+
+Contributions are welcome!
+
+### Guidelines for Non-Code and other Trivial Contributions
+
+Please keep in mind that we do not accept non-code contributions like fixing comments, typos or some other trivial
+fixes. Although we appreciate the extra help, managing lots of these small contributions is unfeasible, and puts extra
+pressure in our continuous delivery systems (running all tests, etc). Feel free to open an issue pointing to any of
+those errors, and we will batch them into a single change.
+
+1. [Create an issue](https://github.com/Consensys/linea-ens/issues)
+
+   > If the proposed update is non-trivial, also tag us for discussion.
+
+2. Submit the update as a pull request from your [fork of this repo](https://github.com/Consensys/linea-ens/fork),
+   and tag us for review.
+
+   > Include the issue number in the pull request description and (optionally) in the branch name.
