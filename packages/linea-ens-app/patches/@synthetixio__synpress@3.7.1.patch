@@ -6,7 +6,7 @@ index 66fad67c218a34a923d3674683c3a79c51c8555b..f048f6bc8bdc99af229eca208a38d6db
  const log = require('debug')('synpress:metamask');
  const playwright = require('./playwright');
 +const sleep = require('util').promisify(setTimeout);
- 
+
  const {
    onboardingWelcomePageElements,
 @@ -74,6 +75,7 @@ const metamask = {
@@ -388,16 +388,16 @@ index 66fad67c218a34a923d3674683c3a79c51c8555b..f048f6bc8bdc99af229eca208a38d6db
 @@ -1145,6 +1179,7 @@ const metamask = {
      return true;
    },
-   async confirmPermisionToApproveAll() {
-+    log(`Running confirmPermisionToApproveAll()`);
+   async confirmPermissionToApproveAll() {
++    log(`Running confirmPermissionToApproveAll()`);
      const notificationPage = await playwright.switchToMetamaskNotification();
      await playwright.waitAndClick(
        notificationPageElements.allowToSpendButton,
 @@ -1158,6 +1193,7 @@ const metamask = {
      return true;
    },
-   async rejectPermisionToApproveAll() {
-+    log(`Running rejectPermisionToApproveAll()`);
+   async rejectPermissionToApproveAll() {
++    log(`Running rejectPermissionToApproveAll()`);
      const notificationPage = await playwright.switchToMetamaskNotification();
      await playwright.waitAndClick(
        notificationPageElements.allowToSpendButton,
@@ -698,7 +698,7 @@ index d7daab5bf8883389ccbecb18e53c050d1eef6d13..3ad8b6d1342f99ca4d33d4dd74433595
 --- a/synpress.js
 +++ b/synpress.js
 @@ -6,7 +6,6 @@ const { version } = require('./package.json');
- 
+
  if (process.env.DEBUG && process.env.DEBUG.includes('synpress')) {
    log('DEBUG mode is enabled');
 -  process.env.PWDEBUG = 1;
