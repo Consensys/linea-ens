@@ -23,8 +23,11 @@ try {
   ]);
   const providerL2 = new FallbackProvider(
     [
-      new JsonRpcProvider(l2ProviderUrl),
-      new JsonRpcProvider(l2ProviderUrlFallback),
+      { provider: new JsonRpcProvider(l2ProviderUrl), stallTimeout: 1000 },
+      {
+        provider: new JsonRpcProvider(l2ProviderUrlFallback),
+        stallTimeout: 3000,
+      },
     ],
     l2ChainId,
   );

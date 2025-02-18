@@ -1,4 +1,9 @@
-import { AddressLike, FallbackProvider, JsonRpcProvider, toBeHex } from 'ethers';
+import {
+  AddressLike,
+  FallbackProvider,
+  JsonRpcProvider,
+  toBeHex,
+} from 'ethers';
 import { logDebug, logInfo } from '../utils';
 
 interface ProofStruct {
@@ -75,18 +80,13 @@ export class EVMProofHelper {
     const providerConfigs = this.providerL2.providerConfigs;
 
     for (const config of providerConfigs) {
-      // @ts-ignore - We know this is a JsonRpcProvider
+      // @ts-expect-error - We know this is a JsonRpcProvider
       const provider: JsonRpcProvider = config.provider;
 
       try {
-        logDebug(
-          `Trying provider with URL: ${provider._getConnection().url}`,
-        );
+        logDebug(`Trying provider with URL: ${provider._getConnection().url}`);
 
-        const proofs: StateProof = await provider.send(
-          'linea_getProof',
-          args,
-        );
+        const proofs: StateProof = await provider.send('linea_getProof', args);
 
         logDebug('Proof result from provider:', proofs);
 
