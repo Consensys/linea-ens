@@ -6,11 +6,7 @@ on:
       - main
     paths:
       - "packages/linea-ens-app/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "packages/linea-ens-app/**"
+      - ".github/workflows/linea-ens-app-build-publish.yml"
   release:
     types:
       - released

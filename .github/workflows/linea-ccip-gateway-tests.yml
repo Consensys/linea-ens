@@ -6,6 +6,13 @@ on:
       - main
     paths:
       - "packages/linea-ccip-gateway/**"
+      - ".github/workflows/linea-ccip-gateway-tests.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/linea-ccip-gateway/**"
+      - ".github/workflows/linea-ccip-gateway-tests.yml"
 
 jobs:
   linea-ccip-gateway-tests:

@@ -6,6 +6,13 @@ on:
       - main
     paths:
       - "packages/linea-ens-resolver/**"
+      - ".github/workflows/linea-ens-resolver-tests.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/linea-ens-app/**"
+      - ".github/workflows/linea-ens-resolver-tests.yml"
 
 jobs:
   linea-ens-resolver-tests:

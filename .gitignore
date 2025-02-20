@@ -1,5 +1,7 @@
-# IntelliJ
+# IDE
 .idea
+.vscode
+
 node_modules
 
 # hardhat
