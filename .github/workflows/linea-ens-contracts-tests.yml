@@ -6,6 +6,13 @@ on:
       - main
     paths:
       - "packages/linea-ens-contracts/**"
+      - ".github/workflows/linea-ens-contracts-tests.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/linea-ens-contracts/**"
+      - ".github/workflows/linea-ens-contracts-tests.yml"
 
 jobs:
   linea-ens-contracts-tests:

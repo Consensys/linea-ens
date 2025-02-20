@@ -6,11 +6,7 @@ on:
       - main
     paths:
       - "packages/poh-signer-api/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "packages/poh-signer-api/**"
+      - ".github/workflows/poh-signer-api-build-publish.yml"
   release:
     types:
       - released

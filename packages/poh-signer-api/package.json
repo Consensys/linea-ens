@@ -1,6 +1,6 @@
 {
   "name": "poh-signer-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API to get a signature for an address that has a POH",
   "author": "Consensys",
   "private": true,
