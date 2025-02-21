@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - "packages/linea-ens-resolver/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/linea-ens-app/**"
 
 jobs:
   linea-ens-resolver-tests:
