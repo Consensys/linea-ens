@@ -18,7 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set Docker Tag Tesnet
+      - name: Set Docker Tag Devnet
+        id: docker-tag-devnet
+        if: ${{ github.event_name != 'release' }}
+        run: echo "DOCKER_TAG_DEVNET=${GITHUB_SHA:0:7}-$(date +%s)-poh-signer-api-devnet" | tee $GITHUB_ENV
+
+      - name: Set Docker Tag Sepolia Testnet
         id: docker-tag-testnet
         if: ${{ github.event_name != 'release' }}
         run: echo "DOCKER_TAG_TESTNET=${GITHUB_SHA:0:7}-$(date +%s)-poh-signer-api-testnet" | tee $GITHUB_ENV
@@ -27,6 +32,11 @@ jobs:
         id: docker-tag-mainnet
         if: ${{ github.event_name != 'release' }}
         run: echo "DOCKER_TAG_MAINNET=${GITHUB_SHA:0:7}-$(date +%s)-poh-signer-api-mainnet" | tee $GITHUB_ENV
+
+      - name: Set Docker Tag Devnet - Release
+        id: docker-tag-devnet-release
+        if: ${{ github.event_name == 'release' }}
+        run: echo "DOCKER_TAG_DEVNET=${GITHUB_SHA:0:7}-$(date +%s)-poh-signer-api-devnet-${GITHUB_REF#refs/tags/}" | tee $GITHUB_ENV
 
       - name: Set Docker Tag Testnet - Release
         id: docker-tag-testnet-release
@@ -46,6 +56,18 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - name: Docker Image Build and Publish on Devnet
+        uses: docker/build-push-action@v4
+        with:
+          build-args: |
+            ENV_FILE=.env.devnet
+            WEB3SIGNER_BASE_URL=${{ secrets.WEB3SIGNER_BASE_URL_TESTNET }}
+            WEB3SIGNER_PUBLIC_KEY=${{ secrets.WEB3SIGNER_PUBLIC_KEY_TESTNET }}
+          context: ./packages/poh-signer-api
+          file: ./packages/poh-signer-api/Dockerfile
+          push: true
+          tags: consensys/linea-resolver:${{ env.DOCKER_TAG_DEVNET }}
 
       - name: Docker Image Build and Publish on Sepolia Testnet
         uses: docker/build-push-action@v4
