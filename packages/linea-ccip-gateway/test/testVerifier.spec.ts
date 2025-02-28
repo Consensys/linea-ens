@@ -7,6 +7,7 @@ import {
   BrowserProvider,
   Contract,
   ethers,
+  FallbackProvider,
   FetchRequest,
   JsonRpcProvider,
   Signer,
@@ -18,7 +19,8 @@ import {
   CHAIN_ID_L1,
   CHAIN_ID_L2,
   L1_RPC_URL,
-  L2_RPC_URL,
+  L2_RPC_URL_INVALID,
+  L2_RPC_URL_VALID,
   L2_TEST_CONTRACT_ADDRESS,
   ROLLUP_SEPOLIA_ADDRESS,
 } from './constants';
@@ -40,18 +42,36 @@ declare module 'hardhat/types/runtime' {
 
 describe('L1Verifier', () => {
   let l1Provider: BrowserProvider;
-  let l2Provider: JsonRpcProvider;
+  let invalidL2Provider: JsonRpcProvider;
+  let validL2Provider: JsonRpcProvider;
   let l1SepoliaProvider: JsonRpcProvider;
   let signer: Signer;
   let target: Contract;
 
   before(async () => {
+    // Create a Hardhat L1 provider
     l1Provider = new ethersHardhat.BrowserProvider(
       ethersHardhat.provider._hardhatProvider,
     );
-    l2Provider = new ethersHardhat.JsonRpcProvider(L2_RPC_URL, CHAIN_ID_L2, {
-      staticNetwork: true,
-    });
+
+    // Create an invalid L2 provider
+    invalidL2Provider = new ethersHardhat.JsonRpcProvider(
+      L2_RPC_URL_INVALID,
+      CHAIN_ID_L2,
+      {
+        staticNetwork: true,
+      },
+    );
+
+    // Create a valid L2 provider
+    validL2Provider = new ethersHardhat.JsonRpcProvider(
+      L2_RPC_URL_VALID,
+      CHAIN_ID_L2,
+      {
+        staticNetwork: true,
+      },
+    );
+
     l1SepoliaProvider = new ethersHardhat.JsonRpcProvider(
       L1_RPC_URL,
       CHAIN_ID_L1,
@@ -75,8 +95,11 @@ describe('L1Verifier', () => {
     const rollup = await Rollup.deploy(currentL2BlockNumber, stateRootHash);
 
     const gateway = makeL2Gateway(
-      (l1Provider as unknown) as JsonRpcProvider,
-      l2Provider,
+      new FallbackProvider([(l1Provider as unknown) as JsonRpcProvider]),
+      new FallbackProvider([
+        { provider: invalidL2Provider, stallTimeout: 1000 },
+        { provider: validL2Provider, stallTimeout: 3000 },
+      ]),
       await rollup.getAddress(),
     );
     const server = new Server();

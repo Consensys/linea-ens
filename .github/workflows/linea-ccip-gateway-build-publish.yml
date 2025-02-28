@@ -23,20 +23,30 @@ jobs:
             pnpm-lock.yaml
           sparse-checkout-cone-mode: false
 
-      - name: Set Docker Tag Testnet
-        id: docker-tag-testnet
+      - name: Set Docker Tag Devnet
+        id: docker-tag-devnet
         if: ${{ github.event_name != 'release' }}
-        run: echo "DOCKER_TAG_TESTNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-testnet" | tee $GITHUB_ENV
+        run: echo "DOCKER_TAG_DEVNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-devnet" | tee $GITHUB_ENV
+
+      - name: Set Docker Tag Sepolia
+        id: docker-tag-sepolia
+        if: ${{ github.event_name != 'release' }}
+        run: echo "DOCKER_TAG_SEPOLIA=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-sepolia" | tee $GITHUB_ENV
 
       - name: Set Docker Tag Mainnet
         id: docker-tag-mainnet
         if: ${{ github.event_name != 'release' }}
         run: echo "DOCKER_TAG_MAINNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-mainnet" | tee $GITHUB_ENV
 
-      - name: Set Docker Tag Testnet - Release
-        id: docker-tag-testnet-release
+      - name: Set Docker Tag Devnet - Release
+        id: docker-tag-devnet-release
         if: ${{ github.event_name == 'release' }}
-        run: echo "DOCKER_TAG_TESTNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-testnet-${GITHUB_REF#refs/tags/}" | tee $GITHUB_ENV
+        run: echo "DOCKER_TAG_DEVNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-devnet-${GITHUB_REF#refs/tags/}" | tee $GITHUB_ENV
+
+      - name: Set Docker Tag Sepolia - Release
+        id: docker-tag-sepolia-release
+        if: ${{ github.event_name == 'release' }}
+        run: echo "DOCKER_TAG_SEPOLIA=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-sepolia-${GITHUB_REF#refs/tags/}" | tee $GITHUB_ENV
 
       - name: Set Docker Tag Mainnet - Release
         id: docker-tag-mainnet-release
@@ -52,28 +62,52 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Docker Image Build and Publish Testnet
+      - name: Docker Image Build and Publish Devnet
         uses: docker/build-push-action@v4
         with:
           build-args: |
-            L1_PROVIDER_URL=https://sepolia.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            L2_PROVIDER_URL=https://linea-sepolia.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
+            L1_PROVIDER_URL=${{ secrets.L1_PROVIDER_URL_SEPOLIA }}
+            L1_PROVIDER_URL_FALLBACK=${{ secrets.L1_PROVIDER_URL_FALLBACK_SEPOLIA }}
+            L2_PROVIDER_URL=${{ secrets.L2_PROVIDER_URL_SEPOLIA }}
             L1_ROLLUP_ADDRESS=${{ vars.L1_TESTNET_ROLLUP_ADDRESS }}
             L2_CHAIN_ID=${{ vars.L2_TESTNET_CHAIN_ID }}
+            PRIMARY_PROVIDER_TIMEOUT=${{ vars.PRIMARY_PROVIDER_TIMEOUT }}
+            FALLBACK_PROVIDER_TIMEOUT=${{ vars.FALLBACK_PROVIDER_TIMEOUT }}
             NODE_ENV=${{ vars.CCIP_GATEWAY_TESTNET_NODE_ENV }}
           file: ./packages/linea-ccip-gateway/Dockerfile
           context: ./
           push: true
-          tags: consensys/linea-resolver:${{ env.DOCKER_TAG_TESTNET }}
+          tags: consensys/linea-resolver:${{ env.DOCKER_TAG_DEVNET }}
+
+      - name: Docker Image Build and Publish Sepolia
+        uses: docker/build-push-action@v4
+        with:
+          build-args: |
+            L1_PROVIDER_URL=${{ secrets.L1_PROVIDER_URL_SEPOLIA }}
+            L1_PROVIDER_URL_FALLBACK=${{ secrets.L1_PROVIDER_URL_FALLBACK_SEPOLIA }}
+            L2_PROVIDER_URL=${{ secrets.L2_PROVIDER_URL_SEPOLIA }}
+            L1_ROLLUP_ADDRESS=${{ vars.L1_TESTNET_ROLLUP_ADDRESS }}
+            L2_CHAIN_ID=${{ vars.L2_TESTNET_CHAIN_ID }}
+            PRIMARY_PROVIDER_TIMEOUT=${{ vars.PRIMARY_PROVIDER_TIMEOUT }}
+            FALLBACK_PROVIDER_TIMEOUT=${{ vars.FALLBACK_PROVIDER_TIMEOUT }}
+            NODE_ENV=${{ vars.CCIP_GATEWAY_TESTNET_NODE_ENV }}
+          file: ./packages/linea-ccip-gateway/Dockerfile
+          context: ./
+          push: true
+          tags: consensys/linea-resolver:${{ env.DOCKER_TAG_SEPOLIA }}
 
       - name: Docker Image Build and Publish Mainnet
         uses: docker/build-push-action@v4
         with:
           build-args: |
-            L1_PROVIDER_URL=https://mainnet.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
-            L2_PROVIDER_URL=https://linea-mainnet.infura.io/v3/${{ secrets.NEXT_PUBLIC_INFURA_KEY }}
+            L1_PROVIDER_URL=${{ secrets.L1_PROVIDER_URL_MAINNET }}
+            L1_PROVIDER_URL_FALLBACK=${{ secrets.L1_PROVIDER_URL_FALLBACK_MAINNET }}
+            L2_PROVIDER_URL=${{ secrets.L2_PROVIDER_URL_MAINNET }}
+            L2_PROVIDER_URL_FALLBACK=${{ secrets.L2_PROVIDER_URL_FALLBACK_MAINNET }}
             L1_ROLLUP_ADDRESS=${{ vars.L1_MAINNET_ROLLUP_ADDRESS }}
             L2_CHAIN_ID=${{ vars.L2_MAINNET_CHAIN_ID }}
+            PRIMARY_PROVIDER_TIMEOUT=${{ vars.PRIMARY_PROVIDER_TIMEOUT }}
+            FALLBACK_PROVIDER_TIMEOUT=${{ vars.FALLBACK_PROVIDER_TIMEOUT }}
             NODE_ENV=${{ vars.CCIP_GATEWAY_MAINNET_NODE_ENV }}
           file: ./packages/linea-ccip-gateway/Dockerfile
           context: ./
