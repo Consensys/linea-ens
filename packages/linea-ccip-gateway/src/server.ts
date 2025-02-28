@@ -4,7 +4,10 @@ import { FallbackProvider, JsonRpcProvider } from 'ethers';
 import { L2ProofService } from './L2ProofService';
 import 'dotenv/config';
 import { Server } from '@chainlink/ccip-read-server';
-import { logError } from './utils';
+import { logError, logInfo } from './utils';
+
+const PRIMARY_PROVIDER_TIMEOUT = parseInt(process.env.PRIMARY_PROVIDER_TIMEOUT ?? '1000');
+const FALLBACK_PROVIDER_TIMEOUT = parseInt(process.env.FALLBACK_PROVIDER_TIMEOUT ?? '3000');
 
 const l1ProviderUrl = process.env.L1_PROVIDER_URL;
 const l1ProviderUrlFallback = process.env.L1_PROVIDER_URL_FALLBACK;
@@ -17,20 +20,31 @@ const port = process.env.PORT || 3000;
 const nodeEnv = process.env.NODE_ENV || 'test';
 
 try {
-  const providerL1 = new FallbackProvider([
-    new JsonRpcProvider(l1ProviderUrl),
-    new JsonRpcProvider(l1ProviderUrlFallback),
-  ]);
-  const providerL2 = new FallbackProvider(
-    [
-      { provider: new JsonRpcProvider(l2ProviderUrl), stallTimeout: 1000 },
-      {
-        provider: new JsonRpcProvider(l2ProviderUrlFallback),
-        stallTimeout: 3000,
-      },
-    ],
-    l2ChainId,
-  );
+  const l1Providers = [{ provider: new JsonRpcProvider(l1ProviderUrl), stallTimeout: PRIMARY_PROVIDER_TIMEOUT }];
+  if (l1ProviderUrlFallback && l1ProviderUrlFallback.trim() !== '') {
+    l1Providers.push({
+      provider: new JsonRpcProvider(l1ProviderUrlFallback),
+      stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
+    });
+  }
+
+  const providerL1 = new FallbackProvider(l1Providers);
+  providerL1.on('error', (error) => {
+    logError('L1 Provider error:', error);
+  });
+
+  const l2Providers = [{ provider: new JsonRpcProvider(l2ProviderUrl), stallTimeout: PRIMARY_PROVIDER_TIMEOUT }];
+  if (l2ProviderUrlFallback && l2ProviderUrlFallback.trim() !== '') {
+    l2Providers.push({
+      provider: new JsonRpcProvider(l2ProviderUrlFallback),
+      stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
+    });
+  }
+
+  const providerL2 = new FallbackProvider(l2Providers, l2ChainId);
+  providerL2.on('error', (error) => {
+    logError('L2 Provider error:', error);
+  });
 
   const gateway = new EVMGateway(
     new L2ProofService(providerL1, providerL2, rollupAddress),
@@ -40,7 +54,7 @@ try {
   gateway.add(server);
   const app = server.makeApp('/');
 
-  console.log('Server setup complete.');
+  logInfo('Server setup complete');
 
   // Liveness probe
   app.get('/live', async (_req: Request, res: Response) => {
@@ -85,7 +99,7 @@ try {
 
   (async () => {
     app.listen(port, function() {
-      console.log(`Listening on ${port}`);
+      logInfo(`Listening on port ${port}`);
     });
   })();
 } catch (e) {
