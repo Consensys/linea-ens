@@ -3,7 +3,7 @@ import {
   AddressLike,
   Contract,
   ethers,
-  JsonRpcProvider,
+  FallbackProvider,
 } from 'ethers';
 import { EVMProofHelper, IProofService, StateProof } from './evm-gateway';
 import { logDebug, logError } from './utils';
@@ -23,12 +23,11 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   private readonly helper: EVMProofHelper;
 
   constructor(
-    providerL1: JsonRpcProvider,
-    providerL2: JsonRpcProvider,
+    providerL1: FallbackProvider,
+    providerL2: FallbackProvider,
     rollupAddress: string,
-    shomeiNode?: JsonRpcProvider,
   ) {
-    this.helper = new EVMProofHelper(providerL2, shomeiNode);
+    this.helper = new EVMProofHelper(providerL2);
     const currentL2BlockNumberIface = new ethers.Interface([
       currentL2BlockNumberSig,
     ]);
