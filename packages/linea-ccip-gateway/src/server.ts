@@ -6,45 +6,79 @@ import 'dotenv/config';
 import { Server } from '@chainlink/ccip-read-server';
 import { logError, logInfo } from './utils';
 
-const PRIMARY_PROVIDER_TIMEOUT = parseInt(process.env.PRIMARY_PROVIDER_TIMEOUT ?? '1000');
-const FALLBACK_PROVIDER_TIMEOUT = parseInt(process.env.FALLBACK_PROVIDER_TIMEOUT ?? '3000');
+const PRIMARY_PROVIDER_TIMEOUT = parseInt(
+  process.env.PRIMARY_PROVIDER_TIMEOUT ?? '2000',
+);
+const FALLBACK_PROVIDER_TIMEOUT = parseInt(
+  process.env.FALLBACK_PROVIDER_TIMEOUT ?? '7000',
+);
 
 const l1ProviderUrl = process.env.L1_PROVIDER_URL;
 const l1ProviderUrlFallback = process.env.L1_PROVIDER_URL_FALLBACK;
+const l1ChainId = parseInt(process.env.L1_CHAIN_ID ?? '11155111');
+
 const l2ProviderUrl = process.env.L2_PROVIDER_URL;
 const l2ProviderUrlFallback = process.env.L2_PROVIDER_URL_FALLBACK;
 const l2ChainId = parseInt(process.env.L2_CHAIN_ID ?? '59141');
+
 const rollupAddress =
   process.env.L1_ROLLUP_ADDRESS ?? '0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5';
 const port = process.env.PORT || 3000;
 const nodeEnv = process.env.NODE_ENV || 'test';
 
+function createFallbackProvider(
+  chainId: number,
+  primaryUrl?: string,
+  fallbackUrl?: string,
+) {
+  if (!primaryUrl) {
+    throw new Error('Missing provider URL');
+  }
+
+  const providers = [
+    {
+      provider: new JsonRpcProvider(primaryUrl, chainId, {
+        staticNetwork: true,
+      }),
+      polling: false,
+      stallTimeout: PRIMARY_PROVIDER_TIMEOUT,
+      weight: 2,
+    },
+  ];
+
+  if (fallbackUrl && fallbackUrl.trim() !== '') {
+    providers.push({
+      provider: new JsonRpcProvider(fallbackUrl, chainId, {
+        staticNetwork: true,
+      }),
+      polling: false,
+      stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
+      weight: 1,
+    });
+  }
+
+  const fallbackProvider = new FallbackProvider(providers, chainId, {
+    quorum: 1,
+  });
+
+  fallbackProvider.on('error', error =>
+    logError(`Provider error (chainId: ${chainId}):`, error),
+  );
+
+  return fallbackProvider;
+}
+
 try {
-  const l1Providers = [{ provider: new JsonRpcProvider(l1ProviderUrl), stallTimeout: PRIMARY_PROVIDER_TIMEOUT }];
-  if (l1ProviderUrlFallback && l1ProviderUrlFallback.trim() !== '') {
-    l1Providers.push({
-      provider: new JsonRpcProvider(l1ProviderUrlFallback),
-      stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
-    });
-  }
-
-  const providerL1 = new FallbackProvider(l1Providers);
-  providerL1.on('error', (error) => {
-    logError('L1 Provider error:', error);
-  });
-
-  const l2Providers = [{ provider: new JsonRpcProvider(l2ProviderUrl), stallTimeout: PRIMARY_PROVIDER_TIMEOUT }];
-  if (l2ProviderUrlFallback && l2ProviderUrlFallback.trim() !== '') {
-    l2Providers.push({
-      provider: new JsonRpcProvider(l2ProviderUrlFallback),
-      stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
-    });
-  }
-
-  const providerL2 = new FallbackProvider(l2Providers, l2ChainId);
-  providerL2.on('error', (error) => {
-    logError('L2 Provider error:', error);
-  });
+  const providerL1 = createFallbackProvider(
+    l1ChainId,
+    l1ProviderUrl,
+    l1ProviderUrlFallback,
+  );
+  const providerL2 = createFallbackProvider(
+    l2ChainId,
+    l2ProviderUrl,
+    l2ProviderUrlFallback,
+  );
 
   const gateway = new EVMGateway(
     new L2ProofService(providerL1, providerL2, rollupAddress),
