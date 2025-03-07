@@ -4,7 +4,7 @@ This Subgraph sources events from the Linea ENS contracts. This includes the ENS
 
 # Example Queries
 
-Here we have example queries, so that you don't have to type them in yourself eachtime in the graphiql playground:
+Here we have example queries, so that you don't have to type them in yourself each time in the graphiql playground:
 
 ```graphql
 {

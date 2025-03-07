@@ -103,7 +103,7 @@ contract PublicResolver is
     }
 
     /**
-     * @dev Approve a delegate to be able to updated records on a node.
+     * @dev Approve a delegate to be able to update records on a node.
      */
     function approve(bytes32 node, address delegate, bool approved) external {
         require(msg.sender != delegate, "Setting delegate status for self");
