@@ -11,7 +11,7 @@ import { logDebug, logError } from './utils';
 export type L2ProvableBlock = number;
 
 const FINALIZED_TAG = 'finalized';
-const BLOCK_BUFFER = 3;
+const BLOCK_SYNCHRONIZATION_BUFFER = 3;
 const currentL2BlockNumberSig =
   'function currentL2BlockNumber() view returns (uint256)';
 
