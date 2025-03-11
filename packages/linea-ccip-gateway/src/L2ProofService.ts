@@ -10,6 +10,8 @@ import { logDebug, logError } from './utils';
 
 export type L2ProvableBlock = number;
 
+const FINALIZED_TAG = 'finalized';
+const BLOCK_BUFFER = 3;
 const currentL2BlockNumberSig =
   'function currentL2BlockNumber() view returns (uint256)';
 
@@ -21,12 +23,14 @@ const currentL2BlockNumberSig =
 export class L2ProofService implements IProofService<L2ProvableBlock> {
   private readonly rollup: Contract;
   private readonly helper: EVMProofHelper;
+  private readonly providerL1: FallbackProvider;
 
   constructor(
     providerL1: FallbackProvider,
     providerL2: FallbackProvider,
     rollupAddress: string,
   ) {
+    this.providerL1 = providerL1;
     this.helper = new EVMProofHelper(providerL2);
     const currentL2BlockNumberIface = new ethers.Interface([
       currentL2BlockNumberSig,
@@ -39,7 +43,10 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   }
 
   /**
-   * @dev Returns an object representing a block whose state can be proven on L1.
+   * @dev Returns the latest finalized L2 block that can be proven on L1.
+   * Applies a buffer to ensure the block's state is fully anchored and available.
+   *
+   * @returns The L2 block number that is safe to use for proof submission.
    */
   async getProvableBlock(): Promise<number> {
     logDebug(
@@ -47,8 +54,16 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
       await this.rollup.getAddress(),
     );
 
+    const block = await this.providerL1.getBlock(FINALIZED_TAG);
+
+    if (!block) {
+      const error = new Error('No finalized block found on L1');
+      logError(error);
+      return Promise.reject(error);
+    }
+
     const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
-      blockTag: 'finalized',
+      blockTag: block.number - BLOCK_BUFFER,
     });
 
     if (!lastBlockFinalized) {
