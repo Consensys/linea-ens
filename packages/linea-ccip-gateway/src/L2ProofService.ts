@@ -63,7 +63,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     }
 
     const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
-      blockTag: block.number - BLOCK_BUFFER,
+      blockTag: block.number - BLOCK_SYNCHRONIZATION_BUFFER,
     });
 
     if (!lastBlockFinalized) {
