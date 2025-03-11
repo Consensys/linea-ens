@@ -1,34 +1,34 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.17 <0.9.0;
 
-import "../registry/ENS.sol";
-import "./profiles/ABIResolver.sol";
-import "./profiles/AddrResolver.sol";
-import "./profiles/ContentHashResolver.sol";
-import "./profiles/DNSResolver.sol";
-import "./profiles/InterfaceResolver.sol";
-import "./profiles/NameResolver.sol";
-import "./profiles/PubkeyResolver.sol";
-import "./profiles/TextResolver.sol";
-import "./Multicallable.sol";
+import {ENS} from "../registry/ENS.sol";
 import {ReverseClaimer} from "../reverseRegistrar/ReverseClaimer.sol";
 import {INameWrapper} from "../wrapper/INameWrapper.sol";
+import {Multicallable} from "./Multicallable.sol";
+import {ABIResolver} from "./profiles/ABIResolver.sol";
+import {AddrResolver} from "./profiles/AddrResolver.sol";
+import {ContentHashResolver} from "./profiles/ContentHashResolver.sol";
+import {DNSResolver} from "./profiles/DNSResolver.sol";
+import {InterfaceResolver} from "./profiles/InterfaceResolver.sol";
+import {NameResolver} from "./profiles/NameResolver.sol";
+import {PubkeyResolver} from "./profiles/PubkeyResolver.sol";
+import {TextResolver} from "./profiles/TextResolver.sol";
 
 /**
  * A simple resolver anyone can use; only allows the owner of a node to set its
  * address.
  */
 contract PublicResolver is
-    Multicallable,
-    ABIResolver,
-    AddrResolver,
-    ContentHashResolver,
-    DNSResolver,
-    InterfaceResolver,
-    NameResolver,
-    PubkeyResolver,
-    TextResolver,
-    ReverseClaimer
+Multicallable,
+ABIResolver,
+AddrResolver,
+ContentHashResolver,
+DNSResolver,
+InterfaceResolver,
+NameResolver,
+PubkeyResolver,
+TextResolver,
+ReverseClaimer
 {
     ENS immutable ens;
     INameWrapper immutable nameWrapper;
@@ -50,7 +50,7 @@ contract PublicResolver is
      * (owner, name, delegate) => approved
      */
     mapping(address => mapping(bytes32 => mapping(address => bool)))
-        private _tokenApprovals;
+    private _tokenApprovals;
 
     // Logged when an operator is added or removed.
     event ApprovalForAll(
@@ -103,7 +103,7 @@ contract PublicResolver is
     }
 
     /**
-     * @dev Approve a delegate to be able to updated records on a node.
+     * @dev Approve a delegate to be able to update records on a node.
      */
     function approve(bytes32 node, address delegate, bool approved) external {
         require(msg.sender != delegate, "Setting delegate status for self");
@@ -143,20 +143,20 @@ contract PublicResolver is
     function supportsInterface(
         bytes4 interfaceID
     )
-        public
-        view
-        override(
-            Multicallable,
-            ABIResolver,
-            AddrResolver,
-            ContentHashResolver,
-            DNSResolver,
-            InterfaceResolver,
-            NameResolver,
-            PubkeyResolver,
-            TextResolver
-        )
-        returns (bool)
+    public
+    view
+    override(
+    Multicallable,
+    ABIResolver,
+    AddrResolver,
+    ContentHashResolver,
+    DNSResolver,
+    InterfaceResolver,
+    NameResolver,
+    PubkeyResolver,
+    TextResolver
+    )
+    returns (bool)
     {
         return super.supportsInterface(interfaceID);
     }
