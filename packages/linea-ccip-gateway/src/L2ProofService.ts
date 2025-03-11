@@ -44,7 +44,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
 
   /**
    * @dev Returns the latest finalized L2 block that can be proven on L1.
-   * Applies a buffer to ensure the block's state is fully anchored and available.
+   * Applies a buffer to ensure the block's state is fully synchronized and available.
    *
    * @returns The L2 block number that is safe to use for proof submission.
    */
