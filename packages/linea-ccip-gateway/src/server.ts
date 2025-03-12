@@ -42,6 +42,7 @@ function createFallbackProvider(
       }),
       polling: false,
       stallTimeout: PRIMARY_PROVIDER_TIMEOUT,
+      priority: 1,
       weight: 2,
     },
   ];
@@ -53,6 +54,7 @@ function createFallbackProvider(
       }),
       polling: false,
       stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
+      priority: 2,
       weight: 1,
     });
   }
