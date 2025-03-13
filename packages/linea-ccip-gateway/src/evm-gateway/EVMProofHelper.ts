@@ -54,11 +54,14 @@ export class EVMProofHelper {
 
   /**
    * @dev Fetches a set of proofs for the requested state slots.
-   * @param blockNo A `ProvableBlock`'s number returned by `getProvableBlock`.
-   * @param address The address of the contract to fetch data from.
-   * @param slots An array of slots to fetch data for.
-   * @returns A proof of the given slots, encoded in a manner that this service's
-   *   corresponding decoding library will understand.
+   *
+   * Since `FallbackProvider` does not support sending custom RPC requests directly,
+   * we manually iterate over its underlying providers (which are `JsonRpcProvider` instances).
+   *
+   * @param blockNo The block number from which to retrieve the state proof.
+   * @param address The contract address for which the proof is requested.
+   * @param slots An array of storage slots to fetch proofs for.
+   * @returns A `StateProof` object containing the proof data for the given slots.
    */
   async getProofs(
     blockNo: number,
@@ -73,13 +76,12 @@ export class EVMProofHelper {
 
     logInfo('Calling linea_getProof with args', args);
 
-    // We have to reinitialize the provider L2 because of an issue when multiple
-    // requests are sent at the same time, the provider becomes unaware of
-    // the linea_getProof method
-
+    // `FallbackProvider` does not allow direct custom RPC calls.
+    // Instead, we iterate over its configured providers and send the request manually.
     const providerConfigs = this.providerL2.providerConfigs;
 
     for (const config of providerConfigs) {
+      // Extract the underlying provider, which is a `JsonRpcProvider`
       // @ts-expect-error - We know this is a JsonRpcProvider
       const provider: JsonRpcProvider = config.provider;
 
