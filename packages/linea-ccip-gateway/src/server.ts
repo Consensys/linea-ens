@@ -39,6 +39,10 @@ function createFallbackProvider(
     {
       provider: new JsonRpcProvider(primaryUrl, chainId, {
         staticNetwork: true,
+        batchMaxCount: 1,
+        cacheTimeout: -1,
+        polling: false,
+        batchStallTime: 0,
       }),
       polling: false,
       stallTimeout: PRIMARY_PROVIDER_TIMEOUT,
@@ -51,6 +55,10 @@ function createFallbackProvider(
     providers.push({
       provider: new JsonRpcProvider(fallbackUrl, chainId, {
         staticNetwork: true,
+        batchMaxCount: 1,
+        cacheTimeout: -1,
+        polling: false,
+        batchStallTime: 0,
       }),
       polling: false,
       stallTimeout: FALLBACK_PROVIDER_TIMEOUT,
