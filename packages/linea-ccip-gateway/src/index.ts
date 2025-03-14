@@ -8,9 +8,10 @@ export function makeL2Gateway(
   providerL1: FallbackProvider,
   providerL2: FallbackProvider,
   rollupAddress: string,
+  blockSyncBuffer: number,
 ): L1Gateway {
   return new EVMGateway(
-    new L2ProofService(providerL1, providerL2, rollupAddress),
+    new L2ProofService(providerL1, providerL2, rollupAddress, blockSyncBuffer),
   );
 }
 

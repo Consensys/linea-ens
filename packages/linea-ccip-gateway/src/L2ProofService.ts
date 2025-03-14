@@ -11,7 +11,6 @@ import { logDebug, logError } from './utils';
 export type L2ProvableBlock = number;
 
 const FINALIZED_TAG = 'finalized';
-const BLOCK_SYNCHRONIZATION_BUFFER = 3;
 const currentL2BlockNumberSig =
   'function currentL2BlockNumber() view returns (uint256)';
 
@@ -24,14 +23,17 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
   private readonly rollup: Contract;
   private readonly helper: EVMProofHelper;
   private readonly providerL1: FallbackProvider;
+  private readonly blockSyncBuffer: number;
 
   constructor(
     providerL1: FallbackProvider,
     providerL2: FallbackProvider,
     rollupAddress: string,
+    blockSyncBuffer: number,
   ) {
     this.providerL1 = providerL1;
     this.helper = new EVMProofHelper(providerL2);
+    this.blockSyncBuffer = blockSyncBuffer;
     const currentL2BlockNumberIface = new ethers.Interface([
       currentL2BlockNumberSig,
     ]);
@@ -63,7 +65,7 @@ export class L2ProofService implements IProofService<L2ProvableBlock> {
     }
 
     const lastBlockFinalized = await this.rollup.currentL2BlockNumber({
-      blockTag: block.number - BLOCK_SYNCHRONIZATION_BUFFER,
+      blockTag: block.number - this.blockSyncBuffer,
     });
 
     if (!lastBlockFinalized) {

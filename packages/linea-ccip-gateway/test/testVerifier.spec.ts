@@ -3,34 +3,32 @@ import { makeL2Gateway } from '../src';
 import { HardhatEthersProvider } from '@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider';
 import { HardhatEthersHelpers } from '@nomicfoundation/hardhat-ethers/types';
 import { expect } from 'chai';
-import {
-  BrowserProvider,
-  Contract,
-  ethers,
-  FallbackProvider,
-  FetchRequest,
-  JsonRpcProvider,
-  Signer,
-} from 'ethers';
+import { BrowserProvider, Contract, ethers, FallbackProvider, FetchRequest, JsonRpcProvider, Signer } from 'ethers';
 import { ethers as ethersHardhat } from 'hardhat';
 import { EthereumProvider } from 'hardhat/types';
 import request from 'supertest';
-import {
-  CHAIN_ID_L1,
-  CHAIN_ID_L2,
-  L1_RPC_URL,
-  L2_RPC_URL_INVALID,
-  L2_RPC_URL_VALID,
-  L2_TEST_CONTRACT_ADDRESS,
-  ROLLUP_SEPOLIA_ADDRESS,
-} from './constants';
+import { L2_RPC_URL_INVALID, L2_TEST_CONTRACT_ADDRESS } from './constants';
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+// Load test environment variables
+config({ path: resolve(__dirname, '../.env.test'), override: true });
+
+const {
+  L1_CHAIN_ID,
+  L2_CHAIN_ID,
+  L1_PROVIDER_URL,
+  L2_PROVIDER_URL,
+  L1_ROLLUP_ADDRESS,
+  BLOCK_SYNC_BUFFER,
+} = process.env;
 
 type ethersObj = typeof ethers &
   Omit<HardhatEthersHelpers, 'provider'> & {
-    provider: Omit<HardhatEthersProvider, '_hardhatProvider'> & {
-      _hardhatProvider: EthereumProvider;
-    };
+  provider: Omit<HardhatEthersProvider, '_hardhatProvider'> & {
+    _hardhatProvider: EthereumProvider;
   };
+};
 
 declare module 'hardhat/types/runtime' {
   const ethers: ethersObj;
@@ -49,6 +47,21 @@ describe('L1Verifier', () => {
   let target: Contract;
 
   before(async () => {
+    if (
+      !L1_CHAIN_ID ||
+      !L2_CHAIN_ID ||
+      !L1_PROVIDER_URL ||
+      !L2_PROVIDER_URL ||
+      !L1_ROLLUP_ADDRESS ||
+      !BLOCK_SYNC_BUFFER
+    ) {
+      throw new Error('Missing environment variables');
+    }
+
+    const l1ChainId = parseInt(L1_CHAIN_ID);
+    const l2ChainId = parseInt(L2_CHAIN_ID);
+    const blockSyncBuffer = parseInt(BLOCK_SYNC_BUFFER);
+
     // Create a Hardhat L1 provider
     l1Provider = new ethersHardhat.BrowserProvider(
       ethersHardhat.provider._hardhatProvider,
@@ -57,7 +70,7 @@ describe('L1Verifier', () => {
     // Create an invalid L2 provider
     invalidL2Provider = new ethersHardhat.JsonRpcProvider(
       L2_RPC_URL_INVALID,
-      CHAIN_ID_L2,
+      l2ChainId,
       {
         staticNetwork: true,
       },
@@ -65,16 +78,16 @@ describe('L1Verifier', () => {
 
     // Create a valid L2 provider
     validL2Provider = new ethersHardhat.JsonRpcProvider(
-      L2_RPC_URL_VALID,
-      CHAIN_ID_L2,
+      L2_PROVIDER_URL,
+      l2ChainId,
       {
         staticNetwork: true,
       },
     );
 
     l1SepoliaProvider = new ethersHardhat.JsonRpcProvider(
-      L1_RPC_URL,
-      CHAIN_ID_L1,
+      L1_PROVIDER_URL,
+      l1ChainId,
       {
         staticNetwork: true,
       },
@@ -84,7 +97,7 @@ describe('L1Verifier', () => {
     const Rollup = await ethersHardhat.getContractFactory('RollupMock', signer);
 
     const rollupSepolia = new ethersHardhat.Contract(
-      ROLLUP_SEPOLIA_ADDRESS,
+      L1_ROLLUP_ADDRESS,
       Rollup.interface,
       l1SepoliaProvider,
     );
@@ -101,6 +114,7 @@ describe('L1Verifier', () => {
         { provider: validL2Provider, stallTimeout: 3000 },
       ]),
       await rollup.getAddress(),
+      blockSyncBuffer,
     );
     const server = new Server();
     gateway.add(server);
