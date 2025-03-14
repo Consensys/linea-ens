@@ -21,6 +21,8 @@ const l2ProviderUrl = process.env.L2_PROVIDER_URL;
 const l2ProviderUrlFallback = process.env.L2_PROVIDER_URL_FALLBACK;
 const l2ChainId = parseInt(process.env.L2_CHAIN_ID ?? '59141');
 
+const blockSyncBuffer = parseInt(process.env.BLOCK_SYNC_BUFFER ?? '32');
+
 const rollupAddress =
   process.env.L1_ROLLUP_ADDRESS ?? '0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5';
 const port = process.env.PORT || 3000;
@@ -91,7 +93,7 @@ try {
   );
 
   const gateway = new EVMGateway(
-    new L2ProofService(providerL1, providerL2, rollupAddress),
+    new L2ProofService(providerL1, providerL2, rollupAddress, blockSyncBuffer),
   );
 
   const server = new Server();
