@@ -4,7 +4,7 @@
   "description": "API to get a signature for an address that has a POH",
   "author": "Consensys",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "(MIT OR Apache-2.0)",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

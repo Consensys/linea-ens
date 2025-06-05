@@ -1,7 +1,7 @@
 {
   "name": "@consensys/linea-ccip-gateway",
   "version": "1.2.0",
-  "license": "Apache-2.0",
+  "license": "(MIT OR Apache-2.0)",
   "author": "Consensys",
   "main": "dist/index.js",
   "scripts": {

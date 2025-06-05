@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "Consensys",
-  "license": "Apache-2.0",
+  "license": "(MIT OR Apache-2.0)",
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^4.9.3",
