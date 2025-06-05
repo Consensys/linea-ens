@@ -73,7 +73,7 @@
     "url": "git+https://github.com/ensdomains/ens-contracts.git"
   },
   "author": "",
-  "license": "MIT",
+  "license": "(MIT OR Apache-2.0)",
   "bugs": {
     "url": "https://github.com/ensdomains/ens-contracts/issues"
   },

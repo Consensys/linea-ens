@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "(MIT OR Apache-2.0)",
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
     "@ensdomains/buffer": "^0.1.1",
