@@ -1,4 +1,4 @@
-# Linea ENS POH
+# Linea POH signer API
 
 A NestJS API responsible for returning a signature acknowledging an address has passed the POH process.  
 Uses the [POH api](https://linea-xp-poh-api.linea.build) to check if an address has a POH.
