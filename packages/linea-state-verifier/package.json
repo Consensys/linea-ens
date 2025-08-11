@@ -2,13 +2,13 @@
   "name": "@consensys/linea-state-verifier",
   "version": "1.0.1",
   "description": "This library is intended to be used specifically to resolve any Linea storage state on L1",
-  "scripts": {
-    "compile": "hardhat compile",
-    "clean": "rm -fr artifacts cache node_modules typechain-types"
-  },
   "keywords": [],
-  "author": "Consensys",
   "license": "(MIT OR Apache-2.0)",
+  "author": "Consensys",
+  "scripts": {
+    "clean": "rm -fr artifacts cache node_modules typechain-types",
+    "compile": "hardhat compile"
+  },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^4.9.3",

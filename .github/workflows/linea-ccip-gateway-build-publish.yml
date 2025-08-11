@@ -21,6 +21,7 @@ jobs:
             packages/linea-state-verifier
             pnpm-workspace.yaml
             pnpm-lock.yaml
+            package.json
           sparse-checkout-cone-mode: false
 
       - name: Set Docker Tag Devnet
