@@ -25,7 +25,7 @@ ENV NEXT_PUBLIC_THE_GRAPH_SEPOLIA_API_KEY=$NEXT_PUBLIC_THE_GRAPH_SEPOLIA_API_KEY
 COPY . .
 
 # Install pnpm and dependencies
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.10.0
 RUN rm -rf node_modules
 RUN pnpm config set store-dir ~/.local/share/pnpm/store
 

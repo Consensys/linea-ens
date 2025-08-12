@@ -6,7 +6,7 @@ import {EVMFetchTarget} from "linea-state-verifier/contracts/EVMFetchTarget.sol"
 import {IEVMVerifier} from "linea-state-verifier/contracts/IEVMVerifier.sol";
 import "@ensdomains/ens-contracts/contracts/registry/ENS.sol";
 import {INameWrapper} from "@ensdomains/ens-contracts/contracts/wrapper/INameWrapper.sol";
-import {BytesUtils} from "@ensdomains/ens-contracts/contracts/dnssec-oracle/BytesUtils.sol";
+import {BytesUtils} from "@ensdomains/ens-contracts/contracts/utils/BytesUtils.sol";
 import {IAddrResolver} from "@ensdomains/ens-contracts/contracts/resolvers/profiles/IAddrResolver.sol";
 import {IAddressResolver} from "@ensdomains/ens-contracts/contracts/resolvers/profiles/IAddressResolver.sol";
 import {ITextResolver} from "@ensdomains/ens-contracts/contracts/resolvers/profiles/ITextResolver.sol";

@@ -2,15 +2,15 @@
   "name": "linea-ens-resolver",
   "version": "1.0.0",
   "description": "L1 contracts to resolve Linea ENS domains stored on Linea from L1",
-  "scripts": {
-    "test": "hardhat compile && cd ../linea-ccip-gateway && npm run build && cd ../linea-ens-resolver && mocha test/testL1Resolver.spec.ts --timeout 300000 --exit",
-    "test:local": "hardhat compile && cd ../linea-ccip-gateway && npm run build && cd ../linea-ens-resolver && mocha test/testL1ResolverLocal.spec.ts --timeout 300000 --exit",
-    "compile": "hardhat compile",
-    "clean": "rm -fr artifacts cache node_modules typechain-types"
-  },
   "keywords": [],
-  "author": "",
   "license": "(MIT OR Apache-2.0)",
+  "author": "",
+  "scripts": {
+    "clean": "rm -fr artifacts cache node_modules typechain-types",
+    "compile": "hardhat compile",
+    "test": "hardhat compile && (cd ../linea-ccip-gateway && NODE_OPTIONS='' npm run build) && mocha test/testL1Resolver.spec.ts --timeout 300000 --exit",
+    "test:local": "hardhat compile && (cd ../linea-ccip-gateway && NODE_OPTIONS='' npm run build) && mocha test/testL1ResolverLocal.spec.ts --timeout 300000 --exit"
+  },
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
     "@ensdomains/buffer": "^0.1.1",
