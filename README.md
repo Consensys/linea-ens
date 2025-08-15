@@ -151,7 +151,7 @@ For detailed information about each package, please check their own Readme file.
 
 ## Audit report
 
-An audit has been conducted by Consensys Diligence: https://consensys.io/diligence/audits/2024/06/linea-ens/
+An audit has been conducted by Consensys Diligence: https://diligence.consensys.io/audits/2024/06/linea-ens/
 
 ## How to contribute
 
