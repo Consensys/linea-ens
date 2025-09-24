@@ -3,24 +3,23 @@ import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Address } from 'viem';
-import { PohAttestationResponse } from './types/poh';
 
 @Injectable()
 export class ApiService {
-  Date;
+  constructor(private readonly httpService: HttpService) {
+  }
 
-  constructor(private readonly httpService: HttpService) {}
-
-  async getPoh(address: Address): Promise<PohAttestationResponse> {
+  async getPoh(address: Address, isV2: boolean = false): Promise<boolean> {
     const observable = this.httpService
-      .get(`poh/${address}`)
+      .get(`poh/${isV2 ? 'v2/' : ''}${address}`)
       .pipe(map((res) => res.data));
 
     try {
-      const poh = await lastValueFrom(observable);
-      return poh;
+      const response = await lastValueFrom(observable);
+      return isV2 ? response : response.poh;
     } catch (error) {
       console.error('Error processing:', address, error);
+      return false;
     }
   }
 }

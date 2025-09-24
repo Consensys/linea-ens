@@ -15,19 +15,18 @@ export class PohService {
     private configService: ConfigService,
     private apiService: ApiService,
     private readonly signerService: SignerService,
-  ) {}
+  ) {
+  }
 
-  onModulteInit() {}
-
-  async signMessage(address: Address): Promise<string> {
+  async signMessage(address: Address, isV2: boolean = false): Promise<string> {
     this.logger.log({ address });
     const ens = this.configService.get<EnsConfig>('ens');
     const chainId = this.configService.get<number>('chainId');
 
     try {
-      const pohResponse = await this.apiService.getPoh(address);
+      const pohStatus = await this.apiService.getPoh(address, isV2);
 
-      if (!pohResponse.poh) {
+      if (!pohStatus) {
         throw new Error('address not POH');
       }
 
