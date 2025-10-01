@@ -15,8 +15,7 @@ export class PohService {
     private configService: ConfigService,
     private apiService: ApiService,
     private readonly signerService: SignerService,
-  ) {
-  }
+  ) {}
 
   async signMessage(address: Address, isV2: boolean = false): Promise<string> {
     this.logger.log({ address });
