@@ -1,4 +1,11 @@
-import { Controller, Get, HttpException, HttpStatus, Logger, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Param,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { PohService } from './poh.service';
@@ -9,8 +16,7 @@ import { Address } from 'viem';
 export class PohController {
   private readonly logger = new Logger(PohController.name);
 
-  constructor(private readonly pohService: PohService) {
-  }
+  constructor(private readonly pohService: PohService) {}
 
   @Get(':address')
   async signMessage(@Param('address') address: Address): Promise<string> {

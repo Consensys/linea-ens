@@ -1,18 +1,17 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { lastValueFrom } from 'rxjs';
+import axios, { AxiosInstance } from 'axios';
 import { Web3SignerConfig } from 'src/config/config.interface';
 import { Hex } from 'viem';
 
 @Injectable()
 export class SignerService {
   private readonly logger = new Logger(SignerService.name);
+  private readonly axiosInstance: AxiosInstance;
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {
+    this.axiosInstance = axios.create();
+  }
 
   async signTypedData(data: string): Promise<Hex> {
     const web3signer = this.configService.get<Web3SignerConfig>('web3signer');
@@ -22,11 +21,11 @@ export class SignerService {
     );
 
     try {
-      const res = this.httpService.post(url.href, {
+      const response = await this.axiosInstance.post(url.href, {
         data: data,
       });
 
-      return (await lastValueFrom(res)).data;
+      return response.data;
     } catch (error) {
       this.logger.error({
         message: 'Failed to sign typed data',

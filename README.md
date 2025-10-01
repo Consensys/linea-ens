@@ -1,6 +1,6 @@
 # Linea ENS
 
-This repository contains smart contracts and a Node.js Gateway server that allow storing ENS names on Linea
+This repository contains smart contracts and a Node.js Gateway server that allows storing ENS names on Linea
 using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668)
 and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
 They have been adapted from ENS's [EVM gateway](https://github.com/ensdomains/evmgateway)
