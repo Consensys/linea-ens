@@ -54,6 +54,10 @@ export interface ApiConfig {
 export interface Web3SignerConfig {
   baseUrl: string;
   publicKey: Hex;
+  keystorePath: string;
+  keystorePassphrase: string;
+  trustedStorePath: string;
+  trustedStorePassphrase: string;
 }
 
 export interface LogConfig {

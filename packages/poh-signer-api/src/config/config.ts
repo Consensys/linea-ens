@@ -37,6 +37,10 @@ export default (): Config => ({
   web3signer: {
     baseUrl: process.env.WEB3SIGNER_BASE_URL,
     publicKey: process.env.WEB3SIGNER_PUBLIC_KEY as Hex,
+    keystorePath: process.env.WEB3SIGNER_KEYSTORE_PATH,
+    keystorePassphrase: process.env.WEB3SIGNER_KEYSTORE_PASSPHRASE,
+    trustedStorePath: process.env.WEB3SIGNER_TRUSTED_STORE_PATH,
+    trustedStorePassphrase: process.env.WEB3SIGNER_TRUSTED_STORE_PASSPHRASE,
   },
   log: {
     level: (process.env.LOG_LEVEL as LogLevel) || LogLevel.INFO,
