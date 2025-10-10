@@ -1,9 +1,10 @@
 # Linea POH signer API
 
 A NestJS API responsible for returning a signature acknowledging an address has passed the POH process.  
-Uses the [POH api](https://linea-xp-poh-api.linea.build) to check if an address has a POH.
+Uses the [POH api](https://poh-api.linea.build) to check if an address has a POH.
 
-POH stands for Proof Of Humanity, it respects a set of rules that determines if an address is human or not, a user has to go through a POH process to be marked as POH.
+POH stands for Proof Of Humanity, it respects a set of rules that determines if an address is human or not, a user has
+to go through a POH process to be marked as POH.
 
 ## Installation
 
