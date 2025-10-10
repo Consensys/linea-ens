@@ -8,7 +8,7 @@ export const usePohSignature = (address: Address | undefined): Hex | undefined =
   useMemo(async () => {
     const pohSignatureApi = chain ? chain.custom.pohVerifierUrl : undefined
     if (!pohSignatureApi) return undefined
-    const resp = await fetch(`${pohSignatureApi}/poh/${address}`, {
+    const resp = await fetch(`${pohSignatureApi}/poh/v2/${address}`, {
       method: 'GET',
       redirect: 'follow',
     })
