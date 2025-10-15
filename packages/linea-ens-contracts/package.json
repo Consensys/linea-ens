@@ -49,6 +49,8 @@
   "devDependencies": {
     "@ensdomains/dnsprovejs": "^0.3.7",
     "@ensdomains/test-utils": "^1.3.0",
+    "@lavamoat/allow-scripts": "^3.4.0",
+    "@lavamoat/preinstall-always-fail": "^2.1.1",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@nomiclabs/hardhat-etherscan": "^3.1.8",
     "@nomiclabs/hardhat-solhint": "^2.0.0",

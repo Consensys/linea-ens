@@ -50,6 +50,8 @@
     "winston": "^3.18.2"
   },
   "devDependencies": {
+    "@lavamoat/allow-scripts": "^3.4.0",
+    "@lavamoat/preinstall-always-fail": "^2.1.1",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
     "@nestjs/testing": "^11.1.6",
@@ -72,5 +74,10 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.3.3"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@nestjs/core": false
+    }
   }
 }
