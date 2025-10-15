@@ -7,5 +7,9 @@
   "devDependencies": {
     "@lavamoat/allow-scripts": "^3.4.0",
     "@lavamoat/preinstall-always-fail": "^2.1.1"
+  },
+  "scripts":{
+    "lifecycle:run": "pnpm -r exec allow-scripts",
+    "lifecycle:scan": "pnpm -r exec allow-scripts auto"
   }
 }
