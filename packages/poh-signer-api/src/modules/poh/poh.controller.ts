@@ -22,27 +22,23 @@ export class PohController {
   async signMessage(@Param('address') address: Address): Promise<string> {
     if (!isAddress(address)) {
       this.logger.warn(`Invalid Ethereum address received: ${address}`);
-      throw new HttpException('Invalid Ethereum address', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Invalid Ethereum address',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    try {
-      return await this.pohService.signMessage(address);
-    } catch (error) {
-      this.logger.error(error);
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    return this.pohService.signMessage(address);
   }
 
   @Get('v2/:address')
   async signMessageV2(@Param('address') address: Address): Promise<string> {
     if (!isAddress(address)) {
       this.logger.warn(`Invalid Ethereum address received: ${address}`);
-      throw new HttpException('Invalid Ethereum address', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Invalid Ethereum address',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    try {
-      return await this.pohService.signMessage(address, true);
-    } catch (error) {
-      this.logger.error(error);
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    return this.pohService.signMessage(address, true);
   }
 }

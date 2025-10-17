@@ -1,2 +1,2 @@
-# Ignore keyFiles
-keyFiles/*.yaml
+# Ignore key-files
+key-files/*.yaml
