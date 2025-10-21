@@ -52,7 +52,8 @@
   },
   "lavamoat": {
     "allowScripts": {
-      "@ensdomains/ens-contracts": false
+      "@ensdomains/ens-contracts": false,
+      "@lavamoat/preinstall-always-fail": false
     }
   }
 }

@@ -77,7 +77,8 @@
   },
   "lavamoat": {
     "allowScripts": {
-      "@nestjs/core": false
+      "@nestjs/core": false,
+      "@lavamoat/preinstall-always-fail": false
     }
   }
 }

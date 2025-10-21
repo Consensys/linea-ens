@@ -205,7 +205,8 @@
       "ganache>keccak": false,
       "ganache>leveldown": false,
       "ganache>secp256k1": false,
-      "msw": false
+      "msw": false,
+      "@lavamoat/preinstall-always-fail": false
     }
   }
 }

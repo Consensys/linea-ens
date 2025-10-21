@@ -56,5 +56,10 @@
     "solidity-coverage": "^0.8.1",
     "supertest": "^6.3.3",
     "ts-node": "^10.9.2"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail": false
+    }
   }
 }

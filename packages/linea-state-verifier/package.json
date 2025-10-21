@@ -37,5 +37,10 @@
     "ts-node": "^10.9.2",
     "typechain": "^8.3.0",
     "typescript": "^5.5.4"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail": false
+    }
   }
 }
