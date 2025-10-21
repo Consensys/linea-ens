@@ -53,7 +53,11 @@
   "lavamoat": {
     "allowScripts": {
       "@ensdomains/ens-contracts": false,
-      "@lavamoat/preinstall-always-fail": false
+      "@lavamoat/preinstall-always-fail": false,
+      "keccak": true,
+      "bufferutil": true,
+      "utf-8-validate": true,
+      "secp256k1": true
     }
   }
 }
