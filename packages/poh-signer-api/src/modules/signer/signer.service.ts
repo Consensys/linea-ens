@@ -176,7 +176,6 @@ export class SignerService {
       pfx: clientPfx,
       passphrase: keystorePassphrase,
       ca: caCertPem,
-      rejectUnauthorized: true,
       requestCert: true,
     });
   }
