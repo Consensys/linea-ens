@@ -49,6 +49,8 @@
   "devDependencies": {
     "@ensdomains/dnsprovejs": "^0.3.7",
     "@ensdomains/test-utils": "^1.3.0",
+    "@lavamoat/allow-scripts": "^3.4.0",
+    "@lavamoat/preinstall-always-fail": "^2.1.1",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@nomiclabs/hardhat-etherscan": "^3.1.8",
     "@nomiclabs/hardhat-solhint": "^2.0.0",
@@ -80,5 +82,30 @@
   },
   "volta": {
     "node": "16.20.2"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail": false,
+      "@nomiclabs/hardhat-truffle5>@nomiclabs/truffle-contract>ethereum-ens>web3": false,
+      "@nomiclabs/hardhat-truffle5>@nomiclabs/truffle-contract>ethereum-ens>web3>web3-bzz": false,
+      "@nomiclabs/hardhat-truffle5>@nomiclabs/truffle-contract>ethereum-ens>web3>web3-shh": false,
+      "@nomiclabs/hardhat-web3>web3": false,
+      "@nomiclabs/hardhat-web3>web3>web3-bzz": false,
+      "@nomiclabs/hardhat-web3>web3>web3-shh": false,
+      "@openzeppelin/test-helpers>web3": false,
+      "@openzeppelin/test-helpers>web3>web3-bzz": false,
+      "@openzeppelin/test-helpers>web3>web3-shh": false,
+      "ethereum-waffle>@ethereum-waffle/provider>ganache-core>ethereumjs-vm>core-js-pure": false,
+      "ethereum-waffle>@ethereum-waffle/provider>ganache-core>keccak": false,
+      "ethereum-waffle>@ethereum-waffle/provider>ganache-core>web3": false,
+      "ethereum-waffle>@ethereum-waffle/provider>ganache-core>web3-provider-engine>eth-block-tracker>json-rpc-engine>babelify>babel-core>babel-runtime>core-js": false,
+      "ethereum-waffle>@ethereum-waffle/provider>ganache-core>websocket>es5-ext": false,
+      "ethereum-waffle>@ethereum-waffle/provider>postinstall-postinstall": false,
+      "hardhat>@nomicfoundation/ethereumjs-blockchain>level>classic-level": false,
+      "hardhat>@nomicfoundation/ethereumjs-tx>ethereum-cryptography>secp256k1": false,
+      "hardhat>keccak": false,
+      "hardhat>ws>bufferutil": false,
+      "hardhat>ws>utf-8-validate": false
+    }
   }
 }
