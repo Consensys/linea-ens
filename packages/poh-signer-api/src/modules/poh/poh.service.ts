@@ -43,12 +43,14 @@ export class PohService {
       const message = {
         to: address,
       };
+
       const serializedData = ethers.TypedDataEncoder.encode(
         domain,
         types,
         message,
       );
-      return await this.signerService.signTypedData(serializedData);
+
+      return this.signerService.signTypedData(serializedData);
     } catch (error) {
       this.logger.error({ address, error });
       throw error;

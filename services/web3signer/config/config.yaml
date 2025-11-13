@@ -9,4 +9,4 @@ eth1.chain-id: 59141
 http-host-allowlist: "*"
 
 # Signing key locations
-key-store-path: "/keyFiles/"
+key-store-path: "/key-files/"

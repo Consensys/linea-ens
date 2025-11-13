@@ -62,7 +62,7 @@ In a third terminal, run:
 
 ```bash
 cd services/web3signer/
-cp ./keyFiles/examples/signer.yaml ./keyFiles/signer.yaml
+cp ./key-files/examples/signer.yaml ./key-files/signer.yaml
 make dev-docker
 ```
 
@@ -114,7 +114,7 @@ it [here] (https://poh.linea.build/).
     - Add this config:
 
   | Setting         | Value                 |
-    | --------------- | --------------------- |
+  | --------------- | --------------------- |
   | Network name    | Localhost 8545        |
   | New RPC URL     | http://127.0.0.1:8545 |
   | Chain ID        | 1337                  |
