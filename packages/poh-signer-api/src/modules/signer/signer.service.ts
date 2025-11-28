@@ -12,7 +12,7 @@ import path from 'path';
 export class SignerService {
   private readonly logger = new Logger(SignerService.name);
   private readonly axiosInstance: AxiosInstance;
-  private httpsAgent: Agent | null = null;
+  private httpsAgent: Agent;
 
   constructor(private readonly configService: ConfigService) {
     this.axiosInstance = axios.create();
@@ -27,34 +27,50 @@ export class SignerService {
       web3signer.baseUrl,
     );
 
+    this.logger.debug({
+      message: 'Calling Web3Signer to sign typed data',
+      url: url.href,
+      publicKey: web3signer.publicKey,
+      dataLength: data.length,
+    });
+
     try {
+      const startTime = Date.now();
       const response = await this.axiosInstance.post(
         url.href,
         {
           data: data,
         },
         {
-          httpsAgent:
-            process.env.NODE_ENV !== 'development' ? this.httpsAgent : undefined,
+          httpsAgent: this.httpsAgent,
         },
       );
+
+      const duration = Date.now() - startTime;
+
+      this.logger.log({
+        message: 'Successfully signed typed data with Web3Signer',
+        url: url.href,
+        duration: `${duration}ms`,
+        signatureLength: response.data?.length || 0,
+      });
 
       return response.data;
     } catch (error) {
       this.logger.error({
         message: 'Failed to sign typed data',
-        url,
+        url: url.href,
         error: error.message,
         stack: error.stack,
+        statusCode: error.response?.status,
+        statusText: error.response?.statusText,
+        responseData: error.response?.data,
       });
       throw error;
     }
   }
 
-  convertToPem(
-    p12Der: string | forge.util.ByteStringBuffer,
-    password: string,
-  ) {
+  convertToPem(p12Der: string | forge.util.ByteStringBuffer, password: string) {
     const p12Asn1 = forge.asn1.fromDer(p12Der);
     const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, password);
 
@@ -69,13 +85,12 @@ export class SignerService {
       throw new Error('Certificate not found in P12');
     }
 
-    const pemCertificate = forge.pki.certificateToPem(certificate.cert);
-    return { pemCertificate };
+    return forge.pki.certificateToPem(certificate.cert);
   }
 
   private validateWeb3SignerConfig(): void {
     const web3signer = this.configService.get<Web3SignerConfig>('web3signer');
-    
+
     if (!web3signer) {
       throw new Error('Web3Signer configuration is missing');
     }
@@ -93,12 +108,6 @@ export class SignerService {
           `Web3Signer configuration error: ${field} is required but not provided or is empty`,
         );
       }
-    }
-
-    // Skip certificate validation in development mode
-    if (process.env.NODE_ENV === 'development') {
-      this.logger.log('Skipping certificate configuration validation in development mode');
-      return;
     }
 
     // Validate certificate fields required in non-development environments
@@ -120,12 +129,6 @@ export class SignerService {
   }
 
   private initializeHttpsAgent(): void {
-    // Skip HTTPS agent initialization in development
-    if (process.env.NODE_ENV === 'development') {
-      this.logger.log('Skipping HTTPS agent initialization in development mode');
-      return;
-    }
-
     const web3signer = this.configService.get<Web3SignerConfig>('web3signer');
 
     try {
@@ -152,20 +155,28 @@ export class SignerService {
     trustedStorePath: string,
     trustedStorePassphrase: string,
   ): Agent {
-    const trustedStoreFile = readFileSync(
-      path.resolve(process.cwd(), trustedStorePath),
-      { encoding: 'binary' },
-    );
+    this.logger.log('Creating HTTPS agent with mTLS configuration');
 
-    const { pemCertificate } = this.convertToPem(
+    // Load client certificate (pfx contains both cert and private key)
+    const keystoreFullPath = path.resolve(process.cwd(), keystorePath);
+    const clientPfx = readFileSync(keystoreFullPath);
+
+    // Load trusted CA certificate (server certificate)
+    const trustedStoreFullPath = path.resolve(process.cwd(), trustedStorePath);
+    const trustedStoreFile = readFileSync(trustedStoreFullPath, {
+      encoding: 'binary',
+    });
+
+    const caCertPem = this.convertToPem(
       trustedStoreFile,
       trustedStorePassphrase,
     );
 
     return new Agent({
-      pfx: readFileSync(path.resolve(process.cwd(), keystorePath)),
+      pfx: clientPfx,
       passphrase: keystorePassphrase,
-      ca: pemCertificate,
+      ca: caCertPem,
+      requestCert: true,
     });
   }
 }
