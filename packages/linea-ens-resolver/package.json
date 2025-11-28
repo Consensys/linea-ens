@@ -45,7 +45,19 @@
     "typescript": "^5.4.3"
   },
   "devDependencies": {
+    "@lavamoat/allow-scripts": "^3.4.0",
+    "@lavamoat/preinstall-always-fail": "^2.1.1",
     "@types/mocha": ">=9.1.0",
     "@types/node": "^20.11.30"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@ensdomains/ens-contracts": false,
+      "@lavamoat/preinstall-always-fail": false,
+      "keccak": true,
+      "bufferutil": true,
+      "utf-8-validate": true,
+      "secp256k1": true
+    }
   }
 }
