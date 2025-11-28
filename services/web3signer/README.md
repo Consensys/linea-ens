@@ -9,8 +9,8 @@ Web3Signer is an open-source remote signing service.
 Set the private key:
 
 ```bash
-cp ./services/web3signer/keyFiles/examples/signer.yaml ./services/web3signer/keyFiles/signer.yaml
-nano ./services/web3signer/keyFiles/signer.yaml
+cp ./services/web3signer/key-files/examples/signer.yaml ./services/web3signer/key-files/signer.yaml
+nano ./services/web3signer/key-files/signer.yaml
 ```
 
 Inside the `signer.yaml` file, replace the value of `JustChangeMe` with a valid private key.

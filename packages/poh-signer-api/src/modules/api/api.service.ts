@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import axios, { AxiosInstance } from 'axios';
 import { Address } from 'viem';
-import { PohAttestationResponse } from './types/poh';
+import { ApiConfig } from 'src/config/config.interface';
 
 @Injectable()
 export class ApiService {
-  Date;
+  private readonly logger = new Logger(ApiService.name);
+  private readonly axiosInstance: AxiosInstance;
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly configService: ConfigService) {
+    const apiConfig = this.configService.get<ApiConfig>('pohApi');
+    this.axiosInstance = axios.create({
+      baseURL: apiConfig.url,
+      timeout: 5000,
+      maxRedirects: 3,
+    });
+  }
 
-  async getPoh(address: Address): Promise<PohAttestationResponse> {
-    const observable = this.httpService
-      .get(`poh/${address}`)
-      .pipe(map((res) => res.data));
-
+  async getPoh(address: Address, isV2: boolean = false): Promise<boolean> {
     try {
-      const poh = await lastValueFrom(observable);
-      return poh;
+      const { data } = await this.axiosInstance.get(
+        `poh/${isV2 ? 'v2/' : ''}${address}`,
+      );
+      return isV2 ? data : data.poh;
     } catch (error) {
-      console.error('Error processing:', address, error);
+      this.logger.error('Error processing:', address, error);
+      return false;
     }
   }
 }

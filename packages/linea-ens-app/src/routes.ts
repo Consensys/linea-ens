@@ -247,7 +247,7 @@ export const getDestination = (url: UrlObject | string) => {
       const values = href.split('/')
       let replacedDestination = (isIPFS ? rewrite.destination : rewrite.flattenedDestination)
         .replace(/\$(\d)/g, (_, n) => values[parseInt(n)])
-        .replace('#', '%23')
+        .replace(/#/g, '%23')
       if (!isIPFS && rewrite.tldPrefix && !replacedDestination.includes('.')) {
         replacedDestination = `/tld${replacedDestination}`
       }

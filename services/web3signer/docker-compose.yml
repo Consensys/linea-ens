@@ -1,18 +1,21 @@
 services:
   ens-web3signer:
     container_name: ens-web3signer
-    image: consensys/web3signer:latest
-    profiles: ["l2", "debug"]
+    image: consensys/web3signer:25.2
+    profiles: [ "l2", "debug" ]
     ports:
       - "9000:9000"
     command:
-      # - --key-store-path=/keyFiles/
-      # - --http-host-allowlist=*
+      - --key-store-path=/key-files/
+      - --tls-keystore-file=/tls-files/web3signer-keystore.p12
+      - --tls-keystore-password-file=/tls-files/web3signer-keystore-password.txt
+      - --tls-known-clients-file=/tls-files/known-clients.txt
+      - --http-host-allowlist=*
       - --config-file=/config/web3signer-config.yaml
-
       - eth1
     volumes:
-      - ./keyFiles/:/keyFiles/
+      - ./key-files/:/key-files/
+      - ./tls-files/:/tls-files/
       - ./config/config.yaml:/config/web3signer-config.yaml
     networks:
       - ens-network

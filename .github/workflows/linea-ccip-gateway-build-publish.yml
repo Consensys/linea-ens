@@ -24,11 +24,6 @@ jobs:
             package.json
           sparse-checkout-cone-mode: false
 
-      - name: Set Docker Tag Devnet
-        id: docker-tag-devnet
-        if: ${{ github.event_name != 'release' }}
-        run: echo "DOCKER_TAG_DEVNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-devnet" | tee $GITHUB_ENV
-
       - name: Set Docker Tag Sepolia
         id: docker-tag-sepolia
         if: ${{ github.event_name != 'release' }}
@@ -38,11 +33,6 @@ jobs:
         id: docker-tag-mainnet
         if: ${{ github.event_name != 'release' }}
         run: echo "DOCKER_TAG_MAINNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-mainnet" | tee $GITHUB_ENV
-
-      - name: Set Docker Tag Devnet - Release
-        id: docker-tag-devnet-release
-        if: ${{ github.event_name == 'release' }}
-        run: echo "DOCKER_TAG_DEVNET=${GITHUB_SHA:0:7}-$(date +%s)-linea-ccip-gateway-devnet-${GITHUB_REF#refs/tags/}" | tee $GITHUB_ENV
 
       - name: Set Docker Tag Sepolia - Release
         id: docker-tag-sepolia-release
@@ -62,24 +52,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
-      - name: Docker Image Build and Publish Devnet
-        uses: docker/build-push-action@v4
-        with:
-          build-args: |
-            L1_PROVIDER_URL=${{ secrets.L1_PROVIDER_URL_SEPOLIA }}
-            L1_PROVIDER_URL_FALLBACK=${{ secrets.L1_PROVIDER_URL_FALLBACK_SEPOLIA }}
-            L2_PROVIDER_URL=${{ secrets.L2_PROVIDER_URL_SEPOLIA }}
-            L1_ROLLUP_ADDRESS=${{ vars.L1_TESTNET_ROLLUP_ADDRESS }}
-            L1_CHAIN_ID=${{ vars.L1_TESTNET_CHAIN_ID }}
-            L2_CHAIN_ID=${{ vars.L2_TESTNET_CHAIN_ID }}
-            PRIMARY_PROVIDER_TIMEOUT=${{ vars.PRIMARY_PROVIDER_TIMEOUT }}
-            FALLBACK_PROVIDER_TIMEOUT=${{ vars.FALLBACK_PROVIDER_TIMEOUT }}
-            NODE_ENV=${{ vars.CCIP_GATEWAY_TESTNET_NODE_ENV }}
-          file: ./packages/linea-ccip-gateway/Dockerfile
-          context: ./
-          push: true
-          tags: consensys/linea-resolver:${{ env.DOCKER_TAG_DEVNET }}
 
       - name: Docker Image Build and Publish Sepolia
         uses: docker/build-push-action@v4
