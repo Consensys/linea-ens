@@ -101,8 +101,8 @@ cd packages/linea-ens-app
 pnpm dev:glocal
 ```
 
-You'll need an account with POH to fully use the local env, if you don't, you can get
-it [here] (https://poh.linea.build/).
+You'll need an account with POH to fully use the local env, if you don't, you can get it
+via [Linea Hub] (https://linea.build/hub/).
 
 - Then browse http://localhost:3000/.
 - Import one of the hardhat test accounts in your MetaMask to have funds (eg, private key:
@@ -114,7 +114,7 @@ it [here] (https://poh.linea.build/).
     - Add this config:
 
   | Setting         | Value                 |
-  | --------------- | --------------------- |
+    | --------------- | --------------------- |
   | Network name    | Localhost 8545        |
   | New RPC URL     | http://127.0.0.1:8545 |
   | Chain ID        | 1337                  |
