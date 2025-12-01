@@ -87,7 +87,7 @@ export const ActionButton = ({
     return (
       <Button
         data-testid="next-button"
-        onClick={() => window.open('https://poh.linea.build/', '_blank')}
+        onClick={() => window.open('https://linea.build/hub/', '_blank')}
       >
         {t('steps.pohCheck.getPoh')}
       </Button>

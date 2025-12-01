@@ -59,11 +59,11 @@
     "**/*.ts",
     "**/*.tsx",
     "next.config.mjs",
-    "vitest.config.mts",
     "test/*.mts",
     "test/**/*.ts",
     "typings-custom/generated/*.d.ts",
-    "typings-custom/local-contracts.d.ts"
+    "typings-custom/local-contracts.d.ts",
+    "typings-custom/**/*.d.ts"
   ],
   "exclude": [
     "**/*.ignore.ts",

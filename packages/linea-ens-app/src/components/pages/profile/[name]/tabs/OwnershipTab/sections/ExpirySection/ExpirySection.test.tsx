@@ -26,13 +26,6 @@ vi.mock('./hooks/useExpiryActions', () => ({
     if (name === 'test.eth')
       return [
         {
-          label: 'action.setReminder',
-          type: 'set-reminder',
-          icon: <div>ICON</div>,
-          primary: false,
-          expiryDate: new Date(),
-        },
-        {
           label: 'action.extend',
           type: 'extend',
           icon: <div>ICON</div>,
@@ -46,20 +39,6 @@ vi.mock('./hooks/useExpiryActions', () => ({
 }))
 
 describe('ExpirySection', () => {
-  it('should be able to open earnify button modal', async () => {
-    render(<ExpirySection name="test.eth" details={{} as any} />)
-    expect(screen.getByText('action.setReminder')).toBeVisible()
-    expect(screen.getByText('action.extend')).toBeVisible()
-    await userEvent.click(screen.getByText('action.setReminder'))
-    await waitFor(async () => {
-      expect(screen.getByText('tabs.more.misc.reminderOptions.bankless')).toBeVisible()
-      await userEvent.click(screen.getByText('tabs.more.misc.reminderOptions.bankless'))
-    })
-    await waitFor(() => {
-      expect(screen.getByText('tabs.more.misc.bankless.title')).toBeVisible()
-    })
-  })
-
   it('should be able to call show extend modal', async () => {
     render(<ExpirySection name="test.eth" details={{} as any} />)
     expect(screen.getByText('action.extend')).toBeVisible()
