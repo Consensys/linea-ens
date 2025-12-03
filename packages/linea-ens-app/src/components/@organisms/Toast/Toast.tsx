@@ -360,7 +360,7 @@ export const Toast = ({
   ...props
 }: ToastProps) => {
   const [popped, setPopped] = React.useState(false)
-  const currentTimeout = React.useRef<NodeJS.Timeout>()
+  const currentTimeout = React.useRef<NodeJS.Timeout | undefined>(undefined)
 
   React.useEffect(() => {
     if (open) {

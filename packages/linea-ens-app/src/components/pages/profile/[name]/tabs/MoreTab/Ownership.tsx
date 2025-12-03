@@ -9,7 +9,10 @@ import { Button, Helper, mq, Tag, Typography } from '@ensdomains/thorin'
 
 import AeroplaneSVG from '@app/assets/Aeroplane.svg'
 import { BaseLinkWithHistory } from '@app/components/@atoms/BaseLink'
-import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
+import {
+  CacheableComponentProps,
+  cacheableComponentStyles,
+} from '@app/components/@atoms/CacheableComponent'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import { AvatarWithZorb } from '@app/components/AvatarWithZorb'
 import { useDnsImportData } from '@app/hooks/ensjs/dns/useDnsImportData'
@@ -24,9 +27,9 @@ import { shortenAddress } from '@app/utils/utils'
 
 import { TabWrapper } from '../../../TabWrapper'
 
-const Container = styled(TabWrapper)(
-  cacheableComponentStyles,
-  ({ theme }) => css`
+const Container = styled(TabWrapper)<CacheableComponentProps>`
+  ${cacheableComponentStyles}
+  ${({ theme }) => css`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -41,8 +44,8 @@ const Container = styled(TabWrapper)(
         border-bottom: none;
       }
     }
-  `,
-)
+  `}
+`
 
 const HeadingContainer = styled.div(
   ({ theme }) => css`

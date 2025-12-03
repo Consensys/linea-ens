@@ -100,7 +100,7 @@ export const SyncProvider = ({ children }: { children: React.ReactNode }) => {
   const callbacks = useRef<Record<string, UpdateCallback>>({})
 
   const transactions = useRecentTransactions()
-  const previousTransactions = useRef<Transaction[]>()
+  const previousTransactions = useRef<Transaction[] | undefined>(undefined)
   const findTransactionHigherThanBlock = useCallback(
     (blockNumber: number) =>
       transactions.find((x) => x.minedData && x.minedData.blockNumber > blockNumber),

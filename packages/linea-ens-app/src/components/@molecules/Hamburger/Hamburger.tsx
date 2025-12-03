@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { ReactNode, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { CrossSVG, DynamicPopover, MenuSVG, Modal, Spinner } from '@ensdomains/thorin'
@@ -246,7 +246,7 @@ const Hamburger = () => {
       {breakpoints.sm ? (
         <DynamicPopover
           isOpen={isOpen}
-          anchorRef={btnRef}
+          anchorRef={btnRef as RefObject<HTMLElement>}
           popover={
             <DesktopDropdownCard ref={containerRef} style={{ height: height || undefined }}>
               {componentWithAnimation}
