@@ -5,6 +5,7 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 import { useQueryClient } from '@tanstack/react-query'
 import debounce from 'lodash/debounce'
+import type { JSX } from 'react'
 import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useTransition, { TransitionState } from 'react-transition-state'
@@ -138,7 +139,7 @@ const MobileSearchInput = ({
 }: {
   state: TransitionState
   toggle: (value: boolean) => void
-  searchInputRef: RefObject<HTMLInputElement>
+  searchInputRef: RefObject<HTMLInputElement | null>
   SearchResultsElement: JSX.Element
   SearchInputElement: JSX.Element
 }) => {

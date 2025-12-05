@@ -265,7 +265,7 @@ const usePointVars = (
   getPos: (i: number) => { x: number; y: number },
   name: string,
   setProperty: PropertyFunc,
-  ref: RefObject<HTMLDivElement>,
+  ref: RefObject<HTMLDivElement | null>,
 ) => {
   useEffect(() => {
     const set = setProperty(name)

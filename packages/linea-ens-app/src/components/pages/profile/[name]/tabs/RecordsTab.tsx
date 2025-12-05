@@ -5,7 +5,10 @@ import { useChainId } from 'wagmi'
 
 import { mq } from '@ensdomains/thorin'
 
-import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
+import {
+  CacheableComponentProps,
+  cacheableComponentStyles,
+} from '@app/components/@atoms/CacheableComponent'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import { Outlink } from '@app/components/Outlink'
 import RecordItem from '@app/components/RecordItem'
@@ -20,15 +23,13 @@ import { useHasGraphError } from '@app/utils/SyncProvider/SyncProvider'
 
 import { TabWrapper as OriginalTabWrapper } from '../../TabWrapper'
 
-const TabWrapper = styled(OriginalTabWrapper)(
-  () => css`
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-  `,
-  cacheableComponentStyles,
-)
+const TabWrapper = styled(OriginalTabWrapper)<CacheableComponentProps>`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  ${cacheableComponentStyles}
+`
 
 const AllRecords = styled.div(
   ({ theme }) => css`

@@ -13,7 +13,7 @@ Thanks to ccip-read the domains created on Linea can also be resolved on Ethereu
 
 ## CCIPRead process
 
-![alt text](./media/LineaENSCCIPRead.png?raw=true)
+![CCIP Read Process diagram](./media/LineaENSCCIPRead.png?raw=true)
 
 This schema describes how a client application can resolve a domain name stored on Linea L2 from Ethereum L1 using CCIP
 Read.

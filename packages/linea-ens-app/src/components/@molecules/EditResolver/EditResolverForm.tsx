@@ -43,7 +43,7 @@ const LatestResolverSubtitle = styled(Typography)(
 )
 
 type Props = ReturnType<typeof useResolverEditor> & {
-  formRef: RefObject<HTMLFormElement>
+  formRef: RefObject<HTMLFormElement | null>
   resolverAddress: string | undefined
 }
 

@@ -2,7 +2,10 @@ import styled, { css } from 'styled-components'
 
 import { Card, mq } from '@ensdomains/thorin'
 
-import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
+import {
+  CacheableComponentProps,
+  cacheableComponentStyles,
+} from '@app/components/@atoms/CacheableComponent'
 import { useNameDetails } from '@app/hooks/useNameDetails'
 
 import { ExpiryPanel } from './components/ExpiryPanel'
@@ -48,7 +51,9 @@ const Container = styled.div(({ theme }) => [
   `),
 ])
 
-const StyledCard = styled(Card)(cacheableComponentStyles)
+const StyledCard = styled(Card)<CacheableComponentProps>`
+  ${cacheableComponentStyles}
+`
 
 type Props = {
   name: string

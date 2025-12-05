@@ -82,17 +82,16 @@
     "next": "15.2.6",
     "p-memoize": "^7.1.1",
     "pino-pretty": "^10.3.1",
-    "react": "^18.2.0",
+    "react": "19.0.1",
     "react-confetti": "^6.1.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "19.0.1",
     "react-ga": "^3.3.1",
     "react-hook-form": "^7.51.0",
     "react-i18next": "^11.18.5",
-    "react-is": "^17.0.2",
     "react-transition-state": "^1.1.5",
-    "react-use": "^17.4.0",
+    "react-use": "17.6.0",
     "react-use-error-boundary": "^3.0.0",
-    "styled-components": "^5.3.5",
+    "styled-components": "^6.1.13",
     "ts-pattern": "^4.2.2",
     "use-immer": "^0.7.0",
     "viem": "^2.7.13",
@@ -106,7 +105,7 @@
     "@ethersproject/abi": "^5.4.0",
     "@ethersproject/contracts": "^5.4.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
-    "@next/bundle-analyzer": "^13.4.19",
+    "@next/bundle-analyzer": "^15.2.6",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@openzeppelin/contracts": "^4.7.3",
     "@openzeppelin/test-helpers": "^0.5.16",
@@ -121,10 +120,8 @@
     "@types/pako": "^2.0.0",
     "@types/prettier": "^2.7.0",
     "@types/puppeteer-core": "^5.4.0",
-    "@types/react": "18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "@types/react-is": "^17.0.3",
-    "@types/styled-components": "5.1.23",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.1",
     "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
@@ -193,7 +190,7 @@
     "yaml": "^2.4.1"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "react": "19.0.1",
+    "react-dom": "19.0.1"
   }
 }
