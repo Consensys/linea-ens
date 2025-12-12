@@ -10,22 +10,15 @@ const anim = keyframes`
   }
 `
 
-export interface CacheableComponentProps {
-  $isCached?: boolean
-}
-
-export const cacheableComponentStyles = css<CacheableComponentProps>`
+export const cacheableComponentStyles = ({ $isCached }: { $isCached?: boolean }) => css`
   transition: opacity 0.15s ease-in-out;
   opacity: 1;
-  ${({ $isCached }) =>
-    $isCached &&
-    css`
-      opacity: 0.5;
-      pointer-events: none;
-      animation: ${anim} 0.25s ease-in-out 1s backwards;
-    `}
+  ${$isCached &&
+  css`
+    opacity: 0.5;
+    pointer-events: none;
+    animation: ${anim} 0.25s ease-in-out 1s backwards;
+  `}
 `
 
-export const CacheableComponent = styled.div<CacheableComponentProps>`
-  ${cacheableComponentStyles}
-`
+export const CacheableComponent = styled.div<{ $isCached?: boolean }>(cacheableComponentStyles)

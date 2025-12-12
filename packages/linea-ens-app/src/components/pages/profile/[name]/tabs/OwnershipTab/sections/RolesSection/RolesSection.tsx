@@ -3,10 +3,7 @@ import styled, { css, useTheme } from 'styled-components'
 
 import { Button, Card } from '@ensdomains/thorin'
 
-import {
-  CacheableComponentProps,
-  cacheableComponentStyles,
-} from '@app/components/@atoms/CacheableComponent'
+import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
 import { PseudoActionButton } from '@app/components/@atoms/PseudoActionButton/PseudoActionButton'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import type { GroupedRoleRecord } from '@app/hooks/ownership/useRoles/useRoles'
@@ -26,9 +23,7 @@ const Footer = styled.div(
   `,
 )
 
-const StyledCard = styled(Card)<CacheableComponentProps>`
-  ${cacheableComponentStyles}
-`
+const StyledCard = styled(Card)(cacheableComponentStyles, () => css``)
 
 type Props = {
   name: string

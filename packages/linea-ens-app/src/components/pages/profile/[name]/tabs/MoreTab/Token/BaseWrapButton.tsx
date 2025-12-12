@@ -1,4 +1,4 @@
-import { ComponentProps, forwardRef, Ref } from 'react'
+import { ComponentProps, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { mq } from '@ensdomains/thorin'
@@ -15,10 +15,7 @@ const StyledWrapButton = styled(Button)(
 )
 
 const BaseWrapButton = forwardRef(
-  (
-    { children, ...props }: ComponentProps<typeof StyledWrapButton>,
-    ref: Ref<HTMLButtonElement>,
-  ) => {
+  ({ children, ...props }: ComponentProps<typeof StyledWrapButton>, ref) => {
     return (
       <StyledWrapButton size="small" colorStyle="accentPrimary" ref={ref} {...props}>
         {children}

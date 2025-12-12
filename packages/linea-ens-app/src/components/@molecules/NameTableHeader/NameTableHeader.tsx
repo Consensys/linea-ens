@@ -178,8 +178,9 @@ export const NameTableHeader = ({
               <Select
                 value={sortType}
                 size="small"
-                label={t('action.sort')}
+                label="Sort by"
                 hideLabel
+                placeholder={t('action.sort')}
                 onChange={(e) => {
                   onSortTypeChange?.(e.target.value as SortType)
                 }}

@@ -5,7 +5,7 @@ export default function useDebouncedCallback<T extends (...args: any[]) => Retur
   wait?: number,
   deps: DependencyList = [],
 ): T {
-  const timerId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const timerId = useRef<ReturnType<typeof setTimeout>>()
 
   return useCallback(
     (...args: Parameters<T>) => {

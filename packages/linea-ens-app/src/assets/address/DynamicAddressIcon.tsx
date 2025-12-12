@@ -1,5 +1,3 @@
-import type { JSX } from 'react'
-
 import { QuestionCircleSVG } from '@ensdomains/thorin'
 
 import { DynamicAddressIconName, dynamicAddressIcons } from './dynamicAddressIcons'
