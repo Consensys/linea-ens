@@ -8,7 +8,6 @@ type Shape = 'circle' | 'square'
 interface ContainerType {
   $shape: Shape
   $noBorder?: boolean
-  children?: React.ReactNode
 }
 
 const Container = styled.div<ContainerType>(

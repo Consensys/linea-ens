@@ -85,12 +85,8 @@ const StyledHeading = styled(Heading)(
   `,
 )
 
-interface GridAreaProps {
-  $name?: string
-}
-
-const gridAreaStyle = css<GridAreaProps>`
-  ${({ $name }) => $name && `grid-area: ${$name};`}
+const gridAreaStyle = ({ $name }: { $name: string }) => css`
+  grid-area: ${$name};
 `
 
 const moonpayInfoItems = Array.from({ length: 2 }, (_, i) => `steps.info.moonpayItems.${i}`)
@@ -193,23 +189,23 @@ const LabelContainer = styled.div`
   flex-wrap: wrap;
 `
 
-const CheckboxWrapper = styled.div<GridAreaProps>`
-  width: 100%;
-  ${gridAreaStyle}
-`
+const CheckboxWrapper = styled.div(
+  () => css`
+    width: 100%;
+  `,
+  gridAreaStyle,
+)
 
-const OutlinedContainerDescription = styled(Typography)<GridAreaProps>`
-  ${gridAreaStyle}
-`
+const OutlinedContainerDescription = styled(Typography)(gridAreaStyle)
 
-const OutlinedContainerTitle = styled(Typography)<GridAreaProps>`
-  ${({ theme }) => css`
+const OutlinedContainerTitle = styled(Typography)(
+  ({ theme }) => css`
     font-size: ${theme.fontSizes.large};
     font-weight: ${theme.fontWeights.bold};
     white-space: nowrap;
-  `}
-  ${gridAreaStyle}
-`
+  `,
+  gridAreaStyle,
+)
 
 const EthInnerCheckbox = ({
   address,

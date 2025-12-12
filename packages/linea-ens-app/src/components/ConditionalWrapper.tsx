@@ -1,4 +1,3 @@
-import type { JSX } from 'react'
 import { ReactNode } from 'react'
 
 export const ConditionalWrapper = ({

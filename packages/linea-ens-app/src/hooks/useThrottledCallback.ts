@@ -6,7 +6,7 @@ export default function useThrottledCallback<T extends (...args: any[]) => Retur
   deps: DependencyList = [],
 ): T {
   const lastRan = useRef(Date.now())
-  const timerId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const timerId = useRef<ReturnType<typeof setTimeout>>()
 
   return useCallback(
     (...args: Parameters<T>) => {

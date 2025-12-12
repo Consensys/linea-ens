@@ -6,6 +6,7 @@
 import { execSync } from 'child_process'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+
 import { withSentryConfig } from '@sentry/nextjs'
 import StylelintPlugin from 'stylelint-webpack-plugin'
 
@@ -26,17 +27,16 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+
   env: {
-    NEXT_PUBLIC_ALCHEMY_KEY: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
-    NEXT_PUBLIC_INFURA_KEY: process.env.NEXT_PUBLIC_INFURA_KEY,
+    NEXT_PUBLIC_ALCHEMY_KEY:
+      process.env.NEXT_PUBLIC_ALCHEMY_KEY || 'sSpYuHmhlpuU7RVXq-IIdCdz4IuKF-gM',
+    NEXT_PUBLIC_INFURA_KEY:
+      process.env.NEXT_PUBLIC_INFURA_KEY || 'cfa6ae2501cc4354a74e20432507317c',
   },
+  // change to true once infinite loop is fixed
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'metadata.ens.domains',
-      },
-    ],
+    domains: ['metadata.ens.domains'],
   },
   async rewrites() {
     return [
@@ -91,7 +91,8 @@ const nextConfig = {
     ]
   },
   generateBuildId: () => {
-    return execSync('git rev-parse HEAD').toString().trim()
+    const hash = execSync('git rev-parse HEAD').toString().trim()
+    return hash
   },
   webpack: (config, options) => {
     for (const rule of config.module.rules) {

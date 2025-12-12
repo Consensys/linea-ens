@@ -4,10 +4,7 @@ import { match, P } from 'ts-pattern'
 
 import { mq } from '@ensdomains/thorin'
 
-import {
-  CacheableComponentProps,
-  cacheableComponentStyles,
-} from '@app/components/@atoms/CacheableComponent'
+import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
 import { DisabledButtonWithTooltip } from '@app/components/@molecules/DisabledButtonWithTooltip'
 import RecordItem from '@app/components/RecordItem'
 import { Button } from '@app/components/styled/Button'
@@ -20,9 +17,9 @@ import { useHasGraphError } from '@app/utils/SyncProvider/SyncProvider'
 
 import { TabWrapper } from '../../../TabWrapper'
 
-const Container = styled(TabWrapper)<CacheableComponentProps>`
-  ${cacheableComponentStyles}
-  ${({ theme }) => css`
+const Container = styled(TabWrapper)(
+  cacheableComponentStyles,
+  ({ theme }) => css`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -35,8 +32,8 @@ const Container = styled(TabWrapper)<CacheableComponentProps>`
     ${mq.sm.min(css`
       padding: ${theme.space['6']};
     `)}
-  `}
-`
+  `,
+)
 
 const HeadingContainer = styled.div(
   ({ theme }) => css`

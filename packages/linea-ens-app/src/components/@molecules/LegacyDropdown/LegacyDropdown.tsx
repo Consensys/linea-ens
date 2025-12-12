@@ -1,4 +1,3 @@
-import type { JSX } from 'react'
 import {
   Children,
   cloneElement,
@@ -483,7 +482,7 @@ export const LegacyDropdown = ({
   inheritContentWidth = false,
   ...props
 }: Props & (PropsWithIsOpen | PropsWithoutIsOpen)) => {
-  const dropdownRef = useRef<any>(null)
+  const dropdownRef = useRef<any>()
   const [internalIsOpen, internalSetIsOpen] = useState(false)
   const [isOpen, setIsOpen] = _setIsOpen
     ? [_isOpen, _setIsOpen]

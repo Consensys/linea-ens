@@ -4,10 +4,7 @@ import styled, { css } from 'styled-components'
 import { UserSettableFuses } from '@ensdomains/ensjs/utils'
 import { Helper, mq, Typography } from '@ensdomains/thorin'
 
-import {
-  CacheableComponentProps,
-  cacheableComponentStyles,
-} from '@app/components/@atoms/CacheableComponent'
+import { cacheableComponentStyles } from '@app/components/@atoms/CacheableComponent'
 import { Spacer } from '@app/components/@atoms/Spacer'
 import { TrafficLight } from '@app/components/TrafficLight'
 import { useTransactionFlow } from '@app/transaction-flow/TransactionFlowProvider'
@@ -15,13 +12,15 @@ import { CurrentAnyFuses } from '@app/types'
 
 import { TabWrapper } from '../../../TabWrapper'
 
-const FusesContainer = styled(TabWrapper)<CacheableComponentProps>`
-  ${cacheableComponentStyles}
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-`
+const FusesContainer = styled(TabWrapper)(
+  cacheableComponentStyles,
+  () => css`
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  `,
+)
 
 const HeadingContainer = styled.div(
   ({ theme }) => css`
