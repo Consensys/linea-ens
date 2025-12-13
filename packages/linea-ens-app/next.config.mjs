@@ -1,12 +1,6 @@
-// @ts-check
-
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-param-reassign */
 import { execSync } from 'child_process'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
-
 import { withSentryConfig } from '@sentry/nextjs'
 import StylelintPlugin from 'stylelint-webpack-plugin'
 
@@ -24,6 +18,9 @@ const babelIncludeRegexes = [
  * */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
+  // For monorepo support with pnpm - trace dependencies from the root
+  outputFileTracingRoot: path.join(__dirname, '../../'),
   compiler: {
     styledComponents: true,
   },
@@ -91,8 +88,7 @@ const nextConfig = {
     ]
   },
   generateBuildId: () => {
-    const hash = execSync('git rev-parse HEAD').toString().trim()
-    return hash
+    return execSync('git rev-parse HEAD').toString().trim()
   },
   webpack: (config, options) => {
     for (const rule of config.module.rules) {
