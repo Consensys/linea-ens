@@ -1,7 +1,5 @@
 {
-  "processors": [
-    "stylelint-processor-styled-components"
-  ],
+  "processors": ["stylelint-processor-styled-components"],
   "extends": [
     "stylelint-config-standard-scss",
     "stylelint-config-styled-components",
@@ -12,27 +10,19 @@
     "selector-type-case": [
       "lower",
       {
-        "ignoreTypes": [
-          "/^\\$\\w+/"
-        ]
+        "ignoreTypes": ["/^\\$\\w+/"]
       }
     ],
     "selector-type-no-unknown": [
       true,
       {
-        "ignoreTypes": [
-          "/-styled-mixin/",
-          "/^\\$\\w+/"
-        ]
+        "ignoreTypes": ["/-styled-mixin/", "/^\\$\\w+/"]
       }
     ],
     "value-keyword-case": [
       "lower",
       {
-        "ignoreKeywords": [
-          "dummyValue",
-          "currentColor"
-        ]
+        "ignoreKeywords": ["dummyValue", "currentColor"]
       }
     ],
     "declaration-colon-newline-after": null,
@@ -40,10 +30,7 @@
     "property-no-unknown": [
       true,
       {
-        "ignoreProperties": [
-          "flex-gap",
-          "webkit-appearance"
-        ]
+        "ignoreProperties": ["flex-gap", "webkit-appearance"]
       }
     ],
     "color-function-notation": "legacy",
@@ -54,6 +41,6 @@
     "rule-empty-line-before": null,
     "keyframes-name-pattern": null,
     "keyframe-block-no-duplicate-selectors": null,
-    "no-descending-specificity": false
+    "no-descending-specificity": null
   }
 }

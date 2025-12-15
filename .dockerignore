@@ -1,0 +1,54 @@
+# Dependencies (will be installed in Docker)
+**/node_modules
+
+# Build outputs (will be rebuilt in Docker)
+**/.next
+**/dist
+**/build
+**/out
+
+# Development files
+**/.gitignore
+**/.env.local
+**/.env.*.local
+
+# IDE
+**/.idea
+**/.vscode
+**/*.swp
+**/*.swo
+
+# Testing
+**/coverage
+**/e2e
+**/test
+**/*.test.*
+**/*.spec.*
+**/playwright
+**/playwright-report
+
+# Documentation
+**/docs
+
+# Misc
+**/.DS_Store
+**/Thumbs.db
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Archives
+**/*.tar
+**/*.tar.gz
+**/*.tar.lz4
+**/*.zip
+
+# Other packages not needed for linea-ens-app build
+packages/linea-ccip-gateway
+packages/linea-ens-resolver
+packages/linea-ens-subgraph
+packages/linea-state-verifier
+packages/poh-signer-api
+services
+
