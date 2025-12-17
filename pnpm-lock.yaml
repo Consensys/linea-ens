@@ -1867,6 +1867,7 @@ packages:
 
   '@ensdomains/ens-contracts@file:packages/linea-ens-contracts':
     resolution: {directory: packages/linea-ens-contracts, type: directory}
+    engines: {node: '>=22.21.1'}
 
   '@ensdomains/ens-contracts@https://codeload.github.com/ensdomains/ens-contracts/tar.gz/d93dfee5908040eb3f7ee98bad7e0fed43d4c9a4':
     resolution: {tarball: https://codeload.github.com/ensdomains/ens-contracts/tar.gz/d93dfee5908040eb3f7ee98bad7e0fed43d4c9a4}

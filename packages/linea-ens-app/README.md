@@ -208,15 +208,15 @@ the [requirements](../../README.md#requirements) if you encounter an error. To v
 
 ```bash
 node --version
-v18.20.4
+v22.21.1
 ```
 
 Node Version Manager (nvm) can be used to manage multiple versions of Node.js if you find you are not in the correct
-version of Node.
+version of Node. The repository includes a `.nvmrc` file that specifies the required version.
 
 ```bash
 pnpm --version
-9.4.0
+10.26.0
 ```
 
 ```bash

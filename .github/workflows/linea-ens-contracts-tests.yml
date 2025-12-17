@@ -25,12 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 18
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: 'packages/linea-ens-contracts/yarn.lock'
 
-      - run: yarn install --immutable --immutable-cache --check-cache
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
 
       - name: Run test
         run: yarn test

@@ -28,12 +28,17 @@ jobs:
             pnpm-workspace.yaml
             pnpm-lock.yaml
             package.json
+            .nvmrc
           sparse-checkout-cone-mode: false
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2.0.1
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js from .nvmrc
+        uses: actions/setup-node@v4
         with:
-          version: 10.10.0
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
 
       - name: Install Bun
         run: |
