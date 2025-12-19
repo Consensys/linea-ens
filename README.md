@@ -92,9 +92,9 @@ contract TestL1 is EVMFetchTarget {
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/en/download/package-manager) v18.x.
-- [pnpm](https://pnpm.io/installation) v9.x
-- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
+- [Node.js](https://nodejs.org/en/download/package-manager) v22.21.1+
+- [pnpm](https://pnpm.io/installation) v10.26.0+
+- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install) (for linea-ens-contracts only)
 - [Docker](https://docs.docker.com/engine/install/)
 - [docker-compose](https://docs.docker.com/compose/install/)
 

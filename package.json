@@ -2,5 +2,10 @@
   "name": "linea-ens",
   "version": "1.0.0",
   "private": true,
-  "description": "Linea ENS monorepo"
+  "description": "Linea ENS monorepo",
+  "packageManager": "pnpm@10.26.0",
+  "engines": {
+    "node": ">=22.21.1",
+    "pnpm": ">=10.26.0"
+  }
 }
