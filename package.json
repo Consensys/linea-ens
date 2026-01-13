@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Linea ENS monorepo",
-  "packageManager": "pnpm@10.26.0",
+  "packageManager": "pnpm@10.28.0",
   "engines": {
-    "node": ">=22.21.1",
-    "pnpm": ">=10.26.0"
+    "node": ">=22.22.0",
+    "pnpm": ">=10.28.0"
   }
 }

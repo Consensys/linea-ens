@@ -114,7 +114,7 @@ via [Linea Hub] (https://linea.build/hub/).
     - Add this config:
 
   | Setting         | Value                 |
-    | --------------- | --------------------- |
+        | --------------- | --------------------- |
   | Network name    | Localhost 8545        |
   | New RPC URL     | http://127.0.0.1:8545 |
   | Chain ID        | 1337                  |
@@ -208,7 +208,7 @@ the [requirements](../../README.md#requirements) if you encounter an error. To v
 
 ```bash
 node --version
-v22.21.1
+v22.22.0
 ```
 
 Node Version Manager (nvm) can be used to manage multiple versions of Node.js if you find you are not in the correct
@@ -216,7 +216,7 @@ version of Node. The repository includes a `.nvmrc` file that specifies the requ
 
 ```bash
 pnpm --version
-10.26.0
+10.28.0
 ```
 
 ```bash

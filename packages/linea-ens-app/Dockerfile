@@ -1,4 +1,4 @@
-FROM node:22.21.1-alpine AS base
+FROM node:22.22.0-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -37,7 +37,7 @@ COPY packages/linea-ens-contracts/ ./packages/linea-ens-contracts/
 WORKDIR /app/packages/linea-ens-app
 RUN pnpm build
 
-FROM node:22.21.1-alpine AS runner
+FROM node:22.22.0-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
