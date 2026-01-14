@@ -1684,7 +1684,7 @@ packages:
 
   '@ensdomains/ens-contracts@file:packages/linea-ens-contracts':
     resolution: {directory: packages/linea-ens-contracts, type: directory}
-    engines: {node: '>=22.21.1'}
+    engines: {node: '>=22.22.0'}
 
   '@ensdomains/ens-test-env@0.4.0-beta.0':
     resolution: {integrity: sha512-B/Kv0EhPQnwHbgHV1yH178es3EIejYf5LbRtTN1N69jbyoxjT+0cUE74YfaH9EZFQ6sLmpJP/Yk7vE3wTpBglQ==}
