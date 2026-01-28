@@ -4,6 +4,10 @@ packages:
 
 minimumReleaseAge: 4320
 
+minimumReleaseAgeExclude:
+  - next
+  - '@next/env'
+
 overrides:
   '@sentry/browser@<7.119.1': '>=7.119.1'
   axios@<0.30.0: '>=0.30.0'
